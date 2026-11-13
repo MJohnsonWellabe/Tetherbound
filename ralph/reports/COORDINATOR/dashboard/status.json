@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 23:28 UTC",
+ "updated": "13 Nov 2026 23:35 UTC",
  "headline": "13 Nov 23:28: six PRs landed this evening (#954, #956, #957, #958, #959) and the first close (Staticub roster row). New board tab \"Tried and failed\": 181 failed or parked approaches by row, so they are not retried.",
  "batches": [
   {
@@ -2880,8 +2880,8 @@
    "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, cleanliness brief, 5 stands; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 7.08; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28"
   },
   "F13#5": {
-   "gpu": 5.38,
-   "src": "GPU High 10 Nov (G-newapproach-t2-cleanup, mean of 3 swim views, landed #892) | G-rescore-1113-f13-5 (LANE-PLACES, main b8622117c, 13 Nov, r 0.958): 6.28 -> 5.38; crescent current cue reads as decals or a debug overlay (3/3) | G-land-mt-flowstreaks (13 Nov, LANE-JUDGE 249d1ea9b): DO NOT SHIP; F13#5 swim views 5.52 -> 6.04 (+0.52, 3/3) but F39#16/#17 current states 6.08 -> 5.66 (0/3), streaks read as guide lanes"
+   "gpu": 6.55,
+   "src": "GPU High 10 Nov (G-newapproach-t2-cleanup, mean of 3 swim views, landed #892) | G-rescore-1113-f13-5 (LANE-PLACES, main b8622117c, 13 Nov, r 0.958): 6.28 -> 5.38; crescent current cue reads as decals or a debug overlay (3/3) | G-land-mt-flowstreaks (13 Nov, LANE-JUDGE 249d1ea9b): DO NOT SHIP; F13#5 swim views 5.52 -> 6.04 (+0.52, 3/3) but F39#16/#17 current states 6.08 -> 5.66 (0/3), streaks read as guide lanes | G-land-mt-flowstreaks-r2 SHIP 5.70 -> 6.55 (+0.85, 3/3), clears 6; states level by construction (LANE-JUDGE d416990ff, 13 Nov)"
   },
   "F39#32": {
    "gpu": 6.77,

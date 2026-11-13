@@ -1,5 +1,5 @@
 {
- "entries": 198,
+ "entries": 199,
  "rows": {
   "F13#5": [
    {
@@ -24,7 +24,7 @@
      "F39#10"
     ],
     "approach": "land-mt-seadepth",
-    "result": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15.",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
    },
@@ -927,6 +927,18 @@
    },
    {
     "rows": [
+     "F39#10",
+     "F39#15",
+     "F39#1",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth-r2",
+    "result": "DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
      "F39#1",
      "F39#15",
      "F39#27",
@@ -950,7 +962,7 @@
      "F39#10"
     ],
     "approach": "land-mt-seadepth",
-    "result": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15.",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
    }
@@ -992,7 +1004,7 @@
      "F39#10"
     ],
     "approach": "land-mt-seadepth",
-    "result": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15.",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
    }
@@ -1234,6 +1246,18 @@
    },
    {
     "rows": [
+     "F39#10",
+     "F39#15",
+     "F39#1",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth-r2",
+    "result": "DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
      "F39#15",
      "F39#1",
      "F13#5",
@@ -1244,7 +1268,7 @@
      "F39#10"
     ],
     "approach": "land-mt-seadepth",
-    "result": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15.",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
    },
@@ -1303,6 +1327,18 @@
    },
    {
     "rows": [
+     "F39#10",
+     "F39#15",
+     "F39#1",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth-r2",
+    "result": "DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
      "F39#1",
      "F39#15",
      "F39#27",
@@ -1326,7 +1362,7 @@
      "F39#10"
     ],
     "approach": "land-mt-seadepth",
-    "result": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15.",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
    }
@@ -1356,6 +1392,18 @@
    },
    {
     "rows": [
+     "F39#10",
+     "F39#15",
+     "F39#1",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth-r2",
+    "result": "DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
      "F39#15",
      "F39#1",
      "F13#5",
@@ -1366,7 +1414,7 @@
      "F39#10"
     ],
     "approach": "land-mt-seadepth",
-    "result": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15.",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
    },
@@ -1416,7 +1464,7 @@
      "F39#10"
     ],
     "approach": "land-mt-seadepth",
-    "result": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15.",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
    },
@@ -1644,7 +1692,7 @@
      "F39#10"
     ],
     "approach": "land-mt-seadepth",
-    "result": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15.",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
    }

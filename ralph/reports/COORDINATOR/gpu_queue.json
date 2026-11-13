@@ -5265,7 +5265,7 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay.json (tidewake_look.json cause_tidewake.sea.enabled: teal mid stop at 4 m, 16 m falloff, lighter deep blue, range haze; replaces the hard navy shallow-to-deep edge the judges call out in every Tidewake frame). High; phase2_capture_routes.gd --biome=water --seed=2042 horizon_stones, terraces, sluice bridge + phase2_capture_current_states.gd for F39#16/#17. By eye on terraces route_day: the navy channel is mid-blue and the shallows fade into it without a hard line. Same Tidewake routes base as land-mt-shorezones: one boot, two arms.",
    "added": "13 Nov 19:35",
    "priority": "floor-raiser across 7 Tidewake rows; ahead of shorezones in the shared boot",
-   "status": "R1 DO NOT SHIP 13 Nov: current states -0.85 (streak bands, whitecap flecks); gradient gains F39#10 +0.62 (to 7.10), F39#15 +0.43. R2 (overlay_r2.json, slicks and whitecaps off) next: re-capture S1 live, S1 restored, S2 live, F39#1, F39#10, F39#15."
+   "status": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again."
   },
   {
    "id": "scene-rosternames",
@@ -5597,7 +5597,8 @@
    ],
    "ask": "Round 2: base vs + ralph/reports/LANES/LAND-MT-FLOWSTREAKS/overlay.json (flag-off current_flow.lesson_cue: only the four swim-lesson lanes drop their chop caps; S1/S2 current-state lanes untouched by construction). Four T2 views (capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/T2-current.json --capture-size=1920x1080) plus phase2_capture_current_states.gd S1/S2 as no-loss, High. By eye: no crescents in T2 views; current-state frames identical to base.",
    "added": "13 Nov 23:10",
-   "priority": "in the land-mt boot after SEADEPTH/SHOREZONES"
+   "priority": "in the land-mt boot after SEADEPTH/SHOREZONES",
+   "status": "SHIP 13 Nov: F13#5 5.70 -> 6.55 (+0.85, 3/3); states level. LANE-LAND-MT to land."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
