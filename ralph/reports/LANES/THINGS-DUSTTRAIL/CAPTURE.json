@@ -3,7 +3,7 @@
  "lane": "LANE-THINGS",
  "branch": "tb/things",
  "preset": "High",
- "status": "READY 13 Nov (queued). 13 Nov addition: please include the Warden fight set; the F38#28 puffs are the same effect.",
+ "status": "WITHDRAWN 13 Nov, unjudged: the GPU lane confirmed on camera-matched pairs that the bead strings are identical with and without this overlay. See THINGS-TELLDUST.",
  "tool": "tools/capture_f38_fight.gd, the G-things-foestand-meadows set (south_bridge_grunt, --attack --dodge --tell-frames)",
  "base": {
   "tree": "tb/things",

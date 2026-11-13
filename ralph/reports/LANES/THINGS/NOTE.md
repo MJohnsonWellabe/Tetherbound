@@ -9,6 +9,8 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Relay from the GPU lane: DUSTTRAIL is confirmed not to touch the beads and is WITHDRAWN, unjudged.** On camera-matched pairs the bead strings on every "! incoming" frame are identical with and without it (Warden 03 Medium, grunt 02/03 High). **TELLDUST is capturing** (Meadows grunt and Warden sets, Medium and High); the wind-up dust does draw on GPU High, so that comparison will show it.
+  - GPU lane's caveat for every fight arm: the fight camera is not deterministic run to run (the same frame lands at up to five camera positions), so they now pair scored frames by camera position and re-run the arm side when it misses.
 - main 0a57e6d7 (Fulgocobra collar, #948) is merged into `tb/things`. No new verdicts for this lane at 09:45 UTC.
 - **CORRECTION: `THINGS-DUSTTRAIL` probably does not touch the "bead strings"; ready: `THINGS-TELLDUST`, which does.** Every GPU frame with the beads also shows "! incoming — move", the opponent's wind-up, before anything is thrown. The wind-up is drawn as dust puffs along the attack's outline (`telegraph.soft_style`: 0.42 m puffs every 0.34 m at 0.6 alpha), which is exactly a looping string of beads. DUSTTRAIL changes the stone moves' trail ribbon instead. **If the GPU lane's by-eye check shows the beads unchanged under DUSTTRAIL, do not spend judges on it; judge TELLDUST.**
   - TELLDUST: overlay only, five values: bigger, closer, dimmer, lower, darker puffs, so they merge into one soft band on the ground. The painted outlines stay off (owner, 24 Oct).
