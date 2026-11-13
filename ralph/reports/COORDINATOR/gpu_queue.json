@@ -4855,7 +4855,8 @@
         "F41#24"
       ],
       "ask": "Base vs overlay_pool_damp_r2.json, High, G-rescore-f41-22-24 stands (giant, forest, rod_line; glass and stormheart no-loss) x Calm, Break, aftermath Calm. By-eye first: the pale sheen behind the trainer at giant_break and on the right at forest_break should be gone. Branch head already merges main 317b3372f.",
-      "added": "13 Nov 02:40"
+      "added": "13 Nov 02:40",
+      "status": "WITHDRAWN 13 Nov: superseded by land-cs-soiloff (same rows; removes the wet_soil discs instead of making them matte)"
     },
     {
       "id": "rescore-f39-17-f39-5-main",
@@ -5033,6 +5034,18 @@
       ],
       "ask": "Base vs ralph/reports/LANES/LAND-MT-BROKENHILL/overlay.json (bank.hill_shell.broken: noise relief, bedded Rock030 on steep faces, base-line foliage), High, phase2_capture_routes.gd --biome=meadows --subset=meadows__band2_stone_and_root__04__the_burrow_warrens --seed=2042 (walk_02/03 scored; route_day, walk_01, vista_dusk no-loss). By-eye: route_day shows grey rock outcrops and the brown slabs are gone; walk_03 hill base no longer one straight diagonal. Else hold.",
       "added": "13 Nov 16:43"
+    },
+    {
+      "id": "land-cs-soiloff",
+      "branch": "tb/land-cs",
+      "commit": "f54650bb6",
+      "rows": [
+        "F41#22",
+        "F41#24 (6.46)",
+        "riders F41#5, F41#12, F41#2"
+      ],
+      "ask": "Takes THINGS-STORMPOOL r2's slot. Base vs ralph/reports/LANES/LAND-CS-SOILOFF/overlay.json (stormwood_ground_finish forest_layers_1113: wet_soil layer off, the 1,400 near-black glossy discs), High, capture_stormwood_f10_matrix.gd --stands=forest,giant,rod_line,glass,stormheart --phases=calm,break (+aftermath Calm). By-eye: forest_calm/giant_calm black jagged patches gone; forest_break/giant_break no pale slab by the trainer. Else hold.",
+      "added": "13 Nov 16:50"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
