@@ -4739,7 +4739,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113 ON), High, phase2_capture_routes.gd --biome=cloudreach --subset=cloudreach__summit_final_stronghold__12__stormward_overlook --seed=2042 (vista_dusk, route_day, walk_01-03); add the High Perches stands (07, 08) as no-loss. By-eye first: the straight dark seam at the trainer's feet in vista_dusk should be gone and the path intact.",
    "added": "13 Nov 03:37",
-   "status": "SHIP; landing in #954."
+   "status": "LANDED #954 (main b8622117c), 13 Nov."
   },
   {
    "id": "below6-overlook-solid",
@@ -4751,7 +4751,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 ON + two capture_stands rows for walk_02/03), High, same routes subset as overlook-join (vista_dusk, route_day, walk_01-03). Can share overlook-join's base capture (same branch lineage, flags off). By-eye: walk_02/03 show the arch, compass and pennants with the trainer on grass; no see-through walls.",
    "added": "13 Nov 04:25",
-   "status": "SHIP; landing in #954."
+   "status": "LANDED #954 (main b8622117c), 13 Nov."
   },
   {
    "id": "below6-fulgocobra-faint",
@@ -5178,7 +5178,7 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1: neighbouring puffs share one slow wave so they never fade out independently; size 0.5, spacing 0.2, rise 0.04). capture_f38_fight.gd south_bridge_grunt + warden_aldis, --attack --dodge --tell-frames, High then Medium, camera-matched, F38#38 control. By eye on grunt 03: one continuous low band at the feet, no beads. The warden base capture is shared with scene-hallwalls (same tree, same base).",
    "added": "13 Nov 18:40",
    "priority": "near-bar closer, with scene-hallwalls before scene-cache",
-   "status": "SHIP; landing in #954 (with overlook join + solid)."
+   "status": "LANDED #954 (main b8622117c), 13 Nov."
   },
   {
    "id": "land-mt-shorezones",
@@ -5227,7 +5227,7 @@
    "ask": "Overlay-only, rides in the beings pose batch as a 4th item (same tree; d2bf0aa13 adds only notes and this overlay over 9ae4ea989). Base vs + ralph/reports/LANES/BEINGS-WMONITOR-GROUND/overlay.json (creature_pose_settle faint per_species water_mangrove_monitor crumple.limb_sink_frac 0.5). CAPTURE.json for frames. By eye on water_mangrove_monitor-faint-050: feet touch the floor and the shadow meets the body; faint-100 same as base. High, then Medium if mapped >= 7.5 (close candidate).",
    "added": "13 Nov 19:25",
    "priority": "near-bar closer; with the pose batch",
-   "status": "SHIP 13 Nov (LANE-JUDGE 83d0819fd): 6.68 -> 7.03 (+0.35, 3/3) on a strict panel; no Medium. LANE-BEINGS to land."
+   "status": "SHIP; landing in #955."
   },
   {
    "id": "land-mt-duskridge",
