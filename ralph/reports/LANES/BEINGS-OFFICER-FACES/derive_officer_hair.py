@@ -23,6 +23,8 @@ Writes:
   assets/ui/portraits/npc_identity_stormwood_nysa.png
 
     python3 ralph/reports/LANES/BEINGS-OFFICER-FACES/derive_officer_hair.py
+    python3 ralph/reports/LANES/BEINGS-OFFICER-FACES/derive_officer_hair.py --nysa-neutral
+      (Nysa keeps her officer_a face; hair and plate only)
 """
 import io
 import json
@@ -143,5 +145,60 @@ def main():
     recolour(plate, pmask, LOOKS["nysa"]).save(os.path.join(ROOT, "assets/ui/portraits/npc_identity_stormwood_nysa.png"))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and "--nysa-neutral" not in sys.argv:
     main()
+
+
+# --- Gender-neutral Nysa option (coordinator, 13 Nov 2026) -----------------
+# Nysa keeps her current officer_a face; only her hair and plate change, so
+# she separates from Varga without the game stating her gender. Built on the
+# judged uniform-cloth texture (character_body_flags.json below6_uniform_cloth),
+# so the variant keeps that cloth. Varga's hair is near-black, so hair here is
+# the dark texels in the top 14% of the model, front of the face excluded.
+OA = "assets/characters/officer_a/"
+OA_GLB = OA + "officer_a_lod0.glb"
+OA_CLOTH = OA + "officer_a_lod0_texture_0_vis1_cloth2.png"
+OA_PLATE = "assets/ui/portraits/officer_a.png"
+OA_HAIR_TOP = 0.86
+OA_FACE_CENTRE = (0.46, 0.29)
+OA_FACE_RADII = (0.09, 0.10)
+OA_EYES_CENTRE = (0.47, 0.205)
+OA_EYES_RADII = (0.12, 0.045)
+NYSA_NEUTRAL = (215.0, 0.07, 2.6)
+
+
+def officer_a_hair_mask(size, image):
+    gltf, binary = A.read_glb(os.path.join(ROOT, OA_GLB))
+    pos, nrm, uv, tris = A.mesh_arrays(gltf, binary)
+    pos_map, nrm_map, valid = A.rasterise(pos, nrm, uv, tris, size)
+    lo, hi = pos.min(axis=0), pos.max(axis=0)
+    unit = (pos_map - lo) / np.maximum(hi - lo, 1e-6)
+    nrm_map = nrm_map / np.maximum(np.linalg.norm(nrm_map, axis=-1, keepdims=True), 1e-9)
+    face = (np.abs(unit[..., 0] - 0.5) < 0.14) & (nrm_map[..., 2] > 0.45) & (unit[..., 1] < 0.93)
+    _, _, v = hsv_arrays(image)
+    return (valid > 0) & (unit[..., 1] > OA_HAIR_TOP) & ~face & (v < 0.30)
+
+
+def officer_a_plate_mask(plate):
+    _, _, v = hsv_arrays(plate)
+    height, width = plate.size[1], plate.size[0]
+    rows = np.arange(height)[:, None] / height
+    cols = np.arange(width)[None, :] / width
+    face = ((cols - OA_FACE_CENTRE[0]) / OA_FACE_RADII[0]) ** 2 + ((rows - OA_FACE_CENTRE[1]) / OA_FACE_RADII[1]) ** 2 < 1.0
+    eyes = ((cols - OA_EYES_CENTRE[0]) / OA_EYES_RADII[0]) ** 2 + ((rows - OA_EYES_CENTRE[1]) / OA_EYES_RADII[1]) ** 2 < 1.0
+    return (v < 0.25) & (rows < 0.24) & ~face & ~eyes
+
+
+def nysa_neutral():
+    cloth = Image.open(os.path.join(ROOT, OA_CLOTH)).convert("RGB")
+    mask = officer_a_hair_mask(cloth.size[0], cloth)
+    print("nysa (neutral) hair texels: %.2f%%" % (100.0 * mask.mean()))
+    recolour(cloth, mask, NYSA_NEUTRAL).save(os.path.join(ROOT, OA + "officer_a_lod0_texture_0_vis1_cloth2_nysa.png"))
+    plate = Image.open(os.path.join(ROOT, OA_PLATE)).convert("RGB")
+    pmask = officer_a_plate_mask(plate)
+    print("nysa (neutral) plate hair pixels: %.2f%%" % (100.0 * pmask.mean()))
+    recolour(plate, pmask, NYSA_NEUTRAL).save(os.path.join(ROOT, "assets/ui/portraits/npc_identity_stormwood_nysa_hair.png"))
+
+
+if __name__ == "__main__" and "--nysa-neutral" in sys.argv:
+    nysa_neutral()

@@ -363,7 +363,7 @@
       "one_time": true
     },
     {
-      "id": "officer_nysa_deepwood_rod", "appearance_variant_id": "beings_stormwood_nysa",
+      "id": "officer_nysa_deepwood_rod", "appearance_variant_id": "beings_stormwood_nysa_hair",
       "display_name": "Officer Nysa",
       "region_id": "deepwood",
       "position": [

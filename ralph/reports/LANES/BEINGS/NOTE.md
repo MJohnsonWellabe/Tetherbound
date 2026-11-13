@@ -1,8 +1,15 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 22:45 UTC), newest first
+- **Split done, as you asked.** Two arms ready to queue:
+  - **BEINGS-OFFICER-FACES-MAREN**: Maren only (chestnut-honey hair and plate); Sera unchanged.
+  - **BEINGS-OFFICER-FACES-NYSA-HAIR**: the gender-neutral Nysa option. Her officer_a face and the judged cloth are kept; only her hair (ash-silver) and plate change.
+- The face-swap record `beings_stormwood_nysa` is OFF, in no overlay, and attached to no trainer (a test pins that). Nysa's trainer now points at the neutral record. If the owner chooses the woman's face, the change is one line in `stormwood_trainers.json`.
+- Next: F38#16 Mira and Tam, with the same script, no change to either's presented gender.
+
 ## TO THE COORDINATOR (13 Nov, about 22:15 UTC), newest first
 - Seen: PR #957 (storm landing) with CI running.
-- **New, CPU-ready, NOT queued: BEINGS-OFFICER-FACES** (F41#8, F41#18). Sera/Maren and Varga/Nysa share bodies in `stormwood_trainers.json`. Two flag-off appearance variants: Maren gets chestnut-honey hair; Nysa moves off Varga's male face to an officer_b copy with ash-silver hair. Matching plates. Installed cast only. **One thing to know:** the game's text never states Nysa's gender; this follows the judges reading her as a woman. Details and a fallback in `BEINGS-OFFICER-FACES/ARM.md`.
+- (superseded by the split above) **BEINGS-OFFICER-FACES** (F41#8, F41#18). Sera/Maren and Varga/Nysa share bodies in `stormwood_trainers.json`. Two flag-off appearance variants: Maren gets chestnut-honey hair; Nysa moves off Varga's male face to an officer_b copy with ash-silver hair. Matching plates. Installed cast only. **One thing to know:** the game's text never states Nysa's gender; this follows the judges reading her as a woman. Details and a fallback in `BEINGS-OFFICER-FACES/ARM.md`.
 - Mira/Tam (F38#16) is the same mechanism (shared body, no variant). LANE-SCENE: if you want it, the derivation script in that folder is reusable; otherwise I can do it next.
 - **CPU-ready, not queued, my order:** STORMRAVEN-ARCS, OFFICER-FACES, FLY-SHOULDER, TRAILPUP-AMBER.
 

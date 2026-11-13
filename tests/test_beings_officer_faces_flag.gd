@@ -1,14 +1,17 @@
 extends "res://tests/test_case.gd"
 
-## BEINGS-OFFICER-FACES (F41#8, F41#18): two appearance-variant records, OFF
-## until GPU-judged. Maren keeps officer_b with her own hair and plate; Nysa
-## moves from officer_a (Varga's face) to an officer_b copy with her own hair
-## and plate. Sera and Varga never change.
+## BEINGS-OFFICER-FACES (F41#8, F41#18): appearance-variant records, OFF until
+## GPU-judged. Maren keeps officer_b with her own hair and plate; Nysa keeps her
+## officer_a face with her own hair and plate (gender-neutral). The record that
+## would move Nysa to a woman's face is held for the owner and never attached.
+## Sera and Varga never change.
 
 const VAR := preload("res://scripts/characters/appearance_variants.gd")
 const MODEL := preload("res://scripts/characters/character_model.gd")
 const TRAINERS := "res://data/config/stormwood_trainers.json"
-const IDS := {"officer_maren_verge_rod": "beings_stormwood_maren", "officer_nysa_deepwood_rod": "beings_stormwood_nysa"}
+const IDS := {"officer_maren_verge_rod": "beings_stormwood_maren", "officer_nysa_deepwood_rod": "beings_stormwood_nysa_hair"}
+## Held for the owner: gives Nysa a woman's face; never attached to a trainer.
+const HELD := "beings_stormwood_nysa"
 
 
 func _trainers() -> Dictionary:
@@ -51,8 +54,8 @@ func test_on_maren_and_nysa_get_their_own_body_and_plate() -> void:
 	assert_true(str(maren.get("body_albedo_override", "")).ends_with("_vis1_maren.png"), "Maren wears her hair texture")
 	assert_true(str(maren.get("model", "")).ends_with("officer_b_lod0.glb"), "Maren keeps officer_b")
 	var nysa := _look(trainers["officer_nysa_deepwood_rod"], settings)
-	assert_eq(str(nysa.get("model", "")), "res://assets/characters/npc_identity/stormwood_nysa/nysa_lod0.glb", "Nysa wears her own body")
-	assert_false(nysa.has("body_albedo_override"), "no officer_a texture is carried onto the new body")
+	assert_true(str(nysa.get("model", "")).ends_with("officer_a_lod0.glb"), "Nysa keeps her own officer_a face")
+	assert_true(str(nysa.get("body_albedo_override", "")).ends_with("_cloth2_nysa.png"), "Nysa wears her hair texture, built on the judged cloth")
 	var plates := {}
 	for look: Dictionary in [maren, nysa]:
 		var plate := str(look.get("portrait", ""))
@@ -63,3 +66,12 @@ func test_on_maren_and_nysa_get_their_own_body_and_plate() -> void:
 	var varga := _look(trainers["lieutenant_varga_rodline_bridge"], settings)
 	assert_eq(str(sera.get("appearance_variant_id", "")), "", "Sera is unchanged")
 	assert_eq(str(varga.get("appearance_variant_id", "")), "", "Varga is unchanged")
+
+
+func test_the_face_swap_record_is_held_and_unattached() -> void:
+	var records: Dictionary = VAR.load_config().get("variants", {})
+	var held: Dictionary = records.get(HELD, {})
+	assert_false(bool(held.get("enabled", true)), "the face-swap record is OFF")
+	assert_true(str(held.get("_why", "")).contains("HELD for the owner"), "it says why it is held")
+	for tr: Dictionary in _trainers().values():
+		assert_true(str(tr.get("appearance_variant_id", "")) != HELD, "%s does not use the held record" % tr.id)

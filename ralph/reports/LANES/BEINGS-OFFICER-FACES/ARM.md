@@ -1,6 +1,6 @@
 # BEINGS-OFFICER-FACES: four officers, four looks (F41#8, F41#18)
 
-**Status: CPU-ready, NOT queued.**
+**Status: SPLIT (coordinator, 13 Nov).** Queue `../BEINGS-OFFICER-FACES-MAREN` and `../BEINGS-OFFICER-FACES-NYSA-HAIR`. The face-swap record (`beings_stormwood_nysa`) is held for the owner and is in no overlay. This folder keeps the derivation script and the record of the first build.
 
 **Defect, quoted (3/3 on both 13 Nov verdicts, G-below6-uniform-cloth-c673 and G-below6-staticub-fur-dialogue-c673):** "Lieutenant Sera and Officer Maren share one face, coat and portrait"; "Officer Nysa shows the same male face and portrait as Lieutenant Varga". Ask: separate them, "face or hair and coat colour".
 

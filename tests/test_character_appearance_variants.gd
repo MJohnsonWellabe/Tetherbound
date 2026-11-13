@@ -27,8 +27,9 @@ func test_only_accepted_adair_is_enabled_and_other_records_preserve_base() -> vo
 	# + six npc_identity records + two LANE-KIT F41#8 Stormwood coat variants (ON, judged)
 	# + two LANE-KIT F38#17 stronghold officer bodies (Solene, Hald; ON, judged)
 	# + LANE-MESHY meshy_f41_8_bryn_teal (applied only through stormwood distinct_bodies_1111, OFF).
-	# + LANE-BEINGS beings_stormwood_maren and beings_stormwood_nysa (OFF until GPU-judged).
-	assert_eq(records.size(), staged.size() + 13)
+	# + LANE-BEINGS beings_stormwood_maren, beings_stormwood_nysa_hair and the held
+	#   beings_stormwood_nysa (all OFF until GPU-judged or the owner decides).
+	assert_eq(records.size(), staged.size() + 14)
 	var model_candidate: Dictionary = records.get("npc_identity_water_adair_v1", {})
 	assert_eq(model_candidate.get("enabled"), true)
 	var accepted_id := "npc_identity_water_adair_v1"
