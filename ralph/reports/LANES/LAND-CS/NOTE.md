@@ -1,5 +1,10 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## HEAD FOR THE GPU LANE (13 Nov 20:20 UTC): `tb/land-cs` 6b5b789f
+- Contains main b8622117c (#954). Against main it differs only by three flag-off blocks (`forest_layers_1113`, `turf_detail_1113`, `paver_strips_1113`), their code and tests, and report files, so base frames from this head are main's.
+- **Scope (coordinator, 20:03):** Cloudreach rows plus the queued SOILOFF (F41#22/#24). LANE-PLACES has the other Stormwood rows; I start no new Stormwood arms.
+- **Order:** F40#15 (wedge, then grey ramp), F40#2 6.15, F40#17 6.18, F40#16 6.19, F40#3 and F40#6 6.33, F40#9 6.48.
+
 ## OVERLOOK LANDED (#954, main b8622117c); next F40#15 arm ready (13 Nov 21:10 UTC)
 - Both overlook ships are on main (the coordinator landed the two single branches). `tb/land-cs-overlook-land` is not needed.
 - **New arm LAND-CS-OVERLOOK-SEAMS** (F40#15, 5.60): a pixel probe names the plank and slab strips at route_day, vista_dusk, walk_02 and walk_03 as the four `approach_pavers`, buried by the ridge join except for a sunken strip. The arm stops building them; the strips are gone on CPU at all four frames. No collision change. **CPU-ready and held**: SOILOFF and TURFGRAIN are my two waiting arms.
