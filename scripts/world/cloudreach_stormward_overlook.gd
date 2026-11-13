@@ -3,6 +3,7 @@ extends Node3D
 ## Collision-free Stormward threshold. Existing crown, descent and realm gate
 ## retain traversal and progression ownership.
 
+const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 const CONFIG_PATH := "res://data/config/cloudreach_stormward_overlook_visual.json"
 const CASTLE_TOWER := preload("res://assets/buildings/quaternius_castle/SmallSquareTowerBricks.obj")
 const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj")
@@ -56,6 +57,50 @@ func build(materials: Dictionary) -> void:
 			(pane_fix.get("pennant", {}) as Dictionary) if fixed else {})
 	_add_beacons(cfg.get("beacons", []) as Array, bronze,
 			(pane_fix.get("ember", {}) as Dictionary) if fixed else {})
+
+
+## F40#15 `camera_stops_1113` (flag-off). The piers and ruined wings are
+## presentation-only, so the production spring arm passed straight through
+## them: with the trainer beside a wing the lens sat inside the masonry and the
+## occluder fade drew it as translucent "ghost planes" in the sky (GPU
+## walk_02, 3/3). These boxes sit on the rig's occlusion-only layer (mask 0,
+## never a traversal layer), so the arm shortens in front of the stone while
+## walking is unchanged. Returned as a separate node, or null when off: the
+## presentation itself stays collision-free.
+func build_camera_stops() -> Node3D:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var cfg: Dictionary = parsed if parsed is Dictionary else {}
+	var stops: Dictionary = cfg.get("camera_stops_1113", {})
+	if not bool(stops.get("enabled", false)):
+		return null
+	var shrink := float(stops.get("shrink", 0.92))
+	var holder := StaticBody3D.new()
+	holder.name = "StormwardOverlookCameraStops"
+	holder.collision_layer = CAMERA_RIG.OCCLUSION_ONLY_LAYER
+	holder.collision_mask = 0
+	holder.position = position
+	for raw: Variant in cfg.get("survey_piers", []):
+		var spec := raw as Dictionary
+		_add_stop_shape(holder, "PierStop", _v3(spec.position), _v3(spec.size) * shrink,
+			Vector3(0.0, 0.0, deg_to_rad(float(spec.get("lean_deg", 0.0)))))
+	for raw: Variant in cfg.get("ruined_wings", []):
+		var spec := raw as Dictionary
+		_add_stop_shape(holder, "WingStop", _v3(spec.position), _v3(spec.size) * shrink,
+			Vector3(deg_to_rad(float(spec.get("pitch_deg", 0.0))),
+				deg_to_rad(float(spec.get("yaw_deg", 0.0))), deg_to_rad(float(spec.get("roll_deg", 0.0)))))
+	return holder
+
+
+func _add_stop_shape(holder: StaticBody3D, label: String, centre: Vector3, extent: Vector3,
+		turn: Vector3) -> void:
+	var shape := CollisionShape3D.new()
+	shape.name = "%s%02d" % [label, holder.get_child_count() + 1]
+	var box := BoxShape3D.new()
+	box.size = extent
+	shape.shape = box
+	shape.position = centre
+	shape.rotation = turn
+	holder.add_child(shape)
 
 
 func _add_needle(cfg: Dictionary, material: Material) -> void:
