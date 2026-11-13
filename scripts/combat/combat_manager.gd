@@ -7393,6 +7393,10 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary, include_traine
 				invalid_hud.append(path)
 		for property: String in cfg.get("hud_dynamic_controls", []):
 			var value: Variant = hud.get(property)
+			# The roster reports its camera footprint (party_strip.gd), so a
+			# wider named roster does not move the fight camera.
+			if value is Control and (value as Control).has_method("camera_footprint"):
+				value = (value as Control).call("camera_footprint")
 			if value is Control and not controls.has(value): controls.append(value)
 	var margin := clampf(float(cfg.get("hud_margin_px", 12.0)), 0.0, 64.0)
 	# F10#2 candidate: a wider HUD keep-out while the Stormwood sight-line fade

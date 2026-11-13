@@ -714,8 +714,12 @@ func _layout_system_hints() -> void:
 ## once it is clear. Presentation only. combat.json `hud_subject_fade`.
 func fight_occupied_controls() -> Array[Control]:
 	var controls: Array[Control] = []
+	# The roster reports its camera footprint: itself, or with named rows on
+	# (combat_roster_visual.json compact_names_1113) its old compact width.
+	var roster: Control = _party_strip.call("camera_footprint") as Control \
+		if is_instance_valid(_party_strip) and _party_strip.has_method("camera_footprint") else _party_strip
 	for control: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel,
-			_party_strip, _tether_meter, _aim_row, _catch_row, _orb_cluster]:
+			roster, _tether_meter, _aim_row, _catch_row, _orb_cluster]:
 		if is_instance_valid(control) and control.is_visible_in_tree():
 			controls.append(control)
 	if is_instance_valid(_system_overlay) and _system_overlay.is_visible_in_tree():

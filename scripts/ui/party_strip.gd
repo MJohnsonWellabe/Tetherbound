@@ -947,6 +947,11 @@ func set_pinned(pinned: bool) -> void:
 	_pinned = pinned
 	if pinned:
 		_reveal()
+	elif compact and compact_names_enabled():
+		# F39#19 round 2 (G-scene-rosternames, 3/3): with names on, the fight
+		# roster faded to ghost text whenever switching was unavailable (a
+		# stagger). The roster stays up for the whole fight instead.
+		_reveal()
 	else:
 		_fade_timer = UI_TOKENS.T_PARTY_FADE
 
@@ -1053,6 +1058,27 @@ static func compact_names_config() -> Dictionary:
 
 static func compact_names_enabled() -> bool:
 	return not compact_names_config().is_empty()
+
+
+## F39#19 round 2: the fight camera keeps creatures clear of every HUD
+## control's rectangle (combat_hud.gd `fight_occupied_controls`). The named
+## rows are wider, which moved the camera (G-scene-rosternames: F39#7 Medium
+## -1.19). With names on, the camera is handed this footprint at the old
+## compact width instead of the strip itself, so the camera does not move.
+var _camera_footprint: Control = null
+
+
+func camera_footprint() -> Control:
+	if not compact or not compact_names_enabled():
+		return self
+	if not is_instance_valid(_camera_footprint):
+		_camera_footprint = Control.new()
+		_camera_footprint.name = "CameraFootprint"
+		_camera_footprint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_camera_footprint)
+	_camera_footprint.position = Vector2.ZERO
+	_camera_footprint.size = Vector2(COMPACT_ROW_WIDTH, size.y)
+	return _camera_footprint
 
 
 static func compact_row_width() -> float:
@@ -1197,7 +1223,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 		_rows[i].modulate.a = SELECTED_MODULATE
 		_name_labels[i].add_theme_color_override("font_color",
 			UI_TOKENS.TEXT_MUTED if fainted or resting
-			else (UI_TOKENS.TEXT_PRIMARY if selected else UI_TOKENS.TEXT_SECONDARY))
+			else (UI_TOKENS.TEXT_PRIMARY if selected or compact_names_enabled() else UI_TOKENS.TEXT_SECONDARY))
 	# F10#6 review: compact rows hide their names, so the portrait chip carries
 	# the state the name colour did: the active one brightest, benched dimmer,
 	# fainted or resting dimmest (the KO/REST tags still name the state).
