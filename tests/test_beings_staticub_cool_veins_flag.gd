@@ -1,8 +1,9 @@
 extends "res://tests/test_case.gd"
 
 ## BEINGS-STATICUB-COOL: creature_coat_flags.json `beings_staticub_cool_veins`,
-## OFF until GPU-judged. Staticub's shipped storm coat moves toward Stormursa's
-## purple-brown (more blue, less red, never red) and the r10 vein glow map lights.
+## OFF until GPU-judged. Staticub's shipped storm coat goes about a third darker with
+## red trimmed most (adding blue rendered pink under Stormwood's violet light, CPU
+## round 1), so the r10 vein glow map, lit here, reads against it.
 ## The flag sits after below6_staticub_storm_fur so its albedo wins when ON.
 
 const FLAGS_PATH := "res://data/config/creature_coat_flags.json"
@@ -34,7 +35,7 @@ func test_flag_is_off_scoped_and_keys_staticub_only() -> void:
 	assert_true(keys.find(FLAG) > keys.find("below6_staticub_storm_fur"), "it overrides the storm coat when ON")
 
 
-func test_the_coat_is_cooler_than_the_storm_coat_and_never_red() -> void:
+func test_the_coat_is_darker_than_the_storm_coat_and_never_redder() -> void:
 	var coat: Dictionary = (_flags().get(FLAG, {}).get("coats", {}) as Dictionary).get(KEY, {})
 	var mean := func(path: String) -> Color:
 		var image := (load(path) as Texture2D).get_image()
@@ -52,6 +53,9 @@ func test_the_coat_is_cooler_than_the_storm_coat_and_never_red() -> void:
 		return Color(sum.r / count, sum.g / count, sum.b / count)
 	var before: Color = mean.call(STORM)
 	var after: Color = mean.call(str(coat.get("albedo", "")))
-	assert_true(after.b > before.b + 0.03, "more blue (%.3f -> %.3f)" % [before.b, after.b])
+	var value := func(c: Color) -> float: return (c.r + c.g + c.b) / 3.0
+	assert_true(float(value.call(after)) < float(value.call(before)) * 0.8,
+		"the coat is darker (%.3f -> %.3f)" % [value.call(before), value.call(after)])
 	assert_true(after.r < before.r, "less red (%.3f -> %.3f)" % [before.r, after.r])
+	assert_true(after.b / after.r >= before.b / before.r, "no warmer than the storm coat")
 	assert_true(after.r - after.g < before.r - before.g, "the coat moves away from red, not toward it")
