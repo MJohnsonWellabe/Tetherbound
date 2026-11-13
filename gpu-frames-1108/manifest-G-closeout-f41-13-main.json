@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "main-High",
+  "tree": "317b3372fd5c9f5fac54150bc6c6e27fc92c7a1c",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-closeout-f41-13-main/main-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3542,
+  "script_errors": 0,
+  "note": "closeout-f41-13-main (F41#13; 7.37 read on this tree): main 317b3372f as it is (Stormraven night coat, #938), one side, High and Medium; stormraven idle + fulgocobra idle; --fixed-fps 20. Confirming batch with the F38#38 control."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "main-High",
+  "tree": "317b3372fd5c9f5fac54150bc6c6e27fc92c7a1c",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-closeout-f41-13-main/main-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.3707,
+  "script_errors": 0,
+  "note": "closeout-f41-13-main (F41#13; 7.37 read on this tree): main 317b3372f as it is (Stormraven night coat, #938), one side, High and Medium; stormraven idle + fulgocobra idle; --fixed-fps 20. Confirming batch with the F38#38 control."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "main-Medium",
+  "tree": "317b3372fd5c9f5fac54150bc6c6e27fc92c7a1c",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-closeout-f41-13-main/main-Medium/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.3555,
+  "script_errors": 0,
+  "note": "closeout-f41-13-main (F41#13; 7.37 read on this tree): main 317b3372f as it is (Stormraven night coat, #938), one side, High and Medium; stormraven idle + fulgocobra idle; --fixed-fps 20. Confirming batch with the F38#38 control."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "main-Medium",
+  "tree": "317b3372fd5c9f5fac54150bc6c6e27fc92c7a1c",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-closeout-f41-13-main/main-Medium/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.153,
+  "lower_edges": 0.3724,
+  "script_errors": 0,
+  "note": "closeout-f41-13-main (F41#13; 7.37 read on this tree): main 317b3372f as it is (Stormraven night coat, #938), one side, High and Medium; stormraven idle + fulgocobra idle; --fixed-fps 20. Confirming batch with the F38#38 control."
+ }
+]
