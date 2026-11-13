@@ -1,0 +1,178 @@
+[
+ {
+  "label": "F38#2",
+  "frames": [
+   "meadows__nightburrow__hurt.jpg",
+   "meadows__nightburrow__moving.jpg",
+   "meadows__terrapup__hurt.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: creature hurt and movement poses. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename"
+  ]
+ },
+ {
+  "label": "F38#6",
+  "frames": [
+   "meadows__inventory__pickup__good_candy.jpg",
+   "meadows__inventory__pickup__potion_small.jpg",
+   "meadows__inventory__pickup__rare_candy.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: ground pickup identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+  ]
+ },
+ {
+  "label": "F38#12",
+  "frames": [
+   "meadows__inventory__harvest__attack_tonic.jpg",
+   "meadows__inventory__harvest__orb_basic.jpg",
+   "meadows__inventory__harvest__travel_pack.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: harvest reward identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item"
+  ]
+ },
+ {
+  "label": "F38#13",
+  "frames": [
+   "meadows__catching__03-absorbing.jpg",
+   "meadows__catching__03-strike.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: catch sequence camera framing. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+  ]
+ },
+ {
+  "label": "F38#14",
+  "frames": [
+   "meadows__catching__02-orb-in-flight.jpg",
+   "meadows__catching__03-absorbing.jpg",
+   "meadows__catching__03-strike.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: catch effect finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames"
+  ]
+ },
+ {
+  "label": "F38#20",
+  "frames": [
+   "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach.jpg",
+   "meadows__landmark__stronghold__day__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Team Tether stronghold. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ },
+ {
+  "label": "F38#21",
+  "frames": [
+   "meadows__band3_the_river_lock__06__old_mill_crossing__day__close.jpg",
+   "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: ground cover. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks"
+  ]
+ },
+ {
+  "label": "F38#22",
+  "frames": [
+   "meadows__band3_the_river_lock__06__old_mill_crossing__day__close.jpg",
+   "meadows__landmark__band1_trail_camp__day__close.jpg",
+   "meadows__landmark__village__day__close.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: mill and settlements. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+  ]
+ },
+ {
+  "label": "F38#29",
+  "frames": [
+   "meadows__fights__south_bridge_grunt-00-before.jpg",
+   "meadows__fights__south_bridge_grunt-99-after.jpg",
+   "meadows__fights__south_bridge_grunt-a01.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: trainer defeated presentation. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change"
+  ]
+ },
+ {
+  "label": "F39#5",
+  "frames": [
+   "tidewake__swimming__entry.jpg",
+   "tidewake__swimming__surface_mid.jpg",
+   "tidewake__swimming__surface_west.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: surface swimming trainer pose. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming"
+  ]
+ },
+ {
+  "label": "F39#14",
+  "frames": [
+   "tidewake__swimming__entry.jpg",
+   "tidewake__swimming__surface_mid.jpg",
+   "tidewake__swimming__surface_west.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: swimmer water contact. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body"
+  ]
+ },
+ {
+  "label": "F40#15",
+  "frames": [
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+   "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: floating dark strips. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+  ]
+ },
+ {
+  "label": "F40#17",
+  "frames": [
+   "cloudreach__flying__high-perches-crown-rim-out-day.jpg",
+   "cloudreach__flying__high-perches-crown-rim-out-night.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: High Perches rim mushroom. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+  ]
+ },
+ {
+  "label": "F41#10",
+  "frames": [
+   "stormwood__landmark__glass_sink__day__approach.jpg",
+   "stormwood__landmark__glass_sink__day__close.jpg",
+   "stormwood__landmark__glass_sink__golden__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Glass Sink landmark. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints"
+  ]
+ },
+ {
+  "label": "F41#18",
+  "frames": [
+   "stormwood__inventory__character__defector_sable.jpg",
+   "stormwood__inventory__character__grunt_lieutenant_dace.jpg",
+   "stormwood__inventory__character__tether_lieutenant_varga.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: uniformed character readability. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+  ]
+ }
+]

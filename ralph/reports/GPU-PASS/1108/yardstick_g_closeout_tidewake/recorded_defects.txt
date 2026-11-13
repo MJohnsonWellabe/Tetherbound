@@ -1,0 +1,6 @@
+Gs: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Gh: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Bd: "Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled"
+Ff: none
+Rs: "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity"
+Nh: none

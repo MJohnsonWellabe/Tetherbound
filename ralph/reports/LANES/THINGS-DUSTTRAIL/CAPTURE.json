@@ -1,0 +1,21 @@
+{
+ "id": "THINGS-DUSTTRAIL",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "WITHDRAWN 13 Nov, unjudged: the GPU lane confirmed on camera-matched pairs that the bead strings are identical with and without this overlay. See THINGS-TELLDUST.",
+ "tool": "tools/capture_f38_fight.gd, the G-things-foestand-meadows set (south_bridge_grunt, --attack --dodge --tell-frames)",
+ "base": {
+  "tree": "tb/things",
+  "overlay": null
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-DUSTTRAIL/overlay_dust_trail.json"
+ },
+ "rows": {
+  "F38#3": "meadows fight (south_bridge_grunt), High",
+  "F38#28": "Warden fight (--trainer=warden_aldis), Medium and High: the 'ring of white puffs over Terrapup' in frames 02-03 is this same trail",
+  "F38#11": "no-loss"
+ }
+}

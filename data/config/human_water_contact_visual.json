@@ -19,5 +19,4 @@
     "grow_to": 2.3,
     "trail_opacity_scale": 0.85,
     "_why_on": "ON (owner 4 Nov 2026: land every judged improvement): NEAR6-TW qj/r14 F39#14 CPU 6.10 -> 6.80 (three code-blind judges all higher, calibrated, anchor RMSE 0.52; wake defect PRESENT -> PARTIAL; judges note a slightly radial, stamped wake)."
-  }
-}
+  }, "soft_churn_1112": {"enabled": false, "scope": "presentation: local and remote human swimmer foam rings; no physics, save or authority state", "_candidate": "LANE-BELOW6 (13 Nov 2026), F39#5 (5.98) and F39#14 (6.12) after G-below6-swim-sea-r5 (3/3): 'a radial pinwheel seam at the centre of the wake foam'. The churn inside the foam lip was broken up by angle alone, so its gaps converge on the centre as spokes. ON: the churn breaks up in patches across the disc and fades toward the centre; the lip is unchanged. Shader value only. OFF until judged.", "amount": 1.0}}

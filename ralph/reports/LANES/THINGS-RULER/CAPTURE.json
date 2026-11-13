@@ -1,0 +1,13 @@
+{
+ "id": "THINGS-RULER",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "QUEUED 12 Nov (takes the slot ahead of THINGS-STORMRULE, which is held)",
+ "tool": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --roles=hit,faint",
+ "base": {"tree": "main", "overlay": null, "extra_args": ""},
+ "arm": {"tree": "main", "overlay": null, "extra_args": "--clear-ruler"},
+ "rows": {
+  "F36 (1) pose rows": ["mirejaw", "brooktail", "shadelet", "riftfrill", "sparkit", "ashtusk"]
+ }
+}

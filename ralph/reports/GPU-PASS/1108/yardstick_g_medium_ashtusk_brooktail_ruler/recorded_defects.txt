@@ -1,0 +1,5 @@
+Ba: none
+Bt: "about trainer height"
+Yb: "near-black plates merge with shadow"; "faint is an armoured ball"
+Kr: none
+Td: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

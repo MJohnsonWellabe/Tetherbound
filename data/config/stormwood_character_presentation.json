@@ -8,6 +8,8 @@
     "night_rim": {"strength": 0.20, "tint": 0.12}
   },
   "rank_uniforms": {"grunt": "grunt", "officer": "officer", "lieutenant": "officer", "captain": "captain"},
+  "named_posts_1112": {"enabled": false, "scope": "client_presentation", "_candidate": "LANE-BELOW6 (12 Nov 2026), F41#8 named silhouettes (GPU High 5.80; G-places-swing2: the road under the villagers is 'a near-black slab' and 'the characters' feet vanish into it', 3/3). The road is LANE-PLACES'. Character side: Elder Maud, Rodkeeper Hesk and Warden-elect Bryn each keep a storm lantern at their post (the installed lantern-pool post model), a step behind and to one side; its warm light pools on the ground at their feet and keys the figure. Visual only: no collider, position, dialogue or progression change. OFF until GPU-judged.", "ids": ["elder_maud", "rodkeeper_hesk", "warden_elect_bryn"], "offset_m": [-1.9, 0.3], "light_colour": "#ffc77a", "light_energy": 4.2, "light_range_m": 11.0},
+  "named_tint_1112": {"enabled": false, "scope": "client_presentation", "_candidate": "LANE-BELOW6 (12 Nov 2026), F41#8 (GPU High 5.92; G-below6-namedposts 3/3: 'speakers' faces burn orange-white'). CPU checks: emission floor 0 and rim 0.2 both leave the faces white, so it is the storm light on pale skin and hair. Each listed villager's body albedo is multiplied by a neutral grey (character_model tint); no emission, light or texture change. OFF until judged.", "tints": {"elder_maud": "#a8a8a8", "rodkeeper_hesk": "#b0b0b0", "warden_elect_bryn": "#b0b0b0"}},
   "identity_floor_1112": {
     "enabled": true,
     "_why_on": "ON (GPU High G-below6-marrow, 12 Nov 2026; ralph/reports/GPU-PASS/1108/G-below6-marrow.md on tb/item-scout-1108 168422e80): Captain Marrow's two dialogue frames 4.55 -> 5.95 (+1.40), 3/3 prefer the arm. Judged together with character_body_flags.json below6_marrow_self_lit_off. Owner 4 Nov: a judged gain ships ON.",
@@ -16,7 +18,7 @@
     "floors": {"marrow": 0.0}
   },
   "lieutenant_rim_scale": 1.28,
-  "rank_marks_1104": {
+  "uniform_cloth_floor_1113": {"enabled": false, "scope": "client_presentation", "_candidate": "LANE-BELOW6 (13 Nov 2026), F41#18. Pairs with character_body_flags.json below6_uniform_cloth (mid-value cloth textures for the row's three bodies): with lit mid-value cloth the 0.18 uniform floor only adds the chalky wash the judges name, so uniformed ranks take 0.04. Do not enable it without the cloth: on dark cloth it repeats the parked floor-0 arm. OFF until GPU-judged.", "emission_floor": 0.04}, "rank_marks_1104": {
     "enabled": false,
     "scope": "client_presentation",
     "_why": "VIS-STORMWOOD (4 Nov 2026), F41#18 P2-056 (GPU 3.91; CPU v1/b11 5.98 with rim r1, judges: 'still no rank read', asked for 'a stronger rim or a pale trim'): pale shoulder knots on both upper-arm bones and a collar ring in the identity colour, larger for lieutenants and the captain, so a uniformed figure carries light accents at normal camera distance. Presentation only (stormwood_character_presentation.gd rank_marks). OFF until judged.",

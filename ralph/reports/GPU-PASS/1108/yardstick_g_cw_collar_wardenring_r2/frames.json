@@ -1,0 +1,4 @@
+{"G F36#46": {"section": "G-below6-fulgocobra-collar-poses", "commit": "f919d655e", "frames": ["fulgocobra-hit-000", "fulgocobra-hit-050", "fulgocobra-faint-050", "fulgocobra-faint-100"], "crop": [560, 200, 1560, 840], "grid": "2x2"},
+ "G Fulgocobra world states": {"section": "G-below6-fulgocobra-collar-world", "commit": "29e40f773", "frames": ["stormwood__fulgocobra__idle", "moving", "attacking", "hurt", "resting", "fainted"], "grid": "2x3", "omitted": "shiny_idle (identical on both sides)"},
+ "G F38#28 High r1-vs-r2": {"section": "G-things-wardenring-r2-high", "commit": "94da43aeb", "frames": ["warden_aldis-03", "warden_aldis-05", "warden_aldis-08"], "grid": "stacked"},
+ "G Warden fight other frames High r1-vs-r2": {"section": "G-things-wardenring-r2-high", "commit": "94da43aeb", "frames": ["warden_aldis-r04", "warden_aldis-r16", "warden_aldis-a03"], "grid": "2x2"}}

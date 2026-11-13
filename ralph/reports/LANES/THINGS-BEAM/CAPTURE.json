@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-BEAM",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; not queued (arms still waiting). Code change, no overlay: base is main, arm is tb/things.",
+ "tool": "tools/phase2_capture_catch.gd --biome=meadows --seed=2042",
+ "base": {"tree": "main", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": null},
+ "rows": {"F38#7": ["job.json frames"], "ride-along": ["F38#33 frames", "F38#14 frames"]}
+}

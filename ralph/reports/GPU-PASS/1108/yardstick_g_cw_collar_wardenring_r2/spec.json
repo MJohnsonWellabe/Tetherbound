@@ -1,0 +1,40 @@
+[
+ {
+  "label": "G F36#46",
+  "a": "G-cw_F36_46_base.png",
+  "b": "G-cw_F36_46_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: fulgocobra - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "dark body on the stage",
+   "hood stays up in the faint",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ },
+ {
+  "label": "G Fulgocobra world states",
+  "a": "G-cw_Fulgocobra_world_states_base.png",
+  "b": "G-cw_Fulgocobra_world_states_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Fulgocobra in the world (idle, moving, attacking, hurt, resting, fainted; left to right, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ },
+ {
+  "label": "G F38#28 High r1-vs-r2",
+  "a": "G-cw_F38_28_High_r1_vs_r2_base.png",
+  "b": "G-cw_F38_28_High_r1_vs_r2_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Warden arena boundary (three fight frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+  ]
+ },
+ {
+  "label": "G Warden fight other frames High r1-vs-r2",
+  "a": "G-cw_Warden_fight_other_frames_High_r1_vs_r2_base.png",
+  "b": "G-cw_Warden_fight_other_frames_High_r1_vs_r2_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the Warden fight (three more frames, left to right, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

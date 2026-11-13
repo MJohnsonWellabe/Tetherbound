@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F40#1 row base-vs-arm",
+  "a": "G-gp_F40#1 row_base.png",
+  "b": "G-gp_F40#1 row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: open terrain. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+  ]
+ },
+ {
+  "label": "G F40#1 other views base-vs-arm",
+  "a": "G-gp_F40#1 other views_base.png",
+  "b": "G-gp_F40#1 other views_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind): three places by day, close and approach views. Judge whether these views read as the key art's world at a shipping game's finish - palette, light, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 gate day clear base-vs-arm",
+  "a": "G-gp_F40#0 gate day clear_base.png",
+  "b": "G-gp_F40#0 gate day clear_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) by day in clear weather, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 gate day rain base-vs-arm",
+  "a": "G-gp_F40#0 gate day rain_base.png",
+  "b": "G-gp_F40#0 gate day rain_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) by day in rain, one place from four views (approach, gameplay, reverse and detail; left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, value range, density, landmarks, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ }
+]

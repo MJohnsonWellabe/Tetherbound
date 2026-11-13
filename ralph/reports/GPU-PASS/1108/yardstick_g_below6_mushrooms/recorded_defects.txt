@@ -1,0 +1,8 @@
+Et: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Uz: "none"
+Hj: "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+Zd: "none"
+Zo: none
+Wx: "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+Np: none
+Yg: "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"

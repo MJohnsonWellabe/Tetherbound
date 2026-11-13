@@ -1,0 +1,8 @@
+Am: none
+Mz: "none"
+Dj: "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases"
+Mn: none
+Lw: "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+Wa: "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+Cn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Sh: "The left team roster fades to pale low-contrast text against terrain during active combat"

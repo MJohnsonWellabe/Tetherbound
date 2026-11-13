@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1108",
+ "F36#62 riftfrill": {"section": "G-things-riftfrill-matte @ 6ffa11f4b", "tree": "tb/things 7949eba7c", "base": "no overlay", "arm": "overlay_riftfrill_matte.json"},
+ "F36#87 voltwig": {"High": "G-things-bandfaint base-High voltwig-* @ 29cb35dbe", "Medium": "G-closeout-voltwig-medium @ 872a8dcb6, main fcdf124b4"},
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg",
+ "tiles": "hit-000, hit-050, faint-050, faint-100, crop (560,200,1560,840)"}

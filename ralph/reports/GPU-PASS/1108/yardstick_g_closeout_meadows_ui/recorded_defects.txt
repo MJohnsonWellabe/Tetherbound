@@ -1,0 +1,11 @@
+Pk: "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+Hc: "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+Fk: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Uc: "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world"
+Rv: "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+Jb: "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+Dx: none
+Yk: "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+Kn: "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish"
+Am: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ur: none

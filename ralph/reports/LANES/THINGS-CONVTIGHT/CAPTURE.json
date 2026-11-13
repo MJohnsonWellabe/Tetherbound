@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-CONVTIGHT",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 13 Nov",
+ "tool": "tools/phase2_capture_dialogue.gd (the standard dialogue capture per biome, as in G-things-convclear-*)",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-CONVTIGHT/overlay_conv_tight.json"},
+ "rows": {"F38#17": "meadows trainers", "F38#37": "meadows quarry posts", "F38#16": "meadows tournament", "F39#26": "tidewake", "F40#10": "cloudreach", "F40#12": "cloudreach"}
+}

@@ -1,0 +1,29 @@
+[
+ {
+  "label": "G F41#15 row base-vs-arm",
+  "a": "G-spo_F41#15 row_base.png",
+  "b": "G-spo_F41#15 row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction (three conversations, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G Stormwood dialogue ride-along base-vs-arm",
+  "a": "G-spo_Stormwood dialogue ride-along_base.png",
+  "b": "G-spo_Stormwood dialogue ride-along_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (three conversations, each the dialogue camera on one named speaker with the dialogue panel, top to bottom). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G Stormwood inventory controls base-vs-arm",
+  "a": "G-spo_Stormwood inventory controls_base.png",
+  "b": "G-spo_Stormwood inventory controls_arm.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (a storm forest): six named-character posts seen from the inventory camera. Judge whether these views read as the key art's world at a shipping game's finish - palette, light, value range, density, staging, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ }
+]

@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F40#16 row base-vs-arm",
+  "a": "G-mu_F40-16_row_base.png",
+  "b": "G-mu_F40-16_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: mushroom pickup variants (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+  ]
+ },
+ {
+  "label": "G F40#17 row base-vs-arm",
+  "a": "G-mu_F40-17_row_base.png",
+  "b": "G-mu_F40-17_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: High Perches rim mushroom (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+  ]
+ },
+ {
+  "label": "G High Perches views base-vs-arm",
+  "a": "G-mu_High_Perches_views_base.png",
+  "b": "G-mu_High_Perches_views_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: High Perches island arrival, crown court and departure views (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G Meadows mushrooms base-vs-arm",
+  "a": "G-mu_Meadows_mushrooms_base.png",
+  "b": "G-mu_Meadows_mushrooms_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: mushroom ground pickups (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#6 row base-vs-arm",
+  "a": "G-mu_F38-6_row_base.png",
+  "b": "G-mu_F38-6_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: ground pickup identity (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+  ]
+ }
+]

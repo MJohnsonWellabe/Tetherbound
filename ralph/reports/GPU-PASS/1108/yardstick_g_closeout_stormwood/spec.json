@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F41#1 High-vs-Medium",
+  "a": "G-swm_F41-1_high.png",
+  "b": "G-swm_F41-1_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Stormheart finale. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+  ]
+ },
+ {
+  "label": "G F41#11 High-vs-Medium",
+  "a": "G-swm_F41-11_high.png",
+  "b": "G-swm_F41-11_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character portrait identity. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+  ]
+ },
+ {
+  "label": "G F41#14 High-vs-Medium",
+  "a": "G-swm_F41-14_high.png",
+  "b": "G-swm_F41-14_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: candy pickup tiers. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+  ]
+ },
+ {
+  "label": "G F38#38 High-vs-Medium",
+  "a": "G-swm_F38-38_high.png",
+  "b": "G-swm_F38-38_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Craft and leave button hints are faint gray on the dark translucent craft panel"
+  ]
+ }
+]

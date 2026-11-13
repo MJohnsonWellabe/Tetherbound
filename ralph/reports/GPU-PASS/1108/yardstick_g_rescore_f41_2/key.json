@@ -1,0 +1,23 @@
+{
+ "Ck": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Xa": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Cm": {
+  "anchor": false,
+  "label": "G F41#2 rescore main one-sided",
+  "A": "G-r2_main.png",
+  "B": "G-r2_main.png"
+ },
+ "Eu": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

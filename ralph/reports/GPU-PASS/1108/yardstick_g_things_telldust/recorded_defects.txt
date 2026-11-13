@@ -1,0 +1,9 @@
+Qx: "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+Ss: "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes"
+Vz: none
+Pd: none
+Yk: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Jg: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Fv: "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+Dd: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Dm: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

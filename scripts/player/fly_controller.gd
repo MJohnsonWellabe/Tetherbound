@@ -522,6 +522,7 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 		_player.call("_face", horizontal.normalized(), delta)
 	if _visual != null and _model != null:
 		_visual.rotation.y = _model.rotation.y
+		_bank_visual(horizontal, delta)
 		_pose_bird()
 		_align_grip()
 	if _player.is_on_floor():
@@ -1223,6 +1224,43 @@ func _build_visual(capability: Dictionary) -> void:
 	_player.add_child(_visual)
 	_grip_bones = capability.get("grip_bones", [])
 	_bird_skeleton = carrier_skeleton(_visual)
+
+
+## glide_bank_1112 (LANE-THINGS, 12 Nov 2026; F38#15 judges 3/3: "the glide is
+## a flat, symmetric, fully spread wing"): the carrier art rolls into a turn
+## and dips its nose with forward speed. Art only: movement, collision, the
+## rider and the grip are untouched. Off (the default) leaves the art level.
+var _bank_last_horizontal := Vector3.ZERO
+var _bank_roll := 0.0
+var _bank_pitch := 0.0
+
+
+func _bank_visual(horizontal: Vector3, delta: float) -> void:
+	var bank: Dictionary = config.get("glide_bank_1112", {})
+	if not bool(bank.get("enabled", false)) or delta <= 0.0:
+		return
+	var targets := glide_bank_targets(bank, horizontal, _bank_last_horizontal, delta,
+		_visual.global_transform.basis, float(config.get("speed_mps", 16.0)), float(config.get("acceleration_mps2", 12.0)))
+	_bank_last_horizontal = horizontal
+	var blend := clampf(float(bank.get("response_per_s", 5.0)) * delta, 0.0, 1.0)
+	_bank_roll = lerpf(_bank_roll, targets.x, blend)
+	_bank_pitch = lerpf(_bank_pitch, targets.y, blend)
+	_visual.rotation.z = _bank_roll
+	_visual.rotation.x = _bank_pitch
+
+
+## (roll, pitch) in radians the carrier art leans toward: roll from sideways
+## acceleration across the art's own right axis, pitch from forward speed.
+static func glide_bank_targets(bank: Dictionary, horizontal: Vector3, last_horizontal: Vector3, delta: float,
+		art_basis: Basis, speed_mps: float, acceleration_mps2: float) -> Vector2:
+	var right := art_basis.x.normalized()
+	var sideways := (horizontal - last_horizontal).dot(right) / maxf(delta, 0.0001)
+	var lean := clampf(sideways / maxf(acceleration_mps2, 0.01), -1.0, 1.0)
+	var speed := clampf(horizontal.length() / maxf(speed_mps, 0.01), 0.0, 1.0)
+	var sign_roll := float(bank.get("roll_sign", -1.0))
+	var sign_pitch := float(bank.get("pitch_sign", 1.0))
+	return Vector2(sign_roll * lean * deg_to_rad(float(bank.get("max_bank_deg", 24.0))),
+		sign_pitch * speed * deg_to_rad(float(bank.get("nose_down_deg", 8.0))))
 
 
 func _flight_shape() -> CapsuleShape3D:

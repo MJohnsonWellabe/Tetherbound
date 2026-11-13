@@ -1,0 +1,41 @@
+{
+ "Wg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Gf": {
+  "anchor": false,
+  "label": "G F36#46",
+  "A": "G-cw_F36_46_arm.png",
+  "B": "G-cw_F36_46_base.png"
+ },
+ "Rl": {
+  "anchor": false,
+  "label": "G F38#28 High r1-vs-r2",
+  "A": "G-cw_F38_28_High_r1_vs_r2_arm.png",
+  "B": "G-cw_F38_28_High_r1_vs_r2_base.png"
+ },
+ "Bs": {
+  "anchor": false,
+  "label": "G Warden fight other frames High r1-vs-r2",
+  "A": "G-cw_Warden_fight_other_frames_High_r1_vs_r2_arm.png",
+  "B": "G-cw_Warden_fight_other_frames_High_r1_vs_r2_base.png"
+ },
+ "Jw": {
+  "anchor": false,
+  "label": "G Fulgocobra world states",
+  "A": "G-cw_Fulgocobra_world_states_arm.png",
+  "B": "G-cw_Fulgocobra_world_states_base.png"
+ },
+ "Kc": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Xr": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}

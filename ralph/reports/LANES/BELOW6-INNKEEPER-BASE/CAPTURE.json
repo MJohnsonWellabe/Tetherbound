@@ -1,0 +1,17 @@
+{
+ "row": "F36#29 Innkeeper (Wilhelm) body and face: GPU High baseline, one side, main",
+ "branch": "main",
+ "tool": "res://tools/_capture_character_cast.gd",
+ "args": [],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "overlay": "none (baseline only)",
+ "output": "the tool takes no --out; it writes res://shots/characters/<slug>-front.png and <slug>-threequarter.png for the whole cast. Use innkeeper-front.png and innkeeper-threequarter.png and discard the rest.",
+ "frames": ["innkeeper-front", "innkeeper-threequarter"],
+ "brief": "as ralph/reports/LANES/ITEM-F36-29/qj/noise-r0/spec.json: 'Innkeeper (Wilhelm) body and face, F36(0) close stand', recorded defect 'Soft flat face with low-resolution eyes and mouth, blotchy chalky skin, muddy low-contrast materials and a stiff pose'",
+ "needs_import": "no",
+ "_why": "The row has no GPU High score on the shipped body. Earlier numbers: GPU Medium 5.90 (F36(0) NPC face round, matched camera; per ITEM-F36-29/READY.md), CPU 7.36 on this cast stand (noise-r0), CPU 6.20 on dialogue frames (VIS-STORMWOOD qj_inn). A High number on this stand says whether the row is below 6 at all.",
+ "note": "The CPU prefix in the tool header is 1280x800; the stand is a bare stage, so the resolution only changes the crop."
+}

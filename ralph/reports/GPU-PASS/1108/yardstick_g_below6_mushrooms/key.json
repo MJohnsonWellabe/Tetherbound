@@ -1,0 +1,47 @@
+{
+ "Et": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Uz": {
+  "anchor": false,
+  "label": "G High Perches views base-vs-arm",
+  "A": "G-mu_High_Perches_views_base.png",
+  "B": "G-mu_High_Perches_views_arm.png"
+ },
+ "Hj": {
+  "anchor": false,
+  "label": "G F40#16 row base-vs-arm",
+  "A": "G-mu_F40-16_row_arm.png",
+  "B": "G-mu_F40-16_row_base.png"
+ },
+ "Zd": {
+  "anchor": false,
+  "label": "G Meadows mushrooms base-vs-arm",
+  "A": "G-mu_Meadows_mushrooms_arm.png",
+  "B": "G-mu_Meadows_mushrooms_base.png"
+ },
+ "Zo": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Wx": {
+  "anchor": false,
+  "label": "G F40#17 row base-vs-arm",
+  "A": "G-mu_F40-17_row_base.png",
+  "B": "G-mu_F40-17_row_arm.png"
+ },
+ "Np": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Yg": {
+  "anchor": false,
+  "label": "G F38#6 row base-vs-arm",
+  "A": "G-mu_F38-6_row_base.png",
+  "B": "G-mu_F38-6_row_arm.png"
+ }
+}

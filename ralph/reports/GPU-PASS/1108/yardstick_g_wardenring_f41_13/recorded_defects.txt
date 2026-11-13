@@ -1,0 +1,8 @@
+Nu: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Zs: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Si: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Ff: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Aq: none
+Ak: "none"
+Id: none
+Jm: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

@@ -1,0 +1,80 @@
+[
+ {
+  "label": "F40#2",
+  "frames": [
+   "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach.jpg",
+   "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close.jpg",
+   "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: summit aviary. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark"
+  ]
+ },
+ {
+  "label": "F40#4",
+  "frames": [
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+   "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+   "cloudreach__landmark__three_bells_bridge__day__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: exposed landform edges. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges"
+  ]
+ },
+ {
+  "label": "F40#7",
+  "frames": [
+   "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+   "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach.jpg",
+   "cloudreach__landmark__broken_skyroad_arch__day__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: grass and stone finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites"
+  ]
+ },
+ {
+  "label": "F40#11",
+  "frames": [
+   "cloudreach__riding__phase2_16_terrace_mounted_at_edge.jpg",
+   "cloudreach__riding__phase2_17_terrace_01.0s.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: terrace edge clouds. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor"
+  ]
+ },
+ {
+  "label": "F40#14",
+  "frames": [
+   "cloudreach__menu_map.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: Cloudreach map region label. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis"
+  ]
+ },
+ {
+  "label": "F40#16",
+  "frames": [
+   "cloudreach__inventory__pickup__speed_mushroom.jpg",
+   "cloudreach__inventory__pickup__wild_mushroom.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: mushroom pickup variants. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+  ]
+ },
+ {
+  "label": "F40#18",
+  "frames": [
+   "cloudreach__catching__09-caught-banner.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: full-party catch choice legibility. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice instructions at the screen bottom"
+  ]
+ }
+]

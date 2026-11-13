@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.088,
+  "lower_edges": 0.3683,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.29,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.028,
+  "lower_edges": 0.326,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3195,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.077,
+  "lower_edges": 0.2472,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.139,
+  "lower_edges": 0.4342,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.3436,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "sky_fraction": 0.166,
+  "lower_edges": 0.4283,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "sky_fraction": 0.193,
+  "lower_edges": 0.3904,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "preset": "arm-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/arm-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.386,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.083,
+  "lower_edges": 0.3668,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.2922,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.025,
+  "lower_edges": 0.3265,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.3184,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.245,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.218,
+  "lower_edges": 0.4348,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "sky_fraction": 0.0,
+  "lower_edges": 0.3514,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.4262,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "sky_fraction": 0.197,
+  "lower_edges": 0.3936,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "511dba55d6fb8f149e76750068dc3803b7bbb3c2",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-things-redleaf/base-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.3875,
+  "script_errors": 0,
+  "note": "THINGS-REDLEAF two-tree confirm (#930): base main f5263ebc7 (before) vs arm main 511dba55d (after), no overlay; burrow_warrens + stronghold_approach routes; High. F38#30 walk_02/03_day; F38#24 job frames walk_02_day, walk_03_day, stronghold_approach route_day. CAUTION: in stronghold_approach route_day the arm's distant mountains render tan-orange vs blue-grey on base (clock identical; #930 touches only harvest_node.gd) - likely a far-backdrop load state, not the fix."
+ }
+]

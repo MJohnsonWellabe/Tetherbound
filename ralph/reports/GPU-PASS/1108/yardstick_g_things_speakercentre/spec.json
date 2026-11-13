@@ -1,0 +1,29 @@
+[
+ {
+  "label": "G meadows dialogue relay picket Hess base-vs-arm",
+  "a": "G-sc_trainer__relay_picket_hess_base.png",
+  "b": "G-sc_trainer__relay_picket_hess_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: one named-character conversation (the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G meadows dialogue stronghold patrol base-vs-arm",
+  "a": "G-sc_trainer__stronghold_patrol_base.png",
+  "b": "G-sc_trainer__stronghold_patrol_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: one named-character conversation (the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G meadows dialogue Rae base-vs-arm",
+  "a": "G-sc_character__rae_base.png",
+  "b": "G-sc_character__rae_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: one named-character conversation (the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

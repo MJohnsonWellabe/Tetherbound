@@ -1,0 +1,4 @@
+Xi: none
+Lt: "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+Hk: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Lv: none

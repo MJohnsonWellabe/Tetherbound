@@ -1,0 +1,31 @@
+{
+ "row": "F41#1 Stormheart finale (row 5.66, close-only 5.95 with the heartwood)",
+ "branch": "tb/below6",
+ "base": "main with heartwood_1111 ON (after PR #912)",
+ "tool": "res://tools/phase2_capture_locations.gd",
+ "args": [
+  "--biome=stormwood",
+  "--subset=stormwood__dynamo__12__the_stormheart_tree",
+  "--subset=stormwood__landmark__dynamo_core",
+  "--times=day",
+  "--views=approach,close",
+  "--seed=2042",
+  "--output={OUT}"
+ ],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080"],
+ "resolution": [1920, 1080],
+ "frames": [
+  "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+  "stormwood__dynamo__12__the_stormheart_tree__day__close",
+  "stormwood__landmark__dynamo_core__day__approach",
+  "stormwood__landmark__dynamo_core__day__close"
+ ],
+ "presets": ["High"],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-RAMP/overlay_approach.json (heartwood on, split_bark_finish.aged_heartwood_1112 on, capture_stands.json approach_overrides on)",
+ "capture_both": "base (main, heartwood on, old stands) and arm (overlay), same command",
+ "needs_import": "no new asset. The capture tool file itself changes (tools/phase2_capture_locations.gd): the arm must run this branch's tool",
+ "_why": "Both approach frames faced a bark wall from 5 m with the split's orange exposed wood at the left edge (3/3 'untextured placeholder', about 0.3 on the row). Arm: the approach views move to the road at (-100, 5300) looking north (GPU screen G-stormheart-stand-screen: trunk and arched gate centre-frame), and the exposed wood is aged to grey-brown.",
+ "want_to_see": "approach frames: the Stormheart trunk and gate centre-frame at the end of the road, as in the screen's spot a. Close frames: unchanged from base (the heartwood). The two approach frames will be near-identical to each other (same stand for both destinations).",
+ "stand_note": "This is a stand change: the approach frames are re-baselined, not compared like-for-like with the old stand. The in-game change beside it is the aged heartwood, which the new stand may not show; `ramp_body_1112` (flag off, built) can be added to the overlay if the entrance ramp is in frame and reads as a thin sheet."
+}

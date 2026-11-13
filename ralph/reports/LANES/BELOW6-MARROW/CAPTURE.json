@@ -1,0 +1,36 @@
+{
+ "row": "F41#15 (4.49) and F41#7 (6.24): Captain Marrow's blown-out head",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_dialogue.gd",
+ "args": [
+  "--biome=stormwood",
+  "--subset=captain_marrow",
+  "--output={OUT}"
+ ],
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080",
+  "--fixed-fps",
+  "20"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "frames": [
+  "stormwood__inventory__character__captain_marrow__dialogue",
+  "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+ ],
+ "overlay": "ralph/reports/LANES/BELOW6-MARROW/overlay.json",
+ "capture_both": "base (main, overlay off) and arm (overlay on), same command as G-dialogue-recapture-stormwood used for these two frames",
+ "needs_import": "yes: one new texture, assets/characters/captain_a/captain_a_lod0_texture_0_floor1.png",
+ "_why": "Marrow's body emits its own albedo texture plus a 0.18 white floor that comes from stormwood_character_presentation.json (not npc_ranks.json, which the earlier arms changed). Arm: emission texture off, his floor 0, pale texels compressed by half.",
+ "want_to_see": "a readable face (eye, nose, mouth, eyepatch) and dark armour with contrast, instead of a white ball on a lilac body. If the head is still white, say so: the remainder is scene light.",
+ "note": "CPU used --subset=stormwood__inventory__character__captain_marrow; use whatever selector the dialogue re-capture used for the two Marrow frames."
+}

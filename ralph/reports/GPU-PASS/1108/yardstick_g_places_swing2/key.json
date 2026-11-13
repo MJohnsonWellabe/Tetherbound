@@ -1,0 +1,41 @@
+{
+ "Tw": {
+  "anchor": false,
+  "label": "G F41#8 base-vs-arm",
+  "A": "G-s2_F41-8_swing2.png",
+  "B": "G-s2_F41-8_base.png"
+ },
+ "Xq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Bv": {
+  "anchor": false,
+  "label": "G F41#4 base-vs-arm",
+  "A": "G-s2_F41-4_swing2.png",
+  "B": "G-s2_F41-4_base.png"
+ },
+ "Tx": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Sz": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Vw": {
+  "anchor": false,
+  "label": "G F41#12 base-vs-arm",
+  "A": "G-s2_F41-12_swing2.png",
+  "B": "G-s2_F41-12_base.png"
+ },
+ "Nh": {
+  "anchor": false,
+  "label": "G F41#5 base-vs-arm",
+  "A": "G-s2_F41-5_base.png",
+  "B": "G-s2_F41-5_swing2.png"
+ }
+}

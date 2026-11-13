@@ -1,0 +1,62 @@
+[
+ {
+  "label": "forest",
+  "frames": [
+   "forest_calm.jpg",
+   "forest_break.jpg",
+   "forest_aftermath_calm.jpg"
+  ],
+  "brief": "Fixed captures from the game of one Stormwood place (the Deepwood forest heart) from the gameplay camera: left, the storm in its Calm phase; middle, the storm at Break (lightning); right, the same place in the calm aftermath once the long storm has ended (lighter rain, no lightning, strike scars). Judge how this place looks in the game - whether it reads as the key art's Stormwood (fixed purple storm sky, cool blue-green moss, copper and glass highlights, black pools, white-violet lightning), with believable form, material, light and staging in each state.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "giant",
+  "frames": [
+   "giant_calm.jpg",
+   "giant_break.jpg",
+   "giant_aftermath_calm.jpg"
+  ],
+  "brief": "Fixed captures from the game of one Stormwood place (a Fallen Giant grove trunk) from the gameplay camera: left, the storm in its Calm phase; middle, the storm at Break (lightning); right, the same place in the calm aftermath once the long storm has ended (lighter rain, no lightning, strike scars). Judge how this place looks in the game - whether it reads as the key art's Stormwood (fixed purple storm sky, cool blue-green moss, copper and glass highlights, black pools, white-violet lightning), with believable form, material, light and staging in each state.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "glass",
+  "frames": [
+   "glass_calm.jpg",
+   "glass_break.jpg",
+   "glass_aftermath_calm.jpg"
+  ],
+  "brief": "Fixed captures from the game of one Stormwood place (a Glass Field strike scar beside the road) from the gameplay camera: left, the storm in its Calm phase; middle, the storm at Break (lightning); right, the same place in the calm aftermath once the long storm has ended (lighter rain, no lightning, strike scars). Judge how this place looks in the game - whether it reads as the key art's Stormwood (fixed purple storm sky, cool blue-green moss, copper and glass highlights, black pools, white-violet lightning), with believable form, material, light and staging in each state.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "rod_line",
+  "frames": [
+   "rod_line_calm.jpg",
+   "rod_line_break.jpg",
+   "rod_line_aftermath_calm.jpg"
+  ],
+  "brief": "Fixed captures from the game of one Stormwood place (the Ash Road rod line) from the gameplay camera: left, the storm in its Calm phase; middle, the storm at Break (lightning); right, the same place in the calm aftermath once the long storm has ended (lighter rain, no lightning, strike scars). Judge how this place looks in the game - whether it reads as the key art's Stormwood (fixed purple storm sky, cool blue-green moss, copper and glass highlights, black pools, white-violet lightning), with believable form, material, light and staging in each state.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ },
+ {
+  "label": "stormheart",
+  "frames": [
+   "stormheart_calm.jpg",
+   "stormheart_break.jpg",
+   "stormheart_aftermath_calm.jpg"
+  ],
+  "brief": "Fixed captures from the game of one Stormwood place (the Stormheart from the southern approach) from the gameplay camera: left, the storm in its Calm phase; middle, the storm at Break (lightning); right, the same place in the calm aftermath once the long storm has ended (lighter rain, no lightning, strike scars). Judge how this place looks in the game - whether it reads as the key art's Stormwood (fixed purple storm sky, cool blue-green moss, copper and glass highlights, black pools, white-violet lightning), with believable form, material, light and staging in each state.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame matrix"
+  ]
+ }
+]

@@ -1,0 +1,21 @@
+{
+ "id": "THINGS-CLOUDNIGHT",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "ROUND 2 READY 13 Nov (round 1: G-things-cloudnight-941, do not ship; three stands lost 0/3). tb/things already contains main 30d00e6b; no local merge needed.",
+ "tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache",
+ "base": {
+  "tree": "tb/things",
+  "overlay": null
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-CLOUDNIGHT/overlay_night_moonlit_cast_r2.json"
+ },
+ "rows": {
+  "F40#0, F40#19, F40#21": {
+   "pieces": "the same night clear and night rain pieces as round 1, including the no-loss set (Three Bells, Windscar Beacon, Flight Aerie)"
+  }
+ }
+}

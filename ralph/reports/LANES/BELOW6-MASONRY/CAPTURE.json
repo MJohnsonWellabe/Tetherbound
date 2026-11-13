@@ -1,0 +1,22 @@
+{
+ "row": "F40#15 floating dark strips (5.89): what holds it now is 'stretched giant cobbles on the Cloudreach wall'",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_routes.gd",
+ "captures": [
+  {"args": ["--biome=cloudreach", "--subset=cloudreach__summit_final_stronghold__12__stormward_overlook", "--seed=2042", "--output={OUT}"],
+   "frames": ["cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day"]},
+  {"args": ["--biome=cloudreach", "--subset=cloudreach__windscar_ravine__06__windscar_flight_aerie", "--seed=2042", "--output={OUT}"],
+   "frames": ["cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk"]}
+ ],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-MASONRY/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same commands as G-rescore-stale-tier2 used for F40#15",
+ "needs_import": "no",
+ "controls": "the flag changes every Cloudreach masonry and trim piece (Sky Shrine pillars and steps, the aviary, gate footings, terrace courses). Please add two or three frames with masonry in them as a no-loss set, e.g. the Sky Shrine close frame and an aviary frame.",
+ "_why": "3/3: 'stretched giant cobbles on the Cloudreach wall'. The shared masonry tiles once every 3.6 m in world space, so one cobble is about a metre across. Arm: tile 0.7 (once every 1.4 m) and a step lighter wall stone.",
+ "want_to_see": "wall stones clearly smaller than the trainer's torso in the walk_03 frame, reading as built masonry. Say if the finer brick reads as noise at distance on the control frames.",
+ "note": "CPU captured the Stormward Overlook set only (walk_03 and route_day); the aerie dusk frame is not CPU-captured. On the near pier the stones are still uneven across the face: the pier is a castle tower mesh stretched to its size."
+}

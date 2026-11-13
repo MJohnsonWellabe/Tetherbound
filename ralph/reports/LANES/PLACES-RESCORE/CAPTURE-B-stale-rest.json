@@ -1,0 +1,14 @@
+{
+ "id": "G-rescore-stale-rest",
+ "kind": "one-sided re-score",
+ "base": "main (current), High, each row's own job.json frames",
+ "why": "board scores dated 8-9 Nov that are not in the GPU lane's running stale batches",
+ "rows_by_biome": {
+  "meadows": ["F38#4", "F38#7", "F38#9", "F38#13", "F38#15", "F38#18", "F38#21", "F38#23", "F38#33", "F38#38"],
+  "tidewake": ["F39#4", "F39#8", "F39#24", "F39#25", "F39#28"],
+  "cloudreach": ["F40#18"],
+  "stormwood": ["F41#17"]
+ },
+ "skipped": {"F38#41": "no job.json entry on main", "F40#1": "re-scored on 12 Nov inside G-places-gatepaving and G-places-wetpath; LANE-BELOW6 owns it"},
+ "flags_wanted": "rows at 7.5 or above at High need a Medium capture next: F38#18 (7.95), F38#23 (7.58) and F38#38 (8.16) are the likely ones"
+}

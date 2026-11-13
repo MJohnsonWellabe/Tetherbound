@@ -1,0 +1,106 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 10,
+  "pearson_r": 0.7853,
+  "least_squares_slope": 1.0197,
+  "method": "linear",
+  "slope": 1.0197,
+  "intercept": 0.2953,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.715,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C3A": {
+   "measured": 5.067,
+   "reference": 4.6,
+   "mapped": 5.462,
+   "residual": -0.862
+  },
+  "f36_0_npc:C3B": {
+   "measured": 5.167,
+   "reference": 4.53,
+   "mapped": 5.563,
+   "residual": -1.033
+  },
+  "f36_0_gap:C2B": {
+   "measured": 5.833,
+   "reference": 6.9,
+   "mapped": 6.243,
+   "residual": 0.657
+  },
+  "f36_0_gap:C2A": {
+   "measured": 6.867,
+   "reference": 6.83,
+   "mapped": 7.297,
+   "residual": -0.467
+  },
+  "craft:after": {
+   "measured": 6.8,
+   "reference": 7.35,
+   "mapped": 7.229,
+   "residual": 0.121
+  },
+  "craft:before": {
+   "measured": 4.967,
+   "reference": 4.83,
+   "mapped": 5.36,
+   "residual": -0.53
+  },
+  "f04_6_r22:control": {
+   "measured": 4.733,
+   "reference": 5.83,
+   "mapped": 5.122,
+   "residual": 0.708
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.933,
+   "reference": 6.75,
+   "mapped": 6.345,
+   "residual": 0.405
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.867,
+   "reference": 6.53,
+   "mapped": 5.258,
+   "residual": 1.272
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.9,
+   "reference": 4.0,
+   "mapped": 4.272,
+   "residual": -0.272
+  }
+ },
+ "candidates": {
+  "F38#8": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.18,
+   "mapped_judges": [
+    6.11,
+    6.21,
+    6.21
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#13": {
+   "measured_mean": 5.567,
+   "mapped_mean": 5.97,
+   "mapped_judges": [
+    5.9,
+    6.01,
+    6.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

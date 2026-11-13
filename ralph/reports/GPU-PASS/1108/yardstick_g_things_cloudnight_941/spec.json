@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F40#0 night clear",
+  "a": "G-cn_F40_0_night_clear_base.png",
+  "b": "G-cn_F40_0_night_clear_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at night in clear weather, nine places from the gameplay camera. Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#0 night rain",
+  "a": "G-cn_F40_0_night_rain_base.png",
+  "b": "G-cn_F40_0_night_rain_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at night in rain, nine places from the gameplay camera. Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F40#21 night clear",
+  "a": "G-cn_F40_21_night_clear_base.png",
+  "b": "G-cn_F40_21_night_clear_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome at night in clear weather, nine places from an approach view. Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating bodies or clipping, and whether the views otherwise read as the key art's world at a shipping game's finish.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "G F40#19 night rain sky",
+  "a": "G-cn_F40_19_night_rain_sky_base.png",
+  "b": "G-cn_F40_19_night_rain_sky_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at night in rain, the sky at one gate crag, four views (left to right, top to bottom). Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G Night other stands",
+  "a": "G-cn_Night_other_stands_base.png",
+  "b": "G-cn_Night_other_stands_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome (high cliffs, sky islands and wind) at night, three places from the gameplay camera, clear weather on the top row and rain on the bottom row. Judge whether these views read as the key art's world at a shipping game's finish - palette, light, time of day, weather, depth - and anything that reads as a defect.",
+  "defects": [
+   "none"
+  ]
+ }
+]

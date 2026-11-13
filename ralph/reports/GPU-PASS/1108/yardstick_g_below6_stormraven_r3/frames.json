@@ -1,0 +1,2 @@
+{"branch": "tb/gpu-frames-1108", "section": "G-below6-stormraven-r3", "commit": "87c76c7b4", "renderer": "High", "tree": "tb/below6 e150f1cad both sides", "base": "no overlay", "arm": "BELOW6-STORMRAVEN/overlay_night.json",
+ "sets": {"F41#13 row": ["stormwood__stormraven__idle", "stormwood__fulgocobra__idle"]}}

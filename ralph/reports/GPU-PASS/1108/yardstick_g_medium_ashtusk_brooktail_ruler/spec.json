@@ -1,0 +1,21 @@
+[
+ {
+  "label": "G F36(1) ashtusk ruler Medium base-vs-arm",
+  "a": "G-abm_ashtusk_base.png",
+  "b": "G-abm_ashtusk_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: ashtusk - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black plates merge with shadow",
+   "faint is an armoured ball"
+  ]
+ },
+ {
+  "label": "G F36(1) brooktail ruler Medium base-vs-arm",
+  "a": "G-abm_brooktail_base.png",
+  "b": "G-abm_brooktail_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: brooktail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "about trainer height"
+  ]
+ }
+]

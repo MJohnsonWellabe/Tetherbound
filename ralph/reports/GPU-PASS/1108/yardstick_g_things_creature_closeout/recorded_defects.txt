@@ -1,0 +1,10 @@
+Tk: "near-black plates merge with shadow"; "a thin line floats above the back"; "tusks clip into the floor in the hit reaction"
+Uh: "none"
+Uw: "glossy dark purple"
+Nu: none
+Tq: none
+Aw: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Lw: "oversized glowing spots read as a decal pattern"; "dark head with unreadable eyes"
+Ys: "oversized glowing spots read as a decal pattern"; "dark head with unreadable eyes"
+Re: "near-black plates merge with shadow"; "a thin line floats above the back"; "tusks clip into the floor in the hit reaction"
+Zv: "flat black placeholder look with emissive bands"; "faint flattens to a sheet"

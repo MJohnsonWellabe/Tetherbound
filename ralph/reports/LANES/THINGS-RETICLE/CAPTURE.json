@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-RETICLE",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; queue when a slot frees (F38#7 at 7.49: High then Medium)",
+ "tool": "tools/phase2_capture_catch.gd --biome=meadows --seed=2042 (and --biome=tidewake for the no-loss frame)",
+ "base": {"tree": "main", "overlay": null},
+ "arm": {"tree": "main", "overlay": "ralph/reports/LANES/THINGS-RETICLE/overlay_reticle_ring.json (on tb/things)"},
+ "rows": {"F38#7": ["job.json frames"], "no-loss": ["F39#23 catch_low / catch_high"]}
+}

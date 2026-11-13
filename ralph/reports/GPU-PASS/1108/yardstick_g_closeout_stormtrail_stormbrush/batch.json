@@ -1,0 +1,46 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   6.8,
+   6.8,
+   7.2
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.8,
+   7.2
+  ],
+  "f04_6_r22:r22": [
+   6.0,
+   5.6,
+   6.4
+  ],
+  "f04_6_r22:control": [
+   5.0,
+   4.9,
+   5.6
+  ],
+  "craft:before": [
+   5.3,
+   5.0,
+   5.6
+  ],
+  "craft:after": [
+   6.9,
+   6.8,
+   7.2
+  ]
+ },
+ "candidates": {
+  "G F36(1) stormtrail High main one-sided": [
+   6.95,
+   6.55,
+   7.0
+  ],
+  "G F36(1) stormbrush Medium main one-sided": [
+   7.0,
+   6.9,
+   7.1
+  ]
+ }
+}

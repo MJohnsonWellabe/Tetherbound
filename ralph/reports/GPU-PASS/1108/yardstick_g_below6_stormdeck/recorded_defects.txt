@@ -1,0 +1,5 @@
+Ye: "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+Nz: "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+Kr: none
+Ob: none
+Xt: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

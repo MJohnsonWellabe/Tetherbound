@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1108", "renderer": "High", "tree": "tb/below6 e948b35aa both sides", "base": "no overlay", "arm": "BELOW6-KNIFEEDGE/overlay.json",
+ "sections": {"G-below6-knife-bridge": "11de0b4d6", "G-below6-knife-f40-15": "46dee6378", "G-below6-knife-gate": "ad01b8691", "G-below6-knife-summit": "b9b4ca021"},
+ "sets": {"F40#8 row": ["three_bells_bridge__day__close", "three_bells_bridge__golden__close", "three_bells_bridge__night__close"],
+  "F40#15 row": ["stormward_overlook__walk_03_day", "windscar_flight_aerie__vista_dusk"],
+  "Overlook and aerie routes": ["stormward_overlook__walk_01_day", "stormward_overlook__route_day", "windscar_flight_aerie__route_day"],
+  "F40#0 road ends (2x2)": ["realm_gate_crag__approach", "realm_gate_crag__gameplay", "summit_eyrie__approach", "summit_eyrie__reverse"]}}

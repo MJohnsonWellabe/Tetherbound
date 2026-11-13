@@ -269,7 +269,7 @@ func _light_speaker(who: Node3D, rig: Node, cfg: Dictionary) -> void:
 		var light := OmniLight3D.new()
 		light.name = "ConversationSpeaker_" + name
 		light.light_color = Color(str(spec.get("colour", "#ffffff")))
-		light.light_energy = float(spec.get("energy", 1.0))
+		light.light_energy = float(spec.get("energy", 1.0)) * speaker_light_scale(light_cfg as Dictionary, _current_realm())
 		light.omni_range = float(spec.get("range", 4.0))
 		light.omni_attenuation = float(spec.get("attenuation", 1.0))
 		light.shadow_enabled = false
@@ -277,6 +277,22 @@ func _light_speaker(who: Node3D, rig: Node, cfg: Dictionary) -> void:
 		add_child(light)
 		light.global_position = at[name]
 		_speaker_lights.append(light)
+
+
+## `speaker_light_candidate.realm_energy_1112` (OFF by default; LANE-THINGS,
+## 12 Nov): in Stormwood's dark scenes the key and rim blow the speaker out
+## (Officer Nysa and Captain Marrow read as white, the player's head blooms at
+## the left edge; GPU, 3/3). When on, both lights are scaled per realm.
+static func speaker_light_scale(light_cfg: Dictionary, realm: String) -> float:
+	var block: Variant = light_cfg.get("realm_energy_1112", {})
+	if not (block is Dictionary and bool((block as Dictionary).get("enabled", false))):
+		return 1.0
+	return float(((block as Dictionary).get("scale", {}) as Dictionary).get(realm, 1.0))
+
+
+func _current_realm() -> String:
+	var game := get_node_or_null(^"/root/Game") if is_inside_tree() else null
+	return str(game.get("current_realm")) if game != null else ""
 
 
 func _clear_speaker_lights() -> void:

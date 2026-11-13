@@ -1,0 +1,6 @@
+Fe: none
+Zw: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Sc: "none"
+Pr: "none"
+Km: "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+Kb: none

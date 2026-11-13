@@ -1,0 +1,64 @@
+{
+ "row": "Stormwood top-deck dialogue frames (F41#7, #11, #15, #20) and the split-facing frame; contains STORMDRESS plus the deck wood",
+ "branch": "tb/below6",
+ "overlay": "ralph/reports/LANES/BELOW6-STORMDECK/overlay.json",
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "resolution": [
+  1920,
+  1080
+ ],
+ "needs_import": "no",
+ "capture_both": "base and arm for each set, same commands",
+ "sets": [
+  {
+   "name": "marrow_dialogue",
+   "tool": "res://tools/phase2_capture_dialogue.gd",
+   "args": [
+    "--biome=stormwood",
+    "--subset=captain_marrow",
+    "--output={OUT}"
+   ],
+   "godot_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--fixed-fps",
+    "20"
+   ],
+   "frames": [
+    "stormwood__inventory__character__captain_marrow__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+   ],
+   "note": "as G-below6-marrow / G-below6-stormdress; Marrow's fix is on main (#918). If the dialogue re-capture has other top-deck frames for F41#7, #11 and #20 (the DynamoCore deck), add them to this set on both sides."
+  },
+  {
+   "name": "split_facing",
+   "tool": "res://tools/phase2_capture_locations.gd",
+   "args": [
+    "--biome=stormwood",
+    "--subset=zz_no_match",
+    "--spot=split@-101.56,5466.87@26.6",
+    "--times=day",
+    "--views=approach",
+    "--seed=2042",
+    "--output={OUT}"
+   ],
+   "godot_args": [
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080"
+   ],
+   "frames": [
+    "stormwood__spot__split__day__approach"
+   ],
+   "note": "the old approach stand, beside the south split. If the orange slab is absent on base, do not judge this set."
+  }
+ ],
+ "_why": "Judges 3/3: tiled pink-lilac planks, a blue placeholder slab (a banner), a saturated orange trunk. Arm: warm oak deck tint, folded navy banners, aged heartwood retuned off pink.",
+ "want_to_see": "planks read as warm oak, not lilac; banners as folded cloth; the trunk face at the left as warm grey-brown. Hue check first (see ARM.md): planks and trunk face between about 15 and 50 degrees."
+}

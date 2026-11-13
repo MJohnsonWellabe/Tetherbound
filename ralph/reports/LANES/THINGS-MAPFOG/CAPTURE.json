@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-MAPFOG",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; not queued (three arms still waiting). Cheap UI capture; can ride any Meadows UI session.",
+ "tool": "tools/phase2_capture_ui.gd --biome=meadows --seed=2042 (map tab)",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-MAPFOG/overlay_map_parchment.json"},
+ "rows": {"F38#4": ["meadows__menu_map"]}
+}

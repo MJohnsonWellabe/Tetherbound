@@ -25,8 +25,20 @@ static func row(species_id: String, cfg: Dictionary = {}) -> Dictionary:
 	for key: String in [species_id, "water_" + species_id.trim_prefix("water_"), species_id.trim_prefix("water_")]:
 		var found: Variant = (rows as Dictionary).get(key, null)
 		if found is Dictionary:
-			return found
+			return _with_deep_swim(found as Dictionary)
 	return {}
+
+
+## F39#8 `deep_swim_1113` (per mount, flag-off): the row's own deeper sink
+## replaces `extra_sink_m`, so the mount's back goes under and the rider sits
+## waist-deep. Presentation only; the row is copied, never edited in place.
+static func _with_deep_swim(look: Dictionary) -> Dictionary:
+	var deep: Variant = look.get("deep_swim_1113", {})
+	if not deep is Dictionary or not bool((deep as Dictionary).get("enabled", false)):
+		return look
+	var out := look.duplicate()
+	out["extra_sink_m"] = float((deep as Dictionary).get("extra_sink_m", look.get("extra_sink_m", 0.0)))
+	return out
 
 
 ## Extra origin offset (metres, added to the swim follow target): a deeper sit

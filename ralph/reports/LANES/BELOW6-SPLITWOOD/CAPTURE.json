@@ -1,0 +1,57 @@
+{
+ "row": "Stormheart split's exposed wood: (1) the split-facing frame beside the entrance, (2) Captain Marrow's two dialogue frames (F41#15, F41#7), where the same surface is the 'saturated orange trunk at the left' (3/3, one judge 'near oxblood')",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_locations.gd",
+ "args": [
+  "--biome=stormwood",
+  "--subset=zz_no_match",
+  "--spot=split@-101.56,5466.87@26.6",
+  "--times=day",
+  "--views=approach",
+  "--seed=2042",
+  "--output={OUT}"
+ ],
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "frames": [
+  "stormwood__spot__split__day__approach"
+ ],
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-SPLITWOOD/overlay.json",
+ "capture_both": "base (main) and arm (overlay), same command",
+ "needs_import": "no",
+ "_why": "The split's exposed wood reads as an orange untextured placeholder slab from beside the entrance (3/3 on the old approach stand). Arm greys the grain under a pale heartwood tint.",
+ "want_to_see": "the orange slab at the left of the frame becomes muted grey-brown aged wood; the bark wall and ground are unchanged. If the stand does not seat beside the split (orange slab absent on base), say so and do not judge. Marrow frames: the orange trunk face at the left becomes muted grey-brown; Marrow and the deck are unchanged.",
+ "second_capture": {
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "args": [
+   "--biome=stormwood",
+   "--subset=captain_marrow",
+   "--output={OUT}"
+  ],
+  "godot_args": [
+   "--rendering-method",
+   "forward_plus",
+   "--resolution",
+   "1920x1080",
+   "--fixed-fps",
+   "20"
+  ],
+  "frames": [
+   "stormwood__inventory__character__captain_marrow__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+  ],
+  "note": "same command as G-below6-marrow. Base for these two frames should be main with the Marrow landing (tb/below6-marrow-land) once it is in; until then add BELOW6-MARROW/overlay.json to BOTH sides so the only difference is the wood."
+ }
+}

@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-r2-pair/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.138,
+  "lower_edges": 0.3688,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F41#13 pair): tb/below6 ba924ea82 both sides (textures re-imported), base vs BELOW6-FULGOCOBRA/overlay.json (olive veins, emission 0.8); stormraven + fulgocobra idle; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "arm-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-r2-pair/arm-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3547,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F41#13 pair): tb/below6 ba924ea82 both sides (textures re-imported), base vs BELOW6-FULGOCOBRA/overlay.json (olive veins, emission 0.8); stormraven + fulgocobra idle; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-r2-pair/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.371,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F41#13 pair): tb/below6 ba924ea82 both sides (textures re-imported), base vs BELOW6-FULGOCOBRA/overlay.json (olive veins, emission 0.8); stormraven + fulgocobra idle; --fixed-fps 20; High."
+ },
+ {
+  "frame": "stormwood__stormraven__idle.jpg",
+  "preset": "base-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-r2-pair/base-High/stormwood__stormraven__idle.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3547,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F41#13 pair): tb/below6 ba924ea82 both sides (textures re-imported), base vs BELOW6-FULGOCOBRA/overlay.json (olive veins, emission 0.8); stormraven + fulgocobra idle; --fixed-fps 20; High."
+ },
+ {
+  "frame": "fulgocobra-faint-050.png",
+  "preset": "arm-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-r2-poses/arm-High/fulgocobra-faint-050.png",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0482,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F36#46 poses): hit + faint whole-body with context; tb/below6 ba924ea82; High. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "fulgocobra-faint-100.png",
+  "preset": "arm-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-r2-poses/arm-High/fulgocobra-faint-100.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0476,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F36#46 poses): hit + faint whole-body with context; tb/below6 ba924ea82; High. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "fulgocobra-hit-000.png",
+  "preset": "arm-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-r2-poses/arm-High/fulgocobra-hit-000.png",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0468,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F36#46 poses): hit + faint whole-body with context; tb/below6 ba924ea82; High. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "fulgocobra-hit-050.png",
+  "preset": "arm-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-r2-poses/arm-High/fulgocobra-hit-050.png",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0459,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F36#46 poses): hit + faint whole-body with context; tb/below6 ba924ea82; High. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "fulgocobra-faint-050.png",
+  "preset": "base-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-r2-poses/base-High/fulgocobra-faint-050.png",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.0541,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F36#46 poses): hit + faint whole-body with context; tb/below6 ba924ea82; High. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "fulgocobra-faint-100.png",
+  "preset": "base-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-r2-poses/base-High/fulgocobra-faint-100.png",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0531,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F36#46 poses): hit + faint whole-body with context; tb/below6 ba924ea82; High. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "fulgocobra-hit-000.png",
+  "preset": "base-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-r2-poses/base-High/fulgocobra-hit-000.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0512,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F36#46 poses): hit + faint whole-body with context; tb/below6 ba924ea82; High. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "fulgocobra-hit-050.png",
+  "preset": "base-High",
+  "tree": "ba924ea82dbf82f4723db233a1f36fe6b2cda038",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-r2-poses/base-High/fulgocobra-hit-050.png",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0509,
+  "script_errors": 0,
+  "note": "below6-fulgocobra r2 (F36#46 poses): hit + faint whole-body with context; tb/below6 ba924ea82; High. Pose-stage frames: sky flag bypassed after an eye check."
+ }
+]

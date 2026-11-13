@@ -1,0 +1,59 @@
+{
+ "Wq": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Bq": {
+  "anchor": false,
+  "label": "G F40#1 row base-vs-arm",
+  "A": "G-wp_F40-1_row_base.png",
+  "B": "G-wp_F40-1_row_arm.png"
+ },
+ "Ko": {
+  "anchor": false,
+  "label": "G F40#0 clear controls gameplay base-vs-arm",
+  "A": "G-wp_F40-0_clear_controls_gameplay_arm.png",
+  "B": "G-wp_F40-0_clear_controls_gameplay_base.png"
+ },
+ "Em": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Nl": {
+  "anchor": false,
+  "label": "G F40#0 clear controls approach base-vs-arm",
+  "A": "G-wp_F40-0_clear_controls_approach_arm.png",
+  "B": "G-wp_F40-0_clear_controls_approach_base.png"
+ },
+ "At": {
+  "anchor": false,
+  "label": "G F40#0 overlook rain base-vs-arm",
+  "A": "G-wp_F40-0_overlook_rain_base.png",
+  "B": "G-wp_F40-0_overlook_rain_arm.png"
+ },
+ "Bv": {
+  "anchor": false,
+  "label": "G F40#0 summit-night rain base-vs-arm",
+  "A": "G-wp_F40-0_summit-night_rain_arm.png",
+  "B": "G-wp_F40-0_summit-night_rain_base.png"
+ },
+ "Hp": {
+  "anchor": false,
+  "label": "G F40#0 gate rain base-vs-arm",
+  "A": "G-wp_F40-0_gate_rain_arm.png",
+  "B": "G-wp_F40-0_gate_rain_base.png"
+ },
+ "Aj": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ee": {
+  "anchor": false,
+  "label": "G F40#0 summit-day rain base-vs-arm",
+  "A": "G-wp_F40-0_summit-day_rain_arm.png",
+  "B": "G-wp_F40-0_summit-day_rain_base.png"
+ }
+}

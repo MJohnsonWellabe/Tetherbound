@@ -1,0 +1,20 @@
+{
+ "id": "places-wet-path-1112-r2",
+ "branch": "tb/places",
+ "head": "(this commit)",
+ "base": "main",
+ "arm": "ralph/reports/LANES/PLACES-WETPATH/overlay.json",
+ "preset": "High first, then Medium if High reaches 7.5",
+ "tool": "tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=<N> --ground-cover-cache",
+ "rows": {
+  "F40#0": {
+   "pieces": "4, 84, 88, 92 (rain) plus 3 (clear control); 88 and 92 are the no-loss checks"
+  },
+  "F40#19": {
+   "pieces": "4"
+  }
+ },
+ "want_to_see": "ground and trail that look wet in rain; a dull earth trail with a soft, frayed edge in clear weather",
+ "reject_if": "a black or charred trail at night, a grey trail lost in wet grass, near-black mud or a blown sheen",
+ "round": 2
+}

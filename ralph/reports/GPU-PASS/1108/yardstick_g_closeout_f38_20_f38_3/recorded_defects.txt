@@ -1,0 +1,6 @@
+Hr: none
+Hf: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Vl: none
+Ql: "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+Kt: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ob: "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"

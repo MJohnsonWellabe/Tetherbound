@@ -1,0 +1,63 @@
+[
+ {
+  "label": "G F36(1) mirejaw ruler base-vs-arm",
+  "a": "G-rr_mirejaw_base.png",
+  "b": "G-rr_mirejaw_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: mirejaw - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "low, at trainer height",
+   "body passes through the trainer in faint end",
+   "stretched dark bar on the tail"
+  ]
+ },
+ {
+  "label": "G F36(1) brooktail ruler base-vs-arm",
+  "a": "G-rr_brooktail_base.png",
+  "b": "G-rr_brooktail_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: brooktail - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "about trainer height"
+  ]
+ },
+ {
+  "label": "G F36(1) shadelet ruler base-vs-arm",
+  "a": "G-rr_shadelet_base.png",
+  "b": "G-rr_shadelet_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: shadelet - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black with no rim light",
+   "silhouette dissolves"
+  ]
+ },
+ {
+  "label": "G F36(1) riftfrill ruler base-vs-arm",
+  "a": "G-rr_riftfrill_base.png",
+  "b": "G-rr_riftfrill_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: riftfrill - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "glossy dark purple",
+   "back below the trainer's head"
+  ]
+ },
+ {
+  "label": "G F36(1) sparkit ruler base-vs-arm",
+  "a": "G-rr_sparkit_base.png",
+  "b": "G-rr_sparkit_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: sparkit - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "below the trainer's height",
+   "flat mustard material",
+   "faint tail passes through the trainer"
+  ]
+ },
+ {
+  "label": "G F36(1) ashtusk ruler base-vs-arm",
+  "a": "G-rr_ashtusk_base.png",
+  "b": "G-rr_ashtusk_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: ashtusk - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "near-black plates merge with shadow",
+   "faint is an armoured ball"
+  ]
+ }
+]

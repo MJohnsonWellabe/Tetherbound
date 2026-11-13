@@ -1,0 +1,2 @@
+{"branch": "tb/gpu-frames-1108", "section": "G-things-bandfaint", "commit": "29cb35dbe", "renderer": "High", "tree": "tb/things 4f91b7ee9 both sides", "base": "no overlay", "arm": "overlay_band_faint.json (creature_pose_settle.json things_band_scope)",
+ "sets": "per species 2x2 of hit-000, hit-050, faint-050, faint-100, crop (560,200,1560,840)", "species": {"F36#44": "duskhush", "F36#61": "ribbonray", "F36#83": "trailpup", "F36#87": "voltwig"}}

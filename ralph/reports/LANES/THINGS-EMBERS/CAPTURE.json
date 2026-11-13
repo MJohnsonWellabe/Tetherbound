@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-EMBERS",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; queue when GLIDEBANK or STORMUNIFORM returns (Ashtusk close-out: High then Medium)",
+ "tool": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --roles=hit,faint",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-EMBERS/overlay_aspect_billboard.json"},
+ "rows": {"F36 (1) pose rows": ["ashtusk", "riftfrill", "stormtrail", "nightburrow"]}
+}

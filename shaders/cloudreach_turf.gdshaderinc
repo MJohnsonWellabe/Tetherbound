@@ -13,6 +13,11 @@ uniform vec4 turf_dry_tint : source_color = vec4(0.80,0.76,0.50,1.0);
 uniform vec4 turf_lush_tint : source_color = vec4(0.42,0.56,0.32,1.0);
 uniform vec2 turf_dry_band = vec2(0.35,0.6);
 uniform vec2 turf_lush_band = vec2(0.3,0.55);
+// ground_wet_path_1112 (LANE-PLACES, OFF until judged; all zero = no change):
+// x = rain wetness on turf and soil (darker, with a sheen), y = how far the
+// trail feathers and frays into the turf, z = how far the trail's orange soil
+// is pulled toward a duller earth. Set by cloudreach_weather.gd.
+global uniform vec4 cloudreach_ground_1112;
 float cloudreach_turf_patch(vec2 xz) {
 	vec2 p = xz * turf_patch_freq;
 	float a = sin(p.x + sin(p.y * 1.37) * 1.7) * sin(p.y * 0.91 + sin(p.x * 1.13) * 1.3);
@@ -34,5 +39,5 @@ vec3 cloudreach_turf(vec3 at) {
 		turf_tint = mix(turf_tint, turf_dry_tint.rgb, dry * turf_patch_strength);
 		turf_tint = mix(turf_tint, turf_lush_tint.rgb, lush * turf_patch_strength);
 	}
-	return texture_value*turf_tint*(1.0+broad);
+	return texture_value*turf_tint*(1.0+broad)*mix(1.0,0.74,cloudreach_ground_1112.x);
 }

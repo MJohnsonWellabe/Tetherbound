@@ -1,0 +1,6 @@
+Sv: none
+Cq: "none"
+Lt: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Hg: "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"
+Vj: none
+Hz: "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"

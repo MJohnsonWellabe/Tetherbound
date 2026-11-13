@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "preset": "main-High",
+  "tree": "a2ce48f7bfa8738f36486ea3af16c4979fe7bc48",
+  "tool": "res://tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel --times=day --views=close",
+  "path": "G-rescore-f41-2-breakonly/main-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__break.jpg",
+  "sky_fraction": 0.116,
+  "lower_edges": 0.2906,
+  "script_errors": 0,
+  "note": "F41#2 row score, one side on a2ce48f7b (main 3b7d04b5e + PR #919 lightning-out-at-Break-end), High. Pre-check: Fading no bolt, Break has lightning."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "preset": "main-High",
+  "tree": "a2ce48f7bfa8738f36486ea3af16c4979fe7bc48",
+  "tool": "res://tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel --times=day --views=close",
+  "path": "G-rescore-f41-2-breakonly/main-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__building.jpg",
+  "sky_fraction": 0.128,
+  "lower_edges": 0.2759,
+  "script_errors": 0,
+  "note": "F41#2 row score, one side on a2ce48f7b (main 3b7d04b5e + PR #919 lightning-out-at-Break-end), High. Pre-check: Fading no bolt, Break has lightning."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "preset": "main-High",
+  "tree": "a2ce48f7bfa8738f36486ea3af16c4979fe7bc48",
+  "tool": "res://tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel --times=day --views=close",
+  "path": "G-rescore-f41-2-breakonly/main-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm.jpg",
+  "sky_fraction": 0.121,
+  "lower_edges": 0.3079,
+  "script_errors": 0,
+  "note": "F41#2 row score, one side on a2ce48f7b (main 3b7d04b5e + PR #919 lightning-out-at-Break-end), High. Pre-check: Fading no bolt, Break has lightning."
+ },
+ {
+  "frame": "stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "preset": "main-High",
+  "tree": "a2ce48f7bfa8738f36486ea3af16c4979fe7bc48",
+  "tool": "res://tools/phase2_capture_storm_phases.gd --biome=stormwood --seed=2042 --subset=stormwood__cinder_verge__01__the_struck_sentinel --times=day --views=close",
+  "path": "G-rescore-f41-2-breakonly/main-High/stormwood__cinder_verge__01__the_struck_sentinel__day__close__fading.jpg",
+  "sky_fraction": 0.149,
+  "lower_edges": 0.3003,
+  "script_errors": 0,
+  "note": "F41#2 row score, one side on a2ce48f7b (main 3b7d04b5e + PR #919 lightning-out-at-Break-end), High. Pre-check: Fading no bolt, Break has lightning."
+ }
+]

@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F41#15 row base-vs-arm",
+  "a": "G-srim_F41-15_row_base.png",
+  "b": "G-srim_F41-15_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction (three conversations, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G F41#18 row base-vs-arm",
+  "a": "G-srim_F41-18_row_base.png",
+  "b": "G-srim_F41-18_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: uniformed character readability (three characters, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+  ]
+ },
+ {
+  "label": "G F41#18 dialogue base-vs-arm",
+  "a": "G-srim_F41-18_dialogue_base.png",
+  "b": "G-srim_F41-18_dialogue_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: uniformed character readability in conversation (three conversations, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+  ]
+ },
+ {
+  "label": "G Stormwood dialogue ride-along base-vs-arm",
+  "a": "G-srim_Stormwood_dialogue_ride-along_base.png",
+  "b": "G-srim_Stormwood_dialogue_ride-along_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (three conversations, each the dialogue camera on one named speaker with the dialogue panel, top to bottom). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

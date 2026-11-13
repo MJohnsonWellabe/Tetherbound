@@ -1,0 +1,107 @@
+{
+ "Nc": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Xs": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ky": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ab": {
+  "anchor": false,
+  "label": "F38#2",
+  "A": "main",
+  "one_sided": true
+ },
+ "Gc": {
+  "anchor": false,
+  "label": "F38#6",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ud": {
+  "anchor": false,
+  "label": "F38#12",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ya": {
+  "anchor": false,
+  "label": "F38#13",
+  "A": "main",
+  "one_sided": true
+ },
+ "Fd": {
+  "anchor": false,
+  "label": "F38#14",
+  "A": "main",
+  "one_sided": true
+ },
+ "Zs": {
+  "anchor": false,
+  "label": "F38#20",
+  "A": "main",
+  "one_sided": true
+ },
+ "Rb": {
+  "anchor": false,
+  "label": "F38#21",
+  "A": "main",
+  "one_sided": true
+ },
+ "Vs": {
+  "anchor": false,
+  "label": "F38#22",
+  "A": "main",
+  "one_sided": true
+ },
+ "Qc": {
+  "anchor": false,
+  "label": "F38#29",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ty": {
+  "anchor": false,
+  "label": "F39#5",
+  "A": "main",
+  "one_sided": true
+ },
+ "Nv": {
+  "anchor": false,
+  "label": "F39#14",
+  "A": "main",
+  "one_sided": true
+ },
+ "Tb": {
+  "anchor": false,
+  "label": "F40#15",
+  "A": "main",
+  "one_sided": true
+ },
+ "Rd": {
+  "anchor": false,
+  "label": "F40#17",
+  "A": "main",
+  "one_sided": true
+ },
+ "Cc": {
+  "anchor": false,
+  "label": "F41#10",
+  "A": "main",
+  "one_sided": true
+ },
+ "Iu": {
+  "anchor": false,
+  "label": "F41#18",
+  "A": "main",
+  "one_sided": true
+ }
+}

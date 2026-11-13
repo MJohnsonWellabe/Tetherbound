@@ -1,0 +1,33 @@
+{
+ "row": "F36#30 Abyssal Guardian poses (5.54) and F36#88 Water Abyssal Guardian poses (5.85)",
+ "branch": "tb/below6",
+ "head": "see git log (tb/below6 tip)",
+ "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+ "args": [
+  "--species=abyssal_guardian,water_abyssal_guardian",
+  "--whole-body",
+  "--context",
+  "--out={OUT}"
+ ],
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "crop": "560,200 1000x640 at 1080p (as G-rescore-tier2-f36)",
+ "tiles": "standing (hit 000), hit 050, faint 050, faint 100",
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-ABYSSAL/overlay.json",
+ "capture_both": "base (main as it is, overlay off) and arm (overlay on), same command",
+ "needs_import": "yes: new graded textures (*_floor1*.png) ship on the branch",
+ "_why": "Glossy vinyl, toy-like (3/3). Probed roughness map mean 0.52 on a flat saturated navy. Arm: slate sea-blue hide with fine mottling, grey-cream belly, roughness 0.86, specular 0.3; the water form takes the same matte values over its vis1 grade.",
+ "want_to_see": "a matte slate-blue hide without the plastic highlight; the water form's spindly build and faint are not addressed by this arm"
+}

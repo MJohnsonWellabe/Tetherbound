@@ -1,0 +1,8 @@
+Nt: "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"
+Fw: none
+Rb: "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body"
+Ou: "none"
+Pf: "none"
+Pk: "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming"
+Vm: none
+Xe: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F40#15 overlook base-vs-arm",
+  "a": "G-os_F40-15_overlook_base.png",
+  "b": "G-os_F40-15_overlook_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: route edges and built stonework over the void (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+  ]
+ },
+ {
+  "label": "G Overlook routes base-vs-arm",
+  "a": "G-os_Overlook_routes_base.png",
+  "b": "G-os_Overlook_routes_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome: walking route at a summit overlook (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

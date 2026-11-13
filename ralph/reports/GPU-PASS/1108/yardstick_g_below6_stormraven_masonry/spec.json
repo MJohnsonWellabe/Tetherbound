@@ -1,0 +1,38 @@
+[
+ {
+  "label": "G F41#13 row base-vs-arm",
+  "a": "G-sm_F41-13_row_base.png",
+  "b": "G-sm_F41-13_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: electric creature finish (two creatures, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ },
+ {
+  "label": "G F40#15 row base-vs-arm",
+  "a": "G-sm_F40-15_row_base.png",
+  "b": "G-sm_F40-15_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: route edges and built stonework over the void (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+  ]
+ },
+ {
+  "label": "G Overlook routes base-vs-arm",
+  "a": "G-sm_Overlook_routes_base.png",
+  "b": "G-sm_Overlook_routes_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome: walking route at a summit overlook (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G Shrine and eyrie base-vs-arm",
+  "a": "G-sm_Shrine_and_eyrie_base.png",
+  "b": "G-sm_Shrine_and_eyrie_arm.png",
+  "brief": "Fixed captures from the game of the Cloudreach biome: a sky shrine and a summit aviary, approach and close views (four frames, left to right, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

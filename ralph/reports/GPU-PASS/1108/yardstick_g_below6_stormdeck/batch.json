@@ -1,0 +1,56 @@
+{
+ "anchors": {
+  "f36_0_npc:C1B": [
+   6.7,
+   6.8,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.7,
+   6.8,
+   6.9
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.9,
+   4.5,
+   5.2
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.2,
+   3.7,
+   4.4
+  ],
+  "craft:after": [
+   6.6,
+   6.0,
+   6.2
+  ],
+  "craft:before": [
+   5.2,
+   4.5,
+   4.6
+  ]
+ },
+ "candidates": {
+  "G F41#1 stormdeck split base-vs-arm [G-sk_split_base.png]": [
+   3.8,
+   3.9,
+   4.6
+  ],
+  "G F41#1 stormdeck split base-vs-arm [G-sk_split_arm.png]": [
+   4.1,
+   4.2,
+   5.0
+  ],
+  "G F41#15 stormdeck marrow base-vs-arm [G-sk_marrow_base.png]": [
+   3.9,
+   4.4,
+   4.3
+  ],
+  "G F41#15 stormdeck marrow base-vs-arm [G-sk_marrow_arm.png]": [
+   4.2,
+   4.9,
+   4.7
+  ]
+ }
+}

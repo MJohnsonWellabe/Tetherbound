@@ -1,0 +1,58 @@
+{
+ "branch": "tb/gpu-frames-1108",
+ "section": "G-things-cloudnight-941",
+ "commit": "eef5b8efa",
+ "renderer": "High",
+ "tree": "local merge 7fef52f5c (tb/things 3c242a6a6 + main 317b3372f) both sides",
+ "base": "no overlay",
+ "arm": "overlay_night_moonlit_cast.json",
+ "sets": {
+  "F40#0 night clear": [
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__clear.jpg",
+   "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__night__clear.jpg",
+   "cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__night__clear.jpg",
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__clear.jpg",
+   "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear.jpg",
+   "cloudreach__upper_cloudreach__09__cliffhold__gameplay__night__clear.jpg",
+   "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear.jpg",
+   "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__clear.jpg",
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__night__clear.jpg"
+  ],
+  "F40#0 night rain": [
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__rain.jpg",
+   "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__gameplay__night__rain.jpg",
+   "cloudreach__broken_causeways__04__broken_skyroad_arch__gameplay__night__rain.jpg",
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__rain.jpg",
+   "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__rain.jpg",
+   "cloudreach__upper_cloudreach__09__cliffhold__gameplay__night__rain.jpg",
+   "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__rain.jpg",
+   "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__rain.jpg",
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__night__rain.jpg"
+  ],
+  "F40#21 night clear": [
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__night__clear.jpg",
+   "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__approach__night__clear.jpg",
+   "cloudreach__broken_causeways__04__broken_skyroad_arch__approach__night__clear.jpg",
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__night__clear.jpg",
+   "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__night__clear.jpg",
+   "cloudreach__upper_cloudreach__09__cliffhold__approach__night__clear.jpg",
+   "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__night__clear.jpg",
+   "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__night__clear.jpg",
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.jpg"
+  ],
+  "F40#19 night rain sky": [
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__night__rain.jpg",
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__night__rain.jpg",
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__rain.jpg",
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__rain.jpg"
+  ],
+  "Night other stands": [
+   "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__night__clear.jpg",
+   "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__night__clear.jpg",
+   "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__night__clear.jpg",
+   "cloudreach__broken_causeways__03__three_bells_bridge__gameplay__night__rain.jpg",
+   "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__night__rain.jpg",
+   "cloudreach__windscar_ravine__06__windscar_flight_aerie__gameplay__night__rain.jpg"
+  ]
+ }
+}

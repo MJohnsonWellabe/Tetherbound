@@ -1,0 +1,7 @@
+Pu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Jm: "none"
+Kj: none
+We: "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+Pr: "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer"
+Ni: "none"
+Rj: none

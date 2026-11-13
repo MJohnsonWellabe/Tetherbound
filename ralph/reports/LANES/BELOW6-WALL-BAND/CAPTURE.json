@@ -1,0 +1,1 @@
+{"row":"F40#1","tool":"res://tools/phase2_capture_locations.gd","args":["--biome=cloudreach","--times=day","--views=approach,close","--seed=2042","--output={OUT}"],"frames":["cloudreach__landmark__realm_gate_crag__day__approach","cloudreach__landmark__sky_shrine_heartstone__day__approach","cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close"]}

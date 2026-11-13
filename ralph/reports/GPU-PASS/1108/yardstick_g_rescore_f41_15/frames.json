@@ -1,0 +1,35 @@
+[
+ {
+  "frame": "stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "3b7d04b5eb7790856e6c9881cb5b7f882d15e644",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-rescore-f41-15-main/main-High/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+  "sky_fraction": 0.274,
+  "lower_edges": 0.3439,
+  "script_errors": 0,
+  "note": "F41#15 (P2-083) row score, one side on main 3b7d04b5e (#918 Marrow glow fix), High. All 3 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "3b7d04b5eb7790856e6c9881cb5b7f882d15e644",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-rescore-f41-15-main/main-High/stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue.jpg",
+  "sky_fraction": 0.282,
+  "lower_edges": 0.3331,
+  "script_errors": 0,
+  "note": "F41#15 (P2-083) row score, one side on main 3b7d04b5e (#918 Marrow glow fix), High. All 3 __dialogue frames blend 1.000."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "3b7d04b5eb7790856e6c9881cb5b7f882d15e644",
+  "tool": "res://tools/phase2_capture_dialogue.gd --biome=stormwood --seed=2042 --subset=captain_marrow --subset=officer_nysa_deepwood_rod (--fixed-fps 20)",
+  "path": "G-rescore-f41-15-main/main-High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "sky_fraction": 0.303,
+  "lower_edges": 0.3993,
+  "script_errors": 0,
+  "note": "F41#15 (P2-083) row score, one side on main 3b7d04b5e (#918 Marrow glow fix), High. All 3 __dialogue frames blend 1.000."
+ }
+]

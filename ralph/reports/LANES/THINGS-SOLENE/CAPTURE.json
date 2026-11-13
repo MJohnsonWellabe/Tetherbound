@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-SOLENE",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 13 Nov. Small change on CPU (see ARM); needs the GPU.",
+ "tool": "tools/phase2_capture_dialogue.gd --biome=meadows, the Meadows dialogue set (Warder Solene is subset stronghold_courtyard; Keeper Hald's row is in the same set)",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-SOLENE/overlay_solene_floor.json"},
+ "rows": {"F38#17": ["stronghold_courtyard (Warder Solene)", "Keeper Hald's row"]}
+}

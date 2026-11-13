@@ -1,0 +1,41 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.4,
+   4.2,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.0,
+   4.9,
+   5.4
+  ],
+  "craft:before": [
+   5.0,
+   4.7,
+   5.5
+  ],
+  "craft:after": [
+   6.6,
+   6.6,
+   7.2
+  ],
+  "f36_0_npc:C1A": [
+   7.2,
+   6.8,
+   6.8
+  ],
+  "f36_0_npc:C1B": [
+   7.2,
+   6.9,
+   6.8
+  ]
+ },
+ "candidates": {
+  "G F41#15 rescore main one-sided": [
+   5.0,
+   4.6,
+   4.8
+  ]
+ }
+}

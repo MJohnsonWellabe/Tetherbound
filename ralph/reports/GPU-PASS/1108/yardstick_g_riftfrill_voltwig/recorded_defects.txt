@@ -1,0 +1,6 @@
+Tz: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vw: none
+Ui: "none"
+Xp: "glossy dark purple"; "back below the trainer's head"
+Ca: none
+Bp: "Craft and leave button hints are faint gray on the dark translucent craft panel"

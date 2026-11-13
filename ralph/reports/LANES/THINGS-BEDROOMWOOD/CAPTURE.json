@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-BEDROOMWOOD",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High, then Medium if 7.5 or above (F38#19 is a close-out: 7.17)",
+ "status": "READY 13 Nov",
+ "tool": "tools/phase2_capture_ui.gd --biome=meadows (the F38#19 frame meadows__exploration_hud, as in G-closeout-meadows-ui)",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-BEDROOMWOOD/overlay_bedroom_wood.json"},
+ "rows": {"F38#19": ["meadows__exploration_hud"], "no-loss": "any other frame inside Grandpa's house (the opening)"}
+}

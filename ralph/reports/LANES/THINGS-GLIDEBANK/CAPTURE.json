@@ -1,0 +1,22 @@
+{
+ "id": "THINGS-GLIDEBANK",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "ATTEMPT 2 READY 12 Nov (capture tool only changed: steer returns to the starting stand and heading before landing; flag unchanged). Pin time of day and weather on both sides.",
+ "tool": "phase2_capture_realm_flight.gd --biome=meadows --seed=2042 --glide-steer --glide-steer-frames=20 (default carrier; pin time of day and weather on both sides)",
+ "base": {
+  "tree": "tb/things",
+  "overlay": null
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-GLIDEBANK/overlay_glide_bank.json"
+ },
+ "rows": {
+  "F38#15": [
+   "glide",
+   "landed"
+  ]
+ }
+}

@@ -1,0 +1,122 @@
+{
+ "three_bells_bridge clear": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "three_bells_bridge rain": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "broken_skyroad_arch clear": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "broken_skyroad_arch rain": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "realm_gate_crag clear": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "realm_gate_crag rain": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "galefoot_waycamp clear": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "galefoot_waycamp rain": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "sky_shrine clear": [
+  "FIXED",
+  "PARTIAL",
+  "FIXED"
+ ],
+ "sky_shrine rain": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "the_high_perches clear": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "the_high_perches rain": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "summit_eyrie clear": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "summit_eyrie rain": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "stormward_overlook clear": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "stormward_overlook rain": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "cliffhold clear": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "cliffhold rain": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "old_wind_observatory clear": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "old_wind_observatory rain": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "windscar_beacon clear": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "windscar_beacon rain": [
+  "FIXED",
+  "FIXED",
+  "FIXED"
+ ],
+ "windscar_flight_aerie clear": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ],
+ "windscar_flight_aerie rain": [
+  "PARTIAL",
+  "PARTIAL",
+  "PARTIAL"
+ ]
+}

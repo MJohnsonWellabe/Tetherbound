@@ -1,0 +1,12 @@
+a af0bb9ff54b979e70 G-cc
+b a1d01a002770b8d12 G-cc
+c a167f3d0674ad75ea G-cc
+a a28af9c21985ac373 G-cc2
+b a6f07aeeebb17bb8c G-cc2
+c af716544075aa12bb G-cc2
+a aa39e5fc15a3a0b00 G-cc3
+b a80992514182bbc25 G-cc3
+c a233fa05c7863e346 G-cc3
+a a1910ad6d025a0dd2 G-cc
+b a61bc9c60d17f41a4 G-cc
+c a36bf46ffa57ae33e G-cc

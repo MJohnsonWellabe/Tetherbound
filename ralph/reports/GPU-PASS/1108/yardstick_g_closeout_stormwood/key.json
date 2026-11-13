@@ -1,0 +1,41 @@
+{
+ "Kv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Fp": {
+  "anchor": false,
+  "label": "G F41#1 High-vs-Medium",
+  "A": "G-swm_F41-1_high.png",
+  "B": "G-swm_F41-1_medium.png"
+ },
+ "Az": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ip": {
+  "anchor": false,
+  "label": "G F41#14 High-vs-Medium",
+  "A": "G-swm_F41-14_medium.png",
+  "B": "G-swm_F41-14_high.png"
+ },
+ "Pz": {
+  "anchor": false,
+  "label": "G F38#38 High-vs-Medium",
+  "A": "G-swm_F38-38_high.png",
+  "B": "G-swm_F38-38_medium.png"
+ },
+ "Es": {
+  "anchor": false,
+  "label": "G F41#11 High-vs-Medium",
+  "A": "G-swm_F41-11_medium.png",
+  "B": "G-swm_F41-11_high.png"
+ },
+ "Ko": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

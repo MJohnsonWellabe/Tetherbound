@@ -1,0 +1,34 @@
+{
+ "id": "THINGS-STORMPOST",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "needs_import": "yes: the merged dressing branch adds a shader (stormheart_heartwood_core.gdshader)",
+ "tool": "phase2_capture_dialogue.gd --biome=stormwood (the same stand switches on both sides as G-rescore-f41-15-main)",
+ "base": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-STORMPOST/overlay_base.json",
+  "note": "turns LANE-BELOW6's three dressing flags OFF; wild_post_clearance_1112 is already off, so base equals main"
+ },
+ "arm": {
+  "tree": "tb/things",
+  "overlay": "ralph/reports/LANES/THINGS-STORMPOST/overlay_arm.json",
+  "note": "wild_post_clearance_1112 ON; the three dressing flags stay ON as merged from tb/below6-stormdeck-ride 71f0f211b"
+ },
+ "rows": {
+  "F41#15": [
+   "stormwood__inventory__character__captain_marrow__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+  ],
+  "Sera and Tamsin (F41 dialogue rows)": [
+   "stormwood__inventory__trainer__outerworks_lieutenant_sera__dialogue",
+   "stormwood__inventory__character__stormreader_tamsin__dialogue",
+   "stormwood__inventory__trainer__tamsin_ash_ring__dialogue"
+  ]
+ },
+ "check_before_judging": [
+  "no wild creature stands within about 16 m of the speaker on the arm",
+  "the conversation clearance rule stays off in Stormwood on both sides (exclude_realms)"
+ ]
+}

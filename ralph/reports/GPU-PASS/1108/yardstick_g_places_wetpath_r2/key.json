@@ -1,0 +1,47 @@
+{
+ "Ec": {
+  "anchor": false,
+  "label": "G F40#0 overlook rain base-vs-arm",
+  "A": "G-wp2_overlook_rain_base.png",
+  "B": "G-wp2_overlook_rain_arm.png"
+ },
+ "Lz": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Xw": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Nn": {
+  "anchor": false,
+  "label": "G F40#0 summit-day rain base-vs-arm",
+  "A": "G-wp2_summit-day_rain_arm.png",
+  "B": "G-wp2_summit-day_rain_base.png"
+ },
+ "Sx": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ts": {
+  "anchor": false,
+  "label": "G F40#0 gate clear base-vs-arm",
+  "A": "G-wp2_gate_clear_arm.png",
+  "B": "G-wp2_gate_clear_base.png"
+ },
+ "Io": {
+  "anchor": false,
+  "label": "G F40#0 gate rain base-vs-arm",
+  "A": "G-wp2_gate_rain_arm.png",
+  "B": "G-wp2_gate_rain_base.png"
+ },
+ "Fr": {
+  "anchor": false,
+  "label": "G F40#0 summit-night rain base-vs-arm",
+  "A": "G-wp2_summit-night_rain_base.png",
+  "B": "G-wp2_summit-night_rain_arm.png"
+ }
+}

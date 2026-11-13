@@ -1,0 +1,20 @@
+[
+ {
+  "label": "G F41#8 row base-vs-arm",
+  "a": "G-np_F41#8 row_base.png",
+  "b": "G-np_F41#8 row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named character silhouettes. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes"
+  ]
+ },
+ {
+  "label": "G F41#8 dialogue base-vs-arm",
+  "a": "G-np_F41#8 dialogue_base.png",
+  "b": "G-np_F41#8 dialogue_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named-character conversations (three conversations, each the dialogue camera on one named speaker with the dialogue panel). Judge how this subject looks in the game - the speaker readable and framed beside the panel, nothing blocking them, believable form, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]

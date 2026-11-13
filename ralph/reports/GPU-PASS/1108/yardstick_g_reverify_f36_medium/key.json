@@ -1,0 +1,53 @@
+{
+ "Cx": {
+  "anchor": false,
+  "label": "G F36(1) solmane Medium main one-sided",
+  "A": "G-rvm_solmane_main.png",
+  "B": "G-rvm_solmane_main.png"
+ },
+ "Tz": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Pw": {
+  "anchor": false,
+  "label": "G F36(1) ashtusk Medium main one-sided",
+  "A": "G-rvm_ashtusk_main.png",
+  "B": "G-rvm_ashtusk_main.png"
+ },
+ "Wy": {
+  "anchor": false,
+  "label": "G F36(1) stormbrush Medium main one-sided",
+  "A": "G-rvm_stormbrush_main.png",
+  "B": "G-rvm_stormbrush_main.png"
+ },
+ "Tg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Yg": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Fd": {
+  "anchor": false,
+  "label": "G F36(1) breezetail Medium main one-sided",
+  "A": "G-rvm_breezetail_main.png",
+  "B": "G-rvm_breezetail_main.png"
+ },
+ "Lx": {
+  "anchor": false,
+  "label": "G F36(1) pebbik Medium main one-sided",
+  "A": "G-rvm_pebbik_main.png",
+  "B": "G-rvm_pebbik_main.png"
+ },
+ "Pf": {
+  "anchor": false,
+  "label": "G F36(1) stormtrail Medium main one-sided",
+  "A": "G-rvm_stormtrail_main.png",
+  "B": "G-rvm_stormtrail_main.png"
+ }
+}

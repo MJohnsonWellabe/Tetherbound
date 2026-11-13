@@ -1,0 +1,6 @@
+Vm: "none"
+Uh: "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"
+Ho: none
+Mz: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Nq: none
+As: "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"

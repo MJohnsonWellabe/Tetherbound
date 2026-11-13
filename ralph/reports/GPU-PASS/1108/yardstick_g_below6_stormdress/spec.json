@@ -1,0 +1,29 @@
+[
+ {
+  "label": "G F41#15 stormdress marrow base-vs-arm",
+  "a": "G-sd_marrow_base.png",
+  "b": "G-sd_marrow_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: dialogue foreground obstruction (two conversations with the same named speaker, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames"
+  ]
+ },
+ {
+  "label": "G F41#1 stormdress f411 base-vs-arm",
+  "a": "G-sd_f411_base.png",
+  "b": "G-sd_f411_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Stormheart finale (approach views on top, close views below). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+  ]
+ },
+ {
+  "label": "G F41#1 stormdress split base-vs-arm",
+  "a": "G-sd_split_base.png",
+  "b": "G-sd_split_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: Stormheart finale (the split in the trunk, seen from the approach). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+  ]
+ }
+]

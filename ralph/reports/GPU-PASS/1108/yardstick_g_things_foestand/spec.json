@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F38#3 base-vs-arm",
+  "a": "G-fs_F38-3_base.png",
+  "b": "G-fs_F38-3_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: fight camera and creature scale (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+  ]
+ },
+ {
+  "label": "G Aldis base-vs-arm",
+  "a": "G-fs_Aldis_base.png",
+  "b": "G-fs_Aldis_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: named trainer fight staging (Warden Aldis) (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F39#7 base-vs-arm",
+  "a": "G-fs_F39-7_base.png",
+  "b": "G-fs_F39-7_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight actor composition (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases"
+  ]
+ },
+ {
+  "label": "G F39#19 base-vs-arm",
+  "a": "G-fs_F39-19_base.png",
+  "b": "G-fs_F39-19_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: fight team roster contrast (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The left team roster fades to pale low-contrast text against terrain during active combat"
+  ]
+ },
+ {
+  "label": "G F41#3 base-vs-arm",
+  "a": "G-fs_F41-3_base.png",
+  "b": "G-fs_F41-3_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+  ]
+ }
+]

@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-BANDFAINT",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 13 Nov",
+ "tool": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --roles=hit,faint",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-BANDFAINT/overlay_band_faint.json"},
+ "rows": {"F36#44": ["duskhush"], "F36#61": ["ribbonray"], "F36#83": ["trailpup"], "F36#87": ["voltwig"]}
+}

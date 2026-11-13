@@ -1,0 +1,7 @@
+Km: none
+Ht: "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+Dy: none
+Xi: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Aa: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Ol: "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+Zw: "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"

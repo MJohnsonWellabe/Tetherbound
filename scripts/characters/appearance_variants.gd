@@ -29,7 +29,7 @@ static func resolve(base: Dictionary, base_profile: String, variant_id: String,
 	var raw: Variant = records.get(variant_id, {})
 	if not raw is Dictionary:
 		return result
-	var record: Dictionary = raw
+	var record: Dictionary = with_floor_model(raw)
 	# Regional candidates can be staged independently of the overall pipeline.
 	# Existing records without this field retain the global gate's behavior.
 	if record.has("enabled") and not bool(record.enabled):
@@ -78,6 +78,25 @@ static func resolve(base: Dictionary, base_profile: String, variant_id: String,
 		result["portrait_region"] = record["portrait_region"]
 	result["appearance_variant_id"] = variant_id
 	return result
+
+
+## `body_model_floor_1113` (LANE-THINGS, 13 Nov 2026; OFF unless its own
+## `enabled` is true): a record with its own model may name a second copy of
+## that model whose embedded atlas is graded (pale texels pulled down), for a
+## body that washes out to white under bright light (F38#17, Warder Solene).
+## When on, the copy replaces `body_model_override`; the copy must sit under
+## the same root and pass the same checks as any replacement model.
+static func with_floor_model(record: Dictionary) -> Dictionary:
+	var floor_model: Variant = record.get("body_model_floor_1113", {})
+	if not floor_model is Dictionary or not bool((floor_model as Dictionary).get("enabled", false)) \
+			or not record.has("body_model_override"):
+		return record
+	var path: Variant = (floor_model as Dictionary).get("path", "")
+	if not path is String or (path as String).is_empty():
+		return record
+	var out := record.duplicate(true)
+	out["body_model_override"] = path
+	return out
 
 
 ## Body-only validation shared with explicit OFF-candidate portrait authoring.

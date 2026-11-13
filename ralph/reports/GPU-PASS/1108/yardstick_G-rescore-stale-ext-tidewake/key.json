@@ -1,0 +1,143 @@
+{
+ "Ah": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ux": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Nw": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ik": {
+  "anchor": false,
+  "label": "F39#1",
+  "A": "main",
+  "one_sided": true
+ },
+ "Bb": {
+  "anchor": false,
+  "label": "F39#2",
+  "A": "main",
+  "one_sided": true
+ },
+ "Gw": {
+  "anchor": false,
+  "label": "F39#3",
+  "A": "main",
+  "one_sided": true
+ },
+ "Um": {
+  "anchor": false,
+  "label": "F39#4",
+  "A": "main",
+  "one_sided": true
+ },
+ "Xx": {
+  "anchor": false,
+  "label": "F39#7",
+  "A": "main",
+  "one_sided": true
+ },
+ "Vi": {
+  "anchor": false,
+  "label": "F39#8",
+  "A": "main",
+  "one_sided": true
+ },
+ "Ta": {
+  "anchor": false,
+  "label": "F39#9",
+  "A": "main",
+  "one_sided": true
+ },
+ "Sv": {
+  "anchor": false,
+  "label": "F39#10",
+  "A": "main",
+  "one_sided": true
+ },
+ "Bs": {
+  "anchor": false,
+  "label": "F39#12",
+  "A": "main",
+  "one_sided": true
+ },
+ "Gs": {
+  "anchor": false,
+  "label": "F39#13",
+  "A": "main",
+  "one_sided": true
+ },
+ "Gq": {
+  "anchor": false,
+  "label": "F39#14",
+  "A": "main",
+  "one_sided": true
+ },
+ "Zt": {
+  "anchor": false,
+  "label": "F39#15",
+  "A": "main",
+  "one_sided": true
+ },
+ "Bj": {
+  "anchor": false,
+  "label": "F39#16",
+  "A": "main",
+  "one_sided": true
+ },
+ "Tc": {
+  "anchor": false,
+  "label": "F39#17",
+  "A": "main",
+  "one_sided": true
+ },
+ "Eq": {
+  "anchor": false,
+  "label": "F39#19",
+  "A": "main",
+  "one_sided": true
+ },
+ "Yn": {
+  "anchor": false,
+  "label": "F39#20",
+  "A": "main",
+  "one_sided": true
+ },
+ "Cw": {
+  "anchor": false,
+  "label": "F39#22",
+  "A": "main",
+  "one_sided": true
+ },
+ "Pj": {
+  "anchor": false,
+  "label": "F39#23",
+  "A": "main",
+  "one_sided": true
+ },
+ "Kg": {
+  "anchor": false,
+  "label": "F39#24",
+  "A": "main",
+  "one_sided": true
+ },
+ "Lk": {
+  "anchor": false,
+  "label": "F39#25",
+  "A": "main",
+  "one_sided": true
+ },
+ "Db": {
+  "anchor": false,
+  "label": "F39#28",
+  "A": "main",
+  "one_sided": true
+ }
+}

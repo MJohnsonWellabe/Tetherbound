@@ -1,0 +1,22 @@
+[
+ {
+  "label": "G F41#13",
+  "a": "G-fc_F41-13_base.png",
+  "b": "G-fc_F41-13_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: electric creature finish. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ },
+ {
+  "label": "G F36#46",
+  "a": "G-fc_F36-46_base.png",
+  "b": "G-fc_F36-46_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: fulgocobra - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "dark body on the stage",
+   "hood stays up in the faint",
+   "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+  ]
+ }
+]
