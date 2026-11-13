@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1108", "section": "G-things-bedroomwood-high @ 21fa0dc6a", "tree": "tb/things 44f0847bd", "arm": "overlay_bedroom_wood.json",
+ "G F38#19 High": ["F38-19/meadows__exploration_hud"],
+ "G F38#9 High": ["F38-9/meadows__menu_backpack", "F38-9/meadows__menu_build", "F38-9/meadows__menu_creatures"],
+ "G F38#4 High": ["F38-4/meadows__menu_map"], "G F38#10 High": ["F38-10/meadows__menu_build"],
+ "excluded": "F38-34 system__building (outdoors, unaffected)",
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg"}

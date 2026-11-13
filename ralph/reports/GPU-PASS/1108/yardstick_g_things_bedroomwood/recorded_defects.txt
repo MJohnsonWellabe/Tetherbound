@@ -1,0 +1,8 @@
+Db: "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world"
+Ke: "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+Jk: none
+Kx: "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+Kh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ow: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Nu: "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+Eg: none
