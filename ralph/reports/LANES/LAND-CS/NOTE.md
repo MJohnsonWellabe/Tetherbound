@@ -1,6 +1,6 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
-## HEAD FOR THE GPU LANE (13 Nov 20:20 UTC): `tb/land-cs` 6b5b789f
+## HEAD FOR THE GPU LANE (13 Nov 20:20 UTC): `tb/land-cs` 6b5b789f or later (later commits touch only report files)
 - Contains main b8622117c (#954). Against main it differs only by three flag-off blocks (`forest_layers_1113`, `turf_detail_1113`, `paver_strips_1113`), their code and tests, and report files, so base frames from this head are main's.
 - **Scope (coordinator, 20:03):** Cloudreach rows plus the queued SOILOFF (F41#22/#24). LANE-PLACES has the other Stormwood rows; I start no new Stormwood arms.
 - **Order:** F40#15 (wedge, then grey ramp), F40#2 6.15, F40#17 6.18, F40#16 6.19, F40#3 and F40#6 6.33, F40#9 6.48.
