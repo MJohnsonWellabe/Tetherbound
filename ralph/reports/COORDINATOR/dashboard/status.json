@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 04:17 UTC",
+  "updated": "13 Nov 2026 04:48 UTC",
   "headline": [
+    "13 Nov 04:48: #943 landed: Trainer Rune now reachable (was stood on a steep sand face). Overnight so far: #937, #938, #939, #941, #942, #943.",
     "13 Nov 04:17: #942 landed: conversation shots tighter, five dialogue rows up and none down. Rune re-placed on flat ground 17.7 m clear of the wild cluster: PR #943 in CI.",
     "13 Nov 03:55: Fulgocobra recolour parked after 2 rounds (olive body lost 0/3). F41#13 now reads 7.37 on the current tree: a close-out candidate. Convtight PR #942 in CI; Rune pulled from it after a real ring-clearance failure, being re-placed.",
     "13 Nov 03:20: Conversation camera (convtight) SHIPS: 10 of 11 sets gain, none lose (F39#26 to 7.04, F40#12 to 7.12, F38#17, F38#37, F40#10 up). Landing branch being cut by LANE-THINGS. Red-leaf fix #930 confirmed on GPU: no red outside Team Tether.",
@@ -2284,6 +2285,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#943",
+      "what": "Trainer Rune (Tidewake) moved off a steep sand face onto flat dune top 17.7 m clear of the Gull Rest wild cluster: his conversation and fight are reachable; full CI green",
+      "when": "13 Nov 04:47"
+    },
     {
       "pr": "#942",
       "what": "Tighter conversation shot (fov 40 to 36 at the 2.9 m arm): 10 of 11 judged sets gain, none lose (F39#26 7.04, F40#12 7.12, F38#17, F38#37, F40#10 up); full CI green (26 jobs, engine suites ran)",
