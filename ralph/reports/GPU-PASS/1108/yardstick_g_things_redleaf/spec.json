@@ -1,0 +1,47 @@
+[
+ {
+  "label": "G F38#30",
+  "a": "G-rl_F38-30_base.png",
+  "b": "G-rl_F38-30_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Burrow Warrens hillside. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "G F38#24 walk",
+  "a": "G-rl_F38-24_walk_base.png",
+  "b": "G-rl_F38-24_walk_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: distant mountains. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "G F38#24 route",
+  "a": "G-rl_F38-24_route_base.png",
+  "b": "G-rl_F38-24_route_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: distant mountains. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "G warrens other",
+  "a": "G-rl_warrens_other_base.png",
+  "b": "G-rl_warrens_other_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the Burrow Warrens route (route, walk and dusk vista views). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G stronghold other",
+  "a": "G-rl_stronghold_other_base.png",
+  "b": "G-rl_stronghold_other_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the stronghold approach route (walk and dusk vista views). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "none"
+  ]
+ }
+]
