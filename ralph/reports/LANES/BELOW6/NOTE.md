@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-UNIFORM-CLOTH is an arm after all (F41#18): mesh-built garment mask
+
+Your idea works. The probe: each body's triangles sort cleanly by dominant bone (8 to 18 percent have no bone above half weight), and the garment islands line up with the atlas, with head, hair, forearms and hands excluded. Flag-off pair in one overlay: `below6_uniform_cloth` (mid-value slate cloth and a brass band on the shoulder-bone triangles, for grunt_c, officer_a and former_tether_member) and `uniform_cloth_floor_1113` (floor 0.18 to 0.04 for uniformed ranks). CPU, Dace: at the inventory camera the uniform separates from the mud and the brass shoulders read; hair and skin are as on base. Only Dace is captured on CPU. These are shared rigs, so the cloth changes wherever those three bodies appear, in any biome: it needs a no-loss look outside Stormwood. The three failed colour passes are kept as `EARLIER-PASSES-NOT-SENT.md`. Twelve arms waiting.
+
 ## 13 Nov, uniform cloth albedo (F41#18): tried three texture passes, NOT SENT
 
 `BELOW6-UNIFORM-CLOTH/NOT-SENT.md` with two CPU sheets. The uniform bodies are baked atlases with no garment masks, so the cloth can only be selected by colour. Selecting all dark pixels separates the figure from the mud but turns the hair pale blue; keeping warm dark pixels saves the hair but leaves a mottled dark indigo that is darker than base at the inventory camera. Neither is the clean "lit mid-value cloth" the judges ask for, so I removed the textures and both flags rather than queue a weak arm. What would work is a painted per-garment mask on the three atlases (art work), which would also carry the copper or steel rank accent. No GPU slot used. I have no further untried below-6 idea ready right now; eleven arms are waiting on verdicts.
