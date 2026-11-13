@@ -104,7 +104,7 @@ static func _section(cfg: Dictionary, role: String, part: String) -> Dictionary:
 static func any_enabled(cfg: Dictionary) -> bool:
 	if not bool(cfg.get("enabled", false)):
 		return false
-	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "crumple"], ["faint", "level_trunk"], ["faint", "legless_head_drop"],
+	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "crumple"], ["faint", "level_trunk"], ["faint", "legless_head_drop"], ["faint", "end_pose"],
 			["hit", "recoil"], ["hit", "grounded"]]:
 		if not _section(cfg, pair[0], pair[1]).is_empty():
 			return true
@@ -444,6 +444,15 @@ static func settle_faint(rig: Rig, source: Animation, raw_cfg: Dictionary) -> An
 		if not drop.is_empty() and not limbed:
 			# A raised hood does not read as a faint.
 			_drop_head(rig, animation, end, rotations[-1], positions[-1], drop, false)
+	# faint.end_pose (per species, absent by default): stated end pitches for
+	# named joints, root-most first, applied to the faint only. For a rig the
+	# measured head drop cannot read (Fulgocobra's raised neck and hood).
+	var end_pose := _section(cfg, "faint", "end_pose")
+	if not end_pose.is_empty():
+		var joints: Dictionary = end_pose.get("joints", {})
+		for joint: Variant in joints:
+			rig.pitch_joint(animation, end, rotations[-1], positions[-1], str(joint),
+				float(joints[joint]), float(end_pose.get("ramp_start", 0.3)))
 	if not grounded.is_empty() or not side.is_empty():
 		var sink := rig.standing_height * float(grounded.get("sink_frac", 0.015)) if not grounded.is_empty() else 0.0
 		var centre := grounded.is_empty() or bool(grounded.get("recentre", true))
@@ -1131,6 +1140,37 @@ class Rig:
 				continue
 			var value: Quaternion = animation.track_get_key_value(track, key)
 			animation.track_set_key_value(track, key, (Quaternion.IDENTITY.slerp(local_lift, r) * value).normalized())
+		bone_tracks.erase(animation.get_instance_id())
+
+	## faint.end_pose: pitch one joint forward and down by a stated angle,
+	## ramped in over the clip's tail. The axis is the body's lateral axis, so
+	## a positive angle tips the joint's up direction toward the body's forward.
+	func pitch_joint(animation: Animation, t_end: float, rotation: Quaternion, position: Vector3,
+			joint: String, degrees: float, start: float) -> void:
+		var bone := skeleton.find_bone(joint)
+		if bone < 0 or absf(degrees) < 0.5:
+			return
+		var track: int = (_bone_tracks(animation).get(bone, {}) as Dictionary).get(Animation.TYPE_ROTATION_3D, -1)
+		if track < 0 or animation.track_get_key_count(track) == 0:
+			return
+		var to_body := _pivot(rotation, position) * to_model
+		var globals := global_poses(animation, t_end)
+		var axis_skeleton := (to_body.basis.inverse() * Vector3.UP.cross(forward).normalized()).normalized()
+		var turn := Quaternion(axis_skeleton, deg_to_rad(degrees))
+		var parent := skeleton.get_bone_parent(bone)
+		var parent_rotation := globals[parent].basis.get_rotation_quaternion() if parent >= 0 else Quaternion.IDENTITY
+		var local_turn := (parent_rotation.inverse() * turn * parent_rotation).normalized()
+		var end_time := animation.length
+		for phase: float in [start, (start + 1.0) * 0.5, 1.0]:
+			var t := phase * end_time
+			if animation.track_find_key(track, t, Animation.FIND_MODE_APPROX) < 0:
+				animation.rotation_track_insert_key(track, t, animation.rotation_track_interpolate(track, t))
+		for key in animation.track_get_key_count(track):
+			var r := _smooth((animation.track_get_key_time(track, key) / end_time - start) / maxf(1.0 - start, 0.05))
+			if r <= 0.0:
+				continue
+			var value: Quaternion = animation.track_get_key_value(track, key)
+			animation.track_set_key_value(track, key, (Quaternion.IDENTITY.slerp(local_turn, r) * value).normalized())
 		bone_tracks.erase(animation.get_instance_id())
 
 	func write_pivot(animation: Animation, times: PackedFloat64Array, rotations: Array[Quaternion], positions: Array[Vector3]) -> void:
