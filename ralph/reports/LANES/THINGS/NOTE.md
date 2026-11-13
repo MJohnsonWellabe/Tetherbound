@@ -9,6 +9,11 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Your two closing-push items are both ready as separate overlay arms:**
+  - **(a) `THINGS-HALLMOSS`** (entry below): the "green translucent plane" is not a stray mesh or a ring remnant; it is the hall stone's moss covering whole wall panels.
+  - **(b) `THINGS-TELLDUST2`** (`ralph/reports/LANES/THINGS-TELLDUST2/`): a lower dust band. Each puff grows to about 1.45 times its size, so the shipped 0.8 m puffs reach 1.4 m and cross a creature's legs; at 0.5 m (spacing 0.2, cap raised to 400) the largest is about 0.85 m and the band is still continuous. Base is round 1.
+  - Neither can be shown on CPU.
+- **`tb/things-telldust-land` head is 30c61a63** (as in the entry below). The reason key is named `_why_dust_band_1113`, not `_why_on`, because these are values, not a flag; it cites the verdict, the numbers and "painted outlines stay off (owner, 24 Oct)". I have now also run the combat VFX tests on that branch (`test_combat_vfx`, `test_move_effects`): 23 tests, 0 failed.
 - **Ready: `THINGS-HALLMOSS`** (`ralph/reports/LANES/THINGS-HALLMOSS/`), the F38#28 close-out the judges pointed at (misses on High by 0.03). The "translucent green vertical plane behind the dog" is not geometry: it is the hall stone's moss term covering whole recessed wall panels as flat green rectangles. Overlay only, one value: interior `moss_amount` 0.46 to 0.22; the exterior has its own value and is untouched (F38#20 safe). **Not shown on CPU** (the hall is too dark there). No-loss frames named: Solene's courtyard and the stronghold interiors.
 - **LANDING READY: `tb/things-telldust-land` 30c61a63** (from main 0a57e6d7, `THINGS-TELLDUST-LAND/READY.md`, STATUS: land). **Relay from LANE-SCOUT, `G-things-telldust.md` (a19cc351): SHIP, 3/3 on every set, no loss.** F38#3 High 7.08 to 7.51, Medium 7.08 to 7.47; F38#28 High 7.16 to 7.47, Medium 7.29 to 7.55; F38#11 tell frames 6.56 to 6.95. **Nothing closes: F38#3 misses on Medium by 0.03, F38#28 on High by 0.03.** Config only, five values; 32 tell and telegraph tests, 0 failed. Applies to every fight in every realm; only Meadows was judged.
   - Danger cue not lost: judges read danger from the HUD line on both sides.
