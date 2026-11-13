@@ -818,9 +818,13 @@
   },
   "dune_grass_candidate": {
     "_comment": "close-1024 T4 (dw1, t4, t4c judges x3: beach grass in even, comb-like rows). A toggle-off probe proved the tufts are the water_ground_cover grass field. Inside a colony the shader keeps every lattice point (density_gain 1.1, clamped to 1), so tufts stand on the lattice in rows. density 0.6 makes the keep random inside colonies, and the bare gaps widen (dune_gap 0.43/0.60 -> 0.36/0.50). Unjudged; OFF in play.",
-    "density_gain": 0.6,
-    "dune_gap_start": 0.36,
-    "dune_gap_full": 0.5
+    "_why_grassgroves": "ON values (GPU judged, LANE-JUDGE G-land-mt-grassgroves-r2 on tb/judge c9938aeaf, 13 Nov 2026): this section is applied last to the Tidewake grass field, so denser, fewer clumps with wider bare gaps go here. F39#1 6.07 -> 6.23 (+0.16, 3/3); Tidewake routes no-loss 5.87 -> 6.11 (+0.24, 3/3); Venn level at 6.51; F39#15 level.",
+    "density_gain": 1.2,
+    "clump_patch_start": 0.56,
+    "clump_patch_full": 0.66,
+    "clump_contrast": 1.0,
+    "dune_gap_start": 0.42,
+    "dune_gap_full": 0.55
   },
   "shore_water_candidate": {
     "_comment": "close-1024 owner on the GPU lt2 sheet: \"the water maybe could use work\"; judges x3 on every water batch: a hard navy stripe where the shallows jump to deep. The colour route (t2, t2b) lost twice by changing the palette, so this keeps the shipping deep/shallow/fresnel colours exactly and only softens the step: a mid stop between them (#3f8e98 at 3 m), falloff 5 -> 11 m with a gentle band break, and a little more wave relief (0.20 -> 0.30). Unjudged; OFF in play.",
