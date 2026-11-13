@@ -5407,6 +5407,18 @@
    "ask": "One overlay arm per the owner's answer: ralph/reports/LANES/BEINGS-OFFICER-FACES/overlay.json (Maren chestnut-honey hair and plate, Sera unchanged; Nysa ash-silver hair and plate on her current officer_a face, Varga unchanged; no body swap). Stormwood dialogue officer frames per CAPTURE.json, High. By eye: Maren honey, Nysa silver (forelock stays dark), both faces as today.",
    "added": "13 Nov 21:20",
    "priority": "with the beings boot after stormraven-arcs"
+  },
+  {
+   "id": "land-mt-cragcut",
+   "branch": "tb/land-mt",
+   "commit": "5ef7e327e",
+   "rows": [
+    "F39#19 (6.95 High / 7.27 Medium; attempt 2 of 2)",
+    "F39#7"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/LAND-MT-CRAGCUT/overlay.json (crag shader back_face_cut_m 150: discards the Veilfall crag shells' inner faces near the camera; proven on CPU at the judged t-000 view to be the black wedge). Venn fight with warm-up first (TECHNICAL 8.1), High AND Medium, F38#38 control, pair by camera. By eye at t-000: the black polygon is gone and the mossy cliff and sand show.",
+   "added": "13 Nov 21:30",
+   "priority": "near-bar closer; first in the tb/land-mt boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
