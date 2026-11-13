@@ -5349,6 +5349,28 @@
    "ask": "Pose-stage overlay arm: base vs + ralph/reports/LANES/BEINGS-THUNDERTUNNEL-FAINT/overlay.json (forced crumple settle scope so the faint ends head down with the eye showing, not the belly-out 'faceless ball'). capture_f36_poses.gd per its CAPTURE.json, High. Same tb/beings import as the pose batch and MONITOR-VALUE.",
    "added": "13 Nov 20:45",
    "priority": "worst creature row left without an arm; with the beings boot"
+  },
+  {
+   "id": "beings-stormraven-arcs",
+   "branch": "tb/beings",
+   "commit": "2836d1e64",
+   "rows": [
+    "F41#13 Stormraven (6.91 High and Medium)",
+    "F36#74 (6.37)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/BEINGS-STORMRAVEN-ARCS/overlay.json (branching white-violet arcs drawn in model space along the wing, replacing frost-like flecks; the judges' own ask). Per its CAPTURE.json, High; Medium too if F41#13 maps near 7.5. Same tb/beings import (use 2836d1e64 for all beings arms).",
+   "added": "13 Nov 20:55",
+   "priority": "near-7 row; first in the beings boot after the pose batch"
+  },
+  {
+   "id": "rescore-f40-17-main",
+   "branch": "main",
+   "commit": "b8622117c",
+   "rows": [
+    "F40#17 High Perches (board 6.18; #949 rim dressing shipped 6.01 -> 6.94)"
+   ],
+   "ask": "One-sided re-score on main of F40#17's job frames, High; Medium if High >= 7.5. Ride with G-rescore-1113's job-frame rows.",
+   "added": "13 Nov 20:55"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
