@@ -4656,6 +4656,16 @@
       "added": "13 Nov 06:48"
     },
     {
+      "id": "things-wardenring-r2",
+      "branch": "tb/things",
+      "commit": "a85dde69b",
+      "rows": [
+        "F38#28 (close candidate: Medium 7.52, High 7.05)"
+      ],
+      "ask": "Base = round 1 (overlay_warden_ring.json, what lands in #945) vs arm overlay_warden_ring_r2.json (Warden ring 0.05 alpha / 0.3 m), High AND Medium side by side, the F38#28 job frames via the same phase2_capture_fights.gd repro as round 1 (warden_aldis-03/05/08); no-loss r04/r16/a03. Closes only at a mapped 7.5 on both presets in a confirming batch with the F38#38 control. Closer, so ahead of the floor arms.",
+      "added": "13 Nov 06:58"
+    },
+    {
       "id": "below6-overlook-join",
       "branch": "tb/below6",
       "commit": "ee1a130c6",
