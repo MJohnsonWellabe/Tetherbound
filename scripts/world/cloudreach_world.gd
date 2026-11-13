@@ -2822,9 +2822,6 @@ func _overlook_join_height(point: Vector3, height: float, config: Dictionary) ->
 	var cfg: Dictionary = config.get("overlook_ridge_join_1113", {})
 	if not bool(cfg.get("enabled", false)):
 		return height
-	var edge: Variant = cfg.get("edge_1113", {})
-	if edge is Dictionary and bool((edge as Dictionary).get("enabled", false)):
-		return _overlook_join_edge_height(point, height, cfg, edge as Dictionary)
 	for pad: Dictionary in _all_pad_points:
 		if float(pad.get("cap_radius", -1.0)) != 0.0:
 			continue
@@ -2857,55 +2854,6 @@ func _overlook_join_height(point: Vector3, height: float, config: Dictionary) ->
 				return height
 		return maxf(height, lerpf(height, crown - float(cfg.get("sink_m", 0.03)), weight))
 	return height
-
-
-## F40#15 `overlook_ridge_join_1113.edge_1113` (LANE-LAND-CS, OFF until judged;
-## same scope as the join). The overlook registers two cap-0 pads (flat radius
-## about 13 m and 21 m). The join above returns at the first pad whose ease
-## band holds the vertex and never lifts inside a rim, so ridge rows just
-## inside the larger ledge's rim keep the ridge's own height and the ledge's
-## side face stands 6 to 15 cm proud of the turf: the "dark wedge" beside the
-## path (pixel probe, route_day: ridge 1108.46-1108.58, ledge face up to
-## 1108.64, at 20.6 m from the centre). On: every cap-0 pad is considered and
-## the highest lift wins, and the band starts `inner_m` inside each rim (full
-## weight inside the rim). Never lowers; the route ribbon exemption is kept.
-func _overlook_join_edge_height(point: Vector3, height: float, cfg: Dictionary,
-		edge: Dictionary) -> float:
-	var ease := float(cfg.get("ease_m", 9.0))
-	var inner := maxf(0.0, float(edge.get("inner_m", 1.5)))
-	var sink := float(edge.get("sink_m", cfg.get("sink_m", 0.03)))
-	var here := Vector2(point.x, point.z)
-	var best := height
-	for pad: Dictionary in _all_pad_points:
-		if float(pad.get("cap_radius", -1.0)) != 0.0:
-			continue
-		var centre: Vector3 = pad["position"]
-		var flat := Vector2(point.x - centre.x, point.z - centre.z)
-		var r := flat.length()
-		var rim := float(pad["flat_radius"])
-		if r <= maxf(rim - inner, 0.01) or r >= rim + ease:
-			continue
-		var on_rim := flat / r * rim * 0.985
-		var crown := _crown_height_at({"position": centre, "flat_radius": rim, "cap_radius": 0.5},
-			Vector3(centre.x + on_rim.x, centre.y, centre.z + on_rim.y), _all_crown_reference_lines)
-		var weight := 1.0 - smoothstep(0.0, ease, maxf(r - rim, 0.0))
-		for line: Dictionary in _all_route_lines:
-			if str(line["route_id"]).begins_with("crown:"):
-				continue
-			var from: Vector3 = line["a"]
-			var to: Vector3 = line["b"]
-			var a2 := Vector2(from.x, from.z)
-			var along := Vector2(to.x, to.z) - a2
-			var t := clampf((here - a2).dot(along) / along.length_squared(), 0.0, 1.0)
-			var off := here.distance_to(a2 + along * t)
-			var clear := float(line["half_width"]) + LINE_PIN_MARGIN_M
-			weight *= smoothstep(clear, clear + 4.0, off)
-			if weight <= 0.0:
-				break
-		if weight <= 0.0:
-			continue
-		best = maxf(best, lerpf(height, crown - sink, weight))
-	return best
 
 
 func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
