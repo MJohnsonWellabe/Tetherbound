@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.066,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0483,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.312,
+  "lower_edges": 0.251,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.301,
+  "lower_edges": 0.0701,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.363,
+  "lower_edges": 0.1484,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "solid-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/solid-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.215,
+  "lower_edges": 0.0659,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "solid-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/solid-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0485,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "solid-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/solid-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.312,
+  "lower_edges": 0.2529,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "solid-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/solid-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.22,
+  "lower_edges": 0.1237,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "solid-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-below6-overlook-solid-c673/solid-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.193,
+  "lower_edges": 0.127,
+  "script_errors": 0,
+  "note": "BELOW6-OVERLOOK-SOLID (F40#15, frame walk_03_day; also the walk_02 ghost planes): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 + two capture_stands heading overrides, so walk_02/walk_03 are NEW stands by design). High. By eye: walk_02/03 face the arch, compass ring and pennants with the trainer on grass; base walk_02's see-through wall is gone; route_day/vista_dusk/walk_01 near-unchanged (mean diff 1.7-5.0)."
+ }
+]
