@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "meadows__inventory__trainer__tournament_final_oskar.jpg",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-rescore-f38-16-c673/main-High/meadows__inventory__trainer__tournament_final_oskar.jpg",
+  "sky_fraction": 0.196,
+  "lower_edges": 0.4226,
+  "script_errors": 0,
+  "note": "F38#16 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; Meadows dialogue --subset=tournament_ (Mira, Tam, Oskar), dialogue frames at camera blend 1.0."
+ },
+ {
+  "frame": "meadows__inventory__trainer__tournament_final_oskar__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-rescore-f38-16-c673/main-High/meadows__inventory__trainer__tournament_final_oskar__dialogue.jpg",
+  "sky_fraction": 0.15,
+  "lower_edges": 0.3768,
+  "script_errors": 0,
+  "note": "F38#16 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; Meadows dialogue --subset=tournament_ (Mira, Tam, Oskar), dialogue frames at camera blend 1.0."
+ },
+ {
+  "frame": "meadows__inventory__trainer__tournament_quarter_mira.jpg",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-rescore-f38-16-c673/main-High/meadows__inventory__trainer__tournament_quarter_mira.jpg",
+  "sky_fraction": 0.196,
+  "lower_edges": 0.4232,
+  "script_errors": 0,
+  "note": "F38#16 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; Meadows dialogue --subset=tournament_ (Mira, Tam, Oskar), dialogue frames at camera blend 1.0."
+ },
+ {
+  "frame": "meadows__inventory__trainer__tournament_quarter_mira__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-rescore-f38-16-c673/main-High/meadows__inventory__trainer__tournament_quarter_mira__dialogue.jpg",
+  "sky_fraction": 0.146,
+  "lower_edges": 0.3806,
+  "script_errors": 0,
+  "note": "F38#16 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; Meadows dialogue --subset=tournament_ (Mira, Tam, Oskar), dialogue frames at camera blend 1.0."
+ },
+ {
+  "frame": "meadows__inventory__trainer__tournament_semi_tam.jpg",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-rescore-f38-16-c673/main-High/meadows__inventory__trainer__tournament_semi_tam.jpg",
+  "sky_fraction": 0.196,
+  "lower_edges": 0.4232,
+  "script_errors": 0,
+  "note": "F38#16 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; Meadows dialogue --subset=tournament_ (Mira, Tam, Oskar), dialogue frames at camera blend 1.0."
+ },
+ {
+  "frame": "meadows__inventory__trainer__tournament_semi_tam__dialogue.jpg",
+  "preset": "main-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-rescore-f38-16-c673/main-High/meadows__inventory__trainer__tournament_semi_tam__dialogue.jpg",
+  "sky_fraction": 0.153,
+  "lower_edges": 0.3696,
+  "script_errors": 0,
+  "note": "F38#16 re-score: main 4f9ee3967 game content (c673d5285, no overlay), High, one side; Meadows dialogue --subset=tournament_ (Mira, Tam, Oskar), dialogue frames at camera blend 1.0."
+ }
+]
