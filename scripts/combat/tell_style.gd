@@ -305,6 +305,28 @@ static func pulse(style: Dictionary, build: float, time: float) -> float:
 	return 1.0 - depth * 0.5 * (1.0 - cos(TAU * time * hz))
 
 
+## One puff's size (x), lift (y), alpha factor (z) and lane drift (w) at
+## `time`. `slot` seeds it; `along_m` is its distance along the line.
+## `coherence` 0 is the shipped look: each puff grows, rises and fades from
+## nothing to full on its own random phase. At 1 the puffs share one slow wave
+## along the line, the seed is only a small jitter, and none fades out.
+static func dust_puff(slot: int, along_m: float, time: float, size: float, rise: float, rate: float,
+		coherence: float, wave_per_m: float, jitter: float) -> Vector4:
+	var seed := fposmod(sin(float(slot) * 12.9898) * 43758.5453, 1.0)
+	var phase := fposmod(time * rate + seed, 1.0)
+	var grow := size * (0.55 + 0.9 * phase) * (0.8 + 0.4 * seed)
+	var lift := rise * phase
+	var fade := sin(PI * phase)
+	var drift := phase
+	if coherence > 0.0:
+		var breathe := 0.5 + 0.5 * sin(TAU * (time * rate - along_m * wave_per_m + (seed - 0.5) * jitter))
+		grow = lerpf(grow, size * (0.9 + 0.2 * breathe) * (0.95 + 0.1 * seed), coherence)
+		lift = lerpf(lift, rise * breathe, coherence)
+		fade = lerpf(fade, 0.72 + 0.28 * breathe, coherence)
+		drift = lerpf(drift, 0.0, coherence)
+	return Vector4(grow, lift, fade, drift)
+
+
 ## Walks one polyline at `spacing`, at most `limit` puffs. With a multimesh,
 ## writes each puff from index `first`; without one it only counts.
 static func _dust_walk(points: PackedVector3Array, spacing: float, limit: int, multimesh: MultiMesh,
@@ -315,6 +337,14 @@ static func _dust_walk(points: PackedVector3Array, spacing: float, limit: int, m
 	var rise := float(style.get("dust_rise_m", 0.8))
 	var rate := float(style.get("dust_hz", 1.1))
 	var colour := Color(str(style.get("dust_colour", "#c9b38c")))
+	# F38#3 / F38#28 `dust_phase_coherence` (0 = off, the shipped look). Each
+	# puff fades from nothing to full on its own random phase, so at any
+	# spacing the band breaks into separate round puffs with gaps (GPU by-eye,
+	# TELLDUST2). At 1 the phase is a slow wave of distance along the line and
+	# the seed is only a small jitter.
+	var coherence := clampf(float(style.get("dust_phase_coherence", 0.0)), 0.0, 1.0)
+	var wave_per_m := float(style.get("dust_wave_per_m", 0.12))
+	var jitter := float(style.get("dust_phase_jitter", 0.06))
 	for index in points.size() - 1:
 		var a := points[index]
 		var b := points[index + 1]
@@ -325,14 +355,16 @@ static func _dust_walk(points: PackedVector3Array, spacing: float, limit: int, m
 		while next < along + step and placed < limit:
 			if multimesh != null:
 				var slot := first + placed
-				var seed := fposmod(sin(float(slot) * 12.9898) * 43758.5453, 1.0)
-				var phase := fposmod(time * rate + seed, 1.0)
-				var grow := size * (0.55 + 0.9 * phase) * (0.8 + 0.4 * seed)
-				var at := a.lerp(b, (next - along) / step) + Vector3.UP * (grow * 0.35 + rise * phase)
+				var puff := dust_puff(slot, next, time, size, rise, rate, coherence, wave_per_m, jitter)
+				var grow := puff.x
+				var lift := puff.y
+				var fade := puff.z
+				var drift := puff.w
+				var at := a.lerp(b, (next - along) / step) + Vector3.UP * (grow * 0.35 + lift)
 				if flow:
-					at += (b - a) / step * spacing * 1.5 * phase
+					at += (b - a) / step * spacing * 1.5 * drift
 				multimesh.set_instance_transform(slot, Transform3D(Basis.from_scale(Vector3.ONE * grow), at))
-				multimesh.set_instance_color(slot, Color(colour, alpha * sin(PI * phase)))
+				multimesh.set_instance_color(slot, Color(colour, alpha * fade))
 			placed += 1
 			next += spacing
 		along += step
