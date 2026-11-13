@@ -51,6 +51,16 @@ uniform float fog_keep_end_m = 3600.0;
 // faces painted green filled exactly that corner. At 1 a back face takes the
 // flipped normal and is lit as rock facing the viewer.
 uniform float back_face_lit = 0.0;
+// `back_face_cut_m` (LANE-LAND-MT, 13 Nov; 0 keeps the shipped look): the GPU
+// verdict on back_face_lit (G-land-mt-cragback) found the wedge unchanged on
+// Forward+, so lighting is not a reliable fix across renderers. A back face
+// closer than this many metres is discarded instead: from inside a shell the
+// camera then sees the real Veilfall terrain behind it. Far views see front
+// faces, so the mountain's silhouette is untouched.
+uniform float back_face_cut_m = 0.0;
+// GPU eye-check only (alpha 0 = off): paints back faces this colour, so a
+// capture shows whether a dark shape is a crag shell's inner side.
+uniform vec4 back_face_probe_colour : source_color = vec4(0.0);
 uniform float far_lift_m = 0.0;
 uniform float far_lift_start_m = 250.0;
 uniform float far_lift_end_m = 1400.0;
@@ -86,6 +96,9 @@ vec3 triplanar(vec3 p, vec3 n) {
 }
 
 void fragment() {
+	if (!FRONT_FACING && back_face_cut_m > 0.0 && length(VERTEX) < back_face_cut_m) {
+		discard;
+	}
 	if (back_face_lit > 0.5 && !FRONT_FACING) {
 		NORMAL = -NORMAL;
 	}
@@ -112,6 +125,10 @@ void fragment() {
 	float ledge = smoothstep(moss_normal_lo, moss_normal_hi, n.y) * smoothstep(0.35, 0.65, noise(world.xz / 22.0));
 	albedo = mix(albedo, moss_colour * mix(0.8, 1.15, luma), ledge * moss_amount * (1.0 - crown * 0.6) * (1.0 - foot));
 	ALBEDO = albedo * crevice_darken;
+	if (back_face_probe_colour.a > 0.0 && !FRONT_FACING) {
+		ALBEDO = back_face_probe_colour.rgb;
+		EMISSION = back_face_probe_colour.rgb;
+	}
 	ROUGHNESS = mix(roughness_dry, roughness_wet, wet);
 	SPECULAR = mix(0.3, wet_specular, wet);
 	if (tidewake_detail_enabled) {

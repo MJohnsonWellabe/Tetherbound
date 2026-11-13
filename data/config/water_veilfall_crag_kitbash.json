@@ -254,6 +254,8 @@
   ],
   "crag_shader": {
     "back_face_lit": 0.0,
+    "back_face_cut_m": 0.0,
+    "_why_back_face_cut_m": "F39#19 / F39#7 (LANE-LAND-MT, 13 Nov, OFF until GPU-judged): back_face_lit was level on GPU (G-land-mt-cragback). Discarding crag back faces within this distance shows the real Veilfall terrain behind the shell instead of its dark inner side. Shader value only; scope client_presentation.",
     "_why_back_face_lit": "F39#19 / F39#7 (LANE-LAND-MT, 13 Nov, OFF until GPU-judged): the Venn fight's top-right black mass is the inner side of these crag shells, lit with the outer normal. 1.0 lights back faces as rock facing the viewer. Shader value only; scope client_presentation.",
     "body_colour": "#2f3335",
     "wet_colour": "#13171a",
