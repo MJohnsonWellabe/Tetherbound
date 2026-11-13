@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 21:48 UTC",
+ "updated": "13 Nov 2026 22:05 UTC",
  "headline": "13 Nov 21:48: four landings this evening (#954 overlook + dust, #956 monitor + Aquaryn, #957 Staticub fur + uniform cloth). Staticub stage 8.08 High: close batch queued. New regressions found by re-scores: F39#21 Venn win camera (5.84, LANE-SCENE), F13#5 swim cue (5.38, LANE-LAND-MT).",
  "batches": [
   {
@@ -2629,8 +2629,8 @@
    "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression)"
   },
   "F39#19": {
-   "gpu": 6.95,
-   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.85; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-tidewake-fights-c673: 7.47 (+0.91; roster FIXED 3/3), 0.03 short (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov) | G-scene-rosternames (13 Nov, strict panel, control 7.98): base 6.88, arm 6.97 DO NOT SHIP (F39#7 Medium loses to camera shift) | G-land-mt-cragback (13 Nov, control 7.87): 6.95 High, 7.27 Medium, roster FIXED 3/3; dark overhead wedge still flagged 3/3"
+   "gpu": 6.92,
+   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.85; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-tidewake-fights-c673: 7.47 (+0.91; roster FIXED 3/3), 0.03 short (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov) | G-scene-rosternames (13 Nov, strict panel, control 7.98): base 6.88, arm 6.97 DO NOT SHIP (F39#7 Medium loses to camera shift) | G-land-mt-cragback (13 Nov, control 7.87): 6.95 High, 7.27 Medium, roster FIXED 3/3; dark overhead wedge still flagged 3/3 | G-land-mt-cragcut (13 Nov, control 8.08): SHIP small 6.85 -> 6.92 (+0.07, 2/3) both presets on matched t-000; crag approach parked; holds it: plastic Ripplet merging into flat beige sand"
   },
   "F39#2": {
    "gpu": 6.79,
