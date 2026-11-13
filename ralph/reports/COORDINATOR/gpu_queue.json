@@ -5399,12 +5399,12 @@
   {
    "id": "beings-officer-faces",
    "branch": "tb/beings",
-   "commit": "06805723e",
+   "commit": "fae5709b2",
    "rows": [
     "F41#8 (6.27)",
     "F41#18 (6.02)"
    ],
-   "ask": "Two overlay arms, one base: BEINGS-OFFICER-FACES-MAREN (Maren chestnut-honey hair and plate; Sera unchanged) and BEINGS-OFFICER-FACES-NYSA-HAIR (Nysa keeps the current officer_a face per owner 13 Nov; ash-silver hair and plate only). Stormwood dialogue frames per the arm folders' CAPTURE.json, High. By eye: Maren chestnut-honey, Nysa ash-silver, both faces as today. The Nysa face-swap record stays OFF (owner: keep current face).",
+   "ask": "One overlay arm per the owner's answer: ralph/reports/LANES/BEINGS-OFFICER-FACES/overlay.json (Maren chestnut-honey hair and plate, Sera unchanged; Nysa ash-silver hair and plate on her current officer_a face, Varga unchanged; no body swap). Stormwood dialogue officer frames per CAPTURE.json, High. By eye: Maren honey, Nysa silver (forelock stays dark), both faces as today.",
    "added": "13 Nov 21:20",
    "priority": "with the beings boot after stormraven-arcs"
   }
