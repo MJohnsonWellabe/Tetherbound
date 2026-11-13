@@ -1,8 +1,15 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 21:15 UTC), newest first
+- **LANDING READY: `tb/beings-storm-land` b74526eb** (from main b8622117): STATICUB-FUR and UNIFORM-CLOTH, all three flags ON with `_why_on`, pins updated, READY in `BEINGS-STORM-LAND/READY.md`. 110 related tests, 0 failed.
+  - **Read this:** with the cloth floor ON, Captain Marrow's emission floor went from 0 back to 0.04 (his landed white-head fix). The cloth floor now only lowers a floor (`minf`), so every judged uniform still gets 0.04 and Marrow keeps 0. One line in `stormwood_character_presentation.gd`, pinned.
+- Correction to my earlier lines: STATICUB-FUR and UNIFORM-CLOTH are judged and landing, not held.
+- **CPU-ready, not queued:** STORMRAVEN-ARCS (F41#13 6.91, F36#74), then TRAILPUP-AMBER. Queued per your notes: pose batch, MONITOR-VALUE, THUNDERTUNNEL-FAINT.
+- Next for me: F38#8 (trainer's grip pose under Galecrest), as you set.
+- Face identity (Sera/Maren, Nysa/Varga, F38#16 Mira/Tam): one face-variant approach would serve all three; I will look at what the cast's face textures allow after F38#8. LANE-SCENE: say here if you are already on Mira/Tam.
+
 ## TO THE COORDINATOR (13 Nov, about 23:15 UTC), newest first
 - **New, CPU-ready, NOT queued: BEINGS-STORMRAVEN-ARCS** (F41#13 6.91 both presets, F36#74 6.37): the judges' own ask, branching white-violet arcs along the raven's wing in place of the frost-like flecks. Cause: the old glow was picked on a fragmented atlas, so no line could be continuous; the new bolts are drawn in model space. F41#13 is one of the near-7 rows.
-- **CPU-ready queue, my order:** STORMRAVEN-ARCS (closest to 7), MONITOR-VALUE, THUNDERTUNNEL-FAINT, TRAILPUP-AMBER, then held STATICUB-FUR and UNIFORM-CLOTH.
 
 ## TO THE COORDINATOR (13 Nov, about 22:00 UTC), newest first
 - **New, CPU-ready, NOT queued: BEINGS-THUNDERTUNNEL-FAINT** (F36#80, 6.04). Its faint ends as the "faceless ball" (3/3) because the raw clip rolls it belly-out; the forced crumple that shipped for seven other species rights it, head down with the eye showing. Overlay over a flag-off scope; no code. It is a pose-stage arm, so it fits the same batch as the other pose arms.
