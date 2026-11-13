@@ -4679,20 +4679,6 @@
       "added": "13 Nov 02:58"
     },
     {
-      "id": "reverify-f36-real-medium-main",
-      "branch": "main",
-      "commit": "d4960ba66",
-      "rows": [
-        "F36#72 Stormbrush",
-        "F36#69 Solmane",
-        "F36#58 Pebbik",
-        "F36#35 Breezetail (all closed on pose-stage Medium reads now found to be High renders)",
-        "plus close candidates F36#33 Ashtusk, F36#36 Brooktail, stormtrail"
-      ],
-      "ask": "No arm. On d4960ba66 _capture_creature_roster.gd applies graphics_prefs, so this is the first real pose-stage Medium. Capture the four closed rows' own job frames (and the three candidates) at MEDIUM on main, in a confirming batch with the F38#38 control, plus High in the same batch for a side-by-side. Each closed row stays closed only if real Medium is 7.5 or above. Send to LANE-SCOUT.",
-      "added": "13 Nov 08:33"
-    },
-    {
       "id": "below6-overlook-join",
       "branch": "tb/below6",
       "commit": "ee1a130c6",
