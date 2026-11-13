@@ -1875,7 +1875,7 @@ func _collect_all_route_lines() -> void:
 		var ledge_size := Vector3(46.0, 72.0, 44.0)
 		if landmark_id == "sky_shrine_heartstone":
 			ledge_size = Vector3(132.0, at.y + 210.0, 126.0)
-		var ledge_y := -0.08 if landmark_id == "old_wind_observatory" else 0.10
+		var ledge_y := (-0.08 if landmark_id == "old_wind_observatory" else 0.10) - _overlook_ledge_drop(landmark_id)
 		if landmark_id == "old_wind_observatory":
 			# `ObservatoryWalkableCrown` (38x36, flat at the landmark height) is
 			# the floor on top of this ledge; register it as a wide reference
@@ -2806,6 +2806,25 @@ func _resource_position(authored: Vector3) -> Vector3:
 			best_distance = distance
 			best = candidate + Vector3.UP * 0.06
 	return best
+
+
+## F40#15 `overlook_ledge_drop_1113` (LANE-LAND-CS, OFF until judged; scope
+## world_geometry: the ledge, its crown, its collider and its pad drop
+## together, identically on every peer, no save state). Two pixel probes
+## (route_day, walk_02) name the overlook ledge's own body under the "dark
+## wedge" beside the path and the thin strip at the trainer's feet: its side
+## face (normal_y 0.10) stands 6 to 15 cm above the approach ridge turf. The
+## ridge join moves ridge vertices about 4 m apart, so lifting them cannot
+## reach a face that crosses between them (tried; no change). On: the
+## waterward overlook's ledge sits `drop_m` lower, and so does the pad the
+## ridge rows are pinned to, so the face tucks under the turf.
+func _overlook_ledge_drop(landmark_id: String) -> float:
+	if landmark_id != "waterward_overlook":
+		return 0.0
+	var cfg: Variant = (_visual_config.get("landmass", {}) as Dictionary).get("overlook_ledge_drop_1113", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return 0.0
+	return clampf(float((cfg as Dictionary).get("drop_m", 0.18)), 0.0, 0.5)
 
 
 ## F40#15 `overlook_ridge_join_1113` (flag-off; scope world_geometry: the
@@ -3965,7 +3984,7 @@ func _build_landmarks() -> void:
 		# height fits both" conflict no longer applies -- and its visible crown
 		# used to float up to 1 m above the strips (ground-truth probe).
 		var ledge_collision := not settlement
-		var ledge_y := -0.08 if landmark_id == "old_wind_observatory" else 0.10
+		var ledge_y := (-0.08 if landmark_id == "old_wind_observatory" else 0.10) - _overlook_ledge_drop(landmark_id)
 		# Flatten every landmark crown's radius the same way a landing pad's
 		# is flattened (see `_mesa`'s `flat_top_radius_m`), so an authored
 		# route/ramp reaching a crown footprint never meets a jittered dip
