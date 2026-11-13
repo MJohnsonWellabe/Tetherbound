@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 02:10 UTC",
+  "updated": "13 Nov 2026 02:25 UTC",
   "headline": [
+    "13 Nov 02:25: #941 landed: Duskhush and Ribbonray over 7, and the High Perches plaza bug fixed. Overnight landings so far: #937 (catch ring, F38#7 closed), #938 (Stormraven over 6), #939 (overlook pane), #941.",
     "13 Nov 02:10: overlook pale stone loses (-0.58, the stone smears to 'clay'); Fulgocobra's gold veins render near-white and were held. LANE-BELOW6 now chases two overlook bugs the judges found (a dark strip at the trainer's feet, ghost planes in the sky). #941 in full CI; the conversation camera is capturing.",
     "13 Nov 02:00: #941 in full CI: the High Perches plaza no longer draws as placeholder grass (bug fix), and grounded faints for Duskhush (F36#44) and Ribbonray (F36#61), which take both over 7. New on the GPU queue: LANE-THINGS' tighter conversation camera, one change for six dialogue rows in the 6.5-7.0 band.",
     "13 Nov 01:25: #939 landed (overlook pane fixed). Voltwig does not close (7.27 on both presets). Riftfrill matte and Cloudreach rain round 2 do not register; the rain arm is parked, but it exposed a bug: the High Perches plaza sometimes renders as a placeholder line ring instead of cobbles. LANE-BELOW6 has it.",
@@ -2281,6 +2282,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#941",
+      "what": "High Perches court no longer draws as placeholder grass (bug fix); grounded faints for Duskhush (F36#44 6.59 to 7.09) and Ribbonray (F36#61 6.55 to 7.09); full CI 23 jobs green",
+      "when": "13 Nov 02:24"
+    },
+    {
       "pr": "#939",
       "what": "Stormward Overlook amber pane and beacon balls fixed (overlook routes 4.92 to 5.87); full CI 23 jobs green",
       "when": "13 Nov 01:25"
@@ -2858,8 +2864,8 @@
       "src": "GPU High 8-9 Nov (F-stormwood); RE-SCORE G-rescore-stale-ext-stormwood 6.90 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
     },
     "F41#13": {
-      "gpu": 5.74,
-      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries | ARM stormraven r3 G-below6-stormraven-r3 (23aba198d, 13 Nov): 5.76 -> 6.67 (3/3), near-black raven with lightning flecks; SHIP, landing to come. Pooled current-main 5.74. Next: Fulgocobra olive body with gold veins"
+      "gpu": 6.67,
+      "src": "G-floor2-storm-glow-lines (tb/item-scout-1108 3ccb770d2): glow on lines and eyes, +0.64 (3/3) on the creature stage; landed #902; G-places-stormlight +0.23 rides (not landed) | RE-SCORE G-rescore-stale-d (LANE-PLACES 652cad031, main 90ffeb663, 12 Nov) 5.97 (was 6.66; +/-0.7); Stormraven a flat cobalt shape, no face, eye or charge contrast; Fulgocobra reads | ARM stormraven r2 (832aaa06a): 5.72 level; glow-map approach parked after two tries | ARM stormraven r3 G-below6-stormraven-r3 (23aba198d, 13 Nov): 5.76 -> 6.67 (3/3), near-black raven with lightning flecks; SHIP, landing to come. Pooled current-main 5.74. Next: Fulgocobra olive body with gold veins | LANDED #938: arm 6.67 now on main"
     },
     "F41#14": {
       "gpu": 7.05,
@@ -2991,8 +2997,8 @@
       "src": "G-rescore-tier2-batch-1 (LANE-SCOUT, tb/item-scout-1108 eb899eb63), one-sided on main 0058b0d6c at High: Veridian poses; contorted faint neck, tiny rider"
     },
     "F36#61": {
-      "gpu": 6.9,
-      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, LANDED on main 8df122a83 via #910: Ribbonray navy coat plus hit clip blend, 5.02 -> 6.90 (+1.88, 3/3) | ARM bandfaint (138a0c1fd): 6.55 -> 7.09 (3/3), SHIP"
+      "gpu": 7.09,
+      "src": "G-remakes-floor1 (LANE-SCOUT, tb/item-scout-1108 e9012a32d), GPU High, LANDED on main 8df122a83 via #910: Ribbonray navy coat plus hit clip blend, 5.02 -> 6.90 (+1.88, 3/3) | ARM bandfaint (138a0c1fd): 6.55 -> 7.09 (3/3), SHIP | LANDED #941 (13 Nov)"
     },
     "F36#72": {
       "gpu": 7.75,
@@ -3099,8 +3105,8 @@
       "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Sparkit; G-things-ruler-rescore (86e6ee44e): pose stage with --clear-ruler on main f421556ca = 7.26 at High"
     },
     "F36#44": {
-      "gpu": 6.53,
-      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Duskhush | ARM bandfaint (138a0c1fd, 13 Nov): 6.59 -> 7.09 (3/3), SHIP"
+      "gpu": 7.09,
+      "src": "G-things-t4-rescore (LANE-SCOUT, tb/item-scout-1108 f4ffb5e64), one-sided on main 3a514ef5c, GPU High: Duskhush | ARM bandfaint (138a0c1fd, 13 Nov): 6.59 -> 7.09 (3/3), SHIP | LANDED #941 (13 Nov)"
     },
     "F36#83": {
       "gpu": 6.53,
