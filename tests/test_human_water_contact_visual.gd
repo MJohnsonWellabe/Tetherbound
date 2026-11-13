@@ -219,7 +219,7 @@ func test_v_wake_ships_off_and_arcs_only_the_trailing_rings() -> void:
 			if ring == null:
 				continue
 			var arcs := float((ring.material_override as ShaderMaterial).get_shader_parameter("side_arcs"))
-			if is_equal_approx(ring.position.x, at.x) and is_equal_approx(ring.position.z, at.z + 0.6):
+			if ring == view.get("_contact"):
 				contact += 1
 				assert_eq(arcs, 0.0, "the ring at the body stays a full ring")
 				continue
