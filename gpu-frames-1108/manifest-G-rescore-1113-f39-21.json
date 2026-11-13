@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "tidewake__fight__venn__win.png",
+  "preset": "main-High",
+  "tree": "b8622117cc344ad66d7f2c77ec2b44dc302f955c",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-rescore-1113-f39-21/main-High/tidewake__fight__venn__win.png",
+  "sky_fraction": 0.351,
+  "lower_edges": 0.1125,
+  "script_errors": 0,
+  "note": "G-rescore-1113 (LANE-PLACES) F39#21: Venn and Nerissa fight resolve frames (win + aftermath), main b8622117 content (c673d5285 + six non-imported main files), High, one side. job.json ids carry the second the fight was won (win-141_53, aftermath-142_53, nerissa win-207_25); fight length varies run to run, so this run's frames are the tool's own venn__win / venn__aftermath / nerissa__win / nerissa__aftermath. By eye: both 'defeated' reward banners, trainer and creatures on the arena floor."
+ },
+ {
+  "frame": "tidewake__fight__venn__aftermath.png",
+  "preset": "main-High",
+  "tree": "b8622117cc344ad66d7f2c77ec2b44dc302f955c",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-rescore-1113-f39-21/main-High/tidewake__fight__venn__aftermath.png",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.3676,
+  "script_errors": 0,
+  "note": "G-rescore-1113 (LANE-PLACES) F39#21: Venn and Nerissa fight resolve frames (win + aftermath), main b8622117 content (c673d5285 + six non-imported main files), High, one side. job.json ids carry the second the fight was won (win-141_53, aftermath-142_53, nerissa win-207_25); fight length varies run to run, so this run's frames are the tool's own venn__win / venn__aftermath / nerissa__win / nerissa__aftermath. By eye: both 'defeated' reward banners, trainer and creatures on the arena floor."
+ },
+ {
+  "frame": "tidewake__fight__nerissa__win.png",
+  "preset": "main-High",
+  "tree": "b8622117cc344ad66d7f2c77ec2b44dc302f955c",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-rescore-1113-f39-21/main-High/tidewake__fight__nerissa__win.png",
+  "sky_fraction": 0.125,
+  "lower_edges": 0.2371,
+  "script_errors": 0,
+  "note": "G-rescore-1113 (LANE-PLACES) F39#21: Venn and Nerissa fight resolve frames (win + aftermath), main b8622117 content (c673d5285 + six non-imported main files), High, one side. job.json ids carry the second the fight was won (win-141_53, aftermath-142_53, nerissa win-207_25); fight length varies run to run, so this run's frames are the tool's own venn__win / venn__aftermath / nerissa__win / nerissa__aftermath. By eye: both 'defeated' reward banners, trainer and creatures on the arena floor."
+ },
+ {
+  "frame": "tidewake__fight__nerissa__aftermath.png",
+  "preset": "main-High",
+  "tree": "b8622117cc344ad66d7f2c77ec2b44dc302f955c",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-rescore-1113-f39-21/main-High/tidewake__fight__nerissa__aftermath.png",
+  "sky_fraction": 0.145,
+  "lower_edges": 0.2183,
+  "script_errors": 0,
+  "note": "G-rescore-1113 (LANE-PLACES) F39#21: Venn and Nerissa fight resolve frames (win + aftermath), main b8622117 content (c673d5285 + six non-imported main files), High, one side. job.json ids carry the second the fight was won (win-141_53, aftermath-142_53, nerissa win-207_25); fight length varies run to run, so this run's frames are the tool's own venn__win / venn__aftermath / nerissa__win / nerissa__aftermath. By eye: both 'defeated' reward banners, trainer and creatures on the arena floor."
+ }
+]
