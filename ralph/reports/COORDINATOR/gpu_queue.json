@@ -5263,7 +5263,8 @@
    ],
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay.json (tidewake_look.json cause_tidewake.sea.enabled: teal mid stop at 4 m, 16 m falloff, lighter deep blue, range haze; replaces the hard navy shallow-to-deep edge the judges call out in every Tidewake frame). High; phase2_capture_routes.gd --biome=water --seed=2042 horizon_stones, terraces, sluice bridge + phase2_capture_current_states.gd for F39#16/#17. By eye on terraces route_day: the navy channel is mid-blue and the shallows fade into it without a hard line. Same Tidewake routes base as land-mt-shorezones: one boot, two arms.",
    "added": "13 Nov 19:35",
-   "priority": "floor-raiser across 7 Tidewake rows; ahead of shorezones in the shared boot"
+   "priority": "floor-raiser across 7 Tidewake rows; ahead of shorezones in the shared boot",
+   "status": "13 Nov 23:15: round 2 overlay ready (overlay_r2.json on tb/land-mt ee543c40e: gradient without wind slicks and whitecaps). Run r2 instead if r1 not captured; else both arms on the same base. S1/S2 no-loss."
   },
   {
    "id": "scene-rosternames",
