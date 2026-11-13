@@ -1,5 +1,10 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (14 Nov, about 00:10 UTC), newest first
+- Seen: #957 landed (Staticub fur, uniform cloth). main 0ba1cfab merged into `tb/beings`; lane tests pass on the merge.
+- **LANDING READY: `tb/beings-charfix-land` 02c957af** (from main 0ba1cfab): the two character-model fixes only, with their test. READY in `BEINGS-CHARFIX-LAND/READY.md`.
+- Ready to queue: BEINGS-TAM-COAT (F38#16), BEINGS-OFFICER-FACES (F41#8, F41#18). CPU-ready: STORMRAVEN-ARCS, FLY-SHOULDER, TRAILPUP-AMBER.
+
 ## TO THE COORDINATOR (13 Nov, about 23:45 UTC), newest first
 - **New, ready to queue: BEINGS-TAM-COAT** (F38#16, 7.31, near-bar): Tam's coat slate blue with a matching plate; Mira and Oskar unchanged; presented gender unchanged. The tournament has no separate Tam body (the player meets village Tam at the ring), so the variant sits on village Tam too, and her village lines show the matching plate (scoped plate swap in the panel). CPU: the real `tournament_semi_tam__dialogue` frame shows the blue coat in the world and on the plate.
 - **LANDING READY (objective bug fixes, no GPU verdict needed): `tb/beings-charfix-land`** (from current main), two character-model fixes found while building Tam's arm, pinned by a test:
