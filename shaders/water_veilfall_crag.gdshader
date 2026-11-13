@@ -43,6 +43,14 @@ uniform float fog_keep_start_m = 900.0;
 uniform float fog_keep_end_m = 3600.0;
 // Core/skin only (identity model transform): lift with camera distance so the
 // thin rock skin stays above Terrain3D's coarser distant LOD. Zero near.
+// F39#19 / F39#7 `back_face_lit` (LANE-LAND-MT, 13 Nov; 0 keeps the shipped
+// look). This material draws both sides (cull_disabled), but a back face was
+// lit with its front face's normal, which points away from the viewer: from
+// inside a crag shell (the Venn arena at the foot of the climb, where the
+// shells dip around the sand) the inner side drew near-black. Probe: back
+// faces painted green filled exactly that corner. At 1 a back face takes the
+// flipped normal and is lit as rock facing the viewer.
+uniform float back_face_lit = 0.0;
 uniform float far_lift_m = 0.0;
 uniform float far_lift_start_m = 250.0;
 uniform float far_lift_end_m = 1400.0;
@@ -78,6 +86,9 @@ vec3 triplanar(vec3 p, vec3 n) {
 }
 
 void fragment() {
+	if (back_face_lit > 0.5 && !FRONT_FACING) {
+		NORMAL = -NORMAL;
+	}
 	vec3 world = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec3 n = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	float distance_m = length(VERTEX);
