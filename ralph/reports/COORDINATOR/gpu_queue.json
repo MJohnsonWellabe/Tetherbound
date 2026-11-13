@@ -4755,6 +4755,16 @@
       "added": "13 Nov 06:48"
     },
     {
+      "id": "things-solene",
+      "branch": "tb/things",
+      "commit": "e4407b958",
+      "rows": [
+        "F38#17 (6.85)"
+      ],
+      "ask": "Base vs overlay_solene_floor.json (things_self_lit_off_1112 ON + graded model copies for Solene and Keeper Hald via body_model_floor_1113), High, phase2_capture_dialogue.gd --biome=meadows: Warder Solene (stronghold_courtyard) and Keeper Hald rows, plus a no-loss look at any other frame where either stands. New model copies import once. By-eye: does her face come out of clip and the hair read plum, not pink?",
+      "added": "13 Nov 07:09"
+    },
+    {
       "id": "things-stormpool-r2",
       "branch": "tb/things",
       "commit": "a6a79ca70",
