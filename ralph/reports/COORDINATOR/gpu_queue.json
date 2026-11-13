@@ -5259,6 +5259,18 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay.json (tidewake_look.json cause_tidewake.sea.enabled: teal mid stop at 4 m, 16 m falloff, lighter deep blue, range haze; replaces the hard navy shallow-to-deep edge the judges call out in every Tidewake frame). High; phase2_capture_routes.gd --biome=water --seed=2042 horizon_stones, terraces, sluice bridge + phase2_capture_current_states.gd for F39#16/#17. By eye on terraces route_day: the navy channel is mid-blue and the shallows fade into it without a hard line. Same Tidewake routes base as land-mt-shorezones: one boot, two arms.",
    "added": "13 Nov 19:35",
    "priority": "floor-raiser across 7 Tidewake rows; ahead of shorezones in the shared boot"
+  },
+  {
+   "id": "scene-rosternames",
+   "branch": "tb/scene",
+   "commit": "99aae8073",
+   "rows": [
+    "F39#19 fight roster (close candidate: High 7.47, no Medium yet)",
+    "no-loss F39#7 (t-023/024/025), F38#3 grunt 03"
+   ],
+   "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/SCENE-ROSTERNAMES/overlay.json (combat_roster_visual.json compact_names_1113: compact fight roster rows keep each creature's name; rows 232 -> 348 px). phase2_capture_fights.gd Venn fight, frames t-000.00, tell-start-000.57, t-003.02, High AND Medium, F38#38 control (confirming batch, so the row can close). By eye at t-003.02: each of the five roster rows shows the creature's name between portrait and health bar; the wider strip covers no fighter.",
+   "added": "13 Nov 19:40",
+   "priority": "near-bar closer"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
