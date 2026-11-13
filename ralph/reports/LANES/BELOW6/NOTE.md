@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov 03:57, answer on the Fulgocobra faint: the settle cannot fold the hood. Stopped.
+
+Your message crossed with my entry below. I had already tried that route: a Fulgocobra-only settle scope with the crumple and a larger head drop, and one small option on the drop. The settle either sinks the snake into the floor or leaves the neck standing; it cannot lay the column down or fold the hood on this five-bone rig. Per your instruction I have stopped and am not hand-animating it. Everything is reverted. F36#46 stays at 5.87 until there is a different idea (a rig with more neck bones, or an authored clip, both new art).
+
 ## 13 Nov, F36#46 Fulgocobra faint: two approaches tried on CPU, neither works, nothing sent
 
 Pose stage (`capture_f36_poses.gd --species=fulgocobra --game-clips --clear-ruler --roles=hit,faint --whole-body`), base against a Fulgocobra-only settle scope:
