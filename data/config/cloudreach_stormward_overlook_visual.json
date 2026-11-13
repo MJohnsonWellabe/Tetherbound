@@ -47,6 +47,11 @@
       "banners": []
     }
   },
+  "paver_strips_1113": {
+    "enabled": false,
+    "_scope": "world_presentation",
+    "_why": "LANE-LAND-CS (13 Nov 2026), F40#15 5.60 (G-below6-overlook-solid-c673 and -join-c673, 3/3: 'dark slab and plank strips on the grass' at walk_02 and walk_03; 'the dark wedge remains' at route_day and vista_dusk). A pixel probe at those frames (rays against every visible mesh) names StormwardPaver01 under the plank strip in route_day and vista_dusk and StormwardPaver03 at walk_02: the approach pavers, buried by the lifted ridge (overlook_ridge_join_1113) so only a sunken strip of each shows. On: the pavers are not built (stormward_overlook.gd build_pavers). They have no collision. OFF until judged."
+  },
   "ruin_collision_1113": {
     "enabled": true,
     "_why_on": "ON (GPU High, 13 Nov 2026; ralph/reports/GPU-PASS/1108/G-below6-overlook-solid-c673.md on tb/judge ae67d0a5; confirming batch, fit r 0.945, RMSE 0.45): F40#15 walk_02 and walk_03 4.23 -> 5.60 (+1.37, 3/3 prefer); the see-through planes over the trainer are gone because the piers and ruined wings are solid. route_day, vista_dusk and walk_01 level (4.86 = 4.86). Most of the gain is the two reviewed walk stands in capture_stands.json, which now face the arch; they show dark slab and plank strips on the grass that the old stands looked away from (defect PARTIAL 2/3, PRESENT 1/3).",
