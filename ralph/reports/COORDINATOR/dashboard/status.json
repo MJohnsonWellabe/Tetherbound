@@ -2911,8 +2911,8 @@
    "src": "G-floor2-dawn-haze-storm-grade (tb/item-scout-1108 5d0858f3b): row 6.12 -> 6.70 (3/3), rain FIXED; dawn band still present 2/3; landed #902"
   },
   "F39#31": {
-   "gpu": 5.93,
-   "src": "G-floor2-dawn-haze-storm-grade: Veilfall rain views 5.56 -> 6.02 (3/3); landed #902. Judges want new art (cliffs, mist at the fall, terraces). | G-rescore-f39-31-clear-day-pre958 (LANE-JUDGE 33302ce5d, 13 Nov): first clear-day baseline 5.93 High, pre-#958; blocky tiled fall, faceted rock, no base mist, no plunge pool"
+   "gpu": 5.78,
+   "src": "G-floor2-dawn-haze-storm-grade: Veilfall rain views 5.56 -> 6.02 (3/3); landed #902. Judges want new art (cliffs, mist at the fall, terraces). | G-rescore-f39-31-clear-day-pre958 (LANE-JUDGE 33302ce5d, 13 Nov): first clear-day baseline 5.93 High, pre-#958; blocky tiled fall, faceted rock, no base mist, no plunge pool | G-rescore-f39-31-post958 (LANE-JUDGE 533b14909, 13 Nov): 5.78 on main 13a7ab153; same-batch paired pre 5.16 -> post 5.78 (+0.62, 3/3) from #958. TIERA level (parked). Ceiling: Veilfall landmark rebuild"
   },
   "F36#68": {
    "gpu": 7.47,

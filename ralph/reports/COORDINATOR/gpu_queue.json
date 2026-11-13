@@ -5494,7 +5494,8 @@
    ],
    "ask": "After #958 merges: re-shoot F39#31's two views (capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near) on main + #958 as the base, and the same + ralph/reports/LANES/LAND-MT-TIERA/overlay.json (drops the lifted Meshy cascade tier A, the 'rock cluster floating on the sheet') as the arm. High. By eye at veilfall-near: the big rock on the fall sheet is gone.",
    "added": "13 Nov 22:45",
-   "priority": "pair with the post-#958 F39#31 re-shoot (one capture serves both)"
+   "priority": "pair with the post-#958 F39#31 re-shoot (one capture serves both)",
+   "status": "PARKED 13 Nov: level 5.78 -> 5.74 (1/3); the removed rock is not noticed."
   },
   {
    "id": "scene-rosternames-r2",
