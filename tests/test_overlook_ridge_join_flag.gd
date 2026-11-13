@@ -1,14 +1,17 @@
 extends "res://tests/test_case.gd"
 
-## F40#15 candidate `overlook_ridge_join_1113`: OFF until a GPU verdict, and
-## declared world_geometry because the collider follows the lifted rows.
+## F40#15 `overlook_ridge_join_1113`: ships ON (GPU High, 13 Nov 2026,
+## G-below6-overlook-join-c673: overlook set 4.86 -> 5.28, 3/3). Declared
+## world_geometry because the collider follows the lifted rows.
 
 
-func test_candidate_is_off_and_declares_its_scope() -> void:
+func test_ships_on_with_its_verdict_and_declares_its_scope() -> void:
 	var cfg: Dictionary = JSON.parse_string(
 			FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
 	var block: Dictionary = (cfg.get("landmass", {}) as Dictionary).get("overlook_ridge_join_1113", {})
-	assert_false(bool(block.get("enabled", true)))
+	assert_true(bool(block.get("enabled", false)), "overlook_ridge_join_1113 ships ON")
+	assert_true(str(block.get("_why_on", "")).contains("G-below6-overlook-join-c673.md"), "ON cites its GPU verdict")
+	assert_true(str(block.get("_why_on", "")).contains("4.86 -> 5.28"), "and its judged score")
 	assert_eq(str(block.get("_scope", "")), "world_geometry")
 	assert_true(float(block.get("ease_m", 0.0)) > 0.0)
 
