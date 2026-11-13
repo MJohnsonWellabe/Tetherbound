@@ -1,6 +1,6 @@
 # BEINGS-VERIDIAN-ANTLER: antlers follow the head (F36#85)
 
-**Row:** F36#85 Veridian poses, GPU High 6.33 (G-rescore-tier2-batch-1). Also seen wherever a Veridian is hit or faints (F38#1, F38#2).
+**Rows:** F36#85 Veridian poses, GPU High 6.33 (G-rescore-tier2-batch-1), and **F38#1** creature collapse and rest, 6.58. F38#1's last verdict (G-npc-floor, F38#1 recheck) says its remaining defect is frame 3, Veridian fainted: "a white, spiky, wispy shape sitting above the grass" (PARTIAL 3/3). That shape is the same stretched antler sheet.
 
 **Defect, quoted (3/3):** the antler slab "shoots up and back in a twisted spike" and "reads as broken geometry"; recorded defect "contorted faint neck" PRESENT 3/3.
 
@@ -20,8 +20,11 @@ Result: triangles stretching over 0.15 m, 1786 to 107; worst 0.72 m to 0.24 m. M
 ## CPU before and after
 `_sheet_cpu_base_top_arm_bottom.jpg`, the judges' crop and tiles (hit 000, hit 050, faint 050, faint 100). Base: antlers swell in the hit and become a long striped blade over the body in both faint frames. Arm: antlers keep their standing shape in all four. No CPU score taken (a CPU score closes nothing).
 
+## F38#1 in the world (added 13 Nov, CPU)
+`phase2_capture_creatures.gd --biome=meadows --only=veridian`, base and arm: in `meadows__veridian__fainted` and `__resting` the long stretched pale sheet sweeping up from the head is replaced by a shorter branched antler lying by the head. A pale, spiky antler shape is still there (the antlers are real geometry), so the row may stay PARTIAL; the idle and hurt frames are unchanged.
+
 ## By-eye line for the GPU lane
-On `veridian-faint-050` and `veridian-faint-100`: the base shows a long pale-and-green blade rising from the head across the frame; the arm shows a normal branched antler at the head. If the blade is still there, hold the arm.
+On `veridian-faint-050` and `veridian-faint-100`: the base shows a long pale-and-green blade rising from the head across the frame; the arm shows a normal branched antler at the head. If the blade is still there, hold the arm. For F38#1: on `meadows__veridian__fainted` the pale sheet that sweeps across the grass from the head is gone or much shorter.
 
 ## Risks and no-loss frames
 - Standing (`hit-000`) must be identical: the rest pose does not depend on weights.

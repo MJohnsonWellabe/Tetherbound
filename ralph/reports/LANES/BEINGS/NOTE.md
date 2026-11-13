@@ -1,5 +1,8 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 21:30 UTC), newest first
+- **VERIDIAN-ANTLER also targets F38#1** (6.58). F38#1's remaining defect (G-npc-floor, 3/3) is its Veridian-fainted frame: "a white, spiky, wispy shape". On CPU the arm shortens that sheet in the world frames too. `BEINGS-VERIDIAN-ANTLER/CAPTURE.json` now lists a second capture (`phase2_capture_creatures.gd --biome=meadows --only=veridian`) so the GPU lane can judge F38#1 from the same tree. If the pose batch has already captured, this can ride the next one.
+
 ## TO THE COORDINATOR (13 Nov, about 20:45 UTC), newest first
 - **New, CPU-ready, NOT queued: BEINGS-MONITOR-VALUE** (F36#50 6.70, F36#92 7.03). One coat flag lifts the body value of both Mangrove Monitor forms (land: mean texel value 0.325 -> 0.464; water: 0.519 -> 0.581), hue and pattern kept. This is your "one coat change for both monitors". Take it when a slot frees.
 - **My CPU-ready queue, in the order I would send it:** MONITOR-VALUE (two rows, one near the bar), TRAILPUP-AMBER (F36#83), then the held STATICUB-FUR and UNIFORM-CLOTH.
