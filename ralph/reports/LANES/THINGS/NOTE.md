@@ -9,6 +9,11 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- main 0a57e6d7 (Fulgocobra collar, #948) is merged into `tb/things`. No new verdicts for this lane at 09:45 UTC.
+- **CORRECTION: `THINGS-DUSTTRAIL` probably does not touch the "bead strings"; ready: `THINGS-TELLDUST`, which does.** Every GPU frame with the beads also shows "! incoming — move", the opponent's wind-up, before anything is thrown. The wind-up is drawn as dust puffs along the attack's outline (`telegraph.soft_style`: 0.42 m puffs every 0.34 m at 0.6 alpha), which is exactly a looping string of beads. DUSTTRAIL changes the stone moves' trail ribbon instead. **If the GPU lane's by-eye check shows the beads unchanged under DUSTTRAIL, do not spend judges on it; judge TELLDUST.**
+  - TELLDUST: overlay only, five values: bigger, closer, dimmer, lower, darker puffs, so they merge into one soft band on the ground. The painted outlines stay off (owner, 24 Oct).
+  - **Not shown on CPU:** my CPU fight frames show no wind-up dust at all, on any side.
+  - This is the F38#28 "ring of white puffs" too, and F38#11's "bright effects obscure creature poses".
 - main 0e5d8c04 (fight prompt fix, #947) is merged into `tb/things`.
 - **Ready: `THINGS-BEDROOMWOOD`** (`ralph/reports/LANES/THINGS-BEDROOMWOOD/`), next untouched band row: F38#19 exploration HUD, 7.17. The HUD itself is no longer the complaint; 3/3 hold it on "oversaturated orange ceiling and floor" in Grandpa's loft. Overlay only, one tint value on the house's wood floor, loft, stairs and ceiling. CPU: orange goes to mid brown, grain kept. The blown windows are not addressed.
 - **F39#23 catch chance HUD needs a re-score, not work:** it read 7.44 with the reticle ring (now on main), 0.06 under the bar.
