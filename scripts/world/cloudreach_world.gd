@@ -4529,6 +4529,89 @@ func _build_realm_gate_crag(root: Node3D) -> void:
 	presentation.position = facade_origin
 	root.add_child(presentation)
 	presentation.call("build", _materials)
+	_build_gate_crag_terrace(root)
+
+
+## F40#1 `gate_crag_terrace_1113` (flag-off, this landmark only; scope
+## world_geometry: static, the same on every peer, no save state). The Realm
+## Gate Crag crown is a 40 m lawn disc and every panel names it "a broad
+## uniform lawn" with nothing stratified in it. This builds real ground on
+## that crown: stacked terrace bands, each a low pale-stone lip with a turf
+## top that follows a wavy outline, inset from the one below. The lips are at
+## or under the walker's step height, so the terrace is walked up, not round.
+## The collider is the same triangles as the render. The crown is not on any
+## route (the arrival road passes 34 m below it), so no ribbon is touched.
+func _build_gate_crag_terrace(root: Node3D) -> void:
+	var cfg: Dictionary = (_visual_config.get("landmass", {}) as Dictionary).get("gate_crag_terrace_1113", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	var centre_raw: Array = cfg.get("centre_xz", [5.0, -7.0])
+	var tiers := maxi(1, int(cfg.get("tiers", 3)))
+	var radius := float(cfg.get("radius_m", 11.5))
+	var inset := float(cfg.get("inset_m", 2.3))
+	var lip := float(cfg.get("lip_m", 0.32))
+	var wave := float(cfg.get("wave", 0.11))
+	var segments := maxi(12, int(cfg.get("segments", 56)))
+	var base_y := 0.10
+	var outlines: Array = []
+	for tier in tiers + 1:
+		var ring := PackedVector3Array()
+		var r := maxf(0.0, radius - inset * float(tier))
+		for index in segments:
+			var angle := TAU * float(index) / float(segments)
+			var wobble := 1.0 + wave * sin(angle * 3.0 + float(tier) * 1.7) \
+				+ wave * 0.45 * sin(angle * 7.0 + float(tier) * 0.9)
+			ring.append(Vector3(cos(angle) * r * wobble, 0.0, sin(angle) * r * wobble))
+		outlines.append(ring)
+	if not _materials.has("terrace_stone"):
+		var tint := str(cfg.get("stone_tint", "#dedbd0"))
+		var surface_cfg: Dictionary = (_visual_config.get("surface", {}) as Dictionary).get("cliff", {})
+		_materials["terrace_stone"] = _textured_material(_surface_tint(surface_cfg, tint), Color(tint))
+	var wall := SurfaceTool.new()
+	wall.begin(Mesh.PRIMITIVE_TRIANGLES)
+	wall.set_material(_materials["terrace_stone"])
+	var top := SurfaceTool.new()
+	top.begin(Mesh.PRIMITIVE_TRIANGLES)
+	top.set_material(_materials["upland"])
+	for tier in tiers:
+		var outer: PackedVector3Array = outlines[tier]
+		var inner: PackedVector3Array = outlines[tier + 1]
+		var low := base_y + lip * float(tier) - (0.25 if tier == 0 else 0.0)
+		var high := base_y + lip * float(tier + 1)
+		for index in segments:
+			var next := (index + 1) % segments
+			var a := outer[index] + Vector3.UP * high
+			var b := outer[next] + Vector3.UP * high
+			var c := outer[index] + Vector3.UP * low
+			var d := outer[next] + Vector3.UP * low
+			_add_surface_triangle(wall, a, b, c)
+			_add_surface_triangle(wall, b, d, c)
+			# The turf top: a ring out to this tier's lip; the last tier closes
+			# to its centre.
+			if tier < tiers - 1:
+				var e := inner[index] + Vector3.UP * high
+				var f := inner[next] + Vector3.UP * high
+				_add_surface_triangle(top, a, e, b)
+				_add_surface_triangle(top, b, e, f)
+			else:
+				_add_surface_triangle(top, a, Vector3.UP * high, b)
+	wall.generate_normals()
+	top.generate_normals()
+	var mesh := ArrayMesh.new()
+	wall.commit(mesh)
+	top.commit(mesh)
+	var terrace := MeshInstance3D.new()
+	terrace.name = "GateCragTerrace"
+	terrace.mesh = mesh
+	terrace.position = Vector3(float(centre_raw[0]), 0.0, float(centre_raw[1]))
+	terrace.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
+	root.add_child(terrace)
+	var body := StaticBody3D.new()
+	body.name = "Collision"
+	var shape := CollisionShape3D.new()
+	shape.shape = mesh.create_trimesh_shape()
+	body.add_child(shape)
+	terrace.add_child(body)
 
 
 func _build_three_bells(root: Node3D) -> void:
