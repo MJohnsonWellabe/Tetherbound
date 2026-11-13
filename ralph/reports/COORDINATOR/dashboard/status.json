@@ -1,6 +1,6 @@
 {
- "updated": "13 Nov 2026 22:55 UTC",
- "headline": "13 Nov 22:50: FIRST CLOSE of the round - Staticub roster row (F36 (0) #19) at 7.99 High and Medium on the pose stage. Five PRs landed this evening (#954, #956, #957, #958; #959 drift floaters in CI). World Staticub frames 6.53 stay as a follow-up.",
+ "updated": "13 Nov 2026 23:28 UTC",
+ "headline": "13 Nov 23:28: six PRs landed this evening (#954, #956, #957, #958, #959) and the first close (Staticub roster row). New board tab \"Tried and failed\": 181 failed or parked approaches by row, so they are not retried.",
  "batches": [
   {
    "name": "Stormheart interior and Crown heartstone (PR #756)",
@@ -2138,6 +2138,11 @@
  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
  "score_ledger_pending": [],
  "landed_recent": [
+  {
+   "pr": "#959",
+   "what": "Tidewake drift floaters stay afloat (Venn 'floating log'); Meadows DUSKRIDGE (dusk vistas 6.41 -> 7.10) and BROKENHILL (F38#30 5.06 -> 6.48). LANE-LAND-MT; full CI green",
+   "when": "13 Nov 23:20"
+  },
   {
    "pr": "#958",
    "what": "Veilfall base mist renders (shader gate fix), Veilfall crag back-face cut (F39#19 +0.07 ship), character-model body-override fixes (no visible change), TECHNICAL 8.1 fight-capture pairing. LANE-LAND-MT, LANE-BEINGS; full CI green",
