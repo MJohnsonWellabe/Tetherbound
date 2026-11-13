@@ -5431,6 +5431,18 @@
    "added": "13 Nov 21:45",
    "priority": "close candidate once #957 is on main",
    "status": "READY: #957 is on main."
+  },
+  {
+   "id": "land-mt-flowstreaks",
+   "branch": "tb/land-mt",
+   "commit": "c212a3549",
+   "rows": [
+    "F13#5 swim current cue (5.38, worst row in the lane)",
+    "no-loss F39#16/#17 current states"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/LAND-MT-FLOWSTREAKS/overlay.json (chop_cap_opacity 0.45 -> 0 removes the white crescent arcs; the shader's existing soft foam groups return at low strength, aligned with the flow). capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/T2-current.json --capture-size=1920x1080, four T2 views, High; plus phase2_capture_current_states.gd S1/S2 as no-loss. By eye: no white crescent arcs on the water in all four views.",
+   "added": "13 Nov 22:00",
+   "priority": "worst Tidewake row; in the tb/land-mt boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
