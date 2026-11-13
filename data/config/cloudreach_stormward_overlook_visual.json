@@ -46,5 +46,11 @@
       "approach_pavers": [],
       "banners": []
     }
+  },
+  "pane_fix_1112": {
+    "enabled": true,
+    "_why_on": "Bug fix (coordinator, 12 Nov): the overlook route frame walk_02_day showed a blank pale-yellow pane over half the frame and a white ball on the grass. The pane is banners[1], a flat 2 m by 4.5 m card hung at head height beside the right pier; the ball is a beacon glow, a default 1 m sphere at emission 2.8. Streamers become narrow swallow-tailed pennants hung from the same top edge; glows become small embers in their bowls. Visual only.",
+    "pennant": {"enabled": true, "width_scale": 0.42, "height_scale": 0.62, "notch_fraction": 0.22, "darken": 0.3, "hem_darken": 0.35},
+    "ember": {"enabled": true, "radius": 0.3, "height": 0.42, "lift": 0.24, "emission": 1.0}
   }
 }

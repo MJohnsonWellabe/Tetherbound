@@ -76,7 +76,11 @@ func test_f39_23_ring_style_ships_on() -> void:
 	assert_true(str(ring._why_on).contains("CPU 5.26 -> 5.62"), "records its score")
 	assert_eq(str(ring.scope), "client_presentation", "declares its scope")
 	assert_between(float(ring.alpha_scale), 0.2, 1.0, "the ring stays visible")
-	assert_between(float(ring.width_scale), 0.4, 1.0, "a thinner ring, never a bolder one (round 1 lost)")
+	# 12 Nov (G-things-reticle: F38#7 7.40 -> 7.76 on both presets): full alpha, width 1.15 and a thin
+	# 1.5 px halo. Round 1 (arcs x1.35 and a heavy outline) hid the target, so the ring stays below that.
+	assert_true(str(ring._why_1112).contains("7.40 -> 7.76"), "records the 12 Nov verdict")
+	assert_between(float(ring.width_scale), 0.4, 1.3, "visible, but never round 1's x1.35 arcs")
+	assert_between(float(ring.outline_px), 0.0, 2.0, "a thin halo at most")
 	var reticle := FileAccess.get_file_as_string("res://scripts/ui/capture_reticle.gd")
 	assert_true(reticle.contains("_readout_visual.get(\"ring_style_1104\", {})"), "the reticle reads the flag")
 
@@ -87,7 +91,9 @@ func test_f38_4_meadows_parchment_fog_ships_on() -> void:
 	var cloud: Dictionary = _json("res://data/config/map.json").fog_veil.cloud_fog
 	assert_true(bool(cloud.enabled), "cloud fog stays on")
 	assert_true(str(cloud._why_meadows_parchment_1104).contains("CPU 6.15 -> 7.18"), "records its score")
-	assert_eq(cloud.tones.meadows, ["#8c8266", "#cfc3a0"], "Meadows fog is parchment, not slate")
+	# Warmer and lower in contrast since 12 Nov (G-restoredsea-mapfog.md: F38#4 7.36 -> 7.81).
+	assert_eq(cloud.tones.meadows, ["#bda77a", "#dccfa8"], "Meadows fog is warm parchment, not slate or grey smudge")
+	assert_eq(cloud.tones.water, ["#8c8266", "#cfc3a0"], "Tidewake keeps its own parchment")
 	for tone: String in cloud.tones.meadows:
 		var c := Color(tone)
 		assert_true(c.r >= c.b, "a warm tone, never a cold storm grey (%s)" % tone)

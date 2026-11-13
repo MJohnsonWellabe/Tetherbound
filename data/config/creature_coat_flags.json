@@ -1029,6 +1029,32 @@
           "roughness": 0.88, "specular": 0.25
         }
       }
+    },
+    "below6_stormraven_night": {
+      "_why": "LANE-BELOW6 (13 Nov 2026), F41#13 (GPU High 5.72 level, G-below6-stormraven-masonry 3/3: 'flat, saturated royal-blue bird ... glossy plastic, no feather detail, no rim light, no electric trait' where the board shows a black raven with blue lightning; the eye alone cannot carry it). r3: a near-black feather base from the remake's own albedo (ralph/reports/LANES/BELOW6-STORMRAVEN/make_night_albedo.py: saturation 0.42, value down, feather detail kept; beak, feet and eye keep their colour), the widened lightning glow map with its pupilled eye at 2.4 (3.2 clipped the blue lines to white on CPU), a strong cool rim so the dark body holds its silhouette, and a matte finish. Same species, silhouette and markings; no red. OFF until GPU-judged.",
+      "enabled": true,
+      "_why_on": "13 Nov 2026 (LANE-BELOW6 landing): G-below6-stormraven-r3.md (LANE-SCOUT, tb/item-scout-1108 23aba198), GPU High, F41#13 5.76 -> 6.67 (+0.91, 3/3; per judge 6.56, 6.89, 6.56): a believable black raven with blue-white flecks and short lightning lines; the recorded defect moves from PRESENT to PARTIAL 3/3. Needs Medium before the row can close.",
+      "coats": {
+        "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0_night.png",
+          "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read_r2.png", "emission_energy": 2.4,
+          "rim": 1.0, "rim_tint": 0.55,
+          "roughness": 0.92, "specular": 0.12
+        }
+      }
+    },
+    "below6_fulgocobra_slate_collar": {
+      "_why": "LANE-BELOW6 (13 Nov 2026), hard rule: red and oxblood are Team Tether only. G-things-wardenring-f41-13-closeout (LANE-SCOUT, tb/item-scout-1108 7d2ccb33b), 3/3: Fulgocobra's 'copper-red collar plates' sit near the reserved red. Candidate: the live coat (lanekit_face_read_fulgocobra) with its copper plates moved to gunmetal slate in the albedo (ralph/reports/LANES/BELOW6-FULGOCOBRA-COLLAR/make_slate_collar.py); the gold bands, navy scales, cyan arcs, eye, glow map, rim and finish are the live coat's. Fulgocobra only. OFF until GPU-judged.",
+      "enabled": true,
+      "_why_on": "13 Nov 2026 (LANE-BELOW6 landing): G-cw-collar-wardenring-r2.md (LANE-SCOUT, tb/item-scout-1108 d958f1cc), GPU High: F36#46 pose stage 5.29 -> 5.70 (+0.41, 3/3), Stormwood world states 6.12 -> 6.54 (+0.42, 3/3), no set loses. Hard rule check: all three judges flag the base copper plates as close to oxblood and none flag red on the arm; 0 red pixels on every arm pose frame.",
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_face_slate.png",
+          "rim": 0.6, "rim_tint": 0.5,
+          "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_goldvein_face.png", "emission_energy": 1.3,
+          "roughness": 0.8, "specular": 0.25
+        }
+      }
     }
   }
 }

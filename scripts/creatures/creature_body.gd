@@ -1681,7 +1681,12 @@ func _night_floor_material(source: BaseMaterial3D) -> BaseMaterial3D:
 	var suffix := "_night_floor"
 	if source.resource_name.ends_with(suffix):
 		return source
-	var key := "%s|%s" % [species_id, source.resource_name]
+	# Rim state is part of the key: every tier rim copy is named `*_field_rim`
+	# whatever its strength, so keying on the name alone froze the first body's
+	# rim onto every later body of the species (a rare spawn re-rimmed every
+	# uncommon one, and an uncommon spawn made rares read uncommon).
+	var key := "%s|%s|%s|%.4f|%.4f" % [species_id, source.resource_name,
+		source.rim_enabled, source.rim, source.rim_tint]
 	if _night_floor_materials.has(key):
 		# Each body's rim copy is its own, so the shared floor is reached from
 		# every live one, not only from the body that first made it.

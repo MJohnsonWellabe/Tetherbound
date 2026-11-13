@@ -205,7 +205,7 @@ static func with_appearance_variant(cfg: Dictionary, base_profile: String,
 ## rig, clips, palette and accessories are untouched. A later appearance variant
 ## still wins over the flag, so a variant keeps its own authored body.
 const BODY_FLAGS_PATH := "res://data/config/character_body_flags.json"
-const BODY_FLAG_KEYS := ["body_albedo_override", "day_rim", "idle_relax"]
+const BODY_FLAG_KEYS := ["body_albedo_override", "day_rim", "idle_relax", "body_emission_enabled"]
 
 
 static func with_body_flags(cfg: Dictionary, key: String, flags_doc: Variant = null) -> Dictionary:

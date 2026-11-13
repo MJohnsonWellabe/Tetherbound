@@ -357,6 +357,10 @@ func _build_distance_presentation() -> void:
 		markers.name = "WaterCurrentDriftMarkers"
 		add_child(markers)
 		markers.build(world.config, flow_config, _game.world.flags)
+		# F39#17 restored_sea_1112 (OFF until judged): the sea itself and the
+		# lane debris follow the restored-currents fact.
+		preload("res://scripts/world/water_restored_sea.gd").attach(self,
+			world.get_node_or_null("WaterSurface"), markers, _game.world.flags)
 
 ## F22#4 / BOSSES §4.11: Nerissa's side-channel sweeps, only when enabled.
 var nerissa_channels: Node3D

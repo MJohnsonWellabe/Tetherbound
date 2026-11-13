@@ -949,14 +949,21 @@ func _show_fight(visible_now: bool, just_ended: bool = false) -> void:
 ## `EV9-double-prompt`: this row exists to keep showing "Engage X" before a
 ## fight starts, not to repeat whatever unrelated line `PlaygroundHUD` is
 ## currently showing (Grandpa, a starter, a harvest node) just because this
-## `CanvasLayer` never toggles fully invisible outside a fight. Once fighting,
-## the arbiter is disabled scene-wide and `prompt()` already reads "" from it,
-## so the fighting branch does not need its own ownership check.
+## `CanvasLayer` never toggles fully invisible outside a fight.
+##
+## LANE-THINGS, 13 Nov 2026: the same ownership check now also runs while
+## fighting. The old note here said the arbiter is disabled scene-wide in a
+## fight, so `prompt()` reads "". That is true only where a SequenceDirector
+## disables it (Meadows). Tidewake, Cloudreach and Stormwood have none, so a
+## harvest node beside the fight kept winning the arbiter and this row drew
+## "Gather Reef Stone" across the middle of every Venn fight frame (GPU
+## frames 12 Nov; CPU probe: PlaygroundHUD's own prompt was correctly hidden
+## and this label was the one on screen).
 func _draw_prompt() -> void:
 	if _director == null:
 		return
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
-	if not fighting and not bool(_director.call("owns_active_prompt")):
+	if not bool(_director.call("owns_active_prompt")):
 		_prompt.text = ""
 		return
 	var line := str(_director.call("prompt"))

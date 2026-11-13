@@ -52,6 +52,17 @@ static func merge_catalogue(base: Dictionary, roster: Dictionary = {}) -> Dictio
 		if definition.is_empty():
 			continue
 		var target := runtime_id(id)
+		# Re-merging the live table must be idempotent. CreatureSpecies.table()
+		# registers Water first and then applies model/scale flags to the
+		# borrowed source species (paddlenewt, ripplet...), so re-deriving the
+		# presentation from that finished table no longer matches the entry it
+		# registered. An entry this catalogue already registered for the same
+		# board id is kept as is; any other occupant is still refused.
+		var existing: Variant = base.get(target)
+		if existing is Dictionary and str(existing.get("water_board_id", "")) == id:
+			additions[target] = existing
+			mapping[id] = target
+			continue
 		if base.has(target) and base[target] != definition:
 			errors.append("Refusing to overwrite existing species: " + target)
 			continue

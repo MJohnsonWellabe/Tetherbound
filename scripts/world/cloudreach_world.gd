@@ -965,6 +965,15 @@ func _build_materials() -> void:
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
 	for material_key: String in ["masonry", "masonry_trim"]:
 		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
+		# F40#15 `masonry_scale_1112` (ON: G-below6-stormraven-masonry): the shared brick tiles
+		# once every 3.6 m, so a single cobble is as large as the trainer's
+		# torso on every Cloudreach wall ("stretched giant cobbles", 3/3).
+		var masonry_scale: Variant = _visual_config.get("masonry_scale_1112", {})
+		if masonry_scale is Dictionary and bool((masonry_scale as Dictionary).get("enabled", false)):
+			masonry.set_shader_parameter("tile", float((masonry_scale as Dictionary).get("tile", 0.28)))
+			var tint_key := "trim_tint" if material_key == "masonry_trim" else "tint"
+			if (masonry_scale as Dictionary).has(tint_key):
+				masonry.set_shader_parameter("tint", Color(str((masonry_scale as Dictionary)[tint_key])))
 		_materials[material_key] = masonry
 	_materials["bronze"] = _material(Color("#81704b"), 0.72)
 	var timber:=ShaderMaterial.new()
@@ -3008,9 +3017,20 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var first_row: Array[Vector3] = rows[0]
 	var last_row: Array[Vector3] = rows[rows.size() - 1]
 	var last := station_count - 1
-	_add_surface_triangle(deep_tool, first_row[0], first_row[6], left_bottom[0])
+	# F40#15 P2-049 `end_face_follows_row_1112` (ON: G-below6-knifeedge): the end face
+	# used to hang from a straight line between the row's two outer vertices.
+	# Where the row is clamped flat onto a pad crown but one outer vertex rides
+	# up a bridge deck, that line stood up to 0.8 m above the crown as a black
+	# knife-edge across the grass (Three Bells bridge foot). ON: the face's top
+	# edge follows every vertex of the row, so it can never stand above the top.
+	if bool(config.get("end_face_follows_row_1112", {}).get("enabled", false)):
+		for column in first_row.size() - 1:
+			_add_surface_triangle(deep_tool, first_row[column], first_row[column + 1], left_bottom[0])
+			_add_surface_triangle(deep_tool, last_row[column], left_bottom[last], last_row[column + 1])
+	else:
+		_add_surface_triangle(deep_tool, first_row[0], first_row[6], left_bottom[0])
+		_add_surface_triangle(deep_tool, last_row[0], left_bottom[last], last_row[6])
 	_add_surface_triangle(deep_tool, left_bottom[0], first_row[6], right_bottom[0])
-	_add_surface_triangle(deep_tool, last_row[0], left_bottom[last], last_row[6])
 	_add_surface_triangle(deep_tool, left_bottom[last], right_bottom[last], last_row[6])
 	deep_tool.generate_normals()
 	deep_tool.commit(mesh)

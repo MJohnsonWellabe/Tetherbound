@@ -48,6 +48,16 @@
     "destinations": {
       "stormwood__dynamo__12__the_stormheart_tree": {"position": [-100.0, 5300.0], "heading_deg": 0.0},
       "stormwood__landmark__dynamo_core": {"position": [-100.0, 5300.0], "heading_deg": 0.0}
-    }
+    },
+    "candidates_1112": {
+      "_why": "F40#3 Cloudreach landmark read (LANE-BELOW6, 12 Nov 2026; GPU High 5.65). OFF until judged: when `enabled`, these destinations are read as well as `destinations`. The Old Wind Observatory approach stand sits 8 m from the tower on the island rim and frames a bare rim wall with the tower cut off at the knees; the Windscar Beacon approach stand is 16 m behind the landmark position with the gate about 60 m further on, a twentieth of the frame. CPU screen (BELOW6-F40-3/_sheet_cpu_screen.jpg): from the south the observatory stands at the end of its path with the armillary ring (the tower top is cut in every candidate); from 32 m the beacon gate fills the centre of the frame. Capture tooling only; re-baselined, never compared with the old stand's score.",
+      "enabled": true,
+      "_why_on": "ON (coordinator, 12 Nov 2026): GPU High G-below6-f40-3-landmarks (ralph/reports/GPU-PASS/1108/G-below6-f40-3-landmarks.md on tb/item-scout-1108 cb3ff531d): F40#3 re-baselined 6.00 -> 6.33 (2/3) with landmark_crowns_1111. Coordinator stand ruling: neither old stand showed its subject (the observatory stand framed a rim wall; the beacon gate was a twentieth of the frame), the same rule as the landed Stormheart stand. Capture tooling only.",
+      "destinations": {
+        "cloudreach__upper_cloudreach__10__old_wind_observatory": {"position": [430.0, 4500.0], "heading_deg": 180.0},
+        "cloudreach__windscar_ravine__05__windscar_beacon": {"position": [-240.0, 2698.0], "heading_deg": 47.0}
+      }
+    },
+    "candidates_f38_20_1112": {"enabled": true, "_why_on": "12 Nov 2026 (coordinator landing): G-below6-sea-r4-stronghold.md (LANE-SCOUT, tb/item-scout-1108 012ab2548), GPU High, F38#20 6.40 -> 7.57 (+1.17, 3/3; recorded defect FIXED 3/3): the keep reads as a lit landmark at the end of the road. Capture stand only; the game is unchanged.", "_candidate": "LANE-BELOW6 (12 Nov 2026), F38#20 Team Tether stronghold (GPU High 5.72, G-rescore-stale-tier2: 'reads as a small dark ruin behind the pylons'). The Band 5 approach stand is the band's road entry at (0, 6968), about 590 m from the keep, so the row's two approach frames show its subject as a speck on the horizon. Candidate: the same road, about 430 m from the keep, looking north, where the whole keep with its towers and banners stands against the sky at the end of the road (screened on CPU with --spot from z 7130 to 7480: every stand from 7210 up crops the top of the keep, which stands high on its hill, or sits inside the tree line; the GPU pre-check rejected 7405 for that crop). Capture stand only; the game is unchanged. OFF until the coordinator's stand review and a GPU verdict.", "destinations": {"meadows__band5_stronghold_approach__09__stronghold_approach": {"position": [0.0, 7130.0], "heading_deg": 0.0}}}
   }
 }

@@ -140,15 +140,20 @@ func _add_stop_shape(holder: StaticBody3D, label: String, centre: Vector3, exten
 
 
 func _add_compass(cfg: Dictionary, stone: Material, bronze: Material, blue: Material) -> void:
-	_add_cylinder("LandingApron", Vector3(0.0, 0.065, 0.0), 7.15, 0.13, stone, "landing_apron")
+	# The apron's top stood 3 cm above the crown turf (crown top +0.10, apron
+	# top +0.13). The turf won the depth test in some views and the court drew
+	# as bare grass with only the compass lines ("placeholder geometry", GPU
+	# G-things-cloudrain-r2). `landing_apron_top_m` seats the stone clear of it.
+	var top := float(cfg.get("landing_apron_top_m", 0.13))
+	_add_cylinder("LandingApron", Vector3(0.0, top * 0.5, 0.0), 7.15, top, stone, "landing_apron")
 	_add_ring("OuterWindCompass", cfg.get("compass_outer_radii_m", [6.15, 6.65]) as Array,
-		Vector3(0.0, 0.145, 0.0), bronze, "wind_compass")
+		Vector3(0.0, top + 0.015, 0.0), bronze, "wind_compass")
 	_add_ring("InnerWindCompass", cfg.get("compass_inner_radii_m", [2.0, 2.35]) as Array,
-		Vector3(0.0, 0.15, 0.0), blue, "wind_compass")
+		Vector3(0.0, top + 0.02, 0.0), blue, "wind_compass")
 	for index in 8:
 		var angle := TAU * float(index) / 8.0
 		var direction := Vector3(sin(angle), 0.0, cos(angle))
-		var centre := direction * 4.35 + Vector3.UP * 0.15
+		var centre := direction * 4.35 + Vector3.UP * (top + 0.02)
 		var ray := _add_box("CompassRay%02d" % (index + 1), centre,
 			Vector3(0.22 if index % 2 else 0.34, 0.055, 3.8), bronze if index % 2 else blue,
 			"wind_compass")

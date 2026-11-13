@@ -46,7 +46,7 @@
   "rig": {
     "sun": {"pitch_deg": -44.0, "yaw_deg": 140.0, "energy": 1.65, "colour": "#ddd9f3", "angular_distance": 2.5},
     "sky": {"top_colour": "#51476f", "horizon_colour": "#6f7a9c", "ground_horizon_colour": "#696485", "ground_bottom_colour": "#303b3a", "energy": 1.0, "cloud_lit": "#b8b2cc", "cloud_shade": "#7e7896", "cloud_base": "#6c6686", "horizon_haze_colour": "#6f7a9c", "sun_colour": "#d8d0ec"},
-    "environment": {"ambient_colour": "#aab0bc", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 1.35, "fog_density": 0.00028, "fog_colour": "#6f7a9c", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 1.1, "player_character_rim_scale": 1.0}
+    "environment": {"ambient_colour": "#aab0bc", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 1.35, "fog_density": 0.00028, "fog_colour": "#6f7a9c", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 1.1, "player_character_rim_scale": 0.0, "_why_on_rim_1112": "0.0 since 12 Nov 2026 (LANE-THINGS, GPU High G-things-stormrim.md on tb/item-scout-1108 b3b9fbd4; was 1.0). The character night rim ran at full weight under Stormwood's bright ambient and blew the player and the officers out to a pink-white glow. F41#18 row 5.60 -> 6.22, F41#18 dialogue 6.18 -> 6.63, F41#15 6.18 -> 6.59, Sera/Ivo/Tamsin 6.42 -> 6.87; 3/3 on every set, nothing loses."}
   },
   "terrain": {
     "grass": {"normal_depth": 0.38, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},

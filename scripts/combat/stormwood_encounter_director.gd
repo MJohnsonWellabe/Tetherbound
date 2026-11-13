@@ -62,6 +62,56 @@ func can_challenge(spec: Dictionary) -> bool:
 			return false
 	return super.can_challenge(spec)
 
+## combat.json `arena.wild_post_clearance_1112` (LANE-THINGS, 12 Nov 2026;
+## OFF until judged). GPU dialogue frames, 3/3: "a huge saturated royal-blue
+## bird creature fills almost the whole frame, Nysa a sliver behind it"; a
+## Stormursa stands a metre from Lieutenant Sera. Wild bodies were idling on
+## named conversation posts. When on, Stormwood's own trainer and character
+## posts are the stands the shared director already keeps wild spawns and
+## wander targets clear of (F04#2's rule for Meadows captains), at this
+## realm's radius. Posts, encounter counts, tables and rewards are unchanged;
+## a body already in a fight is not moved. Spawn and wander placement is
+## host-authoritative world state, decided where it already is: clients
+## receive positions from the host exactly as before.
+var _post_stands: Array[Vector2] = []
+var _post_stands_read := false
+
+
+static func post_clearance_config() -> Dictionary:
+	var block: Variant = (MATH.config().get("arena", {}) as Dictionary).get("wild_post_clearance_1112", {})
+	return block if block is Dictionary and bool((block as Dictionary).get("enabled", false)) else {}
+
+
+## Every Stormwood trainer and character post, as (x, z).
+static func conversation_posts() -> Array[Vector2]:
+	var posts: Array[Vector2] = []
+	for source: Array in [["res://data/config/stormwood_trainers.json", "trainers"], ["res://data/config/stormwood_npcs.json", "characters"]]:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(source[0]))
+		if not parsed is Dictionary:
+			continue
+		for raw: Variant in (parsed as Dictionary).get(source[1], []):
+			var at: Variant = (raw as Dictionary).get("position", []) if raw is Dictionary else []
+			if at is Array and (at as Array).size() == 3:
+				posts.append(Vector2(float(at[0]), float(at[2])))
+	return posts
+
+
+func _named_trainer_wild_clear_m() -> float:
+	var block := post_clearance_config()
+	if block.is_empty():
+		return super._named_trainer_wild_clear_m()
+	return float((block.get("radius_m", {}) as Dictionary).get("stormwood", 0.0))
+
+
+func _named_trainer_grounds() -> Array[Vector2]:
+	if post_clearance_config().is_empty():
+		return super._named_trainer_grounds()
+	if not _post_stands_read:
+		_post_stands_read = true
+		_post_stands = conversation_posts()
+	return _post_stands
+
+
 func _wander_target_clear_of_road(at: Vector3) -> bool:
 	var world := get_parent()
 	var height := float(world.call("ground_height_at", at.x, at.z))

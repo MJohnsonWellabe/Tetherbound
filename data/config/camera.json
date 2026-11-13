@@ -16,9 +16,9 @@
   "conversation": {
     "_comment": "The two-shot the rig blends to while a conversation is on screen. Distances in metres, angles in degrees. The rig is a SpringArm3D: `distance` is the arm length from the framing pivot to the camera, and the engine shortens it further if something is in the way.",
 
-    "distance": 3.5,
+    "_why_tight_1113": "Ships 13 Nov 2026. LANE-SCOUT G-things-convtight.md (tb/item-scout-1108 b4ff847a), GPU High: field of view 40 -> 36 at the 2.9 m arm wins 10 of 11 judged sets and loses none (3/3 on 9): F38#17 6.46 -> 6.85, F38#37 6.50 -> 6.69, F39#26 6.73 -> 7.04, F40#10 6.61 -> 6.92, F40#12 6.85 -> 7.12; F38#16 level. The tighter shot drops the player's head, shoulder or pack from the left edge; no head crops. Conversation shots only (owner). The judged overlay also set this block's distance to 2.9; that was a no-op in play because twoshot_v2 (ON) already sets the arm to 2.9, so this plain distance stays 3.5 (the twoshot_v2 test compares against it).", "distance": 3.5,
     "blend_time": 0.45,
-    "fov": 40.0,
+    "fov": 36.0,
 
     "_comment_bias": "Where along the trainer -> speaker line the frame is centred. 0 is the trainer, 1 is the speaker. High, because the shot is about the person talking: at 0.78 the speaker lands near the middle of frame and the trainer's near shoulder falls on the opposite third.",
     "speaker_bias": 0.78,

@@ -248,7 +248,16 @@ func _a_forced_shiny_creature_renders_a_different_material() -> void:
 		## differ, and on the same channel pair -- albedo AND emission.
 		var texture_swapped := plain_base.albedo_texture != shiny_base.albedo_texture
 		var colour_tinted := not plain_base.albedo_color.is_equal_approx(shiny_base.albedo_color)
-		if not texture_swapped and not colour_tinted:
+		## Owner, 1 Nov 2026: every creature remake ships ON, and a remake mesh
+		## with no repaint of its own (terrapup's owner1101) takes P2-030's
+		## surface-finish hue shift (creature_surface_finish.gd shiny_fallback)
+		## as a next pass instead -- the old mesh's repaint is on other UVs.
+		## That pass is a real shiny tell, so it counts, but only when the
+		## plain body does not wear it.
+		var hue_shifted := _wears_shiny_shift(shiny_base) and not _wears_shiny_shift(plain_base)
+		if hue_shifted and not texture_swapped and not colour_tinted:
+			print("  shiny            forced-shiny terrapup differs from plain (surface-finish hue shift)")
+		elif not texture_swapped and not colour_tinted:
 			_fail("shiny check: a forced-shiny terrapup renders the same albedo (texture and colour) as a plain one")
 		elif plain_base.emission_enabled and texture_swapped \
 				and plain_base.emission_texture == shiny_base.emission_texture:
@@ -278,30 +287,35 @@ func _a_forced_shiny_creature_renders_a_different_material() -> void:
 ## textures tools/repaint_creature_textures.py wrote, on albedo AND emission
 ## — a tint multiplier over the blue texture can never make the red the
 ## owner asked for ("not blue with a red shade over it").
+##
+## Bramblebun since the 1 Nov 2026 owner direction turned every remake ON:
+## the pilot pair's remakes (paddlenewt owner1101, burrowback nat1024) carry
+## no repaint on their own UVs and take the shiny hue shift instead, while
+## bramblebun's owner1101 remake ships authored `_shiny`/`_alpha` repaints.
 func _a_colourway_species_swaps_textures_not_tints() -> void:
 	var shiny: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
 	shiny.set_script(CREATURE_BODY)
 	root.add_child(shiny)
-	shiny.call("setup", "paddlenewt", true)
+	shiny.call("setup", "bramblebun", true)
 	shiny.set_physics_process(false)
 
 	var mat := _first_material(shiny.call("model_pivot") as Node3D)
 	if mat == null or not mat is BaseMaterial3D:
-		_fail("shiny repaint check: could not read a material off a forced-shiny paddlenewt")
+		_fail("shiny repaint check: could not read a material off a forced-shiny bramblebun")
 	else:
 		var base := mat as BaseMaterial3D
 		var albedo_path := base.albedo_texture.resource_path if base.albedo_texture != null else ""
 		var emission_path := base.emission_texture.resource_path \
 			if base.emission_enabled and base.emission_texture != null else ""
 		if not albedo_path.ends_with("_shiny.png"):
-			_fail("shiny repaint check: paddlenewt has an authored colourway but its forced-shiny " +
+			_fail("shiny repaint check: bramblebun has an authored colourway but its forced-shiny " +
 				"albedo texture is %s, not the repainted *_shiny.png" % (albedo_path if albedo_path != "" else "<none>"))
 		elif base.emission_enabled and not emission_path.ends_with("_shiny.png"):
-			_fail("shiny repaint check: paddlenewt's shiny swapped albedo but left the emission " +
+			_fail("shiny repaint check: bramblebun's shiny swapped albedo but left the emission " +
 				"texture at %s -- the emission channel carries the same painted image, so the " +
 				"repaint is invisible without it" % (emission_path if emission_path != "" else "<none>"))
 		else:
-			print("  shiny repaint    forced-shiny paddlenewt swaps to *_shiny.png (albedo%s)" % [
+			print("  shiny repaint    forced-shiny bramblebun swaps to *_shiny.png (albedo%s)" % [
 				" + emission" if base.emission_enabled else ""
 			])
 
@@ -321,7 +335,7 @@ func _a_colourway_species_swaps_textures_not_tints() -> void:
 ## is not. So the presentation carries three things and this asserts all three,
 ## because each one alone has a failure mode that the other two hide:
 ##
-##   * the `*_alpha` colourway (burrowback's heavier plates), which is the
+##   * the `*_alpha` colourway (bramblebun's remake repaint), which is the
 ##     only one of the three that can be authored per species;
 ##   * the rim light, which is what survives at the distance the player decides
 ##     whether to approach -- and which is the piece that still works on a
@@ -336,13 +350,13 @@ func _an_alpha_reads_differently_from_its_own_species() -> void:
 	var plain: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
 	plain.set_script(CREATURE_BODY)
 	root.add_child(plain)
-	plain.call("setup", "burrowback", false)
+	plain.call("setup", "bramblebun", false)
 	plain.set_physics_process(false)
 
 	var alpha: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
 	alpha.set_script(CREATURE_BODY)
 	root.add_child(alpha)
-	alpha.call("setup", "burrowback", false)
+	alpha.call("setup", "bramblebun", false)
 	alpha.call("set_alpha", true)
 	alpha.set_physics_process(false)
 
@@ -350,29 +364,29 @@ func _an_alpha_reads_differently_from_its_own_species() -> void:
 	var alpha_mat := _first_material(alpha.call("model_pivot") as Node3D)
 	if plain_mat == null or alpha_mat == null \
 			or not plain_mat is BaseMaterial3D or not alpha_mat is BaseMaterial3D:
-		_fail("alpha check: could not read a material off a plain and an alpha burrowback")
+		_fail("alpha check: could not read a material off a plain and an alpha bramblebun")
 	else:
 		var plain_base := plain_mat as BaseMaterial3D
 		var alpha_base := alpha_mat as BaseMaterial3D
 		var albedo_path := alpha_base.albedo_texture.resource_path \
 			if alpha_base.albedo_texture != null else ""
 		if not albedo_path.ends_with("_alpha.png"):
-			_fail(("alpha check: burrowback has an authored alpha colourway but its alpha body " +
+			_fail(("alpha check: bramblebun has an authored alpha colourway but its alpha body " +
 				"renders %s -- the *_alpha.png swap in creature_body._refresh_shiny_tint did not " +
 				"happen") % (albedo_path if albedo_path != "" else "<no albedo texture>"))
 		elif not alpha_base.rim_enabled:
-			_fail("alpha check: the alpha burrowback's material has no rim -- the silhouette " +
+			_fail("alpha check: the alpha bramblebun's material has no rim -- the silhouette " +
 				"brightening is the only part of alpha presence that survives at the distance " +
 				"where the player chooses whether to approach")
 		elif plain_base.rim_enabled:
-			_fail("alpha check: an ORDINARY burrowback also renders with a rim; the alpha " +
+			_fail("alpha check: an ORDINARY bramblebun also renders with a rim; the alpha " +
 				"dressing leaked onto the shared per-species material and now every one of them " +
 				"reads as a leader")
 		elif alpha.get_node_or_null(^"AlphaAura") == null:
-			_fail("alpha check: the alpha burrowback has no AlphaAura child -- the idle effect " +
+			_fail("alpha check: the alpha bramblebun has no AlphaAura child -- the idle effect " +
 				"is what marks a leader that is standing still and doing nothing")
 		else:
-			print("  alpha presence   burrowback alpha: *_alpha.png + rim %.2f + idle aura"
+			print("  alpha presence   bramblebun alpha: *_alpha.png + rim %.2f + idle aura"
 				% alpha_base.rim)
 
 	plain.queue_free()
@@ -389,16 +403,19 @@ func _an_alpha_reads_differently_from_its_own_species() -> void:
 ## an alpha's own rim -- the identity tell `_an_alpha_reads_differently_...`
 ## above already protects.
 ##
-## terrapup rather than burrowback: it carries no authored `field_rim` (unlike
-## bramblebun) and no alpha colourway, so any rim found here can only be
-## tier's doing, not a species opt-in or a colourway swap leaking through.
+## trailpup: it carries no authored `field_rim` and no alpha colourway, so any
+## rim found here can only be tier's doing, not a species opt-in or a
+## colourway swap leaking through. (Terrapup was the subject until #878 gave
+## it a 0.25 `field_rim`, which by design outranks the uncommon rung.) Its
+## remake is not self-lit, so these bodies also go through the shared night
+## floor, which once froze the first body's rim onto every later one.
 func _rarity_tiers_read_differently_from_each_other() -> void:
 	var bodies := {}
 	for tier_id in ["", "common", "uncommon", "rare"]:
 		var body: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
 		body.set_script(CREATURE_BODY)
 		root.add_child(body)
-		body.call("setup", "terrapup", false)
+		body.call("setup", "trailpup", false)
 		body.call("set_tier", tier_id)
 		body.set_physics_process(false)
 		bodies[tier_id] = body
@@ -408,7 +425,7 @@ func _rarity_tiers_read_differently_from_each_other() -> void:
 	for tier_id in bodies:
 		var mat := _first_material(bodies[tier_id].call("model_pivot") as Node3D)
 		if mat == null or not mat is BaseMaterial3D:
-			_fail("rarity tier check: could not read a material off a '%s'-tier terrapup" % tier_id)
+			_fail("rarity tier check: could not read a material off a '%s'-tier trailpup" % tier_id)
 			ok = false
 			break
 		var base := mat as BaseMaterial3D
@@ -416,7 +433,7 @@ func _rarity_tiers_read_differently_from_each_other() -> void:
 
 	if ok:
 		if rim[""] != 0.0 or rim["common"] != 0.0:
-			_fail("rarity tier check: an untiered or common terrapup renders with a rim (%.2f/%.2f) " % [
+			_fail("rarity tier check: an untiered or common trailpup renders with a rim (%.2f/%.2f) " % [
 				rim[""], rim["common"]
 			] + "-- common is the baseline every other tier should read as more-than, not a fourth look")
 		elif not (rim["common"] < rim["uncommon"] and rim["uncommon"] < rim["rare"]):
@@ -429,12 +446,20 @@ func _rarity_tiers_read_differently_from_each_other() -> void:
 			_fail(("rarity tier check: rare's rim (%.2f) is not clearly under alpha's own (%.2f) -- " +
 				"alpha has to stay the strongest tell") % [rim["rare"], CREATURE_BODY.ALPHA_RIM_STRENGTH])
 		else:
-			print("  rarity tiers     terrapup rim by tier: common %.2f, uncommon %.2f, rare %.2f" % [
+			print("  rarity tiers     trailpup rim by tier: common %.2f, uncommon %.2f, rare %.2f" % [
 				rim["common"], rim["uncommon"], rim["rare"]
 			])
 
 	for tier_id in bodies:
 		(bodies[tier_id] as Node3D).queue_free()
+
+
+## True when `material` carries the shiny surface-finish hue-shift pass.
+func _wears_shiny_shift(material: BaseMaterial3D) -> bool:
+	var pass_material := material.next_pass as ShaderMaterial
+	return pass_material != null and pass_material.shader != null \
+		and pass_material.shader.resource_path == "res://shaders/creature_surface_finish.gdshader" \
+		and pass_material.get_shader_parameter("shift_enabled") == true
 
 
 ## The first material an actual mesh renders with, walking down from a model
