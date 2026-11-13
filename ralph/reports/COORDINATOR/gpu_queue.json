@@ -5549,6 +5549,39 @@
    ],
    "ask": "One-sided re-score of F39#20's job frames on main, High.",
    "added": "13 Nov 23:05"
+  },
+  {
+   "id": "beings-staticub-cool",
+   "branch": "tb/beings",
+   "commit": "c012a8817",
+   "rows": [
+    "Staticub world frames (6.53)",
+    "F41#8 (6.27)",
+    "PROTECT the closed F36 (0) #19 stage row (7.99/7.99)"
+   ],
+   "ask": "Base (main coat, landed #957) vs + ralph/reports/LANES/BEINGS-STATICUB-COOL/overlay.json (coat about a third darker, red trimmed, model's own glow map at 2.5 so the veins read). World: stormwood__staticub__idle and the Nysa and Maud/Bryn dialogue frames, High. MUST also capture the pose-stage Staticub frames at High and Medium as no-loss: the stage row just closed at 7.99, so any stage loss blocks shipping. By eye: dark natural-brown bear, not peach or pink, white-violet streaks on the back.",
+   "added": "13 Nov 23:10",
+   "priority": "first of the new beings arms"
+  },
+  {
+   "id": "beings-terrapup-sphinx",
+   "branch": "tb/beings",
+   "commit": "c012a8817",
+   "rows": [
+    "F38#1 (6.26; Terrapup's stiff faint)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/BEINGS-TERRAPUP-SPHINX/overlay.json, per its CAPTURE.json, High.",
+   "added": "13 Nov 23:10"
+  },
+  {
+   "id": "beings-ripplet-deep",
+   "branch": "tb/beings",
+   "commit": "c012a8817",
+   "rows": [
+    "F39#19 (6.92; plastic Ripplet merging into beige sand)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/BEINGS-RIPPLET-DEEP/overlay.json, per its CAPTURE.json; Venn fight with warm-up and pooled bases (TECHNICAL 8.1), High and Medium with control.",
+   "added": "13 Nov 23:10"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
