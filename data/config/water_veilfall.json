@@ -280,7 +280,9 @@
       "depth_pull_fraction": 0.0,
       "depth_pull_max_m": 0.0,
       "fog_keep": 0.35,
-      "night_lift": 0.06
+      "night_lift": 0.06,
+      "billow_floor": 0.55,
+      "_why_billow_floor": "Correctness (LANE-LAND-MT, 13 Nov 2026): the base mist never showed. CPU probes on the F39#31 views: the spray quads draw (alpha forced to 1 paints them) and alpha = opacity * radial shows the mist, but the billow gate took every puff to nothing. 0.55 keeps that share of each puff so the noise breaks the mist up without erasing it. Puff size and placement unchanged. tests/test_veilfall_spray_floor.gd."
     }
   },
   "silhouette": {
