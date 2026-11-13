@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "t-000.00.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/arm-Medium/t-000.00.png",
+  "sky_fraction": 0.054,
+  "lower_edges": 0.2037,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/arm-Medium/t-003.02.png",
+  "sky_fraction": 0.047,
+  "lower_edges": 0.2158,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-023.02.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/arm-Medium/t-023.02.png",
+  "sky_fraction": 0.27,
+  "lower_edges": 0.2155,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-024.02.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/arm-Medium/t-024.02.png",
+  "sky_fraction": 0.26,
+  "lower_edges": 0.1716,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-025.02.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/arm-Medium/t-025.02.png",
+  "sky_fraction": 0.046,
+  "lower_edges": 0.1825,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-000.00.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/base-Medium/t-000.00.png",
+  "sky_fraction": 0.061,
+  "lower_edges": 0.2037,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/base-Medium/t-003.02.png",
+  "sky_fraction": 0.052,
+  "lower_edges": 0.2275,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-023.02.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/base-Medium/t-023.02.png",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.2344,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-024.02.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/base-Medium/t-024.02.png",
+  "sky_fraction": 0.127,
+  "lower_edges": 0.1949,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-025.02.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragcut-medium/base-Medium/t-025.02.png",
+  "sky_fraction": 0.045,
+  "lower_edges": 0.1862,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGCUT (F39#19 near-bar, High 6.95 / Medium 7.27; attempt 2 of 2), MEDIUM: every side = c673d5285 (= main for this arena) + tb/land-mt 5ef7e327e's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_cut_m 0 = shipped); arm = LAND-MT-CRAGCUT/overlay.json (back_face_cut_m 150: crag shell inside faces near the camera discarded). Venn fight with a warm-up, --fixed-fps 20; pooled camera pairing: t-000.00 matched 0.00 m using base run G-scene-rosternames-base2 base-Medium (c673 + flag-off roster files + horizon_ranges.gd; crag files are c673's shipped originals, which render identically to back_face_cut 0 / back_face_lit 0; the roster code does not draw on the crag) because both cragcut base runs started on the other Venn camera; t-003 3.9 m, t-023-025 5-24 m off. By eye at the matched t-000: the black polygon above the dune is gone (sand shows), the dark top-right reads as mossy cliff instead of flat navy; nothing else changes (mean diff 1.0). F38#38 control on tb/keep-gpu-frames-1108."
+ }
+]
