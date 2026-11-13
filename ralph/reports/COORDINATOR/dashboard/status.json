@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 12:23 UTC",
+  "updated": "13 Nov 2026 12:30 UTC",
   "headline": [
+    "13 Nov 12:30: Bedroom wood ships (F38#19 +0.51, 3/3: the loft's orange floor now reads as morning light). Landing next.",
     "13 Nov 12:23: #949 landed: fight wind-up dust is now a soft ground band. F38#3 and F38#28 each sit 0.03 under closing; two close-out arms (hall moss, lower dust band) are at the front of the GPU queue. Overnight: 12 PRs (#937-#939, #941-#949).",
     "13 Nov 11:52: Fight wind-up dust (telldust) ships, 3/3 everywhere: F38#3 High 7.51 / Medium 7.47, F38#28 High 7.47 / Medium 7.55. Both rows sit 0.03 under closing; landing now.",
     "13 Nov 09:52: The fight 'bead strings' (F38#3, F38#28) turn out to be the attack wind-up dust, not the stone trail; the trail arm is parked unjudged and the wind-up dust arm (telldust) is capturing.",
@@ -2594,7 +2595,7 @@
     },
     "F38#19": {
       "gpu": 7.17,
-      "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-meadows 7.62 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.17, not closed",
+      "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-meadows 7.62 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.17, not closed | G-things-bedroomwood (13 Nov): SHIPS High 6.64->7.15 (+0.51, 3/3; panel ~0.5 strict, control 7.67); landing via LANE-THINGS; next: right-hand HUD cluster and empty quick slots",
       "medium": 7.17
     },
     "F38#2": {
