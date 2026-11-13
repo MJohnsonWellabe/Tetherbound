@@ -79,6 +79,13 @@ uniform float coast_dune_zone_full_m = 8.0;
 uniform float coast_dune_zone_scale = 0.035;
 uniform vec3 coast_dune_zone_colour : source_color = vec3(0.40, 0.46, 0.27);
 uniform vec3 coast_dune_zone_straw_colour : source_color = vec3(0.62, 0.58, 0.36);
+// LANE-LAND-MT damp hollows (flag-off; 0 keeps the shipping sand exactly).
+// Judges on the Venn fight (G-land-mt-cragback, 3/3): "the dune is one flat
+// pale mid-tone". Low sand gets broad, irregular damp patches in the wet
+// tone, fading out by damp_top_m, so the ground has a light/dark structure.
+uniform float coast_dune_damp_strength = 0.0;
+uniform float coast_dune_damp_scale = 0.03;
+uniform float coast_dune_damp_top_m = 6.0;
 
 float coast_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -232,6 +239,13 @@ const MATERIAL := """
 			scrub = smoothstep(0.26, 0.40, scrub + (grain - 0.5) * 0.12) * level;
 			sand = mix(sand, coast_dune_scrub_colour * mix(0.82, 1.08, grain), scrub * coast_dune_scrub_strength);
 		}
+		if (coast_dune_damp_strength > 0.0) {
+			float damp_n = coast_noise(v_vertex.xz * coast_dune_damp_scale + vec2(2.3, 7.7)) * 0.7
+				+ coast_noise(v_vertex.xz * coast_dune_damp_scale * 2.9 + vec2(9.1, 4.4)) * 0.3;
+			float damp = smoothstep(0.5, 0.68, damp_n + (grain - 0.5) * 0.08)
+				* (1.0 - smoothstep(coast_dune_damp_top_m * 0.55, coast_dune_damp_top_m, v_vertex.y));
+			sand = mix(sand, coast_dune_wet_colour * mix(0.94, 1.06, grain), damp * coast_dune_damp_strength);
+		}
 		if (coast_dune_zone_strength > 0.0) {
 			float zone_n = coast_noise(v_vertex.xz * coast_dune_zone_scale) * 0.5
 				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 3.1 + vec2(3.7, 9.2)) * 0.3
@@ -359,7 +373,8 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 		for key: String in ["sand_colour", "wet_colour", "wet_height_m", "wet_strength", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "normal_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y",
 				"flank_strength", "flank_scale", "strata_strength", "scrub_strength", "scrub_scale", "scrub_colour",
 				"wet_wobble_m", "wrack_strength", "wrack_height_m", "wrack_width_m", "wrack_colour",
-				"zone_strength", "zone_start_m", "zone_full_m", "zone_scale", "zone_colour", "zone_straw_colour"]:
+				"zone_strength", "zone_start_m", "zone_full_m", "zone_scale", "zone_colour", "zone_straw_colour",
+				"damp_strength", "damp_scale", "damp_top_m"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
