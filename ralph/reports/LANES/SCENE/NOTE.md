@@ -8,8 +8,8 @@
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
-- Criteria closed: 0. Landed on main: 0.
-- **Ready to land, no GPU verdict needed (objective geometry fix):** `tb/scene-benchfix-land`. The shipped Tidewake camp workbench model had its hung tools, rope, vise and lantern thrown up to 1.6 m off the bench by its build script. See `ralph/reports/LANES/SCENE-BENCHFIX-LAND/READY.md`.
+- Criteria closed: 0. Landed on main: 1 (#953, the camp workbench parts fix, main 4f9ae9e2).
+- `tb/scene` has main 4f9ae9e2 merged in; `tb/scene-benchfix-land` is done.
 
 ## Waiting on the GPU (limit two; inherited arms count)
 | Arm | Rows | Status |
