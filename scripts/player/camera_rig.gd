@@ -1391,7 +1391,11 @@ func _clearance_shot(shot: Dictionary, cfg: Dictionary, room: float, trainer_anc
 			if score >= 0.0:
 				break
 	_clear_last = best_option
-	_clear_cooldown = int(clear_cfg.get("search_cooldown_frames", 12)) if best_option != null and best_score < 0.0 else 0
+	# The hold only exists for the cone test's cost, so it is off with the cone:
+	# the shipped clearance rule searches every frame exactly as on main.
+	var cone_cfg: Variant = clear_cfg.get("creature_cone", {})
+	var cone_on: bool = cone_cfg is Dictionary and bool((cone_cfg as Dictionary).get("enabled", false))
+	_clear_cooldown = int(clear_cfg.get("search_cooldown_frames", 12)) if cone_on and best_option != null and best_score < 0.0 else 0
 	return best
 
 

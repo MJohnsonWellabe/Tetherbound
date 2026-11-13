@@ -1,5 +1,71 @@
 # LANE-THINGS NOTE (branch `tb/things`)
 
+# HANDOFF (13 Nov 2026, lane wrapped up on the owner's direction)
+
+**Wrap-up head: `tb/things-wrapup` ad49fc2f** (this NOTE on that branch is one commit older and does not carry this line). Branch `tb/things-wrapup`, cut from `origin/main` 3cf230b6. It holds everything from `tb/things` that is not on main. Every flag in it is OFF. Tests: 92 test files that touch the changed code, config or flags, run together: **604 tests, 0 failed**. `texture_import_policy.py --check` passes.
+
+## State
+- **On main from this lane (12 to 13 Nov):** faint rounds 1 and 2, band faints (Duskhush, Ribbonray), Ashtusk hit recoil and motes, clear pose-stage ruler, Stormwood player rim off, conversation clearance rule, tighter conversation shot (fov 36), opponent trainer stand, aim ring, objective beam fix, red-leaf fix, map parchment, flight take-off fix, Rune's stand, tournament capture stand (Mira), Warden ring round 1, war banner camera stand-off, fight prompt ownership, wind-up dust band.
+- **In CI:** `tb/things-bedroomwood-land` (#950), F38#19 6.64 to 7.15.
+- **Rows closed with this lane's changes:** F38#7 (aim ring), F38#9, F38#4, F39#4, F39#24, F41#11, F38#20 (some by other lanes, relayed here).
+- **Near the bar after this lane's changes:** F38#3 High 7.51 / Medium 7.47; F38#28 High 7.47 / Medium 7.55; F39#26 7.04; F40#12 7.12; F38#19 7.15; F39#23 7.44 (needs a re-score).
+
+## Open candidates (all flag-off or overlay-only, in this branch)
+| Arm (folder `THINGS-<NAME>`) | Row and last score | Status |
+|---|---|---|
+| HALLMOSS | F38#28, High 7.47 (0.03 short) | Front of the GPU queue, no verdict. Overlay: interior stone `moss_amount` 0.46 to 0.22. |
+| TELLDUST2 | F38#3 Medium 7.47, F38#28 High 7.47 | Front of the GPU queue, no verdict. Overlay over the shipped dust: lower band (0.5 m puffs). |
+| SOLENE | F38#17, 6.85 | Queued, no verdict. Self-emission off plus graded model copies for Solene and Hald (`body_model_floor_1113`). Small change on CPU. 24 MB of model and texture copies under `assets/characters/npc_identity/lanekit_f38_17_*`; drop them if the arm is not judged (they rebuild from `provenance_floor1.json`). |
+| CLOUDNIGHT round 2 | F40#0, F40#19, F40#21 (about 6.2 to 6.7) | Queued, no verdict. Round 1 did not ship (three stands lost). Second round: park if a stand loses. Handed to LANE-BELOW6 otherwise. |
+| STORMPOOL round 2 | F41#22, F41#24, 6.46 | Not captured. Matte `wet_gloss` on the wet-soil patches plus `pool_damp_1112`. |
+| WETPATH3 | F40#21 and Cloudreach paths | Not judged. LANE-PLACES' wet path with a clock gate. Handed to LANE-BELOW6. |
+| CLOUDRAIN (`rain_bright_overcast_1112`) | F40#0, F40#19 | PARKED after two rounds under 0.5. |
+| WARDENRING round 2 (overlay) | F38#28 | PARKED: level at High; lower alpha does not register. |
+| GLIDEBANK (`glide_bank_1112`) | F38#15, High 7.70 / Medium 7.37 | PARKED: needs a glide, flare and perch animation, not a bank. |
+| SELFLIT (`things_self_lit_off_1112`) | F38#17 | Part of SOLENE. |
+| `creature_cone`, `speaker_centre`, `realm_energy_1112` (camera.json) | Stormwood and Meadows dialogue | Never sent or dropped: no visible effect on CPU, or mixed on GPU. |
+| DUSTTRAIL | F38#3 | WITHDRAWN: confirmed not to touch the beads. |
+| MEADOWGROUND, STORMUNIFORM, RIFTFRILL, BROOKTAIL | F38#21, F41#18, F36#62, F36#36 | Did not ship; overlays only remain as records (the Riftfrill and Brooktail coat flags are not in this branch). |
+
+## Not built, with what I would do
+- **F38#19:** the right-hand HUD cluster. Proposal in the entry below (quiet empty quick slots, move slots and hint row to the bottom edge, rest the hint row when idle). Waiting on a decision.
+- **F38#28:** an in-world arena edge and a cool fill, if HALLMOSS does not close it.
+- **Fight hit burst:** the solid white ball over the struck creature (F38#11, F41#6). Not provable on CPU.
+- **Pose rows that need art or authored clips:** Glimmermoth and Tempestwing (no wing bones), Voltarach (hit and head), Trailpup and Voltwig (side-lie), Ribbonray anatomy.
+- **Re-scores, no work:** F36#50 Mangrove Monitor, F39#23, F41#6, the Tidewake fight rows after the prompt fix, F38#16 after the tournament stand.
+
+## What worked
+- **Finding the thing that actually draws the defect before changing anything.** The best gains were not look tweaks: the pose-stage ruler through creatures (6 rows), the beam in catch frames, the hidden aim ring, the fight HUD's second prompt label ("Gather Reef Stone", patched three times in the wrong file), the tournament proxy speaker, Rune on a slope, the banner occluder, the wind-up dust that read as beads.
+- **One shared cause across several rows** (faint settle scopes, conversation fov, dust band) over single-row tweaks.
+- **Reading the GPU frames themselves** (`tb/gpu-frames-1108`) alongside the judges' words. Several recorded defects were already gone or were something else.
+- **Small probes that print state at each saved frame** (who the camera frames, which label is visible, lens against mesh bounds) settle a cause in one run.
+
+## What did not work
+- **Arms I could not show on CPU.** Compatibility at Low draws no specular sheen, no wind-up dust, no faint boundary ring, and clips harder. I filed several of these on reasoning alone; one (DUSTTRAIL) was simply wrong. Say so in the ARM and ask for the GPU lane's by-eye check first.
+- **Per-character light and exposure fixes on CPU** (Solene, Stormwood uniforms): the CPU result does not predict the GPU.
+- **Faint crumples for quadrupeds, ring alpha, rain grade:** two rounds each under 0.5. Parked.
+- **My own misses:** a landing that failed a generic test I had not grepped for (Rune and the wild-cluster clearance), a tool edit kept after it had not helped (reverted), and a cause stated in the NOTE before I had checked it (corrected twice).
+
+## Runbook
+- **Setup.** Shallow checkout: always `git fetch --depth N`. Verdicts: `git fetch --depth 1 origin +tb/item-scout-1108:refs/remotes/origin/tb/item-scout-1108`, then `git show` single files under `ralph/reports/GPU-PASS/1108/` (never `git grep` the folder: it downloads every blob). GPU frames: the same with `--filter=blob:none` on `tb/gpu-frames-1108`.
+- **One Godot process at a time.** Captures die when a turn ends: run them inside the turn with a wait loop (`for i in $(seq 57); do [ -f x.done ] && break; sleep 10; done`), at most 10 minutes per call.
+- **CPU capture:** `xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility --script <tool> -- <args>`. About 25 minutes for a dialogue row, a fight or a Cloudreach matrix piece.
+  - Poses: `tools/art_pipeline/capture_f36_poses.gd --species=a,b --whole-body --context --roles=hit,faint`.
+  - Dialogue: `tools/phase2_capture_dialogue.gd --biome=<b> --seed=2042 --subset=<name> [--sight-stand]` (not `--sight-stand` in Stormwood on CPU).
+  - Fights: `tools/capture_f38_fight.gd --trainer=<id> --frames=N --interval=0.15 --attack --dodge --tell-frames --preset=Low --low-resolution=1280x720 [--resolve=won --lens-probe]`. The fight differs run to run; pair frames by camera position.
+  - Tidewake fights: `tools/phase2_capture_tidewake_fights.gd`; the output must be under `ralph/reports/VISUAL/phase2/tidewake/`.
+  - UI: `tools/phase2_capture_ui.gd --biome=meadows --tabs=<tab>`.
+  - Cloudreach: `tools/capture_cloudreach_f40_matrix.gd --biome=cloudreach --piece=N --ground-cover-cache --preset=Low --low-resolution=1920x1080 --source-commit=<sha> --output=`.
+- **Overlays.** An arm is flag-off code or config plus a JSON overlay deep-merged over config for the capture and restored after (`git checkout -- <config>`). Commit config edits before an overlay capture.
+- **Arm files:** `ralph/reports/LANES/THINGS-<NAME>/ARM.md`, `CAPTURE.json`, the overlay, one `_sheet*.jpg` under 1.5 MB per round.
+- **Landing:** branch `tb/things-<name>-land` from current `origin/main`; flag ON or values with a `_why`; a pin test; grep `tests/` for the changed keys AND run the generic tests of the area (the miss above); `READY.md` with `STATUS: land`. The coordinator opens the PR.
+- **Textures:** `tools/art_pipeline/texture_import_policy.py --check`; on failure `--apply`, then `godot --headless --path . --import`.
+- **Tests:** `godot --headless --path . --script tests/run_tests.gd -- --only=a.gd,b.gd`; tests extend `res://tests/test_case.gd`. Smokes run directly as scripts.
+- **Leave `.uid` files out of commits.**
+
+---
+
+
 This file is the lane's channel to the coordinator.
 
 ## State (12 Nov 2026, lane restarted on the owner's direction)
