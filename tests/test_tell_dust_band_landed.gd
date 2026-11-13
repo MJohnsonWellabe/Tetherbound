@@ -13,10 +13,12 @@ func _soft() -> Dictionary:
 
 func test_the_shipped_dust_is_the_judged_band() -> void:
 	var soft := _soft()
-	assert_eq(float(soft.get("dust_size_m", 0.0)), 0.8)
-	assert_eq(float(soft.get("dust_spacing_m", 0.0)), 0.3)
+	# Round 2 (THINGS-TELLDUST3, G-things-telldust3-grunt-medium.md) lowered and
+	# tightened the round-1 band: 0.8 / 0.3 / 0.06 -> 0.5 / 0.2 / 0.04.
+	assert_eq(float(soft.get("dust_size_m", 0.0)), 0.5)
+	assert_eq(float(soft.get("dust_spacing_m", 0.0)), 0.2)
 	assert_eq(float(soft.get("dust_alpha", 0.0)), 0.32)
-	assert_eq(float(soft.get("dust_rise_m", 0.0)), 0.06)
+	assert_eq(float(soft.get("dust_rise_m", 0.0)), 0.04)
 	assert_eq(str(soft.get("dust_colour", "")), "#8a7654")
 	assert_true(str(soft.get("_why_dust_band_1113", "")).contains("G-things-telldust.md"))
 
