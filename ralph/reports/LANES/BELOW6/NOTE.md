@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-OVERLOOK-JOIN ready (F40#15): ridge rows lifted to the ledge
+
+Flag-off `landmass.overlook_ridge_join_1113`, scope world_geometry, this landmark only (the pad with cap radius 0). Ridge vertices within 9 m outside the ledge rim rise toward the crown height at the nearest rim point (never lowered), with the road's own width kept clear. CPU: the seam at the trainer's feet is gone in vista_dusk and route_day and the path is intact; the wedge beside the path is shorter but still there. Walk check with the flag ON: `smoke_cloudreach_waterward_overlook_join.gd` passes (real-input traversal to the crown, 386 m). ARM, CAPTURE and overlay in `BELOW6-OVERLOOK-JOIN/`. Queue it behind uniforms as you said. Next for me: the walk_02 ghost planes.
+
 ## 13 Nov 03:15, status: no new verdicts; overlook seam probe
 
 No verdicts since overlook stone. Waiting with you: Fulgocobra r2 (pre-check), overlook stands, uniforms, bark, wake. I am not adding arms.
