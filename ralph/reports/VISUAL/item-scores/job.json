@@ -2567,6 +2567,36 @@
        "category": "characters"
       }
      ]
+    },
+    {
+     "board_row": "F39#31",
+     "item": "F39#31",
+     "subject": "Veilfall hero landmark",
+     "defect": "Veilfall should read as the chapter's hero landmark at distance and up close; judges (G-floor2-dawn-haze-storm-grade, rain frames): faceted flat-shaded cliffs, a single opaque white fall ribbon with no mist at its base, flat sand-disc islets",
+     "impact": 60.0,
+     "fix_class": "scene",
+     "catalog_status": "open",
+     "_why_frames": "LANE-LAND-MT, 13 Nov (coordinator-approved: 'give it its own reviewed frame set: one clear-day distance view and one close view'). F39#31 had no frames of its own; its 6.02 came from the two rain frames where it rode along as a no-loss check. These are the clear-day twins of those same reviewed stands in F39-look.json: veilfall-vista (about 750 m offshore, whole island, crown and sea; reframed and approved 24 Oct) and veilfall-near (the landing stand). Capture tooling only.",
+     "frames": [
+      {
+       "id": "tidewake__F39-look__veilfall-vista",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_tidewake_f13_5.gd -- --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista --source-sha=<tree sha> --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__F39-look__veilfall-vista",
+       "location": "veilfall",
+       "time": "day",
+       "phase": "clear",
+       "camera": "vista",
+       "category": "landmark"
+      },
+      {
+       "id": "tidewake__F39-look__veilfall-near",
+       "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_tidewake_f13_5.gd -- --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-near --source-sha=<tree sha> --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/tidewake__F39-look__veilfall-near",
+       "location": "veilfall",
+       "time": "day",
+       "phase": "clear",
+       "camera": "close",
+       "category": "landmark"
+      }
+     ]
     }
    ],
    "unique_frames": 71

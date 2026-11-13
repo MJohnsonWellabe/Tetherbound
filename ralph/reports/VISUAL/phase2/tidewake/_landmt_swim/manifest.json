@@ -1,0 +1,26 @@
+{
+	"biome": "tidewake",
+	"complete": false,
+	"display_server": "X11",
+	"frames": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/_landmt_swim/west_dry_approach.png",
+			"id": "west_dry_approach",
+			"player_position": "(57.36812, 1.931218, 151.5021)",
+			"stamina": 100.0,
+			"state": "dry",
+			"time": "day"
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"system": "swimming"
+}

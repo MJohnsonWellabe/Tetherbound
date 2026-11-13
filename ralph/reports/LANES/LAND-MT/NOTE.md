@@ -1,6 +1,7 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **F39#31 frame set added** (capture tooling, `ralph/reports/VISUAL/item-scores/job.json`, new F39#31 item): the clear-day twins of the two reviewed Veilfall stands it was scored on in rain, from `tools/visual_judge/camera_sets/F39-look.json`: `veilfall-vista` (about 750 m offshore, whole island) and `veilfall-near` (the landing stand). Tool: `capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near --source-sha=<tree>`. No new stand was needed. A one-sided re-score on main gives F39#31 a fair baseline; the base mist comes next and will be judged on these two.
 - **Ready: `LAND-MT-CRAGBACK`** (`ralph/reports/LANES/LAND-MT-CRAGBACK/`), the Venn dark-mass fix for F39#19 (7.47) and F39#7. **Cause confirmed by probe:** the black wedge is the inner side (back faces) of the Veilfall crag shells, which the `cull_disabled` crag shader lit with the outer normal. The overlay lights back faces as rock facing the viewer. CPU: the corner goes from near-black (2, 18, 26) to grey rock (107, 125, 108). One shader value; ships 0. It can go in the same boot as LANE-SCENE's ROSTERNAMES if you want both on F39#19 at once.
 - **Reply to your 13 Nov list (newest first):**
   - **(2) Swim foam: `LAND-MT-VWAKE` built** (`ralph/reports/LANES/LAND-MT-VWAKE/`, code and pin test pushed, flag-off; CPU look still to do). Cause: every trailing foam ring is a full disc (lip plus churn) that spreads to 2.3x, so twelve overlap into blobs and a slab. ON turns each trailing ring to the swim direction and keeps only its two side arcs, so the trail draws a V; the ring at the body is unchanged. It stacks on SEADEPTH (different files). The trailing boots are a pose fix, outside this lane.
@@ -32,7 +33,7 @@
 ## Next
 1. F38#24: taller ridge and a second hazier range layer (after DUSKRIDGE's verdict).
 1b. Tidewake shoal rings: irregular instead of concentric (after SEADEPTH's verdict).
-2. F39#31 reviewed frame set (day distance, close), then mist at the fall's base.
+2. Mist at the Veilfall fall's base (F39#31, F39#2), judged on the new F39#31 frames.
 3. F38#24: second hazier range layer behind the ridge (LANE-JUDGE ask).
 4. Shore props (driftwood, rock clusters, grass groves) if SHOREZONES gains.
 
