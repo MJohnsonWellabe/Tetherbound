@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-GATE-TERRACE is now an arm (F40#1): walk probe passes
+
+The terrace did not turn into a multi-turn job. With the flag on, `tests/smoke_cloudreach_gate_crag_terrace.gd` (new, real stick input; skips while the flag is off) walks from the crown's north lawn up all five 0.32 m lips to the top: PASS, grounded, y 151.70 on a 151.70 top, 24.8 m. The arrival walk smoke also passes with it on; the crown is on no route. CPU sheet, ARM.md, CAPTURE.json and overlay are in the folder. One of the row's three frames changes. Queue it behind what I have. Next: the uniform cloth albedo for F41#18, as you said.
+
 ## 13 Nov, RELAY: uniforms do NOT ship; lighting-only arms on F41#18 parked and removed
 
 RELAY from LANE-SCOUT, G-below6-uniforms (tb/item-scout-1108 ca7cb834; slope 1.374, r 0.936, RMSE 0.49): F41#18 row 6.05 -> 5.59 (-0.46, 0/3). Without the floor the coats "blend into the dark mud and purple mist" (PRESENT 3/3 on the arm; base PARTIAL); the rim and knots do not show at that distance. Dialogue: row 6.14 -> 6.55 (+0.41, 3/3), officers 6.41 -> 6.55 (2/3), civilians 7.06 -> 7.19. Two rounds under the stop rule, so parked. I removed `uniform_separation_1113`, its code and its test from tb/below6. Row asks (3/3): lit mid-value cloth with a cool rim that reads at the normal camera; one bright copper, glass or steel rank accent per uniform sized for distance; new faces for Varga, Nysa and Sable (new art); and the salmon bears behind Nysa and Wen, which BELOW6-STATICUB-FUR answers. Carrying on with the terrace walk probe; the uniform cloth albedo is after that.
