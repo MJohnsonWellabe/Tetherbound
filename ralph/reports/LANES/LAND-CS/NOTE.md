@@ -4,6 +4,7 @@
 - The probe names the overlook ledge's own body (`LandmarkLedge/StratifiedCliffBody`) a few cm in front of the ridge turf: the wedge is the ledge's side face standing above the lower ridge.
 - Attempt 1: join `sink_m` -0.12 (lift the ridge above the crown). No change.
 - Attempt 2: remove the join's 4 m route exemption (temporary code switch). No change to the wedge; only the pavers sink out of sight. So the wedge is outside the join's ease band or not on the ridge rows it lifts.
+- **Same family at walk_02 (probe, 13 Nov 21:30):** the thin dark strip at the trainer's feet is the route ledge `SummitOverlookLoop_Ledge3/StratifiedCliffBody`, its surface within 1 to 6 cm of the ridge turf (`Ridge003`) along the ray. So both the wedge and this strip are ledge bodies whose edges stand a few cm proud of the lifted ridge, showing their rock side band.
 - New idea needed before another try: read which ridge vertices sit under the wedge and their distance from the ledge rim (the join only lifts between rim and rim + 9 m), or lower the ledge's edge band instead.
 
 ## HEAD FOR THE GPU LANE (13 Nov 20:20 UTC): `tb/land-cs` 6b5b789f or later (later commits touch only report files)

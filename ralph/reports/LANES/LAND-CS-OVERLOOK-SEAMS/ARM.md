@@ -22,6 +22,9 @@ A pixel probe during the capture (a temporary hook in `phase2_capture_locations.
 ## CPU before and after
 `_sheet_cpu_base_vs_arm.jpg`: the lower part of route_day, vista_dusk, walk_02 and walk_03, base left and arm right (`phase2_capture_routes.gd --biome=cloudreach --subset=cloudreach__summit_final_stronghold__12__stormward_overlook --seed=2042`, Compatibility). Same stands and camera on both sides.
 
+## Checked against the judged GPU frames
+`tb/gpu-frames-1113` G-below6-overlook-solid-c673 solid-High: the dark rectangle by the tree at walk_02 and the dark plank strip at upper left of walk_03 are the same paver slabs the probe names; both are gone in this arm on CPU.
+
 ## By-eye line for the GPU lane
 - route_day and vista_dusk: the cobbled or plank strip running down-right from the dark wedge, right of the trainer, is gone.
 - walk_02: the dark slab on the grass behind the trainer, by the tree, is gone.
