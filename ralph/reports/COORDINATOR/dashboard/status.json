@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 00:45 UTC",
+  "updated": "13 Nov 2026 00:57 UTC",
   "headline": [
+    "13 Nov 00:57: #938 landed (Stormraven, F41#13 above 6). #939 (overlook pane fix) is updated onto the new main and in full CI.",
     "13 Nov 00:45: faint poses ship for Duskhush (F36#44 6.59 to 7.09) and Ribbonray (F36#61 6.55 to 7.09), both now over 7; Trailpup and Voltwig dropped from that change. Voltwig on main read 7.51 at High, so its Medium is queued as a close-out.",
     "13 Nov 00:40: the Stormward Overlook amber pane and beacon balls are fixed (overlook routes 4.92 to 5.87, 3/3), landing as #939 once #938 (Stormraven) is in. The four-creature faint poses are with the judges. The Stormwood pool fix was held: the sky reflection moves rather than going away.",
     "13 Nov 00:35: #938 in full CI: near-black Stormraven (F41#13 5.76 to 6.67). Auto-merge is off; I merge by hand once the engine jobs have run.",
@@ -2276,6 +2277,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#938",
+      "what": "Near-black Stormraven with lightning flecks (F41#13 5.76 to 6.67, above 6); full CI 23 jobs green",
+      "when": "13 Nov 00:56"
+    },
     {
       "pr": "#937",
       "what": "Visible catch ring with a thin dark halo; F38#7 CLOSED (7.76 High and Medium); F39#23 +0.61",
