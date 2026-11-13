@@ -4656,6 +4656,17 @@
       "added": "13 Nov 03:37"
     },
     {
+      "id": "below6-overlook-solid",
+      "branch": "tb/below6",
+      "commit": "a4d4e067e",
+      "rows": [
+        "F40#15 (walk_03 frame; walk_02 ghost planes)",
+        "F40#0/#21 overlook frames no-loss"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 ON + two capture_stands rows for walk_02/03), High, same routes subset as overlook-join (vista_dusk, route_day, walk_01-03). Can share overlook-join's base capture (same branch lineage, flags off). By-eye: walk_02/03 show the arch, compass and pennants with the trainer on grass; no see-through walls.",
+      "added": "13 Nov 04:25"
+    },
+    {
       "id": "below6-fulgocobra-faint",
       "branch": "tb/below6",
       "commit": "6cc4dad05",
