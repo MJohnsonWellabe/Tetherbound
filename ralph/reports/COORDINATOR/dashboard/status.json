@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 06:40 UTC",
+  "updated": "13 Nov 2026 07:13 UTC",
   "headline": [
+    "13 Nov 07:13: #945 landed (Warden ring fainter: F38#28 Medium 7.52). Overnight: #937, #938, #939, #941, #942, #943, #944, #945. 16 arms queued on the GPU.",
     "13 Nov 06:40: Warden ring ships (F38#28 Medium 7.52; High 7.05 keeps it open). F41#13 not closed at 6.91. Fulgocobra's copper-red collar flagged against the red reserve: LANE-BELOW6 moving it off red first.",
     "13 Nov 05:42: #944 landed (tournament conversations now captured where the game stages them; F38#16 re-capture queued). Overnight: #937, #938, #939, #941, #942, #943, #944.",
     "13 Nov 05:12: Cloudreach night arm (cloudnight) held: gains on 9 night stands but 3 stands read as dim day. Round 2 with a cooler fill and darker grass goes to LANE-THINGS.",
@@ -2289,6 +2290,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#945",
+      "what": "Warden arena boundary ring fainter and lower (F38#28 Medium 7.05 to 7.52, 3/3; High level 7.05; no set loses); full CI green (4 suites, 15 multiplayer shards)",
+      "when": "13 Nov 07:12"
+    },
+    {
       "pr": "#944",
       "what": "Dialogue capture: tournament conversations captured where the game stages them (Mira's frame was inside her shop wall, a view no player sees); tools only; CI green",
       "when": "13 Nov 05:41"
@@ -2601,7 +2607,7 @@
     },
     "F38#28": {
       "gpu": 6.99,
-      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look"
+      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look | LANDED #945 (13 Nov): ring r1 on main; r2 (0.05/0.3 m) queued for the High close-out"
     },
     "F38#29": {
       "gpu": 6.35,
