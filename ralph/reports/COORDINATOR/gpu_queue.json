@@ -4739,7 +4739,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113 ON), High, phase2_capture_routes.gd --biome=cloudreach --subset=cloudreach__summit_final_stronghold__12__stormward_overlook --seed=2042 (vista_dusk, route_day, walk_01-03); add the High Perches stands (07, 08) as no-loss. By-eye first: the straight dark seam at the trainer's feet in vista_dusk should be gone and the path intact.",
    "added": "13 Nov 03:37",
-   "status": "SHIP 13 Nov (LANE-JUDGE). LANE-LAND-CS to land both."
+   "status": "SHIP; landing in #954."
   },
   {
    "id": "below6-overlook-solid",
@@ -4751,7 +4751,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-OVERLOOK-SOLID/overlay.json (ruin_collision_1113 ON + two capture_stands rows for walk_02/03), High, same routes subset as overlook-join (vista_dusk, route_day, walk_01-03). Can share overlook-join's base capture (same branch lineage, flags off). By-eye: walk_02/03 show the arch, compass and pennants with the trainer on grass; no see-through walls.",
    "added": "13 Nov 04:25",
-   "status": "SHIP 13 Nov (LANE-JUDGE). LANE-LAND-CS to land both."
+   "status": "SHIP; landing in #954."
   },
   {
    "id": "below6-fulgocobra-faint",
@@ -4784,7 +4784,8 @@
     "F39#8 (5.82)"
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-AQUARYN-RIDE/overlay.json (deep_swim_1113 ON: ridden Aquaryn sinks 1.6 m, rider waist-deep), High, phase2_capture_tidewake_mounted_swim.gd --seed=2042 frames 03-05. Frame 04's side view is not stable between runs; if base and arm face different ways, note it for the judges. By-eye: mount legs and belly under the surface, rider's head and chest above.",
-   "added": "13 Nov 05:36"
+   "added": "13 Nov 05:36",
+   "status": "CAPTURED 13 Nov 19:30: on tb/gpu-frames-1113, with LANE-JUDGE."
   },
   {
    "id": "below6-wall-band",
@@ -5177,7 +5178,7 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1: neighbouring puffs share one slow wave so they never fade out independently; size 0.5, spacing 0.2, rise 0.04). capture_f38_fight.gd south_bridge_grunt + warden_aldis, --attack --dodge --tell-frames, High then Medium, camera-matched, F38#38 control. By eye on grunt 03: one continuous low band at the feet, no beads. The warden base capture is shared with scene-hallwalls (same tree, same base).",
    "added": "13 Nov 18:40",
    "priority": "near-bar closer, with scene-hallwalls before scene-cache",
-   "status": "SHIP 13 Nov (F38#11 Medium +0.51 3/3; F38#3 Medium +0.04, 0.22 short). LANE-SCENE to land. Retries of grunt High / Warden still useful as no-loss."
+   "status": "SHIP; landing in #954 (with overlook join + solid)."
   },
   {
    "id": "land-mt-shorezones",
@@ -5201,7 +5202,8 @@
    ],
    "ask": "One-sided close-out capture on main: F38#10 Meadows menus, Players and Quest Log panels at High, then all three panels (Build, Players, Quest Log) at Medium, F38#38 control (confirming batch). Same tool and frames as G-rescore-f38-19-c673's F38#10 section.",
    "added": "13 Nov 19:15",
-   "priority": "close candidate"
+   "priority": "close candidate",
+   "status": "CAPTURED 13 Nov 19:30: on tb/gpu-frames-1113, with LANE-JUDGE."
   },
   {
    "id": "rescore-f36-50-mangrove-species",
@@ -5211,7 +5213,8 @@
     "F36#50 Mangrove Monitor (unscored on c673)"
    ],
    "ask": "One-sided re-score on main: the same creature capture as rescore-f36-50-mangrove-main but with --species=mangrove_monitor (that run captured water_mangrove_monitor = F36#92). High; Medium only if High >= 7.5.",
-   "added": "13 Nov 19:20"
+   "added": "13 Nov 19:20",
+   "status": "CAPTURED 13 Nov 19:30: on tb/gpu-frames-1113, with LANE-JUDGE."
   },
   {
    "id": "beings-wmonitor-ground",
@@ -5222,7 +5225,8 @@
    ],
    "ask": "Overlay-only, rides in the beings pose batch as a 4th item (same tree; d2bf0aa13 adds only notes and this overlay over 9ae4ea989). Base vs + ralph/reports/LANES/BEINGS-WMONITOR-GROUND/overlay.json (creature_pose_settle faint per_species water_mangrove_monitor crumple.limb_sink_frac 0.5). CAPTURE.json for frames. By eye on water_mangrove_monitor-faint-050: feet touch the floor and the shadow meets the body; faint-100 same as base. High, then Medium if mapped >= 7.5 (close candidate).",
    "added": "13 Nov 19:25",
-   "priority": "near-bar closer; with the pose batch"
+   "priority": "near-bar closer; with the pose batch",
+   "status": "CAPTURED 13 Nov 19:30: on tb/gpu-frames-1113, with LANE-JUDGE."
   },
   {
    "id": "land-mt-duskridge",
