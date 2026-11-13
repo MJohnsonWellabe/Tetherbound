@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-STATICUB-FUR ready (F41#8, F41#18): the salmon-pink bears
+
+Read both F41#8 panels. The biggest named defect nobody had tried is the background bears: "flat salmon pink ... read as placeholders", 3/3 on G-places-stormlight, G-things-stormuniform and G-below6-namedfaces. They are wild Staticub (r10), not Stormursa. Brown fur, made paler by the shipped value-lift coat, under Stormwood's violet light renders salmon (CPU body crop 196,164,158). Flag-off `below6_staticub_storm_fur`: a darker fur with blue pulled down, derived from the model's own albedo; arcs, eyes and muzzle kept. CPU: 159,111,94, a brown bear with visible fur. Needs a no-loss look at Staticub in daylight, since the lifted coat was judged ON at 6.80 there; ARM.md says what to do if it loses. The crushed black ground is still LANE-PLACES'. Ten arms of mine are waiting now, so I am stopping here until verdicts come back.
+
 ## 13 Nov, BELOW6-WALL-BAND ready (F40#1): pale top band on the island walls
 
 Step 1 as asked. No false-colour run was needed: `_mesa` puts every wall band of a mass in one `cliff_high` surface. Flag-off `landmass.wall_top_band_1113`: the first wall band of `LandmarkLedge` and `CliffMass` goes, with the same vertices, into its own surface under a pale tint. Material only, Cloudreach only. CPU: at the Realm Gate Crag approach the dark soil band becomes a pale stone band; the other two row stands show no wall and do not change. Two cautions in ARM.md: at the shipped tint the band can read as sand (a greyer tint is given as the lever), and it changes every Cloudreach frame that looks across at an island wall, so it needs a wide no-loss set. Next for me: F41#8 panels.
