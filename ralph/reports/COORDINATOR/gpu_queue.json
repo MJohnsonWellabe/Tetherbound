@@ -5372,6 +5372,28 @@
    ],
    "ask": "One-sided re-score on main of F40#17's job frames, High; Medium if High >= 7.5. Ride with G-rescore-1113's job-frame rows.",
    "added": "13 Nov 20:55"
+  },
+  {
+   "id": "land-mt-cragcut-probe",
+   "branch": "tb/land-mt",
+   "commit": "0b901eaa1",
+   "rows": [
+    "F39#19 (6.95/7.27), F39#7: eye check only, no judges"
+   ],
+   "ask": "GPU eye check: Venn fight (warm-up first, per TECHNICAL 8.1) with ralph/reports/LANES/LAND-MT-CRAGCUT/probe_overlay.json (crag back faces painted magenta), t-000 and t-003 at High. Report whether the dark overhead wedge turns magenta. If yes, LAND-MT-CRAGCUT is the arm; if not, it is another mesh.",
+   "added": "13 Nov 21:10",
+   "priority": "cheap probe; ride the tb/land-mt boot"
+  },
+  {
+   "id": "beings-fly-shoulder",
+   "branch": "tb/beings",
+   "commit": "43507f404",
+   "rows": [
+    "F38#8 trainer under Galecrest in flight (6.21)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/BEINGS-FLY-SHOULDER/overlay.json (carrier talons hold the trainer's shoulders, hands hold the bird's legs, instead of the bird standing on raised hands). phase2_capture_realm_flight.gd --biome=meadows --seed=2042, frames launch and glide, High. Same tb/beings import (43507f404 adds flag-off code over 31d672f7b).",
+   "added": "13 Nov 21:10",
+   "priority": "after stormraven-arcs in the beings boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
