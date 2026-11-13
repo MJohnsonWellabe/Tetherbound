@@ -26,7 +26,8 @@ const RIDGE_VL := preload("res://scripts/world/meadows_ridge_vl.gd")
 var _config: Dictionary = {}
 var _base_y := 0.0
 var _ridge: Node3D = null
-var _ridge_poll := 0.0
+## The fog state last copied into the ridge materials; see sync_ridge_fog().
+var _ridge_fog_state: Array = []
 
 
 func _ready() -> void:
@@ -102,11 +103,26 @@ func _process(_delta: float) -> void:
 	if camera != null:
 		global_position = Vector3(camera.global_position.x, _base_y, camera.global_position.z)
 	if _ridge != null:
-		_ridge_poll -= _delta
-		if _ridge_poll <= 0.0:
-			_ridge_poll = 0.5
-			var env_node := get_parent().get_node_or_null(^"WorldEnvironment") as WorldEnvironment
-			RIDGE_VL.sync_fog(_ridge, env_node.environment if env_node != null else null, global_position.y)
+		var env_node := get_parent().get_node_or_null(^"WorldEnvironment") as WorldEnvironment
+		sync_ridge_fog(env_node.environment if env_node != null else null)
+
+
+## Copies the live environment fog into the ridge the frame it changes. This
+## was a 0.5 s poll, which left the ridge wearing the previous hour's haze for
+## up to half a second after a time jump: a day frame taken straight after a
+## dusk one drew the mountains as a flat tan sheet (GPU G-things-redleaf,
+## stronghold route_day, 7.73 -> 5.14). Comparing four values a frame costs
+## nothing; the materials are only written when one of them moved.
+func sync_ridge_fog(environment: Environment) -> void:
+	if _ridge == null or environment == null:
+		return
+	var base_y := global_position.y if is_inside_tree() else position.y
+	var state: Array = [environment.fog_light_color, environment.fog_density,
+		environment.fog_enabled, base_y]
+	if state == _ridge_fog_state:
+		return
+	_ridge_fog_state = state
+	RIDGE_VL.sync_fog(_ridge, environment, base_y)
 
 
 func _material() -> StandardMaterial3D:
