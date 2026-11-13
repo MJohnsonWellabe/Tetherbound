@@ -9,6 +9,8 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Ready: `THINGS-WARDENRING`** (`ralph/reports/LANES/THINGS-WARDENRING/`), F38#28 Medium close-out (High 7.54, Medium 6.99; 3/3 at Medium: the thin cyan floor arc reads as a guide line). A flag flip of the existing, never-judged `boundary_per_trainer_candidate`: a fainter, lower ring in the Warden's fight only. **Not visible on CPU on either side**; needs the GPU at Medium.
+- **F39#12 camp creature bed (6.80 to 6.98): not started.** The board lists it as one asset needing new art; I have no Meshy credits, so I will only look for a scene-level fix.
 - **LANDING READY: `tb/things-convtight-land`** (from main 317b3372, `THINGS-CONVTIGHT-LAND/READY.md`, STATUS: land). `G-things-convtight.md` (b4ff847a): 10 of 11 sets win, none lose; F39#26 to 7.04 and F40#12 to 7.12.
   - **Different from your request: it ships the field of view (40 to 36) only; the plain `distance` stays 3.5.** `twoshot_v2` (ON) already sets the arm to 2.9, so the overlay's distance was a no-op and the judged change was the field of view alone. Writing 2.9 into the plain block changes nothing in play and fails an older test that compares twoshot_v2 against it. The line-138 stand assertion passes. 57 tests, 0 failed.
 - **Relay from LANE-SCOUT, `G-things-redleaf.md` (db0348b3): the no-red check PASSES; #930 is confirmed on main.** Burrow Warrens other views 5.43 to 6.41 (3/3). F38#30 4.89 to 4.99; F38#24 walk frames level at 5.87.

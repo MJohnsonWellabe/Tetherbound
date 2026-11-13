@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-WARDENRING",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "Medium (the row already meets the bar at High: 7.54)",
+ "status": "READY 13 Nov. The arc is not visible on CPU on either side (see ARM).",
+ "tool": "tools/capture_f38_fight.gd --trainer=warden_aldis, the F38#28 set",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-WARDENRING/overlay_warden_ring.json"},
+ "rows": {"F38#28": "Warden arena boundary"}
+}
