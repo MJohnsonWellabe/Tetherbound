@@ -1,3 +1,23 @@
+# LAND-MT-SEADEPTH round 2: depth gradient only (`overlay_r2.json`)
+
+**GPU eye check of round 1 (GPU lane, G-land-mt-seadepth-states).**
+- The routes are clean: the terraces channel goes from navy to mid-blue.
+- But the current-state frames (S1 live and restored, S2 live) gain long diagonal light and dark streak bands across the open water, plus more white flecks (mean difference 11 to 14).
+
+**Cause (from the candidate's own settings).** `cause_tidewake.sea` also turns on wind slicks (`slick_strength` 0.16 at `slick_scale` 0.006, long smooth streaks) and whitecaps (`cap_strength` 0.22). Those are the bands and the flecks, and neither is part of the depth-gradient ask.
+
+**Round 2 change.** Overlay `overlay_r2.json`: the same sea part ON, with `slick_strength` 0 and `cap_strength` 0. The depth stops (shallow, mid, deep), falloff, contour wander, range haze and surf line stay.
+
+**By-eye.**
+- Routes: the channel is still mid-blue with a soft edge.
+- Current-state S1 and S2: no new diagonal bands or flecks against base.
+
+**Not looked at on CPU.** The bands showed on GPU.
+
+---
+
+Round 1 notes follow.
+
 # LAND-MT-SEADEPTH: Tidewake sea with a soft depth gradient
 
 **Rows.** Every Tidewake frame with open water. Scored rows: F39#15 6.14, F13#5 6.28, F39#16 6.55, F39#17 6.55, F39#1 6.14, F39#30 6.70, F39#2 6.79; F39#10 (7.02) as no-loss.
