@@ -5154,7 +5154,8 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/SCENE-HALLWALLS/overlay.json (moss x0.3 on wall faces inside roofed rooms only). capture_f38_fight.gd warden_aldis frames 03/05, High then Medium, camera-matched, F38#38 control. By eye on Warden 03 High: the green rectangles on the wall panels behind the dog gone or reduced to mortar moss; pilasters unchanged. If unchanged, hold and report (next suspect: exterior massing piece through the roof breach).",
    "added": "13 Nov 18:10",
    "priority": "near-bar closer: run before scene-cache",
-   "note_tree": "1735a7827 adds only TELLDUST3 (flag-off) over 442473e62; one import serves hallwalls, telldust3, scene-cache."
+   "note_tree": "1735a7827 adds only TELLDUST3 (flag-off) over 442473e62; one import serves hallwalls, telldust3, scene-cache.",
+   "status": "HELD 13 Nov 18:25 by GPU by-eye: panels lost some green (right 53->38%, centre 26->10%) but a hard-edged flat green rectangle remains on the right panel (reads as a separate plane/layer). Back to LANE-SCENE to probe for a second surface. Attempt 1 of 2."
   },
   {
    "id": "things-telldust3",
@@ -5167,7 +5168,8 @@
    ],
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/THINGS-TELLDUST3/overlay.json (dust_phase_coherence 1: neighbouring puffs share one slow wave so they never fade out independently; size 0.5, spacing 0.2, rise 0.04). capture_f38_fight.gd south_bridge_grunt + warden_aldis, --attack --dodge --tell-frames, High then Medium, camera-matched, F38#38 control. By eye on grunt 03: one continuous low band at the feet, no beads. The warden base capture is shared with scene-hallwalls (same tree, same base).",
    "added": "13 Nov 18:40",
-   "priority": "near-bar closer, with scene-hallwalls before scene-cache"
+   "priority": "near-bar closer, with scene-hallwalls before scene-cache",
+   "status": "RUNNING 13 Nov 18:25: Warden pairs 1.52/1.39 m off base (deterministic); grunt set capturing. F38#3 judged on grunt if paired; Warden only disclosed no-loss unless paired."
   },
   {
    "id": "land-mt-shorezones",
