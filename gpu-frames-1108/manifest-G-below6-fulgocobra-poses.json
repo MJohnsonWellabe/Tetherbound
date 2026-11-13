@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "fulgocobra-faint-000.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-faint-000.png",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0483,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-025.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-faint-025.png",
+  "sky_fraction": 0.958,
+  "lower_edges": 0.0479,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-050.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-faint-050.png",
+  "sky_fraction": 0.959,
+  "lower_edges": 0.0501,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-075.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-faint-075.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0495,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-100.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-faint-100.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0494,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-000.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-hit-000.png",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0484,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-025.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-hit-025.png",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0478,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-050.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-hit-050.png",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0477,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-075.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-hit-075.png",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0478,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-100.png",
+  "preset": "arm-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/arm-High/fulgocobra-hit-100.png",
+  "sky_fraction": 0.957,
+  "lower_edges": 0.0483,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-000.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-faint-000.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0511,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-025.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-faint-025.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0515,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-050.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-faint-050.png",
+  "sky_fraction": 0.962,
+  "lower_edges": 0.054,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-075.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-faint-075.png",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0532,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-faint-100.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-faint-100.png",
+  "sky_fraction": 0.963,
+  "lower_edges": 0.0532,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-000.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-hit-000.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0511,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-025.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-hit-025.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0507,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-050.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-hit-050.png",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.051,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-075.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-hit-075.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0508,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ },
+ {
+  "frame": "fulgocobra-hit-100.png",
+  "preset": "base-High",
+  "tree": "1095069bbc36d66ae84e081ca6171a7de72effa4",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-below6-fulgocobra-poses/base-High/fulgocobra-hit-100.png",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0512,
+  "script_errors": 0,
+  "note": "HELD - NOT FOR JUDGING. below6-fulgocobra (F36#46 poses) pre-check failed: vein lines clip to white. tb/below6 1095069bb; High."
+ }
+]
