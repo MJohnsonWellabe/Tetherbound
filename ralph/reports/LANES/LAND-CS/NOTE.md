@@ -1,5 +1,9 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## New arm, held: LAND-CS-RIMGLOW (F40#17, now 5.61; 13 Nov 23:55 UTC)
+- The "toy-like glow blobs" are the shared pickup glow's 0.7 m halo round the three small rim patches (the patches shipped 12 Nov at about 0.6x the old cap; the halo was not resized). The arm scales the glow at those three placements only (0.45); they still glow (owner OP-0830-3). CPU: the balls are gone. CPU-ready and held.
+- The night navy grade on this row is THINGS-CLOUDNIGHT round 2's target.
+
 ## New arm, held: LAND-CS-ARCHSTAND (F40#3, 13 Nov 23:30 UTC)
 - The skyroad arch frame "shows no landmark" because the stand is 8 m from the arch, between its legs: the "two blocky cliff faces" are the legs. The arch's island is about 15 m across, so the tool cannot back off. A stand override from the arch centre toward the south rim frames the whole arch; the band frame broken_causeways 04, which had no stand at all, now captures too. Capture tooling only. CPU-ready and held for the queue.
 - F40#6: the remaining defect (the mount upright over open cloud) is recorded as an owner decision; not touched.
@@ -49,6 +53,7 @@ On `tb/land-cs` with main 874835ea (#951 and #952) merged, flag on, Compatibilit
 | Arm | Rows | Status |
 |---|---|---|
 | LAND-CS-SOILOFF | F41#22, F41#24 (6.46); riders F41#5, F41#12, F41#2 | New. Cause confirmed by switch-off on CPU. Asks to take THINGS-STORMPOOL round 2's place. |
+| LAND-CS-RIMGLOW | F40#17 (5.61) | New, CPU-ready, held. |
 | LAND-CS-ARCHSTAND | F40#3 (6.33) | New, CPU-ready, held. |
 | LAND-CS-OVERLOOK-SEAMS | F40#15 (5.60) | New, CPU-ready, held until a slot frees. |
 | LAND-CS-TURFGRAIN | F40#1, F40#7, F40#0/#19/#21, F40#4 | New, CPU-ready, held until a slot frees. |
