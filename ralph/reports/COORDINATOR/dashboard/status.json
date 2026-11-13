@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 03:55 UTC",
+  "updated": "13 Nov 2026 04:17 UTC",
   "headline": [
+    "13 Nov 04:17: #942 landed: conversation shots tighter, five dialogue rows up and none down. Rune re-placed on flat ground 17.7 m clear of the wild cluster: PR #943 in CI.",
     "13 Nov 03:55: Fulgocobra recolour parked after 2 rounds (olive body lost 0/3). F41#13 now reads 7.37 on the current tree: a close-out candidate. Convtight PR #942 in CI; Rune pulled from it after a real ring-clearance failure, being re-placed.",
     "13 Nov 03:20: Conversation camera (convtight) SHIPS: 10 of 11 sets gain, none lose (F39#26 to 7.04, F40#12 to 7.12, F38#17, F38#37, F40#10 up). Landing branch being cut by LANE-THINGS. Red-leaf fix #930 confirmed on GPU: no red outside Team Tether.",
     "13 Nov 02:25: #941 landed: Duskhush and Ribbonray over 7, and the High Perches plaza bug fixed. Overnight landings so far: #937 (catch ring, F38#7 closed), #938 (Stormraven over 6), #939 (overlook pane), #941.",
@@ -2283,6 +2284,11 @@
   "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
   "score_ledger_pending": [],
   "landed_recent": [
+    {
+      "pr": "#942",
+      "what": "Tighter conversation shot (fov 40 to 36 at the 2.9 m arm): 10 of 11 judged sets gain, none lose (F39#26 7.04, F40#12 7.12, F38#17, F38#37, F40#10 up); full CI green (26 jobs, engine suites ran)",
+      "when": "13 Nov 04:15"
+    },
     {
       "pr": "#941",
       "what": "High Perches court no longer draws as placeholder grass (bug fix); grounded faints for Duskhush (F36#44 6.59 to 7.09) and Ribbonray (F36#61 6.55 to 7.09); full CI 23 jobs green",
