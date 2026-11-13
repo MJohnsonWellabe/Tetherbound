@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "warden_aldis-03.png",
+  "preset": "arm-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/arm-High/warden_aldis-03.png",
+  "sky_fraction": 0.045,
+  "lower_edges": 0.2251,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-05.png",
+  "preset": "arm-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/arm-High/warden_aldis-05.png",
+  "sky_fraction": 0.046,
+  "lower_edges": 0.1937,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-08.png",
+  "preset": "arm-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/arm-High/warden_aldis-08.png",
+  "sky_fraction": 0.042,
+  "lower_edges": 0.1813,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-r04.png",
+  "preset": "arm-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/arm-High/warden_aldis-r04.png",
+  "sky_fraction": 0.011,
+  "lower_edges": 0.1264,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-r16.png",
+  "preset": "arm-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/arm-High/warden_aldis-r16.png",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.1704,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-a03.png",
+  "preset": "arm-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/arm-High/warden_aldis-a03.png",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.16,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-03.png",
+  "preset": "base-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/base-High/warden_aldis-03.png",
+  "sky_fraction": 0.045,
+  "lower_edges": 0.2332,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-05.png",
+  "preset": "base-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/base-High/warden_aldis-05.png",
+  "sky_fraction": 0.046,
+  "lower_edges": 0.2009,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-08.png",
+  "preset": "base-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/base-High/warden_aldis-08.png",
+  "sky_fraction": 0.042,
+  "lower_edges": 0.1865,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-r04.png",
+  "preset": "base-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/base-High/warden_aldis-r04.png",
+  "sky_fraction": 0.011,
+  "lower_edges": 0.1268,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-r16.png",
+  "preset": "base-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/base-High/warden_aldis-r16.png",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.1772,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ },
+ {
+  "frame": "warden_aldis-a03.png",
+  "preset": "base-High",
+  "tree": "a85dde69b9e4002781acb9f80dbc8e5e9d50550c",
+  "tool": "res://tools/phase2_capture_fights.gd",
+  "path": "G-things-wardenring-r2-high/base-High/warden_aldis-a03.png",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.1599,
+  "script_errors": 0,
+  "note": "things-wardenring-r2 (F38#28 close candidate): tb/things a85dde69b, base = overlay_warden_ring.json (r1), arm = overlay_warden_ring_r2.json, Meadows fight south_bridge_grunt+warden_aldis --fixed-fps 20, HIGH. Row frames warden_aldis-03/05/08; no-loss r04/r16/a03. Base/arm camera positions identical on every packed frame."
+ }
+]
