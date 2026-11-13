@@ -237,9 +237,13 @@ const MATERIAL := """
 				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 3.1 + vec2(3.7, 9.2)) * 0.4;
 			float zone_h = smoothstep(coast_dune_zone_start_m, coast_dune_zone_full_m, v_vertex.y + (zone_n - 0.5) * 4.0);
 			float zone_gentle = smoothstep(0.55, 0.85, abs(dune_normal.y));
-			float zone_cover = smoothstep(0.38, 0.6, zone_n * 0.6 + zone_h * 0.55) * zone_h * zone_gentle;
+			// Noise-led patches that close up with height: turf islands in
+			// sand, never a lawn (a first try blanketed every dune green).
+			float zone_cover = smoothstep(0.5, 0.62, zone_n * 0.8 + zone_h * 0.2) * smoothstep(0.0, 0.35, zone_h) * zone_gentle;
 			vec3 turf = mix(coast_dune_zone_straw_colour, coast_dune_zone_colour,
 				coast_noise(v_vertex.xz * coast_dune_zone_scale * 7.3 + vec2(1.9))) * mix(0.8, 1.1, grain);
+			// Keep the sand's own ripple and grain value under the turf.
+			turf *= clamp(dot(sand, vec3(0.3333)) / max(dot(coast_dune_sand_colour, vec3(0.3333)) * 0.79, 0.01), 0.8, 1.2);
 			sand = mix(sand, turf, zone_cover * coast_dune_zone_strength);
 		}
 		// Sand caps the gentle ground; required steep banks expose the

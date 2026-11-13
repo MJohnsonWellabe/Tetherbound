@@ -1,20 +1,20 @@
 {
  "data/config/tidewake_look.json": {
   "dunes": {
-   "wet_height_m": 3.0,
-   "wet_wobble_m": 1.6,
-   "wet_strength": 0.8,
+   "wet_height_m": 4.5,
+   "wet_wobble_m": 2.4,
+   "wet_strength": 0.7,
    "wet_colour": "#8a7a60",
-   "wrack_strength": 0.85,
-   "wrack_height_m": 2.9,
-   "wrack_width_m": 0.45,
+   "wrack_strength": 0.9,
+   "wrack_height_m": 4.6,
+   "wrack_width_m": 0.6,
    "wrack_colour": "#4a4634",
-   "zone_strength": 0.85,
-   "zone_start_m": 3.5,
-   "zone_full_m": 9.0,
-   "zone_scale": 0.035,
-   "zone_colour": "#66753f",
-   "zone_straw_colour": "#9c9459"
+   "zone_strength": 0.9,
+   "zone_start_m": 8.0,
+   "zone_full_m": 22.0,
+   "zone_scale": 0.03,
+   "zone_colour": "#56653a",
+   "zone_straw_colour": "#8a8355"
   }
  }
 }
