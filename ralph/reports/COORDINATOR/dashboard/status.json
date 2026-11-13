@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 09:52 UTC",
+  "updated": "13 Nov 2026 11:52 UTC",
   "headline": [
+    "13 Nov 11:52: Fight wind-up dust (telldust) ships, 3/3 everywhere: F38#3 High 7.51 / Medium 7.47, F38#28 High 7.47 / Medium 7.55. Both rows sit 0.03 under closing; landing now.",
     "13 Nov 09:52: The fight 'bead strings' (F38#3, F38#28) turn out to be the attack wind-up dust, not the stone trail; the trail arm is parked unjudged and the wind-up dust arm (telldust) is capturing.",
     "13 Nov 09:24: #948 landed (Fulgocobra slate collar: no red outside Team Tether). Overnight: #937-#939, #941-#948 (11 PRs).",
     "13 Nov 08:55: #947 landed (no harvest prompt across Tidewake/Cloudreach/Stormwood fights; Tidewake fight re-capture queued). Overnight: #937-#939, #941-#947 (10 PRs).",
@@ -2554,7 +2555,7 @@
     },
     "F38#11": {
       "gpu": 7.47,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.47 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.47 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-things-telldust (13 Nov): tells 6.56->6.95 (3/3)"
     },
     "F38#12": {
       "gpu": 5.89,
@@ -2629,7 +2630,7 @@
     },
     "F38#28": {
       "gpu": 6.99,
-      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look | LANDED #945 (13 Nov): ring r1 on main; r2 (0.05/0.3 m) queued for the High close-out | G-cw (13 Nov): ring r2 (lower alpha) level at High 6.91->6.87 (0/3): ring-alpha approach PARKED; next = in-world edge and cool fill; dusttrail (puffs) still to judge"
+      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look | LANDED #945 (13 Nov): ring r1 on main; r2 (0.05/0.3 m) queued for the High close-out | G-cw (13 Nov): ring r2 (lower alpha) level at High 6.91->6.87 (0/3): ring-alpha approach PARKED; next = in-world edge and cool fill; dusttrail (puffs) still to judge | G-things-telldust (13 Nov): SHIPS, High 7.16->7.47, Medium 7.29->7.55 (3/3); High 0.03 short of close"
     },
     "F38#29": {
       "gpu": 6.35,
@@ -2637,7 +2638,7 @@
     },
     "F38#3": {
       "gpu": 7.25,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close | 13 Nov: DUSTTRAIL held (beads unchanged); the bead strings are the wind-up telegraph dust: THINGS-TELLDUST capturing",
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close | 13 Nov: DUSTTRAIL held (beads unchanged); the bead strings are the wind-up telegraph dust: THINGS-TELLDUST capturing | G-things-telldust (13 Nov): SHIPS, High 7.08->7.51, Medium 7.08->7.47 (3/3); Medium 0.03 short of close",
       "medium": 7.03
     },
     "F38#30": {

@@ -4701,7 +4701,8 @@
         "F41#3/#6 no-loss optional"
       ],
       "ask": "Base vs overlay_tell_dust.json (combat.json telegraph.soft_style: wind-up dust puffs larger, closer, dimmer, lower, darker so they merge into one soft ground band; painted outlines stay off per owner 24 Oct), the same fight sets as dusttrail (south_bridge_grunt + warden_aldis, --attack --tell-frames), High, plus Warden at Medium. By-eye first on a frame showing '! incoming': beads should be one soft band on the ground. LANE-THINGS now thinks the beads are this wind-up dust, not the stone trail; if DUSTTRAIL's by-eye shows the beads unchanged, hold DUSTTRAIL unjudged and judge this instead.",
-      "added": "13 Nov 09:46"
+      "added": "13 Nov 09:46",
+      "status": "SHIPS 13 Nov (G-things-telldust.md a19cc351b): F38#3 High 7.51 / Medium 7.47; F38#28 High 7.47 / Medium 7.55; landing via LANE-THINGS"
     },
     {
       "id": "below6-overlook-join",
@@ -4771,11 +4772,11 @@
     {
       "id": "below6-gate-terrace",
       "branch": "tb/below6",
-      "commit": "29b783c0e",
+      "commit": "e22452813",
       "rows": [
         "F40#1 (5.90)"
       ],
-      "ask": "Base vs ralph/reports/LANES/BELOW6-GATE-TERRACE/overlay.json (landmass.gate_crag_terrace_1113 ON: five stacked pale-stone terrace lips with turf tops and collision on the Realm Gate Crag crown), High, the same F40#1 row frames as wall-band (phase2_capture_locations.gd --biome=cloudreach --times=day --views=approach,close --seed=2042). Can share wall-band's base if the trees match outside flags. Only the realm_gate_crag approach frame should change.",
+      "ask": "Base vs ralph/reports/LANES/BELOW6-GATE-TERRACE/overlay.json (landmass.gate_crag_terrace_1113 ON: five stacked pale-stone terrace lips with turf tops and collision on the Realm Gate Crag crown), High, the same F40#1 row frames as wall-band (phase2_capture_locations.gd --biome=cloudreach --times=day --views=approach,close --seed=2042). Can share wall-band's base if the trees match outside flags. Only the realm_gate_crag approach frame should change. UPDATED 13 Nov 11:50: capture from tb/below6 e22452813 or later (tiers now register as ground for ground_height_at).",
       "added": "13 Nov 07:32"
     },
     {
