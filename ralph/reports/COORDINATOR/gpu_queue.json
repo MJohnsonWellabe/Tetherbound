@@ -4624,6 +4624,18 @@
       "added": "13 Nov 03:03"
     },
     {
+      "id": "below6-overlook-join",
+      "branch": "tb/below6",
+      "commit": "ee1a130c6",
+      "rows": [
+        "F40#15",
+        "F40#0 and F40#21 overlook frames",
+        "High Perches no-loss"
+      ],
+      "ask": "Base vs ralph/reports/LANES/BELOW6-OVERLOOK-JOIN/overlay.json (landmass.overlook_ridge_join_1113 ON), High, phase2_capture_routes.gd --biome=cloudreach --subset=cloudreach__summit_final_stronghold__12__stormward_overlook --seed=2042 (vista_dusk, route_day, walk_01-03); add the High Perches stands (07, 08) as no-loss. By-eye first: the straight dark seam at the trainer's feet in vista_dusk should be gone and the path intact.",
+      "added": "13 Nov 03:37"
+    },
+    {
       "id": "things-stormpool-r2",
       "branch": "tb/things",
       "commit": "a6a79ca70",
