@@ -5202,6 +5202,16 @@
    "ask": "One-sided close-out capture on main: F38#10 Meadows menus, Players and Quest Log panels at High, then all three panels (Build, Players, Quest Log) at Medium, F38#38 control (confirming batch). Same tool and frames as G-rescore-f38-19-c673's F38#10 section.",
    "added": "13 Nov 19:15",
    "priority": "close candidate"
+  },
+  {
+   "id": "rescore-f36-50-mangrove-species",
+   "branch": "main",
+   "commit": "4f9ae9e2a",
+   "rows": [
+    "F36#50 Mangrove Monitor (unscored on c673)"
+   ],
+   "ask": "One-sided re-score on main: the same creature capture as rescore-f36-50-mangrove-main but with --species=mangrove_monitor (that run captured water_mangrove_monitor = F36#92). High; Medium only if High >= 7.5.",
+   "added": "13 Nov 19:20"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
