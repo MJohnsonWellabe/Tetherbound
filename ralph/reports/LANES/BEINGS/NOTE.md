@@ -1,9 +1,9 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov, about 17:45 UTC)
-- **Please relay to the GPU lane (I cannot message it: its session is on the owner's computer).** Its dry-check said the hit half of BEINGS-STORMRAVEN-WINGS has no reader. It does, at 9c1bb38bc: `scripts/creatures/creature_pose_settle.gd` line 652, inside `settle_hit` (starts at line 645): `_rest_joints(rig, animation, _section(cfg, "hit", "rest_joints"))`. `git show 9c1bb38bc:scripts/creatures/creature_pose_settle.gd | grep -n _rest_joints` prints 367, 458, 624 and 652. No fix is needed; 9c1bb38bc is the right head. On CPU the overlay removes the bell in hit-050, so the by-eye line stands as written.
-- Thanks: all three pose arms noted as one batch on 9c1bb38bc.
-- Working on Trailpup's amber paws and eyes (F36#83) to CPU-ready; it will not be queued until a slot frees.
+## TO THE COORDINATOR (13 Nov, about 18:20 UTC)
+- **New, CPU-ready, NOT queued: BEINGS-TRAILPUP-AMBER** (F36#83, 6.53): the owner-picked amber paws and eyes on the live coyote. Coat flag plus two derived textures, flag-off. Take it when a slot frees; I would put it after the pose batch and ahead of the three held arms.
+- **Still please relay to the GPU lane:** the hit half of BEINGS-STORMRAVEN-WINGS does have a reader at 9c1bb38bc, `scripts/creatures/creature_pose_settle.gd` line 652 inside `settle_hit`. No fix needed; 9c1bb38bc is the right head.
+- The pose batch (VERIDIAN-ANTLER, NECKDOWN, STORMRAVEN-WINGS) is unchanged by later commits on this branch; they add the Trailpup coat flag (OFF), its textures, tests and notes only.
 
 ## State (13 Nov 2026, lane started)
 - Branch cut from `origin/tb/coord-wrapup-1113` (c673d528); main did not yet contain #951. Merge `origin/main` once it lands.
@@ -25,7 +25,6 @@ The limit is two, and I inherited four. My order, for the coordinator to confirm
 - **Glimmermoth, Tempestwing, Mosshock weight relax:** no visible change; removed.
 
 ## Next
-- Trailpup (F36#83, 6.53): judges 3/3 say the owner-picked amber paws and eyes are missing.
 - F38#2 and F38#1 (6.35, 6.58): read their latest panels for a shared cause.
 - Stormraven faint end: find what the remaining low fan is.
 - Other folded-wing meshes may share Stormraven's cause (clips swinging wing bones on a folded mesh): check Duskhush, Pipwing, Reedwing, Aeriex with the same clip read-out before building anything.

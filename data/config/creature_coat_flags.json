@@ -1074,6 +1074,7 @@
           "roughness": 0.8, "specular": 0.25
         }
       }
-    }
+    },
+    "beings_trailpup_amber": {"_why": "LANE-BEINGS (13 Nov 2026), BEINGS-TRAILPUP-AMBER, F36#83 Trailpup (GPU High 6.53; G-things-t4-rescore 3/3: 'no amber paws or eyes', so the recorded 'stock animal' defect is still PRESENT). Owner pick, 1 Nov: 'Trailpup concept 1 (nearly real coyote, glowing amber paws and eyes)'. The live coyote keeps its coat; the paws (below 6% of standing height, fading out by 15%) and the two irises glow amber. Derived from the live albedo and the model's own UVs by ralph/reports/LANES/BEINGS-TRAILPUP-AMBER/derive_amber.py; no new art. Trailpup only: Stormtrail wears its own texture. OFF until GPU-judged.", "scope": "client presentation: one species' albedo and emission; no state", "enabled": false, "coats": {"res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_amber.png", "emission": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_amber_glow.png", "emission_energy": 1.3}}}
   }
 }
