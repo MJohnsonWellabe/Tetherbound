@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "t-000.00.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/arm-Medium/t-000.00.png",
+  "sky_fraction": 0.323,
+  "lower_edges": 0.3625,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/arm-Medium/t-003.02.png",
+  "sky_fraction": 0.046,
+  "lower_edges": 0.2178,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-023.02.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/arm-Medium/t-023.02.png",
+  "sky_fraction": 0.061,
+  "lower_edges": 0.2119,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-024.02.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/arm-Medium/t-024.02.png",
+  "sky_fraction": 0.046,
+  "lower_edges": 0.1876,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-025.02.png",
+  "preset": "arm-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/arm-Medium/t-025.02.png",
+  "sky_fraction": 0.047,
+  "lower_edges": 0.1897,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-000.00.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/base-Medium/t-000.00.png",
+  "sky_fraction": 0.323,
+  "lower_edges": 0.3625,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-003.02.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/base-Medium/t-003.02.png",
+  "sky_fraction": 0.048,
+  "lower_edges": 0.2178,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-023.02.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/base-Medium/t-023.02.png",
+  "sky_fraction": 0.063,
+  "lower_edges": 0.2039,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-024.02.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/base-Medium/t-024.02.png",
+  "sky_fraction": 0.046,
+  "lower_edges": 0.1603,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "t-025.02.png",
+  "preset": "base-Medium",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_tidewake_fights.gd",
+  "path": "G-land-mt-cragback-medium/base-Medium/t-025.02.png",
+  "sky_fraction": 0.072,
+  "lower_edges": 0.1846,
+  "script_errors": 0,
+  "note": "LAND-MT-CRAGBACK (F39#19 near-bar 0.03 short, F39#7), MEDIUM: every side = c673d5285 (= main) + tb/land-mt 887c38d67's water_veilfall_crag_kitbash.json + water_veilfall_crag.gdshader (back_face_lit 0 = shipped); arm = LAND-MT-CRAGBACK/overlay.json (back_face_lit 1). Venn fight, --fixed-fps 20; frames camera-paired across 2 base runs and 2 arm runs: t-000.00 and t-003.02 matched 0.00 m; t-023-025 2.7-13 m off (late fight frames diverge). By eye on the matched frames: the navy-black void behind the arena at top right is textured grey rock; nothing else changes (mean diff 0.01-0.54). F38#38 control on tb/keep-gpu-frames-1108."
+ }
+]
