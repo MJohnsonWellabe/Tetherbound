@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-closeout-staticub-world @ 510ee31a9, G-closeout-staticub-stage @ 8ce6b5a85", "tree": "tb/land-mt 5ef7e327e + #957's four files = main 0ba1cfabd on the Staticub path (per both manifests)",
+ "identity check": "close-out High frames are pixel-identical to the shipped arm frames of G-below6-staticub-fur-world/-stage-c673 (mean diff 0.00 / 0.01)",
+ "Staticub stage High | Medium": ["staticub-hit-000", "hit-050", "faint-050", "faint-100 (2x2, crop 560,200,1560,840)"],
+ "Staticub world High | Medium": ["stormwood__staticub__idle", "moving", "attacking", "hurt", "fainted", "resting (2x3)"],
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg",
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f04_6_r22"}
