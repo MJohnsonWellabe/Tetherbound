@@ -14,7 +14,10 @@
 
 **By-eye line:** in Nysa's frames her hair is ash-silver and Varga's is black. If both are black, hold.
 
-**Risk:** this keeps the shared face, so judges may still say "same face as Varga". It answers the hair-and-plate half of their ask only.
+**Risks and known limits:**
+- This keeps the shared face, so judges may still say "same face as Varga". It answers the hair-and-plate half of their ask only.
+- On the body the top and back of the hair turn grey-silver, but the forelock over the forehead stays near-black: it lies inside the box that protects the eyes and brows. Two other selections (a narrower box; selecting dark texels by how much skin surrounds them) did not move the forelock and the second turned one eye grey, so this version is kept. The plate is fully silver.
+- At gameplay distance the difference from Varga is smaller than on the plate. If the judges see no difference in the world frames, the next step is the owner's answer on the face, not more hair passes.
 
 **Capture:** `CAPTURE.json` (Stormwood dialogue; judge Nysa and Varga together).
 

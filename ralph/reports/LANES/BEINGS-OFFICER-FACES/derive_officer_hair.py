@@ -159,12 +159,12 @@ OA = "assets/characters/officer_a/"
 OA_GLB = OA + "officer_a_lod0.glb"
 OA_CLOTH = OA + "officer_a_lod0_texture_0_vis1_cloth2.png"
 OA_PLATE = "assets/ui/portraits/officer_a.png"
-OA_HAIR_TOP = 0.86
+OA_HAIR_TOP = 0.83
 OA_FACE_CENTRE = (0.46, 0.29)
 OA_FACE_RADII = (0.09, 0.10)
 OA_EYES_CENTRE = (0.47, 0.205)
 OA_EYES_RADII = (0.12, 0.045)
-NYSA_NEUTRAL = (215.0, 0.07, 2.6)
+NYSA_NEUTRAL = (215.0, 0.06, 3.2)
 
 
 def officer_a_hair_mask(size, image):
@@ -174,9 +174,11 @@ def officer_a_hair_mask(size, image):
     lo, hi = pos.min(axis=0), pos.max(axis=0)
     unit = (pos_map - lo) / np.maximum(hi - lo, 1e-6)
     nrm_map = nrm_map / np.maximum(np.linalg.norm(nrm_map, axis=-1, keepdims=True), 1e-9)
-    face = (np.abs(unit[..., 0] - 0.5) < 0.14) & (nrm_map[..., 2] > 0.45) & (unit[..., 1] < 0.93)
+    # The eyes and brows at the very front keep their pixels. Known limit: the
+    # forelock over the forehead falls inside this box and stays near-black.
+    face = (np.abs(unit[..., 0] - 0.5) < 0.085) & (nrm_map[..., 2] > 0.6) & (unit[..., 1] < 0.945)
     _, _, v = hsv_arrays(image)
-    return (valid > 0) & (unit[..., 1] > OA_HAIR_TOP) & ~face & (v < 0.30)
+    return (valid > 0) & (unit[..., 1] > OA_HAIR_TOP) & ~face & (v < 0.34)
 
 
 def officer_a_plate_mask(plate):
