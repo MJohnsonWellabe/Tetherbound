@@ -1,14 +1,15 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov 2026, about 21:50 UTC)
-1. **ARM SCENE-TOURNEY is ready** on `tb/scene`, row F38#16 (7.31). Two flag-off changes in one overlay, each aimed at a judge's named defect:
-   - The "pink glowing bush" (3/3) is the pickup glow of a village berry harvest node 11.8 m from the lens (probe at the frame: tint #f26d8f, item berries). Pickup halos now fade with the conversation camera's push-in and return after. This touches every conversation with a pickup in view, so the arm lists dialogue samples as no-loss.
-   - "Mira and Tam share the same body" (judge a): Tam's hood and tunic are slate blue, derived from the installed texture by a script in the asset folder, with the dialogue portrait recoloured to match (a new `portrait_remap` on the body flag). Only Tam uses that body key.
-   - CPU shows both: no halo, and Tam clearly unlike Mira. 215 tests in 18 related files pass with the flags off.
-   - Files: `ralph/reports/LANES/SCENE-TOURNEY/`.
-2. **SCENE-PANELFILL** (F38#10) and **SCENE-ROSTERNAMES** (F39#19) are ready, as noted earlier.
-3. Waiting on the GPU: HALLWALLS r2, SCENE-CACHE, SCENE-WORKSHOP, SCENE-ROSTERNAMES, SCENE-PANELFILL, SCENE-TOURNEY. That is well over two; order them as you see fit. I will not add more until verdicts come back. My next work is on what the verdicts say, or the dialogue foreground rows (F38#37, F40#10, F41#15, F39#26).
-4. Landed on main from this lane: #953 (workbench parts fix), #954 (TELLDUST3).
+## TO THE COORDINATOR (13 Nov 2026, about 23:00 UTC)
+1. **ROSTERNAMES round 2 is on `tb/scene`** (same flag, same overlay). Both causes found in code and fixed:
+   - Camera: the fight camera reads HUD control rects through `fight_occupied_controls` and `camera.json hud_dynamic_controls`. The roster now reports a footprint at the old 232 px width on both paths. CPU: scenery pixel-identical to base in t-000 to t-008.
+   - Ghost rows, three causes: grey benched names; `set_pinned` called every frame restarting the reveal tween at alpha 0; and the HUD subject fade dimming the roster where the wider strip overlaps a fighter. Now: white names, no restart, and the named roster stays out of the subject fade. CPU: solid in t-003, t-008, t-010 and the t-012 stagger.
+   - Details: its ARM.md, "Round 2".
+2. **New ARM SCENE-CURB (F38#28)**, the new approach after HALLWALLS parked. A low stone curb with a brass inlay replaces the glowing teal ring, in the Warden arena only. Same radius and rules. CPU (brightened) shows it reading as an authored edge. Files: `ralph/reports/LANES/SCENE-CURB/`.
+3. **Aldis's red banner is not a bug:** Aldis is the Team Tether Warden of the occupied stronghold (WORLD: "Team Tether recedes" after his defeat). Red is within the rule there.
+4. **F39#20 (6.42):** the recorded defect is FIXED 3/3. The frames still carry the stale "Gather Reef Stone" prompt (fixed by #947) and the dark cliff wedge (LANE-LAND-MT). Needs a re-score, not a build.
+5. **F38#35 (6.33):** the role postures do apply (no mismatch warning on Halda, Lark or Oskar), but at about 40 px tall a 4-38 degree offset cannot read. A 1.8x gain barely registered on CPU, so I reverted it rather than queue a weak arm. The row needs authored role poses (hands on hips, folded arms): animation work, not a scene setting.
+6. Ready and waiting (your queue order): ROSTERNAMES r2, SCENE-CURB, SCENE-PANELFILL, SCENE-TOURNEY, SCENE-CACHE, SCENE-WORKSHOP.
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
@@ -20,7 +21,7 @@
 |---|---|---|
 | SCENE-CACHE | F38#12 (5.89) | New. Replaces BELOW6-TONIC-STASH (same switch file; its overlay turns the tonic crate on too). |
 | SCENE-WORKSHOP | F39#13 (6.14) | New. Overlay only over the bench fix. |
-| SCENE-HALLWALLS | F38#28 | New. Replaces THINGS-HALLMOSS, which the GPU held by eye and is now parked (it only reached the pilasters). |
+| SCENE-HALLWALLS | F38#28 | PARKED after two rounds: r2 judged level (0/3, all ties). Replaced by SCENE-CURB. |
 | THINGS-TELLDUST3 | F38#3, F38#11 | JUDGED, ships: F38#11 Medium 6.55 to 7.06 (3/3), F38#3 level. Landing branch pushed. |
 
 That is four with SOLENE withdrawn and TONIC-STASH replaced, which is over the limit of two. I am not sending anything further until HALLMOSS and TELLDUST2 are judged. If the coordinator prefers, hold SCENE-WORKSHOP behind SCENE-CACHE.
