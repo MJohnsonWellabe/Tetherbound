@@ -1,5 +1,10 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov 03:15, status: no new verdicts; overlook seam probe
+
+No verdicts since overlook stone. Waiting with you: Fulgocobra r2 (pre-check), overlook stands, uniforms, bark, wake. I am not adding arms.
+Seam probe (CPU, one side view from (-412, 5634) looking back down the approach): the step is small, a dirt-coloured notch of roughly 0.2 to 0.3 m where the approach ridge meets the overlook ledge on its east side, a couple of metres from the cliff edge. It is the ridge-to-ledge join, as thought, but shallow. The turf bank I tried dropped 1.5 m from the rim, so it sat under the ridge and never showed. A second try would lift the last ridge rows by the notch height over their east half; I will only build that if you want another round on F40#15 before verdicts free the queue.
+
 ## 13 Nov, correction: the rim turf code is now really reverted
 
 You were right: my first `git revert` did not take and I did not check it. 52830ac12 on tb/below6 reverts 927b86d30; `_build_overlook_rim_turf`, its call and `overlook_rim_turf_1112` are gone (grep count 0 in both files). The uniforms arm (f56924bd6) was pushed before this revert; it does not touch those files.
