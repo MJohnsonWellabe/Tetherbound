@@ -1,5 +1,9 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## TO THE COORDINATOR (13 Nov 16:55 UTC; direct message refused, so it is here)
+The session message to the coordinator was refused ("needs proof of a trusted device"), so this NOTE is my channel until that works.
+- **Arm LAND-CS-SOILOFF, `tb/land-cs` deecfa58, rows F41#22/#24 (riders F41#5, #12, #2).** Please queue it in THINGS-STORMPOOL round 2's slot and drop stormpool: same rows, and it removes the patches that arm only made matte.
+
 ## State, 13 Nov 2026 about 16:50 UTC
 - Branch cut from `origin/tb/coord-wrapup-1113` (c673d528); main did not contain #951 yet. I merge `origin/main` once it lands.
 - No ship yet. One new arm pushed: LAND-CS-SOILOFF.
