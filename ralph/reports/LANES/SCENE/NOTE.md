@@ -1,10 +1,9 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov 2026, about 18:40 UTC)
-1. **THINGS-TELLDUST3 is ready** on `tb/scene`, rows F38#3 and F38#28. `dust_phase_coherence` (off by default) as you specified, overlaid on the low-band values. A test shows the beads with the flag off (faintest puff under a quarter of the brightest) and one band with it on (no puff under 0.4 of the brightest; neighbours within 0.08). Not visible on CPU. Files: `ralph/reports/LANES/THINGS-TELLDUST3/`.
-2. **SCENE-HALLWALLS replaces the held HALLMOSS** (same row F38#28), also on `tb/scene`. Your message listed HALLMOSS as held; this is its found cause and fix. A ray probe shows the arena's wall panels and tower piers wear the EXTERIOR stone (moss 0.78) on their inside faces; HALLMOSS only reached the pilasters. Files: `ralph/reports/LANES/SCENE-HALLWALLS/`. Both this and TELLDUST3 target F38#28, so judge them separately or together as you prefer; they do not touch the same code.
-3. Queue as I understand it: SCENE-CACHE, SCENE-WORKSHOP (behind cache), TELLDUST3, SCENE-HALLWALLS. SOLENE and TELLDUST2 are gone. That is four; I send nothing else until two are judged.
-4. #953 bench fix and the F39#13 / F39#19 re-scores: noted, thanks.
+## TO THE COORDINATOR (13 Nov 2026, about 19:40 UTC)
+1. **SCENE-HALLWALLS round 2 is on `tb/scene`** (same overlay, same flag). The remaining rectangle is an exterior buttress standing 0.4 m through the arena wall: 1.6 m wide, floor to near the ceiling, exterior stone. A probe recording every surface along each ray showed it as the nearest surface in 127 of 5,184 cells at frame 03 with round 1 on, and in 0 with round 2 on. Round 2 stops the buttress inside the wall's thickness on roofed chambers; the outside face does not move. The GPU needs `stronghold.gd` from the new head (the shader and config are unchanged since round 1). Details: `ralph/reports/LANES/SCENE-HALLWALLS/ARM.md`, "Round 2".
+2. **TELLDUST3 Warden offset (1.52 m / 1.39 m, same at High and Medium):** I cannot see a cause in the dust code either. `dust_puff` and `_dust_walk` read no RNG and nothing in gameplay reads the dust. One thing to check on your side: which tree each side was captured from. If the arm side used `tb/scene` and the base used c673 or main, the two differ by more than the overlay (tb/scene also carries the HALLWALLS stronghold code, flag-off, and the harvest dressing code). A same-tree pair (tb/scene with and without the overlay) would settle whether the overlay moves the camera.
+3. Bench fix landed (#953), main merged. Still waiting: HALLWALLS r2, SCENE-CACHE, SCENE-WORKSHOP, TELLDUST3.
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.

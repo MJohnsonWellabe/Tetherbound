@@ -19,13 +19,23 @@ Flag-off code on `tb/scene`: walls and tower piers of roofed chambers wear a cop
 
 Checked with the same probe, flag on: at frame 03, 1,845 of 5,184 rays land on the copied material inside a room footprint and 24 land on it outside (wall ends in doorways). No shader error in the log.
 
+## Round 2 (13 Nov, after the GPU's by-eye hold)
+
+GPU report on round 1: green on the right panel fell from 53% to 38% and on the centre panel from 26% to 10%, but a flat, hard-edged green rectangle stayed on the right-hand panel at Warden 03 (about x1290 to 1430, y60 to 400), evenly tinted over stone and mortar.
+
+**Cause, confirmed by probe.** It is an exterior buttress standing through the wall. `_dress_exterior_wall` centres each buttress on the wall line: 2.0 m deep on a 1.2 m wall, so 0.4 m of it stands INSIDE the room as a 1.6 m wide slab, floor to near the ceiling, in the exterior stone (moss 0.78, a darker tint than the wall, and not a chamber wall, so round 1 did not reach it). The +x arena wall carries two (at z 7642.3 and 7649.4 in the probe's world frame).
+- Probe, all surfaces along each ray, round 1 on: a full-depth buttress is the nearest surface in 127 of 5,184 cells at frame 03, 0.2 to 0.4 m in front of the wall face.
+- Probe, this round on: 0 cells. No exterior-stone box of buttress size reaches inside any roofed room. The only exterior meshes whose bounds still overlap a room are the corner towers, which the room's tower piers already enclose.
+
+**Change (same flag, no new overlay key).** On roofed keep chambers the buttress keeps its outer face and stops inside the wall's own thickness (1.0 m deep instead of 2.0 m). Open yards keep their buttresses as they are. Seen from outside nothing moves.
+
 ## Not shown on CPU
 
 As HALLMOSS found, the hall is too dark on CPU (Compatibility, Low) to see moss on either side. The CPU frames differ by a mean of 0.2 in red and under 0.1 in green and blue. The evidence here is the probe, not the picture.
 
 ## By-eye line for the GPU lane
 
-Warden 03 at High, camera-matched: the large green rectangles on the wall panels behind the dog are gone or reduced to moss in the mortar joints, and the wall reads as warm brown stone like the wall to its left. The pilasters are unchanged from base. If the rectangles are unchanged, hold the arm and tell me: the next suspect is then the exterior massing piece the probe saw through the roof breach (`@MeshInstance3D@67314`, moss 0.78, on the right wall).
+Warden 03 at High, camera-matched: the large green rectangles on the wall panels behind the dog are gone or reduced to moss in the mortar joints, and the wall reads as warm brown stone like the wall to its left. The pilasters are unchanged from base. Round 2: the hard-edged rectangle on the right-hand panel (about x1290 to 1430, y60 to 400) is gone, leaving the wall face behind it. If it is still there, park the arm (second miss) and tell me what remains.
 
 ## Risks and no-loss frames
 
