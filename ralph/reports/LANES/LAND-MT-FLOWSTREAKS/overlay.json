@@ -1,4 +1,1 @@
-{
- "data/config/tidewake_look.json": {"current_flow": {"state_shader": {"live": {"chop_cap_opacity": 0.0, "streak_density": 0.35, "dash_fill": 0.3, "fleck_amount": 0.3, "opacity": 0.45}}}},
- "data/config/water_current_flow_visual.json": {"shader": {"visual_cell_length_m": 7.0, "visual_cell_width_m": 2.2, "visual_breakup": 0.8, "visual_density": 0.7}}
-}
+{"data/config/tidewake_look.json": {"current_flow": {"state_shader": {"live": {"chop_cap_opacity": 0.0}}}}}
