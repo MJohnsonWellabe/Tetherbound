@@ -1,0 +1,11 @@
+{
+ "id": "LAND-MT-FLOWSTREAKS",
+ "lane": "LANE-LAND-MT",
+ "branch": "tb/land-mt",
+ "preset": "High",
+ "tool": "tools/capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/T2-current.json --capture-size=1920x1080 --source-sha=<tree>",
+ "base": {"tree": "tb/land-mt", "overlay": null},
+ "arm": {"tree": "tb/land-mt", "overlay": "ralph/reports/LANES/LAND-MT-FLOWSTREAKS/overlay.json"},
+ "rows": {"F13#5": ["swim-away-day", "swim-across-day", "swim-away-night", "swim-brine-day"], "no-loss": ["F39#16 / F39#17 current_states S1, S2"]},
+ "by_eye": "All four T2 views: no white crescent arcs on the water."
+}
