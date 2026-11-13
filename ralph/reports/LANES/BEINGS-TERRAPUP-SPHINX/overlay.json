@@ -1,0 +1,9 @@
+{
+ "data/config/creature_model_flags.json": {
+  "flags": {
+   "beings_terrapup_sphinx_rest": {
+    "enabled": true
+   }
+  }
+ }
+}

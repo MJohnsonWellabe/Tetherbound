@@ -17,6 +17,7 @@ const HELD := {
 	"creatures_ralph_mosshock_lateral_hit": "the visual lane's F36#54 lateral hit arm is judged (OFF until a CPU gain)",
 	"creatures_ralph_sparkit_lateral_hit": "the visual lane's F36#70 lateral hit arm is judged (OFF until a CPU gain)",
 	"beings_veridian_rigid_antlers": "LANE-BEINGS' Veridian rigid-antler skin arm (F36#85) is judged (OFF until a GPU gain)",
+	"beings_terrapup_sphinx_rest": "LANE-BEINGS' Terrapup belly-down rest arm (F38#1) is judged (OFF until a GPU gain)",
 	"lanekit_hitreact_grounded_1107": "LANE-KIT's grounded hit/faint arm (Shadelet, Paddlenewt, Glimmermoth, Tempestwing) is judged (OFF until a CPU gain)",
 	"remake_owner1101_burrowback": "its aspect variant Nightburrow reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
 	"remake_owner1101_trailpup": "its aspect variant Stormtrail reuses the base mesh with aspect textures painted for the old model (aspect textures / pose rig follow from tb/cause-remakes)",
@@ -68,6 +69,8 @@ func test_every_owner_remake_ships_on_and_is_the_live_model() -> void:
 			continue
 		assert_true(bool(flags[flag].get("enabled", false)), "%s ships ON (owner, 1 Nov 2026)" % flag)
 		for id: String in flags[flag].species:
+			if not (flags[flag].species[id] as Dictionary).has("model"):
+				continue
 			var model := str(flags[flag].species[id].model)
 			if last.has(id):
 				assert_eq(model.get_base_dir(), str(last[id]).get_base_dir(),
@@ -98,7 +101,8 @@ func test_an_enabled_flag_swaps_the_model_and_keeps_every_clip() -> void:
 		for id: String in entry.species:
 			var before: Dictionary = installed[id].placeholder
 			var after: Dictionary = rows[id].placeholder
-			var model := str(entry.species[id].model)
+			# A flag may refine only a recipe (no model key): it keeps the installed model.
+			var model := str((entry.species[id] as Dictionary).get("model", after.model))
 			assert_eq(str(after.model), model, "%s swaps %s's model" % [flag, id])
 			assert_true(float(after.height) > TRAINER_HEIGHT, "%s stands taller than the trainer" % id)
 			assert_true(float(after.height) >= float(before.height), "%s is never shrunk" % id)
