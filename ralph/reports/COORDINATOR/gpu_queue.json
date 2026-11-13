@@ -4539,6 +4539,20 @@
    "route": "LANE-SCOUT (close call with control)"
   },
   {
+   "id": "below6-fulgocobra",
+   "kind": "arm (needs import)",
+   "rows": [
+    "F36#46",
+    "F41#13"
+   ],
+   "branch": "tb/below6",
+   "head": "1095069bb",
+   "job": "ralph/reports/LANES/BELOW6-FULGOCOBRA/CAPTURE.json: phase2_capture_creatures.gd --biome=stormwood --only=fulgocobra (and stormraven for the F41#13 pair), plus F36#46's own pose-stage frames with the same overlay",
+   "capture": "High, base vs overlay; pre-check: gold vein lines not clipping to white",
+   "priority": "below-6 row (F36#46 5.87)",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-cloudnight",
    "kind": "arm",
    "rows": [
