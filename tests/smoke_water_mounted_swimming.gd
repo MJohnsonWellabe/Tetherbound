@@ -4,6 +4,7 @@ extends SceneTree
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const MOUNT_LOOK := preload("res://scripts/world/water_mount_presentation.gd")
 const IDS := ["water_aquaryn", "water_mosshell", "water_sirenseal", "water_riverdrake", "water_cannonback"]
 var world: Node3D
 var player: CharacterBody3D
@@ -87,7 +88,16 @@ func run() -> void:
 		var offset := vec(mount_data[id].mount_offset)
 		if not check(player.global_position.distance_to(body.to_global(offset)) < 0.15, id + " rider tracks measured seat anchor player=%s seat=%s offset=%s velocity=%s" % [player.global_position,body.to_global(offset),player.carry_offset(),body.velocity]):
 			return
-		if not check(body.global_position.y + offset.y - 0.92 > 0.05, id + " rider art origin remains above sea"):
+		# F39#8 deep swim (coordinator's option A, 13 Nov 2026; shipped ON after
+		# G-below6-aquaryn-ride-c673.md): a mount whose row has `deep_swim_1113`
+		# on carries its rider waist-deep, so the rule there is that the rider's
+		# chest stays above the sea. Every other mount keeps the dry-rider rule.
+		var rider_art: float = body.global_position.y + offset.y - 0.92
+		var deep: Dictionary = (MOUNT_LOOK.config().get("mounts", {}) as Dictionary).get(id, {}).get("deep_swim_1113", {})
+		if bool(deep.get("enabled", false)):
+			if not check(rider_art + float(deep.get("rider_chest_above_art_m", 0.75)) > 0.15, id + " rider chest remains above sea (art %.2f)" % rider_art):
+				return
+		elif not check(rider_art > 0.05, id + " rider art origin remains above sea"):
 			return
 		# Explicit exhausted-resource fixture proves gradual damage and no refill
 		# from the real dismount/remount path, not a complete crossing budget.
