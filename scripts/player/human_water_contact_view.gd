@@ -117,6 +117,10 @@ func step_visual(delta: float, packet: Dictionary, body_position: Vector3) -> vo
 				and _emission_clock >= float(settings.get("trail_interval_s", 0.16)):
 			var ring := _ring()
 			ring.position = at
+			# `v_wake`: turn the ring so its local x is the swim direction.
+			var travel := Vector2(at.x - _last_emission.x, at.z - _last_emission.z)
+			if travel.length() > 0.001:
+				ring.rotation.y = atan2(-travel.y, travel.x)
 			_trail.append({"node": ring, "age": 0.0, "phase": _phase})
 			_last_emission = at
 			_emission_clock = 0.0
@@ -139,7 +143,7 @@ func step_visual(delta: float, packet: Dictionary, body_position: Vector3) -> vo
 		var grow := float(settings.get("trail_grow_to", 1.0))
 		if grow != 1.0:
 			ring.scale = Vector3.ONE * lerpf(1.0, grow, 1.0 - remaining)
-		_set_ring(ring, float(entry.phase), remaining * _fade * float(settings.get("trail_opacity_scale", 0.6)))
+		_set_ring(ring, float(entry.phase), remaining * _fade * float(settings.get("trail_opacity_scale", 0.6)), true)
 
 
 ## The swimmer's meshes (the model this view hangs under, never the foam
@@ -180,8 +184,15 @@ func _ring() -> MeshInstance3D:
 	return ring
 
 
-func _set_ring(ring: MeshInstance3D, phase: float, opacity: float) -> void:
+func _set_ring(ring: MeshInstance3D, phase: float, opacity: float, trailing: bool = false) -> void:
 	var material := ring.material_override as ShaderMaterial
+	# F39#5/#14 `v_wake` (OFF until judged): trailing rings keep only their side
+	# arcs, so the trail reads as a V; the ring at the body stays a full ring.
+	var v_wake: Variant = settings.get("v_wake", {})
+	var v_on := trailing and v_wake is Dictionary and bool((v_wake as Dictionary).get("enabled", false))
+	material.set_shader_parameter("side_arcs", 1.0 if v_on else 0.0)
+	if v_on:
+		material.set_shader_parameter("arc_width", clampf(float((v_wake as Dictionary).get("arc_width", 0.35)), 0.05, 0.9))
 	material.set_shader_parameter("phase", phase)
 	material.set_shader_parameter("opacity", opacity * clampf(float(settings.get("opacity", 0.26)), 0.0, 0.5))
 	var soft: Variant = settings.get("soft_churn_1112", {})
