@@ -4856,10 +4856,6 @@ func _build_waterward_overlook(root: Node3D) -> void:
 	presentation.name = "StormwardOverlookPresentation"
 	root.add_child(presentation)
 	presentation.call("build", _materials)
-	# Lens-only stops (flag-off `camera_stops_1113`): null unless enabled.
-	var camera_stops: Variant = presentation.call("build_camera_stops")
-	if camera_stops is Node3D:
-		root.add_child(camera_stops as Node3D)
 	_exclude_local_wear_segment(root, Vector3(-8.0, -2.4, -28.0), Vector3.ZERO, 5.0)
 
 

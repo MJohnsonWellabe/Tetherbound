@@ -47,12 +47,6 @@
       "banners": []
     }
   },
-  "camera_stops_1113": {
-    "enabled": false,
-    "_scope": "client_presentation",
-    "_candidate": "LANE-BELOW6 (13 Nov 2026), F40#15 (5.77). G-below6-overlook-pane and -stone, 3/3 on both sides: translucent ghost planes in the sky above the wall in walk_02. They are the right pier and ruined wing themselves: both are presentation-only, the spring arm passes through them, the lens sits inside the masonry and the occluder fade draws it see-through. Candidate: one box per pier and wing on the camera rig's occlusion-only layer (mask 0, never a traversal layer), so the arm stops in front of the stone. Walking is unchanged. OFF until a GPU verdict.",
-    "shrink": 0.92
-  },
   "pane_fix_1112": {
     "enabled": true,
     "_why_on": "Bug fix (coordinator, 12 Nov): the overlook route frame walk_02_day showed a blank pale-yellow pane over half the frame and a white ball on the grass. The pane is banners[1], a flat 2 m by 4.5 m card hung at head height beside the right pier; the ball is a beacon glow, a default 1 m sphere at emission 2.8. Streamers become narrow swallow-tailed pennants hung from the same top edge; glows become small embers in their bowls. Visual only.",
