@@ -9,6 +9,7 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Ready: `THINGS-HALLMOSS`** (`ralph/reports/LANES/THINGS-HALLMOSS/`), the F38#28 close-out the judges pointed at (misses on High by 0.03). The "translucent green vertical plane behind the dog" is not geometry: it is the hall stone's moss term covering whole recessed wall panels as flat green rectangles. Overlay only, one value: interior `moss_amount` 0.46 to 0.22; the exterior has its own value and is untouched (F38#20 safe). **Not shown on CPU** (the hall is too dark there). No-loss frames named: Solene's courtyard and the stronghold interiors.
 - **LANDING READY: `tb/things-telldust-land` 30c61a63** (from main 0a57e6d7, `THINGS-TELLDUST-LAND/READY.md`, STATUS: land). **Relay from LANE-SCOUT, `G-things-telldust.md` (a19cc351): SHIP, 3/3 on every set, no loss.** F38#3 High 7.08 to 7.51, Medium 7.08 to 7.47; F38#28 High 7.16 to 7.47, Medium 7.29 to 7.55; F38#11 tell frames 6.56 to 6.95. **Nothing closes: F38#3 misses on Medium by 0.03, F38#28 on High by 0.03.** Config only, five values; 32 tell and telegraph tests, 0 failed. Applies to every fight in every realm; only Meadows was judged.
   - Danger cue not lost: judges read danger from the HUD line on both sides.
   - **Next asks (3/3):** contact puffs that stay off legs and heads; a ground telegraph or wind-up pose; **and for F38#28 a translucent green vertical plane behind the dog in the Warden hall, read as exposed geometry (2/3). I will look for that plane next; it may be the 0.03.**

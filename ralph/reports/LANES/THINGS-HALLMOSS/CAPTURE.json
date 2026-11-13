@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-HALLMOSS",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High, and Medium for F38#28",
+ "status": "READY 13 Nov. Not shown on CPU: the hall is too dark there to see the panels on either side.",
+ "tool": "tools/capture_f38_fight.gd --trainer=warden_aldis (the F38#28 set, frames 03/05), camera-matched pairs",
+ "base": {"tree": "tb/things plus the telldust values (or main once tb/things-telldust-land is in)", "overlay": null},
+ "arm": {"tree": "same", "overlay": "ralph/reports/LANES/THINGS-HALLMOSS/overlay_hall_moss.json"},
+ "rows": {"F38#28": "Warden fight 03/05", "no-loss": ["F38#17 Warder Solene's courtyard conversation", "any stronghold interior frame in the F38#20 set"]}
+}
