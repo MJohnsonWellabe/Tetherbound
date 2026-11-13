@@ -1,0 +1,156 @@
+[
+ {
+  "frame": "stormwood__staticub__attacking.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/base-High/stormwood__staticub__attacking.jpg",
+  "sky_fraction": 0.152,
+  "lower_edges": 0.3444,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__fainted.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/base-High/stormwood__staticub__fainted.jpg",
+  "sky_fraction": 0.154,
+  "lower_edges": 0.3532,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__hurt.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/base-High/stormwood__staticub__hurt.jpg",
+  "sky_fraction": 0.154,
+  "lower_edges": 0.3369,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__idle.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/base-High/stormwood__staticub__idle.jpg",
+  "sky_fraction": 0.152,
+  "lower_edges": 0.34,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__moving.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/base-High/stormwood__staticub__moving.jpg",
+  "sky_fraction": 0.152,
+  "lower_edges": 0.3415,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__resting.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/base-High/stormwood__staticub__resting.jpg",
+  "sky_fraction": 0.15,
+  "lower_edges": 0.348,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__shiny_idle.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/base-High/stormwood__staticub__shiny_idle.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3708,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__attacking.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/fur-High/stormwood__staticub__attacking.jpg",
+  "sky_fraction": 0.152,
+  "lower_edges": 0.3469,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__fainted.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/fur-High/stormwood__staticub__fainted.jpg",
+  "sky_fraction": 0.154,
+  "lower_edges": 0.3618,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__hurt.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/fur-High/stormwood__staticub__hurt.jpg",
+  "sky_fraction": 0.154,
+  "lower_edges": 0.3472,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__idle.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/fur-High/stormwood__staticub__idle.jpg",
+  "sky_fraction": 0.152,
+  "lower_edges": 0.3469,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__moving.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/fur-High/stormwood__staticub__moving.jpg",
+  "sky_fraction": 0.152,
+  "lower_edges": 0.3481,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__resting.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/fur-High/stormwood__staticub__resting.jpg",
+  "sky_fraction": 0.151,
+  "lower_edges": 0.3529,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ },
+ {
+  "frame": "stormwood__staticub__shiny_idle.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-staticub-fur-world-c673/fur-High/stormwood__staticub__shiny_idle.jpg",
+  "sky_fraction": 0.161,
+  "lower_edges": 0.3706,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8 Staticub creature rows): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = creature_coat_flags below6_staticub_storm_fur. Stormwood creature tool --only=staticub, High, --fixed-fps 20. By eye: in all six normal states the bear goes from pale pink to a warm storm-brown coat, keeping its lightning marks and glowing eyes; the shiny (blue) form is unchanged, as expected (own texture)."
+ }
+]
