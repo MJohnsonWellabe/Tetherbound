@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 11:52 UTC",
+  "updated": "13 Nov 2026 12:23 UTC",
   "headline": [
+    "13 Nov 12:23: #949 landed: fight wind-up dust is now a soft ground band. F38#3 and F38#28 each sit 0.03 under closing; two close-out arms (hall moss, lower dust band) are at the front of the GPU queue. Overnight: 12 PRs (#937-#939, #941-#949).",
     "13 Nov 11:52: Fight wind-up dust (telldust) ships, 3/3 everywhere: F38#3 High 7.51 / Medium 7.47, F38#28 High 7.47 / Medium 7.55. Both rows sit 0.03 under closing; landing now.",
     "13 Nov 09:52: The fight 'bead strings' (F38#3, F38#28) turn out to be the attack wind-up dust, not the stone trail; the trail arm is parked unjudged and the wind-up dust arm (telldust) is capturing.",
     "13 Nov 09:24: #948 landed (Fulgocobra slate collar: no red outside Team Tether). Overnight: #937-#939, #941-#948 (11 PRs).",
@@ -2298,6 +2299,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#949",
+      "what": "Fight wind-up dust as one soft low band instead of bead strings: F38#3 High 7.51 / Medium 7.47, F38#28 High 7.47 / Medium 7.55, F38#11 6.95 (all 3/3); full CI green",
+      "when": "13 Nov 12:22"
+    },
+    {
       "pr": "#948",
       "what": "Fulgocobra copper-red collar plates to gunmetal slate: hard rule (red is Team Tether only) cleared; F36#46 pose 5.29 to 5.70, Stormwood world 6.12 to 6.54 (3/3); full CI green",
       "when": "13 Nov 09:23"
@@ -2554,8 +2560,8 @@
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.38 (was 6.58) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov)"
     },
     "F38#11": {
-      "gpu": 7.47,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.47 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-things-telldust (13 Nov): tells 6.56->6.95 (3/3)"
+      "gpu": 6.95,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 7.47 (was 6.89) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov) | G-things-telldust (13 Nov): tells 6.56->6.95 (3/3) | LANDED #949 (13 Nov): tells 6.95"
     },
     "F38#12": {
       "gpu": 5.89,
@@ -2629,17 +2635,18 @@
       "src": "CLOSED 10 Nov: High 7.84, Medium 8.25 (G-f38-27-close, G-f38-27-close-medium on tb/item-scout-1108 038a46d59); the 5.89 entry was stale (spotted by LANE-FLOOR2)"
     },
     "F38#28": {
-      "gpu": 6.99,
-      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look | LANDED #945 (13 Nov): ring r1 on main; r2 (0.05/0.3 m) queued for the High close-out | G-cw (13 Nov): ring r2 (lower alpha) level at High 6.91->6.87 (0/3): ring-alpha approach PARKED; next = in-world edge and cool fill; dusttrail (puffs) still to judge | G-things-telldust (13 Nov): SHIPS, High 7.16->7.47, Medium 7.29->7.55 (3/3); High 0.03 short of close"
+      "gpu": 7.47,
+      "src": "GPU 10 Nov confirm after the rim fix: High 7.54, Medium 6.99 (lower shown; LANE-NEWAPPROACH note) | G-things-wardenring (13 Nov): boundary ring fainter SHIPS: Medium 7.05->7.52 (3/3), High level 7.05; not closed (High 7.05 this batch); landing via LANE-THINGS; close path = High band to Medium look | LANDED #945 (13 Nov): ring r1 on main; r2 (0.05/0.3 m) queued for the High close-out | G-cw (13 Nov): ring r2 (lower alpha) level at High 6.91->6.87 (0/3): ring-alpha approach PARKED; next = in-world edge and cool fill; dusttrail (puffs) still to judge | G-things-telldust (13 Nov): SHIPS, High 7.16->7.47, Medium 7.29->7.55 (3/3); High 0.03 short of close | LANDED #949 (13 Nov): 7.47 High / 7.55 Medium on main",
+      "medium": 7.55
     },
     "F38#29": {
       "gpu": 6.35,
       "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.35 (was 6.05)"
     },
     "F38#3": {
-      "gpu": 7.25,
-      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close | 13 Nov: DUSTTRAIL held (beads unchanged); the bead strings are the wind-up telegraph dust: THINGS-TELLDUST capturing | G-things-telldust (13 Nov): SHIPS, High 7.08->7.51, Medium 7.08->7.47 (3/3); Medium 0.03 short of close",
-      "medium": 7.03
+      "gpu": 7.51,
+      "src": "GPU High 8-9 Nov (F-meadows); RE-SCORE G-rescore-stale-ext-meadows 8.09 (was 6.49) EXTRAPOLATED above the top anchor: needs Medium + confirming batch (LANE-PLACES 96dc2a403, main, GPU High, 12 Nov); G-closeout-meadows-ui (strict panel): High 7.17, Medium 7.35, not closed | ARM THINGS-FOESTAND G-things-foestand (8598c54d, 12 Nov): 7.48 -> 7.61 High (2/3); Warden Aldis 6.80 -> 7.18 (3/3); landing #931; needs Medium | CLOSE CALL G-closeout-f38-20-f38-3 (bebe5fa91): High 6.89 / Medium 7.03 this batch; pooled High 7.25; does not close | 13 Nov: DUSTTRAIL held (beads unchanged); the bead strings are the wind-up telegraph dust: THINGS-TELLDUST capturing | G-things-telldust (13 Nov): SHIPS, High 7.08->7.51, Medium 7.08->7.47 (3/3); Medium 0.03 short of close | LANDED #949 (13 Nov): 7.51 High / 7.47 Medium on main",
+      "medium": 7.47
     },
     "F38#30": {
       "gpu": 6.02,
