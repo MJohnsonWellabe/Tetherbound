@@ -81,8 +81,6 @@ static func rank_marks(settings: Dictionary, identity: Dictionary, rank: String)
 	if not cfg is Dictionary or not (bool((cfg as Dictionary).get("enabled", false)) or with_separation):
 		return []
 	var scale := float(((cfg as Dictionary).get("rank_scale", {}) as Dictionary).get(rank, 1.0))
-	if with_separation:
-		scale *= float((separation as Dictionary).get("mark_scale", 1.0))
 	var colour := str(identity.get("rim_color", (cfg as Dictionary).get("colour", "#d8cba0")))
 	var out: Array = []
 	for template: Variant in (cfg as Dictionary).get("marks", []):
