@@ -233,13 +233,17 @@ const MATERIAL := """
 			sand = mix(sand, coast_dune_scrub_colour * mix(0.82, 1.08, grain), scrub * coast_dune_scrub_strength);
 		}
 		if (coast_dune_zone_strength > 0.0) {
-			float zone_n = coast_noise(v_vertex.xz * coast_dune_zone_scale) * 0.6
-				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 3.1 + vec2(3.7, 9.2)) * 0.4;
+			float zone_n = coast_noise(v_vertex.xz * coast_dune_zone_scale) * 0.5
+				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 3.1 + vec2(3.7, 9.2)) * 0.3
+				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 11.0 + vec2(8.3, 2.1)) * 0.2;
 			float zone_h = smoothstep(coast_dune_zone_start_m, coast_dune_zone_full_m, v_vertex.y + (zone_n - 0.5) * 4.0);
 			float zone_gentle = smoothstep(0.55, 0.85, abs(dune_normal.y));
 			// Noise-led patches that close up with height: turf islands in
 			// sand, never a lawn (a first try blanketed every dune green).
 			float zone_cover = smoothstep(0.5, 0.62, zone_n * 0.8 + zone_h * 0.2) * smoothstep(0.0, 0.35, zone_h) * zone_gentle;
+			// Metre-scale sand flecks through the turf, so a patch underfoot is
+			// tufted ground and not one flat green sheet.
+			zone_cover *= mix(0.35, 1.0, smoothstep(0.3, 0.62, coast_noise(v_vertex.xz * 0.85 + vec2(4.4))));
 			vec3 turf = mix(coast_dune_zone_straw_colour, coast_dune_zone_colour,
 				coast_noise(v_vertex.xz * coast_dune_zone_scale * 7.3 + vec2(1.9))) * mix(0.8, 1.1, grain);
 			// Keep the sand's own ripple and grain value under the turf.

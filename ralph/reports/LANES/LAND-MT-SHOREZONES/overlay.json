@@ -12,7 +12,7 @@
    "zone_strength": 0.9,
    "zone_start_m": 8.0,
    "zone_full_m": 22.0,
-   "zone_scale": 0.03,
+   "zone_scale": 0.05,
    "zone_colour": "#56653a",
    "zone_straw_colour": "#8a8355"
   }
