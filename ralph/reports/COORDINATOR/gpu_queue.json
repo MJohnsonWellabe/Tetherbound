@@ -5469,6 +5469,17 @@
    "ask": "Round 2: base vs + ralph/reports/LANES/LAND-MT-GRASSGROVES/overlay.json (overlays the look profile's dune_grass_candidate: denser grass in fewer clumps with wider bare sand). In the Tidewake routes boot with SEADEPTH and SHOREZONES (stacks), plus the Venn fight t-000 (warm-up, pooled bases) for F39#19. High. By eye: grass in distinct clumps with bare sand between at First Shore and the Venn arena.",
    "added": "13 Nov 22:35",
    "priority": "in the Tidewake boot"
+  },
+  {
+   "id": "land-cs-rimglow",
+   "branch": "tb/land-cs",
+   "commit": "01971e589",
+   "rows": [
+    "F40#17 High Perches (5.61)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/LAND-CS-RIMGLOW/overlay.json (scales the shared pickup glow's 0.7 m halo to 0.45 at the three small rim mushroom patches only; they still glow, owner OP-0830-3). Per its CAPTURE.json, High. By eye: no toy-like glow balls round the rim mushrooms. Same tb/land-cs import as SEAMS/TURFGRAIN/SOILOFF (01971e589 adds only arm files over 91ac0d6a1).",
+   "added": "13 Nov 22:40",
+   "priority": "below-6 row; in the land-cs boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
