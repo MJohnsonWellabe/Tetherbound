@@ -1,0 +1,90 @@
+[
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "arm-High",
+  "tree": "c212a3549c7059050a9dea4dd031a3a4bcef8067",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-t2/arm-High/swim-across-day.jpg",
+  "sky_fraction": 0.453,
+  "lower_edges": 0.1115,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS (F13#5, 5.38): every side = tb/land-mt 5ef7e327e (imported) + c212a3549's water_veilfall_spray.gdshader (= c212a3549 content); arm = LAND-MT-FLOWSTREAKS/overlay.json (current_flow chop_cap_opacity 0 + soft flow-aligned streaks). Four T2 views (camera set T2-current.json), High. By eye: the white crescent arcs are gone in all four views, replaced by faint long streaks running with the current; NOTE in swim-brine-day the streaks merge into one broad pale diagonal band. No-loss F39#16/#17 current states follow as G-land-mt-flowstreaks-states."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "arm-High",
+  "tree": "c212a3549c7059050a9dea4dd031a3a4bcef8067",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-t2/arm-High/swim-away-day.jpg",
+  "sky_fraction": 0.471,
+  "lower_edges": 0.1229,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS (F13#5, 5.38): every side = tb/land-mt 5ef7e327e (imported) + c212a3549's water_veilfall_spray.gdshader (= c212a3549 content); arm = LAND-MT-FLOWSTREAKS/overlay.json (current_flow chop_cap_opacity 0 + soft flow-aligned streaks). Four T2 views (camera set T2-current.json), High. By eye: the white crescent arcs are gone in all four views, replaced by faint long streaks running with the current; NOTE in swim-brine-day the streaks merge into one broad pale diagonal band. No-loss F39#16/#17 current states follow as G-land-mt-flowstreaks-states."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "arm-High",
+  "tree": "c212a3549c7059050a9dea4dd031a3a4bcef8067",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-t2/arm-High/swim-away-night.jpg",
+  "sky_fraction": 0.649,
+  "lower_edges": 0.1245,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS (F13#5, 5.38): every side = tb/land-mt 5ef7e327e (imported) + c212a3549's water_veilfall_spray.gdshader (= c212a3549 content); arm = LAND-MT-FLOWSTREAKS/overlay.json (current_flow chop_cap_opacity 0 + soft flow-aligned streaks). Four T2 views (camera set T2-current.json), High. By eye: the white crescent arcs are gone in all four views, replaced by faint long streaks running with the current; NOTE in swim-brine-day the streaks merge into one broad pale diagonal band. No-loss F39#16/#17 current states follow as G-land-mt-flowstreaks-states."
+ },
+ {
+  "frame": "swim-brine-day.jpg",
+  "preset": "arm-High",
+  "tree": "c212a3549c7059050a9dea4dd031a3a4bcef8067",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-t2/arm-High/swim-brine-day.jpg",
+  "sky_fraction": 0.098,
+  "lower_edges": 0.065,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS (F13#5, 5.38): every side = tb/land-mt 5ef7e327e (imported) + c212a3549's water_veilfall_spray.gdshader (= c212a3549 content); arm = LAND-MT-FLOWSTREAKS/overlay.json (current_flow chop_cap_opacity 0 + soft flow-aligned streaks). Four T2 views (camera set T2-current.json), High. By eye: the white crescent arcs are gone in all four views, replaced by faint long streaks running with the current; NOTE in swim-brine-day the streaks merge into one broad pale diagonal band. No-loss F39#16/#17 current states follow as G-land-mt-flowstreaks-states."
+ },
+ {
+  "frame": "swim-across-day.jpg",
+  "preset": "base-High",
+  "tree": "c212a3549c7059050a9dea4dd031a3a4bcef8067",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-t2/base-High/swim-across-day.jpg",
+  "sky_fraction": 0.326,
+  "lower_edges": 0.1421,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS (F13#5, 5.38): every side = tb/land-mt 5ef7e327e (imported) + c212a3549's water_veilfall_spray.gdshader (= c212a3549 content); arm = LAND-MT-FLOWSTREAKS/overlay.json (current_flow chop_cap_opacity 0 + soft flow-aligned streaks). Four T2 views (camera set T2-current.json), High. By eye: the white crescent arcs are gone in all four views, replaced by faint long streaks running with the current; NOTE in swim-brine-day the streaks merge into one broad pale diagonal band. No-loss F39#16/#17 current states follow as G-land-mt-flowstreaks-states."
+ },
+ {
+  "frame": "swim-away-day.jpg",
+  "preset": "base-High",
+  "tree": "c212a3549c7059050a9dea4dd031a3a4bcef8067",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-t2/base-High/swim-away-day.jpg",
+  "sky_fraction": 0.366,
+  "lower_edges": 0.1522,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS (F13#5, 5.38): every side = tb/land-mt 5ef7e327e (imported) + c212a3549's water_veilfall_spray.gdshader (= c212a3549 content); arm = LAND-MT-FLOWSTREAKS/overlay.json (current_flow chop_cap_opacity 0 + soft flow-aligned streaks). Four T2 views (camera set T2-current.json), High. By eye: the white crescent arcs are gone in all four views, replaced by faint long streaks running with the current; NOTE in swim-brine-day the streaks merge into one broad pale diagonal band. No-loss F39#16/#17 current states follow as G-land-mt-flowstreaks-states."
+ },
+ {
+  "frame": "swim-away-night.jpg",
+  "preset": "base-High",
+  "tree": "c212a3549c7059050a9dea4dd031a3a4bcef8067",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-t2/base-High/swim-away-night.jpg",
+  "sky_fraction": 0.623,
+  "lower_edges": 0.1698,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS (F13#5, 5.38): every side = tb/land-mt 5ef7e327e (imported) + c212a3549's water_veilfall_spray.gdshader (= c212a3549 content); arm = LAND-MT-FLOWSTREAKS/overlay.json (current_flow chop_cap_opacity 0 + soft flow-aligned streaks). Four T2 views (camera set T2-current.json), High. By eye: the white crescent arcs are gone in all four views, replaced by faint long streaks running with the current; NOTE in swim-brine-day the streaks merge into one broad pale diagonal band. No-loss F39#16/#17 current states follow as G-land-mt-flowstreaks-states."
+ },
+ {
+  "frame": "swim-brine-day.jpg",
+  "preset": "base-High",
+  "tree": "c212a3549c7059050a9dea4dd031a3a4bcef8067",
+  "tool": "res://tools/capture_tidewake_f13_5.gd",
+  "path": "G-land-mt-flowstreaks-t2/base-High/swim-brine-day.jpg",
+  "sky_fraction": 0.081,
+  "lower_edges": 0.0686,
+  "script_errors": 0,
+  "note": "LAND-MT-FLOWSTREAKS (F13#5, 5.38): every side = tb/land-mt 5ef7e327e (imported) + c212a3549's water_veilfall_spray.gdshader (= c212a3549 content); arm = LAND-MT-FLOWSTREAKS/overlay.json (current_flow chop_cap_opacity 0 + soft flow-aligned streaks). Four T2 views (camera set T2-current.json), High. By eye: the white crescent arcs are gone in all four views, replaced by faint long streaks running with the current; NOTE in swim-brine-day the streaks merge into one broad pale diagonal band. No-loss F39#16/#17 current states follow as G-land-mt-flowstreaks-states."
+ }
+]
