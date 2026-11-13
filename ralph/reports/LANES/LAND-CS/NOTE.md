@@ -5,6 +5,9 @@ The session message to the coordinator was refused ("needs proof of a trusted de
 - **Arm LAND-CS-SOILOFF, `tb/land-cs`, rows F41#22/#24 (riders F41#5, #12, #2).** Please queue it in THINGS-STORMPOOL round 2's slot and drop stormpool: same rows, and it removes the patches that arm only made matte.
 - **Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay.
 
+## Coordinator's turfgrain check (13 Nov 18:00 UTC): PASS
+On `tb/land-cs` with main 874835ea (#951 and #952) merged, flag on, Compatibility renderer (`opengl3`, `gl_compatibility`), Realm Gate approach: 0 shader errors, 0 script errors, and the lawn shows the same grain as the arm frame before the merge (fine contrast 15.3 both times; base 6.8). So Low shades the turf the same way.
+
 ## State, 13 Nov 2026 about 16:50 UTC
 - Branch cut from `origin/tb/coord-wrapup-1113` (c673d528); main did not contain #951 yet. I merge `origin/main` once it lands.
 - No ship yet. Two new arms pushed: LAND-CS-SOILOFF (Stormwood ground) and LAND-CS-TURFGRAIN (Cloudreach lawn).
