@@ -576,7 +576,8 @@
   },
   "below6_uniform_cloth": {
    "_why": "LANE-BELOW6 (13 Nov 2026), F41#18 Stormwood uniforms (5.89). G-below6-uniforms, 3/3: the ask is 'lit mid-value cloth' and 'one bright copper, glass or steel rank accent per uniform, sized to read at distance'. Colour selection on the baked atlases failed (BELOW6-UNIFORM-CLOTH/NOT-SENT.md), so the garment mask is built from the mesh: triangles whose dominant bone is a garment bone are rasterised into UV space; head, neck, forearm and hand triangles are left out (ralph/reports/LANES/BELOW6-UNIFORM-CLOTH/make_uniform_cloth_mesh.py). Inside the mask the dark cloth is lifted to a cool mid-value slate; shoulder-bone triangles carry a brass band. Hair, face and skin are untouched; the .glb files are not modified. Judged together with stormwood_character_presentation.json uniform_cloth_floor_1113. Nothing is red. OFF until GPU-judged.",
-   "enabled": false,
+   "enabled": true,
+   "_why_on": "Ships ON (13 Nov 2026). LANE-JUDGE ralph/reports/GPU-PASS/1108/G-below6-uniform-cloth-c673.md (tb/judge 190fd4eb4), GPU High, base and arm (this flag with stormwood_character_presentation.json uniform_cloth_floor_1113): F41#18 row 5.95 -> 6.02 (+0.07, 2/3), F41#18 dialogue 6.02 -> 6.20 (+0.18, 3/3), officers no-loss set 6.09 -> 6.27 (+0.18, 3/3); no set loses. Gold rank accents read in close-up; the cloth still reads washed at normal distance. Not closed.",
    "characters": {
     "grunt_c": {"body_albedo_override": "res://assets/characters/grunt_c/grunt_c_lod0_texture_0_vis1_cloth2.png"},
     "officer_a": {"body_albedo_override": "res://assets/characters/officer_a/officer_a_lod0_texture_0_vis1_cloth2.png"},

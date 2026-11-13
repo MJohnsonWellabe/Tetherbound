@@ -31,6 +31,8 @@ var _height: float = 1.8
 var _model_yaw: float = 0.0
 var _config_key: String = ""
 var _cfg: Dictionary = {}
+## The body atlas of this character's rig; see `_first_albedo()`.
+var _main_albedo: Texture2D = null
 
 ## True while the body is posed lying flat rather than standing (OF8's wake
 ## beat). See `set_lying()` for what this actually does to `_art`.
@@ -567,7 +569,27 @@ func _apply_palette(cfg: Dictionary) -> void:
 	var palette: Dictionary = cfg.get("palette", {})
 	if palette.is_empty():
 		palette = {"*": str(cfg.get("tint", "#ffffff"))}
+	_main_albedo = _first_albedo(_art)
 	_palette_node(_art, palette)
+
+
+## The body atlas: the albedo texture of the rig's first textured surface.
+## A body texture override replaces only surfaces that use it. Two installed
+## rigs carry a second textured surface with its own small atlas
+## (villager_female's Shins, villager_male's Trousers); painting the body
+## atlas over those UVs smeared the cloth onto the legs (LANE-BEINGS, 13 Nov).
+func _first_albedo(node: Node) -> Texture2D:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		var instance := node as MeshInstance3D
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.get_active_material(surface) as BaseMaterial3D
+			if source != null and source.albedo_texture != null:
+				return source.albedo_texture
+	for child in node.get_children():
+		var found := _first_albedo(child)
+		if found != null:
+			return found
+	return null
 
 
 func _palette_node(node: Node, palette: Dictionary) -> void:
@@ -634,8 +656,12 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	# Select an authored body texture without repacking the rig. Include its path
 	# in the cache key so the source and overridden variants remain independent.
 	# Accessories use `body == false` and retain their source textures.
-	var body_albedo_path := str(_cfg.get("body_albedo_override", "")) if body else ""
-	var body_emission_path := str(_cfg.get("body_emission_override", "")) if body else ""
+	# A surface with its own atlas (not the body atlas) keeps its texture.
+	var own_atlas := body and source is BaseMaterial3D and _main_albedo != null \
+		and (source as BaseMaterial3D).albedo_texture != null \
+		and (source as BaseMaterial3D).albedo_texture != _main_albedo
+	var body_albedo_path := str(_cfg.get("body_albedo_override", "")) if body and not own_atlas else ""
+	var body_emission_path := str(_cfg.get("body_emission_override", "")) if body and not own_atlas else ""
 	# A body may explicitly reject an imported full-surface emission channel.
 	# Absent means preserve the source material exactly, so this is not a cast-wide
 	# finish policy. Include the tri-state in the cache identity: an opted-out body
@@ -1030,7 +1056,11 @@ func _recolour_painted_hair(real_part: MeshInstance3D, colour: Color) -> void:
 
 func _painted_hair_material(source: BaseMaterial3D, body: bool, colour: Color,
 		mask: Texture2D) -> Material:
-	var key := "%s|painted_hair|%s|%s" % [str(_cfg.get("model", "")), colour.to_html(), str(body)]
+	# The source variant joins the key: it carries the body texture override,
+	# palette and finish. Without it a character built later with a different
+	# body texture on the same model and hair colour reused the first one's
+	# material and silently lost its override (LANE-BEINGS, 13 Nov 2026).
+	var key := "%s|painted_hair|%s|%s|%d" % [str(_cfg.get("model", "")), colour.to_html(), str(body), source.get_instance_id()]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	# Duplicated from the variant already on the surface, so the palette

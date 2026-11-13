@@ -21,10 +21,11 @@ func _parsed() -> Dictionary:
 
 ## The value-lift layer on its own. Later coats graded from a lift (Thundertunnel's
 ## below6_floor_thundertunnel, F36#80, 11 Nov; Stormraven's
-## below6_stormraven_night, F41#13, 13 Nov) win over it when ON; their own
+## below6_stormraven_night, F41#13, 13 Nov; Staticub's below6_staticub_storm_fur,
+## F41#8, 13 Nov) win over it when ON; their own
 ## tests pin that (tests/test_below6_thundertunnel_landed.gd,
 ## tests/test_below6_stormraven_night_landed.gd), so they are switched off here.
-const LATER_COATS := ["below6_floor_thundertunnel", "below6_stormraven_night"]
+const LATER_COATS := ["below6_floor_thundertunnel", "below6_stormraven_night", "below6_staticub_storm_fur"]
 
 
 func _lift_layer_only() -> Dictionary:
