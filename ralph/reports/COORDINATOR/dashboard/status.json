@@ -2876,7 +2876,7 @@
   },
   "F13#5": {
    "gpu": 5.38,
-   "src": "GPU High 10 Nov (G-newapproach-t2-cleanup, mean of 3 swim views, landed #892) | G-rescore-1113-f13-5 (LANE-PLACES, main b8622117c, 13 Nov, r 0.958): 6.28 -> 5.38; crescent current cue reads as decals or a debug overlay (3/3)"
+   "src": "GPU High 10 Nov (G-newapproach-t2-cleanup, mean of 3 swim views, landed #892) | G-rescore-1113-f13-5 (LANE-PLACES, main b8622117c, 13 Nov, r 0.958): 6.28 -> 5.38; crescent current cue reads as decals or a debug overlay (3/3) | G-land-mt-flowstreaks (13 Nov, LANE-JUDGE 249d1ea9b): DO NOT SHIP; F13#5 swim views 5.52 -> 6.04 (+0.52, 3/3) but F39#16/#17 current states 6.08 -> 5.66 (0/3), streaks read as guide lanes"
   },
   "F39#32": {
    "gpu": 6.77,
