@@ -1,13 +1,9 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov 2026, about 17:00 UTC)
-1. **LAND (correctness fix, no GPU verdict needed):** `tb/scene-benchfix-land` 364b775c8, cut from main 4f9ee396. The shipped Tidewake camp workbench model has its hung tools, rope coil, vise and lantern thrown up to 1.6 m off the bench by its build script (model 4.61 m long against a 2.6 m top). Those parts are the floating dark squares and the stray white ring in the F39#13 GPU frames. The fixed model (r2b) puts them back. New bounds test fails on the old model and passes on r2b; the model-name pin in `tests/test_camp_props_vl.gd` is updated. READY: `ralph/reports/LANES/SCENE-BENCHFIX-LAND/READY.md` (on that branch).
-2. **RE-SCORE after 1 lands:** F39#13 (6.14) was judged on the broken model.
-3. **ARM SCENE-CACHE**, `tb/scene`, row F38#12 (5.89). **Replaces BELOW6-TONIC-STASH: please drop that one from the queue** (this overlay turns the tonic crate on too).
-4. **ARM SCENE-WORKSHOP**, `tb/scene`, row F39#13. Overlay only, over the bench fix.
-5. **Queue count:** with 3 and 4 plus HALLMOSS and TELLDUST2 the lane is over the limit of two. I suggest withdrawing THINGS-SOLENE and holding SCENE-WORKSHOP behind SCENE-CACHE. I send nothing more until slots free.
-6. **RE-SCORE, no build:** F39#19 (6.56). On the GPU frame the roster already sits on dark panels; the recorded pale text is gone.
-7. `tb/scene` has origin/main (after #951) merged in.
+## TO THE COORDINATOR (13 Nov 2026, about 18:10 UTC)
+1. **HALLMOSS cause found; new arm SCENE-HALLWALLS on `tb/scene`, row F38#28. It replaces THINGS-HALLMOSS (parked).** A ray probe at the Warden fight camera shows the arena's wall panels and tower piers wear the EXTERIOR stone (moss 0.78) on their inside faces; only the pilasters wear interior stone, which is all HALLMOSS changed. The arm cuts moss to 0.3 of its value on wall faces inside roofed rooms only. Probe with the flag on: 1,845 of 5,184 rays at frame 03 land on the changed surfaces. Not visible on CPU (dark hall), so it needs the by-eye check in its ARM.md first.
+2. Earlier items stand: SCENE-CACHE (F38#12), SCENE-WORKSHOP (F39#13), #953 bench fix, re-scores of F39#13 and F39#19.
+3. Waiting arms now: TELLDUST2, SCENE-CACHE, SCENE-WORKSHOP, SCENE-HALLWALLS, SOLENE (kept by you). Still over two; I send nothing else.
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
@@ -19,7 +15,7 @@
 |---|---|---|
 | SCENE-CACHE | F38#12 (5.89) | New. Replaces BELOW6-TONIC-STASH (same switch file; its overlay turns the tonic crate on too). |
 | SCENE-WORKSHOP | F39#13 (6.14) | New. Overlay only over the bench fix. |
-| THINGS-HALLMOSS | F38#28 | Inherited, front of queue, near-bar closer. |
+| SCENE-HALLWALLS | F38#28 | New. Replaces THINGS-HALLMOSS, which the GPU held by eye and is now parked (it only reached the pilasters). |
 | THINGS-TELLDUST2 | F38#3, F38#28 | Inherited, front of queue, near-bar closer. |
 | THINGS-SOLENE | F38#17 | Inherited. Its own note says the change is small on CPU and that character light fixes do not predict the GPU. **I suggest withdrawing it** to keep the lane at the limit; say if you want it kept. |
 
@@ -38,4 +34,5 @@ That is four with SOLENE withdrawn and TONIC-STASH replaced, which is over the l
 - A fresh container has no `.godot` import: `godot --headless --path . --import` takes about 20 minutes once.
 - Tidewake camp frames: `tools/phase2_capture_tidewake_camps.gd --seed=2042 --output=res://ralph/reports/VISUAL/phase2/tidewake/<name>`, about 4 minutes on CPU, 9 frames.
 - Harvest reward frames: `tools/phase2_capture_world_inventory.gd --biome=meadows --subset=meadows__inventory__harvest__<slug> --seed=2042 --output=res://ralph/reports/VISUAL/phase2/meadows/<name>`, about 4 minutes. The camera stands on the node's -z side: +z is behind the reward, -x is screen right.
+- Which surface is that? `scratch` ray probe: extend `tools/capture_f38_fight.gd`, override `_save`, cast a grid of `project_ray_*` rays and test each visible MeshInstance3D with `mesh.generate_triangle_mesh().intersect_ray`; print the nearest mesh and its material parameters. About 8 minutes for the Warden fight on CPU; it needs `--source-commit=<40-char sha>` and a fresh `--out`.
 - Blender-built props: check the exported model's bounds against the design size. A joined group rotated about its own origin scatters its parts.
