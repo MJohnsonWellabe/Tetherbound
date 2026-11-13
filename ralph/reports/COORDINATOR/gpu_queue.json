@@ -4930,6 +4930,16 @@
       ],
       "ask": "No arm: after #944 the dialogue capture stages tournament conversations where the game does. Re-capture the Meadows dialogue set's three tournament rows (Mira, Tam, Oskar) at High on main fe19404d4 for an F38#16 row score; send to LANE-SCOUT.",
       "added": "13 Nov 05:42"
+    },
+    {
+      "id": "rescore-f36-50-mangrove-main",
+      "branch": "main",
+      "commit": "d4960ba66",
+      "rows": [
+        "F36#50 Mangrove Monitor (6.25)"
+      ],
+      "ask": "No arm: pose-stage re-score on current main (clear ruler is the default since #923). Its 6.25 ('trainer inside the tail', 3/3) predates the clear ruler. capture_f36_poses.gd --species=water_mangrove_monitor --whole-body --context at High; send to LANE-SCOUT.",
+      "added": "13 Nov 08:27"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
