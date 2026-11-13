@@ -1,3 +1,5 @@
+# SUPERSEDED (13 Nov) by BELOW6-OVERLOOK-SOLID, which carries these stand rows together with solid ruins.
+
 # BELOW6-OVERLOOK-STANDS: overlook walk_02 and walk_03 capture stands
 
 Follows BELOW6-OVERLOOK-PANE. With the pane gone, `walk_02_day` and `walk_03_day` still show a pier wall across half the frame. The seeded walk offsets (about 14 m either side of the route) drop the trainer inside the overlook's ruined wings, which are visual only, so the production camera ends up against the masonry.

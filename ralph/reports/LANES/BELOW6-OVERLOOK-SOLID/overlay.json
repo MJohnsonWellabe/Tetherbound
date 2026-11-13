@@ -1,0 +1,4 @@
+{"data/config/cloudreach_stormward_overlook_visual.json":{"ruin_collision_1113":{"enabled":true}},
+"data/config/capture_stands.json":{"heading_overrides":{"frames":{
+"cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day":{"heading_deg":340.0,"position_xz":[-419.0,5642.0],"_why":"LANE-BELOW6 (13 Nov): with ruin_collision_1113 the seeded walk_02 stand is inside solid masonry (the right ruined wing). Stand on the approach lawn facing the arch."},
+"cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day":{"heading_deg":43.0,"position_xz":[-441.0,5636.0],"_why":"LANE-BELOW6 (13 Nov): with ruin_collision_1113 the seeded walk_03 stand is behind solid masonry (the left ruined wing). Stand on the west shoulder looking across to the arch."}}}}}

@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, BELOW6-OVERLOOK-SOLID ready (F40#15): solid ruins plus the two stands, one arm
+
+As you asked. Flag-off `ruin_collision_1113` (world_geometry): one solid box per pier and ruined wing at 90 percent of the visible stone, ordinary world layer, arch opening and route ribbon clear. The same overlay carries the two capture stand rows for walk_02 and walk_03. CPU, all five frames: route_day, vista_dusk and walk_01 unchanged; walk_02 and walk_03 now show the arch with the trainer on grass. Walk check with the overlay on: `smoke_cloudreach_waterward_overlook_join.gd` passes (386.5 m to the crown). It supersedes BELOW6-OVERLOOK-STANDS; please drop that one from the queue. One thing to know: the right wing stands on the east loop edge's 26 m crown strip, so a walker there goes round it; no smoke walks that edge. Waiting with you: uniforms, overlook join, overlook solid, Fulgocobra faint, bark, wake.
+
 ## 13 Nov, BELOW6-FULGOCOBRA-FAINT ready (F36#46): the neck and hood come down
 
 As you asked: stated end pitches in config, faint only, Fulgocobra only, flag-off (`below6_fulgocobra_scope`). Bone probe: the rig is one vertical chain, so the measured drop could not read it. New small settle option `faint.end_pose` pitches spine_1 to spine_4 by stated angles over the faint's tail; the coils keep their height. CPU pose stage: at faint-100 the hood lies on the floor in front of the coils. Side effect to watch: the scope also runs the settle's hit pass for Fulgocobra (hit-050 is a slightly more upright recoil). ARM, CAPTURE, overlay and sheet in `BELOW6-FULGOCOBRA-FAINT/`. Waiting with you: uniforms, overlook join, Fulgocobra faint, overlook stands, bark, wake.
