@@ -24,7 +24,7 @@ from PIL import Image, ImageFilter
 
 BASE = "assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_"
 SRC_A, SRC_G = BASE + "Image_0_face.png", BASE + "glow_goldvein_face.png"
-DST_A, DST_G = BASE + "Image_0_olive.png", BASE + "glow_vein_r1.png"
+DST_A, DST_G = BASE + "Image_0_olive.png", BASE + "glow_vein_r1.png"  # r2 overwrites both in place
 
 
 def hsv_of(path):
@@ -79,12 +79,14 @@ band_h, band_s, band_v = 58.0, 0.45, np.clip(v * 0.42, 0, 1)
 keep = vein
 g = np.maximum(gold, band_area * (1 - copper) * (1 - cyan))
 h2 = h2 * (1 - g) + (44.0 * keep + band_h * (1 - keep)) * g
-s2 = s2 * (1 - g) + (0.80 * keep + band_s * (1 - keep)) * g
-v2 = v2 * (1 - g) + (np.clip(0.55 + v * 0.5, 0, 1) * keep + band_v * (1 - keep)) * g
+s2 = s2 * (1 - g) + (0.88 * keep + band_s * (1 - keep)) * g
+# r2: the vein albedo stays a mid gold (the lit core clipped to white on the GPU at 0.55+).
+v2 = v2 * (1 - g) + (np.clip(0.34 + v * 0.2, 0, 0.5) * keep + band_v * (1 - keep)) * g
 # Pale plates: a little darker with a faint olive cast.
+# r2: 0.14 saturation left the head and hood pale grey on the GPU; the plates are olive now.
 h2 = h2 * (1 - plate) + 80.0 * plate
-s2 = s2 * (1 - plate) + 0.14 * plate
-v2 = v2 * (1 - plate) + v * 0.78 * plate
+s2 = s2 * (1 - plate) + 0.30 * plate
+v2 = v2 * (1 - plate) + v * 0.66 * plate
 # Copper to dark bronze.
 h2 = h2 * (1 - copper) + 34.0 * copper
 s2 = s2 * (1 - copper) + np.clip(s * 0.85, 0.42, 1.0) * copper
@@ -98,9 +100,11 @@ rgb_of(h2, s2, v2).save(DST_A)
 gh, gs, gv = hsv_of(SRC_G)
 g_cyan = band(gh, 195.0, 30.0) * np.clip(gv * 3.0, 0, 1)
 vein_glow = np.clip(vein + blur(vein, 3.0) * 0.5, 0, 1)
-ev = np.clip(vein_glow * 0.95 + g_cyan * gv * 0.8, 0, 1)
-eh = np.full_like(gh, 44.0)
-es = np.full_like(gs, 0.80) * (1 - g_cyan * 0.25)
+# r2: a deeper amber at lower value so the core stays gold after tonemap; the eye and arc
+# cracks keep their full strength (the eye glow was lost on the GPU in r1).
+ev = np.clip(vein_glow * 0.72 + g_cyan * gv, 0, 1)
+eh = np.full_like(gh, 40.0)
+es = np.full_like(gs, 0.95)
 rgb_of(eh, es, ev).save(DST_G)
 
 for path in (SRC_A, SRC_G):

@@ -1061,7 +1061,7 @@
       "coats": {
         "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
           "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_olive.png",
-          "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_vein_r1.png", "emission_energy": 1.5,
+          "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_vein_r1.png", "emission_energy": 1.0,
           "rim": 0.9, "rim_tint": 0.45,
           "roughness": 0.78, "specular": 0.25
         }
