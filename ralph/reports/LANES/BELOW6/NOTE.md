@@ -3,7 +3,7 @@
 ## 13 Nov, RELAY from LANE-SCOUT: overlook pane SHIPS. Landing recut on current main.
 
 G-below6-overlook-pane (tb/item-scout-1108 66760567): overlook routes (walk_01, walk_02, route_day) 4.92 -> 5.87 (+0.95, 3/3); edge and vista (walk_03, vista_dusk) 5.57 -> 5.95 (+0.38, 3/3); nothing loses. Fit caveat: anchor RMSE 0.80 (limit 0.75), raw gains agree (+1.17, +0.47), so the paired result is sound but the levels should not be pooled into a row score. Fixed 3/3: amber box, white sphere and orbs, flat banner quads. Still present 2/3: faint see-through panels above the wall in walk_02 (the pennant from below; BELOW6-OVERLOOK-STANDS removes it). walk_03 is unchanged so F40#15 does not move; the pane sits in F40#21/F40#0 matrix scope and a matrix re-score would carry the gain. Still holding the overlook 3/3: "Meadows on a cliff" (mossy brick slab ruins instead of pale stratified stone, flat carpet ground, wrong-scale outlined wall in walk_03, repeating cloud sea).
-Landing: `tb/below6-overlook-pane-land` recut from current main with the verdict in `_why_on`.
+Landing: `tb/below6-overlook-pane-land2` (1ee49ffea, cut from current main fcdf124b4, verdict in `_why_on`). The older `tb/below6-overlook-pane-land` is superseded; ignore it.
 
 ## 13 Nov, BELOW6-FULGOCOBRA ready (F36#46, F41#13): olive scales, gold veins
 
