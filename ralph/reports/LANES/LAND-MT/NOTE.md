@@ -4,7 +4,9 @@
 - **Ready: `LAND-MT-SEADEPTH`** (`ralph/reports/LANES/LAND-MT-SEADEPTH/`). The soft depth gradient, overlay only, no new code: it switches on an existing flag-off sea candidate that has no GPU verdict on record. CPU sheet shows the navy band gone in all three frames. It touches every Tidewake water row, so it needs the current-state frames and F39#10 as no-loss. **It can share one Tidewake boot with `LAND-MT-SHOREZONES`** (both are `tidewake_look.json` overlays on different keys); I would run SEADEPTH first.
 - Queued (per your message): `LAND-MT-BROKENHILL`, `LAND-MT-DUSKRIDGE`, then `LAND-MT-SHOREZONES`. With SEADEPTH that is more than two waiting; I stop adding arms now and work on the Venn surface and the F38#24 stand.
 - GPU confirmation of #952 (LANE-JUDGE, G-rescore-f38-24-after-952): stronghold route_day shot right after a dusk frame kept its day haze. F38#24 6.59 on main.
-- F38#24 mountain stand: in progress (Warrens walk_01 is used by no row; it becomes the mountain-facing stand, and F38#24's frame list swaps walk_02 for it).
+- **F38#24 mountain stand: a re-aim at the Warrens does not make the mountains the subject. No stand entry added yet.** Heading sweep on CPU at the reviewed open-ground stand (-318, 2642), six headings (131, 181, 206, 256, 281, 306): the hill leaves the frame below about 181, but the range is a thin strip on the horizon in every direction and trees cover most of it. The mountains are small from meadow level everywhere near the Warrens; they read in the stronghold frame because that view is long and open.
+  - So the lever for the two weak frames is the range's size, not the stand. Next arm for this row, after DUSKRIDGE's verdict (same config file): a taller ridge (`height_scale`, overlay only) plus the second hazier layer LANE-JUDGE asked for, checked for no loss on the stronghold route_day frame (7.73).
+  - If you still want a stand swap now, heading 181 at that position is the best of the six (snow caps centre-left, hill at the left edge); Warrens `walk_01` is used by no row and could carry it.
 
 ## Venn fight dark mass (F39#19, F39#7), open
 - CPU capture (`phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn`, 40 frames): a near-black mass (RGB about 2, 18, 26) with a scalloped edge fills the top-right corner and runs down the right edge. The top of the frame is the mossy Veilfall cliff foot with a mossy log on it (the judges' "floating olive object").
@@ -21,7 +23,7 @@
 2. `LAND-MT-SHOREZONES` (F39#1, F39#15, F39#27): turf patches on the dunes. Moderate change; honest read in its ARM.md.
 
 ## Next
-1. F38#24 mountain-facing stand (heading sweep running), then the job.json swap.
+1. F38#24: taller ridge and a second hazier range layer (after DUSKRIDGE's verdict).
 1b. Tidewake shoal rings: irregular instead of concentric (after SEADEPTH's verdict).
 2. Venn fight dark mass: name the surface with a camera ray, then fix.
 3. F38#24: second hazier range layer behind the ridge (LANE-JUDGE ask).
