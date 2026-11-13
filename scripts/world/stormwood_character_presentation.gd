@@ -35,13 +35,6 @@ static func decorate(spec: Dictionary, identity_id: String, authored_rank: Strin
 			result["tint"] = str(tints[canonical])
 	if uniform_rank.is_empty():
 		return result
-	# F41#18 uniform_cloth_floor_1113 (OFF until GPU-judged; pairs with
-	# character_body_flags.json below6_uniform_cloth): once the cloth itself is
-	# mid-value, the additive floor that kept near-black uniforms visible only
-	# washes them, so uniformed ranks take the block's lower floor.
-	var cloth_floor: Variant = settings.get("uniform_cloth_floor_1113", {})
-	if cloth_floor is Dictionary and bool((cloth_floor as Dictionary).get("enabled", false)):
-		result["emission_floor"] = float((cloth_floor as Dictionary).get("emission_floor", 0.0))
 	result["presentation_rank"] = uniform_rank
 	result["base"] = str(spec.get("config_key", ""))
 	var ranked := NPC_RANKS.config_for(uniform_rank, result.base)

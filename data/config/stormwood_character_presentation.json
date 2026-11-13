@@ -18,7 +18,7 @@
     "floors": {"marrow": 0.0}
   },
   "lieutenant_rim_scale": 1.28,
-  "uniform_cloth_floor_1113": {"enabled": false, "scope": "client_presentation", "_candidate": "LANE-BELOW6 (13 Nov 2026), F41#18. Pairs with character_body_flags.json below6_uniform_cloth (mid-value cloth textures for the row's three bodies): with lit mid-value cloth the 0.18 uniform floor only adds the chalky wash the judges name, so uniformed ranks take 0.04. On its own (dark cloth) this would repeat the parked floor-0 arm; do not enable it without the cloth. OFF until GPU-judged.", "emission_floor": 0.04}, "rank_marks_1104": {
+  "rank_marks_1104": {
     "enabled": false,
     "scope": "client_presentation",
     "_why": "VIS-STORMWOOD (4 Nov 2026), F41#18 P2-056 (GPU 3.91; CPU v1/b11 5.98 with rim r1, judges: 'still no rank read', asked for 'a stronger rim or a pale trim'): pale shoulder knots on both upper-arm bones and a collar ring in the identity colour, larger for lieutenants and the captain, so a uniformed figure carries light accents at normal camera distance. Presentation only (stormwood_character_presentation.gd rank_marks). OFF until judged.",

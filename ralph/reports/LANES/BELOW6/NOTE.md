@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, uniform cloth albedo (F41#18): tried three texture passes, NOT SENT
+
+`BELOW6-UNIFORM-CLOTH/NOT-SENT.md` with two CPU sheets. The uniform bodies are baked atlases with no garment masks, so the cloth can only be selected by colour. Selecting all dark pixels separates the figure from the mud but turns the hair pale blue; keeping warm dark pixels saves the hair but leaves a mottled dark indigo that is darker than base at the inventory camera. Neither is the clean "lit mid-value cloth" the judges ask for, so I removed the textures and both flags rather than queue a weak arm. What would work is a painted per-garment mask on the three atlases (art work), which would also carry the copper or steel rank accent. No GPU slot used. I have no further untried below-6 idea ready right now; eleven arms are waiting on verdicts.
+
 ## 13 Nov, BELOW6-GATE-TERRACE is now an arm (F40#1): walk probe passes
 
 The terrace did not turn into a multi-turn job. With the flag on, `tests/smoke_cloudreach_gate_crag_terrace.gd` (new, real stick input; skips while the flag is off) walks from the crown's north lawn up all five 0.32 m lips to the top: PASS, grounded, y 151.70 on a 151.70 top, 24.8 m. The arrival walk smoke also passes with it on; the crown is on no route. CPU sheet, ARM.md, CAPTURE.json and overlay are in the folder. One of the row's three frames changes. Queue it behind what I have. Next: the uniform cloth albedo for F41#18, as you said.
