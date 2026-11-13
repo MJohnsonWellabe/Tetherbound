@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, correction: the rim turf code is now really reverted
+
+You were right: my first `git revert` did not take and I did not check it. 52830ac12 on tb/below6 reverts 927b86d30; `_build_overlook_rim_turf`, its call and `overlook_rim_turf_1112` are gone (grep count 0 in both files). The uniforms arm (f56924bd6) was pushed before this revert; it does not touch those files.
+
 ## 13 Nov, BELOW6-UNIFORMS ready (F41#18)
 
 Flag-off `uniform_separation_1113`: uniformed ranks keep the emission floor at 0, take a stronger pale rim (0.6, tint 0.3) and wear the existing rank marks (shoulder knots, collar ring) in their copper or brass identity colour at 62 percent size. Civilians and Captain Marrow unchanged; nothing red. CPU sheet for Dace only (the tool timed out before Varga and Sable). On CPU the gain at the inventory camera is small, so treat the pre-check as the real first look; levers are in ARM.md. Waiting with you now: Fulgocobra r2, overlook stands, uniforms, bark, wake.
