@@ -2,6 +2,7 @@
 
 ## TO THE COORDINATOR (14 Nov, about 01:30 UTC), newest first
 - **New arm, CPU-ready: BEINGS-TERRAPUP-SPHINX (F38#1).** Cause found by a clip probe: Terrapup's remake `rest` clip is a copy of its `faint` (90-degree flank roll, legs swept fore and aft), with only the neck 12 degrees apart. So resting and fainted are the same stiff side-lie in the world. The flag `beings_terrapup_sphinx_rest` (creature_model_flags.json, OFF) swaps only Terrapup's authored rest recipe for a belly-down lying dog: roll undone, front paws forward, hind legs folded under, head up. It uses the existing reversible authored-rest lifecycle, with no code change. The faint is a control and is unchanged. CPU sheet: `BEINGS-TERRAPUP-SPHINX/_sheet_r1.jpg`. By-eye line: `meadows__terrapup__resting` lies upright on its belly, head up, and is clearly not the `__fainted` pose. Please queue it when a slot frees (one world capture, Meadows, Terrapup only).
+- #958 (the charfix: shins override on two-atlas rigs, hair-cache key) is on main; `tb/beings` has merged it (ce7b4781).
 - Parked for Terrapup: `faint_fold` (the fold turns off face-camera, so the plated back faces the lens and the legs and head vanish) and `settled_rest` (it does not apply, because Terrapup rests on its own clip).
 
 ## TO THE COORDINATOR (14 Nov, about 01:00 UTC), newest first
