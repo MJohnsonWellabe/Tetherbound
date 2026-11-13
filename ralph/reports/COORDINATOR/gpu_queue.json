@@ -5273,7 +5273,8 @@
    ],
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/SCENE-ROSTERNAMES/overlay.json (combat_roster_visual.json compact_names_1113: compact fight roster rows keep each creature's name; rows 232 -> 348 px). phase2_capture_fights.gd Venn fight, frames t-000.00, tell-start-000.57, t-003.02, High AND Medium, F38#38 control (confirming batch, so the row can close). By eye at t-003.02: each of the five roster rows shows the creature's name between portrait and health bar; the wider strip covers no fighter.",
    "added": "13 Nov 19:40",
-   "priority": "near-bar closer"
+   "priority": "near-bar closer",
+   "status": "DO NOT SHIP 13 Nov (LANE-JUDGE 484154a87): the arm moves the fight camera, F39#7 Medium 7.31 -> 6.12 (0/3); F39#19 6.88 -> 6.97 (+0.09) with pale ghost names. Attempt 1 of 2; LANE-SCENE building r2 (decouple camera from roster width, solid cells)."
   },
   {
    "id": "places-rescore-d-1113",
@@ -5314,6 +5315,18 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-CS-OVERLOOK-SEAMS/overlay.json (stops building the four buried approach_pavers whose sunken strips read as dark slab/plank strips at route_day, vista_dusk, walk_02, walk_03). Per its CAPTURE.json, High. Same tb/land-cs import as TURFGRAIN and SOILOFF.",
    "added": "13 Nov 20:30",
    "priority": "worst row: run in the tb/land-cs boot with TURFGRAIN and SOILOFF"
+  },
+  {
+   "id": "land-mt-cragback",
+   "branch": "tb/land-mt",
+   "commit": "887c38d67",
+   "rows": [
+    "F39#19 (7.47 High; 6.88 on the strict 13 Nov panel)",
+    "F39#7 (7.11)"
+   ],
+   "ask": "Base no overlay vs + ralph/reports/LANES/LAND-MT-CRAGBACK/overlay.json (Veilfall crag shader lights its back faces as rock facing the viewer; the Venn-fight black wedge is the inner side of the cull_disabled crag shells). Venn fight frames per its CAPTURE.json, High AND Medium with F38#38 control (confirming, so F39#19 can close). By eye: the dark mass behind the arena becomes grey rock.",
+   "added": "13 Nov 20:35",
+   "priority": "near-bar closer; can share the Venn fight boot with SCENE-ROSTERNAMES r2 if both are ready"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

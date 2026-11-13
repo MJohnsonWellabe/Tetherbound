@@ -2620,7 +2620,7 @@
   },
   "F39#19": {
    "gpu": 7.47,
-   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.85; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-tidewake-fights-c673: 7.47 (+0.91; roster FIXED 3/3), 0.03 short (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
+   "src": "GPU High 8-9 Nov (A); RE-SCORE G-rescore-stale-ext-tidewake 6.56 (was 6.85; LANE-PLACES 0a289b570, main, GPU High, 12 Nov) | G-rescore-tidewake-fights-c673: 7.47 (+0.91; roster FIXED 3/3), 0.03 short (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov) | G-scene-rosternames (13 Nov, strict panel, control 7.98): base 6.88, arm 6.97 DO NOT SHIP (F39#7 Medium loses to camera shift)"
   },
   "F39#2": {
    "gpu": 6.79,
