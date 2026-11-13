@@ -4831,6 +4831,16 @@
       "capture": "High",
       "priority": "cheap UI capture; ride any Meadows UI session",
       "route": "LANE-SCOUT"
+    },
+    {
+      "id": "rescore-f38-16-tournament-main",
+      "branch": "main",
+      "commit": "fe19404d4",
+      "rows": [
+        "F38#16"
+      ],
+      "ask": "No arm: after #944 the dialogue capture stages tournament conversations where the game does. Re-capture the Meadows dialogue set's three tournament rows (Mira, Tam, Oskar) at High on main fe19404d4 for an F38#16 row score; send to LANE-SCOUT.",
+      "added": "13 Nov 05:42"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

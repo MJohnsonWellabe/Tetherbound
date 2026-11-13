@@ -1,6 +1,7 @@
 {
-  "updated": "13 Nov 2026 05:12 UTC",
+  "updated": "13 Nov 2026 05:42 UTC",
   "headline": [
+    "13 Nov 05:42: #944 landed (tournament conversations now captured where the game stages them; F38#16 re-capture queued). Overnight: #937, #938, #939, #941, #942, #943, #944.",
     "13 Nov 05:12: Cloudreach night arm (cloudnight) held: gains on 9 night stands but 3 stands read as dim day. Round 2 with a cooler fill and darker grass goes to LANE-THINGS.",
     "13 Nov 04:48: #943 landed: Trainer Rune now reachable (was stood on a steep sand face). Overnight so far: #937, #938, #939, #941, #942, #943.",
     "13 Nov 04:17: #942 landed: conversation shots tighter, five dialogue rows up and none down. Rune re-placed on flat ground 17.7 m clear of the wild cluster: PR #943 in CI.",
@@ -2287,6 +2288,11 @@
   "score_ledger_pending": [],
   "landed_recent": [
     {
+      "pr": "#944",
+      "what": "Dialogue capture: tournament conversations captured where the game stages them (Mira's frame was inside her shop wall, a view no player sees); tools only; CI green",
+      "when": "13 Nov 05:41"
+    },
+    {
       "pr": "#943",
       "what": "Trainer Rune (Tidewake) moved off a steep sand face onto flat dune top 17.7 m clear of the Gull Rest wild cluster: his conversation and fight are reachable; full CI green",
       "when": "13 Nov 04:47"
@@ -2540,7 +2546,7 @@
     },
     "F38#16": {
       "gpu": 6.32,
-      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#16 6.32 | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 5.57->5.57; landing via tb/things-convtight-land"
+      "src": "G-things-convclear-meadows (LANE-SCOUT 3136cc76f), GPU High, conversation clearance ships in Meadows (Tidewake/Cloudreach level, Stormwood excluded), LANDED #917: F38#16 6.32 | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 5.57->5.57; landing via tb/things-convtight-land | #944 (13 Nov): capture fix for the tournament frames landed; row re-capture queued"
     },
     "F38#17": {
       "gpu": 6.97,
