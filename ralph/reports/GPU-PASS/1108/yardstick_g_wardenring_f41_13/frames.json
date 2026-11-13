@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1108",
+ "F38#28": {"High": "G-things-wardenring-high @ 82af295af", "Medium": "G-things-wardenring-medium @ 884d25cbd", "tree": "tb/things 5f3d5c320", "base": "no overlay", "arm": "overlay_warden_ring.json", "job": ["warden_aldis-03", "warden_aldis-05", "warden_aldis-08"], "no_loss_High": ["warden_aldis-r04", "warden_aldis-r10", "warden_aldis-r16", "warden_aldis-a03"]},
+ "F41#13": {"section": "G-closeout-f41-13-main @ eb8d96d47", "tree": "main 317b3372f", "frames": ["stormwood__stormraven__idle", "stormwood__fulgocobra__idle"]},
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg",
+ "side_names": "_1 = base or High, _2 = arm or Medium"}
