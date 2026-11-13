@@ -19,3 +19,5 @@ Five stacked terrace bands on the crown: each a 0.32 m pale-stone lip with a 0.5
 - Only one of the row's three frames changes (the other two are the Heartstone and Sky Shrine stands).
 - An earlier attempt to capture the trainer standing on the top with `phase2_capture_locations.gd --spot` never produced a frame in three runs. The walk smoke shows the collider is sound, so that looks like the tool's spot survey, not the terrace; I did not chase it.
 - The terrace is not registered with `ground_height_at` (the world's pure-math height lookup). Anything that seats itself from that lookup on this crown would sit at lawn height. Nothing is placed there today.
+
+**13 Nov 11:50 UTC, ground registration (no visual change intended).** Each tier's turf top now registers as a ground surface (`GateCragTerrace<n>`, the circle inscribed in the tier's outline), so anything placed with `ground_height_at()` stands on the terrace. Flag-on smoke: PASS, and `ground_height_at` at the top tier returns 151.70 (top 151.70). Flag-off nothing registers.

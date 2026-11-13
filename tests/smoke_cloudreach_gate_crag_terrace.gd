@@ -52,6 +52,9 @@ func _run() -> void:
 	_require(player.is_on_floor(),"Player is grounded on the terrace")
 	_require(player.global_position.y > top_y - 0.2,
 		"Player stands on the top tier (y %.2f, top %.2f)" % [player.global_position.y, top_y])
+	var ground := float(world.call("ground_height_at", target.x, target.z)) \
+		if world.has_method("ground_height_at") else NAN
+	print("terrace ground_height_at top = %s (top %.2f)" % [ground, top_y])
 	_release()
 	print("CLOUDREACH GATE CRAG TERRACE %s from=%s to=%s distance_m=%.1f"%[
 		"FAIL" if failed else "PASS",start,player.global_position,distance_m])

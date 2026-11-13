@@ -4619,6 +4619,24 @@ func _build_gate_crag_terrace(root: Node3D) -> void:
 	terrace.position = Vector3(float(centre_raw[0]), 0.0, float(centre_raw[1]))
 	terrace.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	root.add_child(terrace)
+	# Each tier's turf top is also a ground surface, so anything placed with
+	# ground_height_at() stands on the terrace, not inside it. The disc is the
+	# circle inscribed in the tier's wavy outline.
+	# The landmark chain above is translation only, so the world origin is the
+	# sum of the parents' positions (the tree is not entered yet while building).
+	var origin := Vector3.ZERO
+	var walk: Node = terrace
+	while walk is Node3D:
+		origin += (walk as Node3D).position
+		walk = walk.get_parent()
+	for tier in tiers:
+		var reach := maxf(0.0, radius - inset * float(tier)) * (1.0 - 1.45 * wave)
+		if reach <= 0.05:
+			continue
+		var offset := (shift * float(tier)).rotated(-terrace.rotation.y)
+		register_runtime_surface({"kind": "ellipse", "label": "GateCragTerrace%d" % tier,
+			"centre": Vector2(origin.x + offset.x, origin.z + offset.y),
+			"half": Vector2(reach, reach), "height": origin.y + base_y + lip * float(tier + 1)})
 	var body := StaticBody3D.new()
 	body.name = "Collision"
 	var shape := CollisionShape3D.new()

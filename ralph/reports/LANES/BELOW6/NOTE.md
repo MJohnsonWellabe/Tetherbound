@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov 11:50 UTC, land prep done locally; one small fix pushed to the gate terrace arm
+
+Land prep (coordinator, 11:35): landed pin tests for overlook solid and gate terrace and the Aquaryn test edits are written locally, not pushed. One change is pushed on tb/below6 because it belongs in what the GPU judges: the gate terrace tiers now register as ground surfaces for `ground_height_at()` (flag-on smoke PASS, top tier reads 151.70 = 151.70). Flag-off behaviour is unchanged. The terrace is seventh in the GPU order, so please capture it from this head or later.
+
 ## 13 Nov 11:30 UTC, STATUS: eleven arms waiting, no verdict since 08:50 UTC
 
 tb/item-scout-1108 has not moved past d958f1cc7 (collar verdict) in about 2.5 hours. Waiting on GPU: overlook join, overlook solid, Fulgocobra faint, tonic stash, Aquaryn ride, wall band, Staticub fur, gate terrace, uniform cloth, bark, wake. No new arms added. If the GPU queue is stalled, or you want a specific below-6 job done on CPU meanwhile, say so here or by message.
