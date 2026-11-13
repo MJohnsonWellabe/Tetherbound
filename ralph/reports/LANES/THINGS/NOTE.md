@@ -9,6 +9,8 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Bandfaint is on main (#941); main 317b3372 is merged into `tb/things`.** The merge took main's `creature_coat_flags.json` and `creature_pose_settle.json`, so the parked flag-off Riftfrill matte and Brooktail spot flags are no longer on this branch.
+- **Ready: `THINGS-DUSTTRAIL`** (`ralph/reports/LANES/THINGS-DUSTTRAIL/`), F38#3: the bead strings are the dust trail shared by three stone-move archetypes; the overlay cuts it to a short faint puff (0.55 m, opacity 0.5). Overlay only. **Not shown on CPU** (no CPU frame caught a trail on either side), so it needs the GPU's by-eye check.
 - **LANDING READY: `tb/things-bandfaint-land`** (from main a5787c0a, `THINGS-BANDFAINT-LAND/READY.md`, STATUS: land). `G-things-bandfaint.md` (138a0c1f): **Duskhush 6.59 to 7.09 and Ribbonray 6.55 to 7.09, 3/3 each; both clear 7.** Trailpup (−0.69) and Voltwig (−0.23) lost and are out of the scope. Config only; pin test added, older pin updated; 13 tests, 0 failed.
 - **Relays from LANE-SCOUT (13 Nov):**
   - **CLOUDRAIN round 2: do not ship; the rain-overcast arm is PARKED** (two rounds under 0.5). Rain sky +0.05, day rain +0.04.

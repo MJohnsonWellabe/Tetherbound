@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-DUSTTRAIL",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 13 Nov. Not demonstrated on CPU: no CPU fight frame caught the trail on either side (see ARM).",
+ "tool": "tools/capture_f38_fight.gd, the G-things-foestand-meadows set (south_bridge_grunt, --attack --dodge --tell-frames)",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-DUSTTRAIL/overlay_dust_trail.json"},
+ "rows": {"F38#3": "meadows fight", "F38#11": "no-loss", "F41#3": "no-loss if the Stormwood fight set is cheap to add"}
+}
