@@ -1,5 +1,19 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## Tried and failed, and held arms (indexed bullets, 14 Nov 00:20 UTC)
+- F40#15 PARKED: lift the ridge above the ledge crown (`overlook_ridge_join_1113.sink_m` -0.12); no change to the dark wedge on CPU.
+- F40#15 PARKED: remove the ridge join's 4 m route exemption (temporary switch); the wedge is unchanged, only the pavers sink.
+- F40#15 PARKED: `edge_1113` (join over every cap-0 pad, from 1.5 m inside the rim); no visible change, reverted. Ridge vertices are about 4 m apart, so a lift cannot reach the ledge face between them.
+- F40#15 PARKED: `overlook_ledge_drop_1113` (overlook ledge and pad 0.18 m lower); no visible change, reverted. Next try must first confirm the ledge face moves (print its heights).
+- F40#15 HELD: LAND-CS-OVERLOOK-SEAMS (buried approach pavers not built), queued for the GPU.
+- F40#1 PARKED: re-cluster the Cloudreach grass tufts by overlay (`ground_cover.cluster_frequency` 0.55, `cluster_threshold` 0.9); no visible change on CPU, not sent.
+- F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.
+- F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.
+- F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.
+- F40#17 HELD: LAND-CS-RIMGLOW (pickup glow at 0.45 at the three rim placements), CPU-ready, waiting for a queue slot.
+- F41#22, F41#24 HELD: LAND-CS-SOILOFF (wet-soil discs not built), queued for the GPU.
+- F40#6 PARKED (owner decision): the mount upright over open cloud; no arm from this lane.
+
 ## New arm, held: LAND-CS-RIMGLOW (F40#17, now 5.61; 13 Nov 23:55 UTC)
 - The "toy-like glow blobs" are the shared pickup glow's 0.7 m halo round the three small rim patches (the patches shipped 12 Nov at about 0.6x the old cap; the halo was not resized). The arm scales the glow at those three placements only (0.45); they still glow (owner OP-0830-3). CPU: the balls are gone. CPU-ready and held.
 - The night navy grade on this row is THINGS-CLOUDNIGHT round 2's target.
