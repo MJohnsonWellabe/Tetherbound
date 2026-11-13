@@ -9,6 +9,11 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Fight-camera spread (GPU lane's numbers: Warden frame 08 at 7 camera positions up to 10.7 m apart over 15 runs): my read is that it is the fight diverging, not the camera, and not a player-facing bug.** Evidence from three CPU runs of the Warden fight I already had, with the tool's per-frame lens log:
+  - **Within a run the camera is steady.** While the fighters stand still (eight consecutive samples, 0.15 s apart, r01 to r08) the lens is at the same position to the centimetre in every run.
+  - **Between runs the fight itself differs.** Two runs on the same code are identical for frames 01 to 04 and then part at frame 05 (lens z 7654.6 against 7662.1); the third differs from frame 01. After that each run's camera sits wherever its own fighters ended up: z 7659.6, 7659.1 and 7662.6 at r01. That matches the GPU lane seeing different damage numbers at the same frame.
+  - So the camera follows fighters who are in different places. The cause is upstream, in how the capture drives the fight (inputs and waits are paced in real time, so the opponent's choices land on different ticks run to run).
+  - **I have not changed anything.** Making the fight capture deterministic is harness work; the GPU lane's pairing by camera position already handles it. If you want it deterministic, that is a separate job on `capture_named_fight.gd`, and I would want to know it is worth a turn before starting.
 - **Relay from the GPU lane: DUSTTRAIL is confirmed not to touch the beads and is WITHDRAWN, unjudged.** On camera-matched pairs the bead strings on every "! incoming" frame are identical with and without it (Warden 03 Medium, grunt 02/03 High). **TELLDUST is capturing** (Meadows grunt and Warden sets, Medium and High); the wind-up dust does draw on GPU High, so that comparison will show it.
   - GPU lane's caveat for every fight arm: the fight camera is not deterministic run to run (the same frame lands at up to five camera positions), so they now pair scored frames by camera position and re-run the arm side when it misses.
 - main 0a57e6d7 (Fulgocobra collar, #948) is merged into `tb/things`. No new verdicts for this lane at 09:45 UTC.
