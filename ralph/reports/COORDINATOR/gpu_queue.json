@@ -5020,7 +5020,7 @@
     {
       "id": "beings-veridian-antler",
       "branch": "tb/beings",
-      "commit": "9c1bb38bc",
+      "commit": "9ae4ea989",
       "rows": [
         "F36#85 Veridian (6.33)",
         "F38#1, F38#2 no-loss"
@@ -5054,7 +5054,7 @@
     {
       "id": "beings-neckdown",
       "branch": "tb/beings",
-      "commit": "9c1bb38bc",
+      "commit": "9ae4ea989",
       "rows": [
         "F36#46 Fulgocobra (5.70)",
         "F36#88 water abyssal guardian (6.32)"
@@ -5095,12 +5095,22 @@
     {
       "id": "beings-stormraven-wings",
       "branch": "tb/beings",
-      "commit": "9c1bb38bc",
+      "commit": "9ae4ea989",
       "rows": [
         "F36#74 Stormraven (6.37)"
       ],
       "ask": "Batch with veridian-antler and neckdown on tb/beings 9c1bb38bc (one import, pose stage, High). Overlay and by-eye per ralph/reports/LANES/BEINGS-STORMRAVEN-WINGS/.",
       "added": "13 Nov 17:00"
+    },
+    {
+      "id": "beings-trailpup-amber",
+      "branch": "tb/beings",
+      "commit": "9ae4ea989",
+      "rows": [
+        "F36#83 Trailpup (6.53)"
+      ],
+      "ask": "Fourth arm in the BEINGS pose batch on tb/beings 9ae4ea989 (one import). Coat flag beings_trailpup_amber: owner-picked amber paws and eyes on the live coyote. By-eye trailpup-hit-000: all four paws amber, brighter than the legs; if they clip to white or lemon on High, set emission_energy 0.9 in a local overlay before judging and say so.",
+      "added": "13 Nov 17:07"
     }
   ],
   "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
