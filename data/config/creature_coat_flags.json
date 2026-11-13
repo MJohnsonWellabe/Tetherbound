@@ -1055,6 +1055,13 @@
         }
       }
     },
+    "below6_staticub_storm_fur": {
+      "_why": "LANE-BELOW6 (13 Nov 2026), F41#8 (5.80) and F41#18 (5.89) backgrounds. G-places-stormlight, G-things-stormuniform and G-below6-namedfaces, 3/3: the wild bears behind the Stormwood cast are 'flat salmon pink' and 'read as placeholders'. They are wild Staticub (r10). The fur is warm brown, the shipped value-lift copy is paler, and Stormwood's violet light adds blue, so the body renders salmon. Candidate: a darker fur with blue pulled down, derived from the model's own albedo (ralph/reports/LANES/BELOW6-STATICUB-FUR/make_storm_fur.py); arcs, eyes and muzzle keep their colour. It replaces the value-lift copy for this model when ON. Same species, silhouette and markings; nothing is red. Staticub is not the owner style-bar Stormursa. OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_Image_0.jpg": {"albedo": "res://assets/creatures/tetherbound/staticub/candidate_r10/models/creature_staticub_r10_Image_0_storm.png"}
+      }
+    },
     "below6_floor_fulgocobra": {
       "_why": "LANE-BELOW6 (11 Nov 2026), F36#46 Fulgocobra 5.87 (GPU G-things-faint base: the near-black body sinks into the stage; the copper-brown neck plates sit near the reserved red). Graded from the face coat that ships: blacks lift to blue-charcoal with their scale detail and the copper plates move to the gold of the body bands. Keeps lanekit_face_read_fulgocobra's rim, gold-vein glow and matte values, and supersedes it when on. Script tools/art_pipeline/grade_remakes_floor.py fulgocobra. The raised hood in the faint is LANE-THINGS'. OFF until GPU-judged.",
       "enabled": false,
