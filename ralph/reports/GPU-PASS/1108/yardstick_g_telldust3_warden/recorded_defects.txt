@@ -1,0 +1,6 @@
+Ny: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Lp: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Pc: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Hn: none
+Ic: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Yz: none
