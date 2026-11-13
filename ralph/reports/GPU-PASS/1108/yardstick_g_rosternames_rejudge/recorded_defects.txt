@@ -1,0 +1,8 @@
+We: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Sj: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Ph: "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several opponent phases"
+Bi: none
+Ad: "The left team roster fades to pale low-contrast text against terrain during active combat"
+Kl: none
+Sd: "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several opponent phases"
+Jl: "The left team roster fades to pale low-contrast text against terrain during active combat"

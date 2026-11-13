@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-scene-rosternames-rejudge-high @ 8663e0a97, G-scene-rosternames-rejudge-medium @ d9b65c362",
+ "arm": "original compact_names_1113 arm runs", "base": "pooled from two fresh base runs after a Venn warm-up",
+ "F39#19 High / Medium": ["t-000.00 (matched 0.00 m; mean diff 2.9 = roster strip)", "t-003.02 (best available, 2-10 m; diff ~22)"],
+ "F39#7 High / Medium": ["t-023.02", "t-024.02", "t-025.02 (best available pairs, 2-10 m apart; fight diverges run to run)"],
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg",
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f04_6_r22"}
