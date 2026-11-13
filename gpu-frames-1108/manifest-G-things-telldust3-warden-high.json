@@ -1,0 +1,46 @@
+[
+ {
+  "frame": "warden_aldis-03.png",
+  "preset": "arm-High",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-warden-high/arm-High/warden_aldis-03.png",
+  "sky_fraction": 0.053,
+  "lower_edges": 0.1985,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 Warden (F38#28; F38#3's grunt closer is G-things-telldust3-grunt-medium), HIGH, camera-matched 0.00 m on Warden 03/05. Arm: telldust3-High from G-f38-closers-warden (c673 + tb/scene 1735a7827's six non-imported files + THINGS-TELLDUST3/overlay.json). Base: scene-hallwalls-r2 base-High (c673 + 063c614ca's same six files, no overlay); tell_style.gd and combat.json are byte-identical between 1735a7827 and 063c614ca, and 063c's only other change (stronghold.gd buttress) is gated by roofed_room_walls_1113, off in a base, so the base content equals telldust3's base. The Warden fight runs along one of two fixed paths from the same start camera; the first-pass telldust3 runs took the other path from their own section's base, hence this cross-section pairing. capture_f38_fight.gd --trainer=warden_aldis --frames=6 --interval=0.15 --attack --dodge --tell-frames, --fixed-fps 20. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "warden_aldis-05.png",
+  "preset": "arm-High",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-warden-high/arm-High/warden_aldis-05.png",
+  "sky_fraction": 0.052,
+  "lower_edges": 0.2116,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 Warden (F38#28; F38#3's grunt closer is G-things-telldust3-grunt-medium), HIGH, camera-matched 0.00 m on Warden 03/05. Arm: telldust3-High from G-f38-closers-warden (c673 + tb/scene 1735a7827's six non-imported files + THINGS-TELLDUST3/overlay.json). Base: scene-hallwalls-r2 base-High (c673 + 063c614ca's same six files, no overlay); tell_style.gd and combat.json are byte-identical between 1735a7827 and 063c614ca, and 063c's only other change (stronghold.gd buttress) is gated by roofed_room_walls_1113, off in a base, so the base content equals telldust3's base. The Warden fight runs along one of two fixed paths from the same start camera; the first-pass telldust3 runs took the other path from their own section's base, hence this cross-section pairing. capture_f38_fight.gd --trainer=warden_aldis --frames=6 --interval=0.15 --attack --dodge --tell-frames, --fixed-fps 20. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "warden_aldis-03.png",
+  "preset": "base-High",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-warden-high/base-High/warden_aldis-03.png",
+  "sky_fraction": 0.054,
+  "lower_edges": 0.1833,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 Warden (F38#28; F38#3's grunt closer is G-things-telldust3-grunt-medium), HIGH, camera-matched 0.00 m on Warden 03/05. Arm: telldust3-High from G-f38-closers-warden (c673 + tb/scene 1735a7827's six non-imported files + THINGS-TELLDUST3/overlay.json). Base: scene-hallwalls-r2 base-High (c673 + 063c614ca's same six files, no overlay); tell_style.gd and combat.json are byte-identical between 1735a7827 and 063c614ca, and 063c's only other change (stronghold.gd buttress) is gated by roofed_room_walls_1113, off in a base, so the base content equals telldust3's base. The Warden fight runs along one of two fixed paths from the same start camera; the first-pass telldust3 runs took the other path from their own section's base, hence this cross-section pairing. capture_f38_fight.gd --trainer=warden_aldis --frames=6 --interval=0.15 --attack --dodge --tell-frames, --fixed-fps 20. F38#38 control on tb/keep-gpu-frames-1108."
+ },
+ {
+  "frame": "warden_aldis-05.png",
+  "preset": "base-High",
+  "tree": "1735a782708ac8406875369ab79960b9c26ac70c",
+  "tool": "res://tools/capture_f38_fight.gd",
+  "path": "G-things-telldust3-warden-high/base-High/warden_aldis-05.png",
+  "sky_fraction": 0.05,
+  "lower_edges": 0.1984,
+  "script_errors": 0,
+  "note": "THINGS-TELLDUST3 Warden (F38#28; F38#3's grunt closer is G-things-telldust3-grunt-medium), HIGH, camera-matched 0.00 m on Warden 03/05. Arm: telldust3-High from G-f38-closers-warden (c673 + tb/scene 1735a7827's six non-imported files + THINGS-TELLDUST3/overlay.json). Base: scene-hallwalls-r2 base-High (c673 + 063c614ca's same six files, no overlay); tell_style.gd and combat.json are byte-identical between 1735a7827 and 063c614ca, and 063c's only other change (stronghold.gd buttress) is gated by roofed_room_walls_1113, off in a base, so the base content equals telldust3's base. The Warden fight runs along one of two fixed paths from the same start camera; the first-pass telldust3 runs took the other path from their own section's base, hence this cross-section pairing. capture_f38_fight.gd --trainer=warden_aldis --frames=6 --interval=0.15 --attack --dodge --tell-frames, --fixed-fps 20. F38#38 control on tb/keep-gpu-frames-1108."
+ }
+]
