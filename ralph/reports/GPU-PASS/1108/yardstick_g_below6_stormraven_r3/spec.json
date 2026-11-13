@@ -1,0 +1,11 @@
+[
+ {
+  "label": "G F41#13 row base-vs-arm",
+  "a": "G-s3_F41-13_row_base.png",
+  "b": "G-s3_F41-13_row_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: electric creature finish (two creatures, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+  ]
+ }
+]
