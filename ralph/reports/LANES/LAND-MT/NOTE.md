@@ -1,6 +1,7 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **F39#31:** #958 (mist fix) is +0.62 on the row (5.16 to 5.78, 3/3). TIERA parked (level). The row's ceiling is a Veilfall rebuild (Meshy hero piece), which is outside this round (no Meshy credits); the in-reach pieces left are the plunge pool and foam at the fall foot and a streaked falling-water material, both bigger builds than a tuning pass. Not started.
 - **SHOREZONES round 2 ready (same folder)**, answering the GPU lane's facet warning: the turf drops its terrain-normal gate (likely per-triangle steps on GPU), gets a softer edge, and fades out within 45 m of the camera, so only the far-dune mottling stays. Overlay only. If round 1 is judged first, round 2 is the follow-up.
 - **GRASSGROVES judged SHIP (+0.16 F39#1, routes +0.24, no loss): land branch in progress** (`tb/land-mt-grassgroves-land`, tests queued behind the engine).
 - **LANE-JUDGE's top Tidewake ask (black lagoon band, hard navy V-band, ring decals, soft depth gradient) is what `LAND-MT-SEADEPTH` targets**, and it has not been judged yet. Please move SEADEPTH to the front of the Tidewake boot; GRASSGROVES' land and FLOWSTREAKS round 2 (lesson-gated) can share it.
