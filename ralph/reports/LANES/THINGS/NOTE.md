@@ -9,6 +9,14 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **LANDING READY: `tb/things-bandfaint-land`** (from main a5787c0a, `THINGS-BANDFAINT-LAND/READY.md`, STATUS: land). `G-things-bandfaint.md` (138a0c1f): **Duskhush 6.59 to 7.09 and Ribbonray 6.55 to 7.09, 3/3 each; both clear 7.** Trailpup (−0.69) and Voltwig (−0.23) lost and are out of the scope. Config only; pin test added, older pin updated; 13 tests, 0 failed.
+- **Relays from LANE-SCOUT (13 Nov):**
+  - **CLOUDRAIN round 2: do not ship; the rain-overcast arm is PARKED** (two rounds under 0.5). Rain sky +0.05, day rain +0.04.
+  - **Defect to route to PLACES or BELOW6: the High Perches crown-court floor intermittently renders as a flat green disc with a line-drawn ring and spokes instead of cobbles**, per view, even from one boot (3/3 named it; it cost F40#0 night −0.38 and F40#21 −0.13). Likely a material or decal loading race.
+  - **RIFTFRILL matte: do not ship, level at 6.52.** The plastic look is in the texture, not the finish. Next lever would be a re-painted coat (matte navy with violet markings). Parked after this round; not built.
+  - **Voltwig does not close: High 7.27 / Medium 7.27** (pooled High 7.39). Holds: uniform mottled green hide with no rim light; the faint end is a belly-up cylinder.
+  - Judges' next asks: Duskhush faces away in standing and hit (no face); Trailpup has no amber eyes or paws.
+- **STORMPOOL (coordinator's message: in band, find what draws the slab before a round 2):** next on my list, from the GPU frames at `tb/gpu-frames-1108` 47d9ba2c7.
 - **Relay from the GPU lane: CLOUDRAIN round 2 (d18132857) and RIFTFRILL (6ffa11f4b) are with the judges; CLOUDNIGHT is still to run.** RIFTFRILL applies but the change is tiny on the pose stage (diff about 0.2), so expect level.
 - **Ready: `THINGS-CONVTIGHT`** (`ralph/reports/LANES/THINGS-CONVTIGHT/`), a tighter conversation shot for the band's dialogue rows (F38#16, #17, #37, F39#26, F40#10, #12). Overlay only: arm 3.5 m to 2.9 m, field of view 40 to 36. CPU on Meadows: speaker larger and nearer centre, companion out of Oskar's frame.
 - **Capture fault, not fixed: Mira's tournament-quarter row (F38#16) shows neither Mira nor the trainer on CPU, with and without `--sight-stand`.** The lens ends up inside her shop looking out through the lattice door. Her shop row is fine with `--sight-stand` (a clean shot of her at the counter) and blind without it (the trainer's head against the outside wall). I tried one tool change (the stand must also give the lens a clear line); the tournament row did not change, so I reverted it. Each try is 25 minutes on CPU. In the game that conversation happens at the tournament ground, not in the shop, so the honest capture is to place Mira at the tournament post for that row. Not built.
