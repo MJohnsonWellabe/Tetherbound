@@ -4553,6 +4553,19 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "below6-overlook-stone",
+   "kind": "arm (config only)",
+   "rows": [
+    "F40#15"
+   ],
+   "branch": "tb/below6",
+   "head": "e9dd11ce2",
+   "job": "phase2_capture_routes.gd --biome=cloudreach --subset=cloudreach__summit_final_stronghold__12__stormward_overlook --seed=2042; route_day, walk_01_day, walk_03_day, vista_dusk",
+   "capture": "High, base vs BELOW6-OVERLOOK-STONE/overlay.json (ruin_material stone_light)",
+   "priority": "below-6 row; after fulgocobra",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-cloudnight",
    "kind": "arm",
    "rows": [
