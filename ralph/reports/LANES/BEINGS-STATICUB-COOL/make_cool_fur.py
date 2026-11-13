@@ -6,7 +6,10 @@ the shipped storm coat's is 99,65,40, i.e. far less blue).
 Input:  creature_staticub_r10_Image_0_storm.png (the shipped coat)
 Output: creature_staticub_r10_Image_0_cool.png
   - fur pixels (same warm-fur mask as make_storm_fur.py, read from the source albedo) are
-    multiplied by (0.90, 0.95, 1.35): red down, blue up, toward Stormursa's balance;
+    multiplied by (0.62, 0.64, 0.70): about a third darker, with red pulled down a little more
+    than blue. CPU round 1 tried (0.90, 0.95, 1.35), red down and blue up toward Stormursa's
+    balance; under Stormwood's violet light that rendered PINK, so blue is not added. The
+    world read is a value problem: the coat renders far lighter than Stormursa's;
   - arcs, eyes and pale muzzle keep their colour. Stormursa itself is untouched.
 """
 import hashlib
@@ -22,7 +25,7 @@ warm = np.clip((55.0 - hue) / 12.0, 0.0, 1.0) * np.clip((sat - 0.18) * 6.0, 0.0,
 pale = np.clip((val - 0.78) / 0.12, 0.0, 1.0)
 weight = (warm * (1.0 - pale))[..., None]
 storm = np.asarray(Image.open(STORM).convert("RGB"), dtype=np.float32) / 255.0
-cool = storm * np.array([0.90, 0.95, 1.35], dtype=np.float32)
+cool = storm * np.array([0.62, 0.64, 0.70], dtype=np.float32)
 out = np.clip(storm * (1.0 - weight) + cool * weight, 0.0, 1.0)
 Image.fromarray((out * 255).astype(np.uint8), "RGB").save(DST)
 print("storm sha256", hashlib.sha256(open(STORM, "rb").read()).hexdigest())
