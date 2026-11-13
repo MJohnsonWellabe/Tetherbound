@@ -1142,9 +1142,9 @@ class Rig:
 			animation.track_set_key_value(track, key, (Quaternion.IDENTITY.slerp(local_lift, r) * value).normalized())
 		bone_tracks.erase(animation.get_instance_id())
 
-	## faint.end_pose: pitch one joint forward and down by a stated angle,
-	## ramped in over the clip's tail. The axis is the body's lateral axis, so
-	## a positive angle tips the joint's up direction toward the body's forward.
+	## faint.end_pose: pitch one joint by a stated angle, ramped in over the
+	## clip's tail. As in lift_head, a negative angle lowers the joint toward
+	## the side its head is on; a positive angle raises it.
 	func pitch_joint(animation: Animation, t_end: float, rotation: Quaternion, position: Vector3,
 			joint: String, degrees: float, start: float) -> void:
 		var bone := skeleton.find_bone(joint)
@@ -1155,7 +1155,17 @@ class Rig:
 			return
 		var to_body := _pivot(rotation, position) * to_model
 		var globals := global_poses(animation, t_end)
-		var axis_skeleton := (to_body.basis.inverse() * Vector3.UP.cross(forward).normalized()).normalized()
+		# The same axis lift_head uses (toward the head, crossed with up), but
+		# from the horizontal direction to the head: a standing neck is nearly
+		# vertical, where joint-to-head crossed with up is unstable.
+		var head := skeleton.find_bone("head")
+		var toward := forward
+		if head >= 0:
+			var d := (to_body * globals[head]).origin - (to_body * globals[bone]).origin
+			d.y = 0.0
+			if d.length() > 0.05:
+				toward = d.normalized()
+		var axis_skeleton := (to_body.basis.inverse() * toward.cross(Vector3.UP).normalized()).normalized()
 		var turn := Quaternion(axis_skeleton, deg_to_rad(degrees))
 		var parent := skeleton.get_bone_parent(bone)
 		var parent_rotation := globals[parent].basis.get_rotation_quaternion() if parent >= 0 else Quaternion.IDENTITY
