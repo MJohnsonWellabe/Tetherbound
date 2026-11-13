@@ -1,6 +1,6 @@
 {
- "updated": "13 Nov 2026 20:25 UTC",
- "headline": "13 Nov 19:58: #954 landed three GPU-judged ships (overlook join + solid, coherent wind-up dust). #955 (F36#92 water monitor faint) in CI. GPU judging flowing: 8 re-scores and 6 arm verdicts today; near-bar closers queued: F39#19 roster names, HALLWALLS r2. F38#10 not closed (7.39, strict panel).",
+ "updated": "13 Nov 2026 20:50 UTC",
+ "headline": "13 Nov 20:50: #956 landed (water monitor faint, Aquaryn deep swim) after #954 (overlook join + solid, coherent wind-up dust). Six lanes active; queued near-bar closers: CRAGBACK (F39#19), STORMRAVEN-ARCS (F41#13), MONITOR-VALUE (F36#92). Parked: HALLWALLS, overlook wedge. Next landing: Staticub fur + uniform cloth.",
  "batches": [
   {
    "name": "Stormheart interior and Crown heartstone (PR #756)",
@@ -2138,6 +2138,11 @@
  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
  "score_ledger_pending": [],
  "landed_recent": [
+  {
+   "pr": "#956",
+   "what": "F36#92 water mangrove monitor faint grounded (+0.35, 3/3) and F39#8 Aquaryn deep swim at the waterline (5.97 -> 6.32, 3/3), mounted-swim smoke updated. LANE-BEINGS; full CI green (4 verify-suite, 15 multiplayer)",
+   "when": "13 Nov 20:46"
+  },
   {
    "pr": "#954",
    "what": "F40#15 Stormward Overlook ridge join (black seam gone, +0.42) and solid ruin with reviewed stands (+1.37 on walk_02/03); F38#11 coherent wind-up dust band (Medium 6.55 -> 7.06). LANE-LAND-CS, LANE-BELOW6, LANE-SCENE; full CI green",
