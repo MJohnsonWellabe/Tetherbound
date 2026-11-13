@@ -1,0 +1,12 @@
+Ty: "Many distinct named roles repeat the same face body and outfit silhouettes"
+Fo: "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+Kh: "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance"
+Ta: none
+Jp: none
+Mg: none
+Gs: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Fk: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Pn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ml: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Su: none
+Pz: none

@@ -1,0 +1,126 @@
+{
+ "anchors": {
+  "f04_6_r22:control": [
+   5.0,
+   4.9,
+   5.1
+  ],
+  "f04_6_r22:r22": [
+   5.8,
+   6.2,
+   6.1
+  ],
+  "craft:before": [
+   4.5,
+   4.6,
+   4.3
+  ],
+  "craft:after": [
+   6.4,
+   6.3,
+   6.3
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   6.6,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   6.6,
+   7.0
+  ]
+ },
+ "candidates": {
+  "F41#8 Maud Bryn [base]": [
+   5.6,
+   5.2,
+   5.5
+  ],
+  "F41#8 Maud Bryn [arm]": [
+   5.8,
+   5.3,
+   5.7
+  ],
+  "F38#20 noloss [arm]": [
+   6.0,
+   5.6,
+   5.6
+  ],
+  "F38#20 noloss [base]": [
+   6.0,
+   5.6,
+   5.6
+  ],
+  "F41#18 row [arm]": [
+   5.6,
+   5.2,
+   5.3
+  ],
+  "F41#18 row [base]": [
+   5.5,
+   5.0,
+   5.4
+  ],
+  "Uniform officers noloss [base]": [
+   5.7,
+   5.3,
+   5.3
+  ],
+  "Uniform officers noloss [arm]": [
+   5.9,
+   5.5,
+   5.4
+  ],
+  "F41#18 dialogue [base]": [
+   5.6,
+   5.3,
+   5.2
+  ],
+  "F41#18 dialogue [arm]": [
+   5.8,
+   5.5,
+   5.3
+  ],
+  "F38#28 Medium [base]": [
+   6.3,
+   6.0,
+   6.0
+  ],
+  "F38#28 Medium [arm]": [
+   6.3,
+   6.0,
+   6.0
+  ],
+  "F38#28 High [base]": [
+   6.3,
+   6.0,
+   6.0
+  ],
+  "F38#28 High [arm]": [
+   6.3,
+   6.0,
+   6.0
+  ],
+  "F38#38 High-vs-Medium [Medium]": [
+   6.8,
+   6.7,
+   6.8
+  ],
+  "F38#38 High-vs-Medium [High]": [
+   6.8,
+   6.7,
+   6.8
+  ],
+  "Staticub Nysa [base]": [
+   5.4,
+   5.3,
+   5.2
+  ],
+  "Staticub Nysa [arm]": [
+   5.8,
+   5.7,
+   5.8
+  ]
+ }
+}

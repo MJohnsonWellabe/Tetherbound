@@ -1,0 +1,290 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9819,
+  "least_squares_slope": 1.0763,
+  "method": "linear",
+  "slope": 1.0763,
+  "intercept": 0.2468,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.188,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 5.0,
+   "reference": 5.83,
+   "mapped": 5.628,
+   "residual": 0.202
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.033,
+   "reference": 6.75,
+   "mapped": 6.74,
+   "residual": 0.01
+  },
+  "craft:before": {
+   "measured": 4.467,
+   "reference": 4.83,
+   "mapped": 5.054,
+   "residual": -0.224
+  },
+  "craft:after": {
+   "measured": 6.333,
+   "reference": 7.35,
+   "mapped": 7.063,
+   "residual": 0.287
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.867,
+   "reference": 7.53,
+   "mapped": 7.637,
+   "residual": -0.107
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.867,
+   "reference": 7.47,
+   "mapped": 7.637,
+   "residual": -0.167
+  }
+ },
+ "candidates": {
+  "F41#8 Maud Bryn [base]": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.09,
+   "mapped_judges": [
+    6.27,
+    5.84,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#8 Maud Bryn [arm]": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.27,
+   "mapped_judges": [
+    6.49,
+    5.95,
+    6.38
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#20 noloss [arm]": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.42,
+   "mapped_judges": [
+    6.7,
+    6.27,
+    6.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#20 noloss [base]": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.42,
+   "mapped_judges": [
+    6.7,
+    6.27,
+    6.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#18 row [arm]": {
+   "measured_mean": 5.367,
+   "mapped_mean": 6.02,
+   "mapped_judges": [
+    6.27,
+    5.84,
+    5.95
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#18 row [base]": {
+   "measured_mean": 5.3,
+   "mapped_mean": 5.95,
+   "mapped_judges": [
+    6.17,
+    5.63,
+    6.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "Uniform officers noloss [base]": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.09,
+   "mapped_judges": [
+    6.38,
+    5.95,
+    5.95
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "Uniform officers noloss [arm]": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.27,
+   "mapped_judges": [
+    6.6,
+    6.17,
+    6.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#18 dialogue [base]": {
+   "measured_mean": 5.367,
+   "mapped_mean": 6.02,
+   "mapped_judges": [
+    6.27,
+    5.95,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F41#18 dialogue [arm]": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.2,
+   "mapped_judges": [
+    6.49,
+    6.17,
+    5.95
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#28 Medium [base]": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.81,
+   "mapped_judges": [
+    7.03,
+    6.7,
+    6.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#28 Medium [arm]": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.81,
+   "mapped_judges": [
+    7.03,
+    6.7,
+    6.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#28 High [base]": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.81,
+   "mapped_judges": [
+    7.03,
+    6.7,
+    6.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#28 High [arm]": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.81,
+   "mapped_judges": [
+    7.03,
+    6.7,
+    6.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38#38 High-vs-Medium [Medium]": {
+   "measured_mean": 6.767,
+   "mapped_mean": 7.53,
+   "mapped_judges": [
+    7.57,
+    7.46,
+    7.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "F38#38 High-vs-Medium [High]": {
+   "measured_mean": 6.767,
+   "mapped_mean": 7.53,
+   "mapped_judges": [
+    7.57,
+    7.46,
+    7.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "Staticub Nysa [base]": {
+   "measured_mean": 5.3,
+   "mapped_mean": 5.95,
+   "mapped_judges": [
+    6.06,
+    5.95,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "Staticub Nysa [arm]": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.45,
+   "mapped_judges": [
+    6.49,
+    6.38,
+    6.49
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
