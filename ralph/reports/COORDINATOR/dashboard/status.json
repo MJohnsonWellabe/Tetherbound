@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 22:35 UTC",
+ "updated": "13 Nov 2026 22:42 UTC",
  "headline": "13 Nov 21:48: four landings this evening (#954 overlook + dust, #956 monitor + Aquaryn, #957 Staticub fur + uniform cloth). Staticub stage 8.08 High: close batch queued. New regressions found by re-scores: F39#21 Venn win camera (5.84, LANE-SCENE), F13#5 swim cue (5.38, LANE-LAND-MT).",
  "batches": [
   {
@@ -2138,6 +2138,11 @@
  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
  "score_ledger_pending": [],
  "landed_recent": [
+  {
+   "pr": "#958",
+   "what": "Veilfall base mist renders (shader gate fix), Veilfall crag back-face cut (F39#19 +0.07 ship), character-model body-override fixes (no visible change), TECHNICAL 8.1 fight-capture pairing. LANE-LAND-MT, LANE-BEINGS; full CI green",
+   "when": "13 Nov 22:40"
+  },
   {
    "pr": "#957",
    "what": "F41#8 Staticub storm-brown fur (Nysa +0.50, Maud/Bryn +0.18; world +1.11, stage 8.08) and F41#18 uniform cloth (+0.07 thin), with a fix keeping Marrow's landed emission floor. LANE-BEINGS; full CI green after one re-run of a Meadows catching smoke (party_count_after_catches) that passed on re-run and is unrelated to the diff",
