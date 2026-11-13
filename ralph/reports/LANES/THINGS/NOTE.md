@@ -9,6 +9,12 @@ This file is the lane's channel to the coordinator.
 - **Arms on the GPU:** none.
 
 ## Work since the restart
+- **Within-run fight camera trace (your low-priority ask): no jitter in direction or pivot; one thing to watch, the arm length. I have built nothing.** CPU, Warden fight, 149 physics ticks (2.5 s) from frame 06 to frame 12, lens, pivot, yaw and arm length each tick.
+  - **Yaw: constant** (-0.913 rad on every tick; no reversals).
+  - **Pivot: drifts with the fighters,** at most 0.36 m in one update.
+  - **Arm length: 14.4 m, then 11.9 m, then back to 14.4 m within about 0.7 s** (ticks 56 and 80), which moves the lens 2.4 m in and 3.1 m back out along the same line. That is the rig's designed behaviour when a body crosses the arm (shorten at once, recover at the fight profile's 14 m/s), not a tick-to-tick flicker, but an in-and-out of 2.5 m in under a second would read as a pump if it happens often.
+  - **Limit of this trace:** on CPU the fight camera only updates on rendered frames, and CPU renders about one frame per 16 to 24 physics ticks. So each change shows as one step and I cannot say how smooth it is in between. A GPU run at real frame rate would.
+  - **My answer:** close it as "follows the fighters". If anyone sees the arm pumping in and out in play or in a GPU clip, that is the camera item to open, and the lever is the fight profile's `collision_recover_speed` (14) or easing the shorten.
 - **Fight-camera spread (GPU lane's numbers: Warden frame 08 at 7 camera positions up to 10.7 m apart over 15 runs): my read is that it is the fight diverging, not the camera, and not a player-facing bug.** Evidence from three CPU runs of the Warden fight I already had, with the tool's per-frame lens log:
   - **Within a run the camera is steady.** While the fighters stand still (eight consecutive samples, 0.15 s apart, r01 to r08) the lens is at the same position to the centimetre in every run.
   - **Between runs the fight itself differs.** Two runs on the same code are identical for frames 01 to 04 and then part at frame 05 (lens z 7654.6 against 7662.1); the third differs from frame 01. After that each run's camera sits wherever its own fighters ended up: z 7659.6, 7659.1 and 7662.6 at r01. That matches the GPU lane seeing different damage numbers at the same frame.
