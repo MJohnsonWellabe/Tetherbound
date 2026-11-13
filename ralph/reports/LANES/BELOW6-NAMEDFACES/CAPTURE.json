@@ -1,0 +1,25 @@
+{
+ "row": "F41#8 (5.92): Stormwood named villagers' faces clip to white (Elder Maud, Rodkeeper Hesk, Warden-elect Bryn)",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_dialogue.gd",
+ "args": ["--biome=stormwood", "--subset=elder_maud", "--subset=rodkeeper_hesk", "--subset=warden_elect_bryn", "--output={OUT}"],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "resolution": [1920, 1080],
+ "presets": ["High"],
+ "preset": "High",
+ "frames": [
+  "stormwood__inventory__character__elder_maud",
+  "stormwood__inventory__character__rodkeeper_hesk",
+  "stormwood__inventory__character__warden_elect_bryn",
+  "stormwood__inventory__character__elder_maud__dialogue",
+  "stormwood__inventory__character__rodkeeper_hesk__dialogue",
+  "stormwood__inventory__character__warden_elect_bryn__dialogue"
+ ],
+ "overlay": "ralph/reports/LANES/BELOW6-NAMEDFACES/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same command as G-below6-namedposts",
+ "needs_import": "no",
+ "_why": "G-below6-namedposts 3/3: 'speakers' faces burn orange-white'. On CPU, emission floor 0 and rim 0.2 both left the faces white, so the cause is the storm light on pale skin and hair. Arm: each of the three bodies' albedo is multiplied by a neutral grey (Maud #a8a8a8, Hesk and Bryn #b0b0b0). No light, emission or texture change.",
+ "rides_along_on_both_sides": "Hesk's dialogue portrait is now the installed alpha_tracker plate (sorrel.png, a bearded man in a hat) instead of villager_male (the dark-haired boy). This is a direct data fix in stormwood_dialogue_presentation.json plates_by_profile, so it shows on base and arm alike.",
+ "want_to_see": "skin tone and readable features on all three faces, Maud's hair off-white instead of a white ball; say if the bodies now read muddy or too dark against the ground (the tints are config).",
+ "note": "The player's own bloom is not touched here."
+}

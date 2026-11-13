@@ -1,0 +1,33 @@
+{
+ "row": "F36#52 Mirejaw poses (GPU High 5.28, G-things-t4-rescore)",
+ "branch": "tb/below6",
+ "head": "see git log (tb/below6 tip)",
+ "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+ "args": [
+  "--species=mirejaw",
+  "--whole-body",
+  "--context",
+  "--out={OUT}"
+ ],
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "crop": "560,200 1000x640 at 1080p (as G-things-t4-rescore)",
+ "tiles": "standing (hit 000), hit 050, faint 050, faint 100",
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-MIREJAW/overlay.json",
+ "capture_both": "base (main as it is, overlay off) and arm (overlay on), same command",
+ "needs_import": "no: config only",
+ "_why": "Hit frame: 'pale translucent jaw shape' and a grey smear by the trainer. Cause: the hit clip over-pitches, the jaw gapes to its pale lining and the tail swings through the floor. Arm scales the hit rotation to 0.45 and position to 0.5.",
+ "want_to_see": "hit 050 as a readable flinch: head up, no pale gaping jaw, tail straight with no grey blade by the trainer"
+}

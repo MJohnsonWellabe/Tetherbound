@@ -78,6 +78,8 @@ func mount(owner_world: Node3D) -> void:
 		specs.append(npc_spec(actor))
 	people.build_specs(world.get_node("Player"), specs)
 	preload("res://scripts/world/stormwood_character_rim.gd").attach(people)
+	if _local:
+		preload("res://scripts/world/stormwood_named_posts.gd").attach(world, people, actors)
 	_parcels = PIMS_PARCELS.new()
 	_parcels.name = "PimsParcels"
 	world.add_child(_parcels)

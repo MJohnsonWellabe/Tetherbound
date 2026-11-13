@@ -1,0 +1,43 @@
+{
+ "row": "F39#17 current restoration environment (5.50)",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_current_states.gd",
+ "args": [
+  "--seed=2042",
+  "--out={OUT}"
+ ],
+ "output_rule": "the tool only accepts --out under res://ralph/reports/VISUAL/phase2/tidewake/",
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080",
+  "--fixed-fps",
+  "20"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "frames": [
+  "tidewake__current_states__S1_live_t0",
+  "tidewake__current_states__S1_restored_t0",
+  "tidewake__current_states__S2_live_t0"
+ ],
+ "also_judge": "S2_restored_t0 beside S2_live_t0: the row's defect is about the difference between the two states, and the job's third frame is a second live view.",
+ "overlay": "ralph/reports/LANES/BELOW6-RESTORED-SEA/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same command as G-rescore-stale-ext-tidewake used for F39#17",
+ "needs_import": "no",
+ "_why": "PRESENT 3/3: the restoration does not read. r5: while water_currents_restored is set, at the day preset the shallow colour draws in to a quarter of the live reach with calmer waves (the deeper restored channel that read in r1, live colours kept); at every other preset the r4 values (wider shallows, eased waves); in both, stronger surf on the sandbars; debris cleared.",
+ "want_to_see": "S1/S2 restored reading as a changed place beside live: deeper, calmer channels with pale surf rings on the sandbars, no debris. S3 waterfall and S4 sunset restored no darker than base (no-loss set; S4 should keep its teal).",
+ "note": "CPU r5: live-versus-restored mean difference S1 14.3, S2 16.8, S3 6.5, S4 9.1. Foreground mean luminance of the restored frame (rows 600-1080), base -> arm: S1 62 -> 46, S2 79 -> 55 (deeper by design at day), S3 35 -> 35, S4 22 -> 35.",
+ "round": "r5 (after G-below6-sea-r4-stronghold: row level, S3/S4 gain)",
+ "no_loss_set": [
+  "tidewake__current_states__S3_restored_t0",
+  "tidewake__current_states__S4_restored_t0"
+ ]
+}

@@ -1,0 +1,29 @@
+{
+ "row": "F41#1 Stormheart finale (P2-037), GPU High 5.78",
+ "branch": "tb/below6",
+ "head": "see git log (tb/below6 tip)",
+ "tool": "res://tools/phase2_capture_locations.gd",
+ "args": [
+  "--biome=stormwood",
+  "--subset=stormwood__dynamo__12__the_stormheart_tree",
+  "--subset=stormwood__landmark__dynamo_core",
+  "--times=day",
+  "--views=approach,close",
+  "--seed=2042",
+  "--output={OUT}"
+ ],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080"],
+ "resolution": [1920, 1080],
+ "frames": [
+  "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+  "stormwood__dynamo__12__the_stormheart_tree__day__close",
+  "stormwood__landmark__dynamo_core__day__close"
+ ],
+ "presets": ["High"],
+ "preset": "High",
+ "overlay": "ralph/reports/LANES/BELOW6-HEARTWOOD/overlay.json",
+ "capture_both": "base (main as it is, overlay off) and arm (overlay on), same command",
+ "needs_import": "yes: one new model, assets/props/blender-1111/stormheart_heartwood/stormheart_heartwood.glb",
+ "_why": "Judges 3/3 every round: no core or crown in view, flat white lightning strokes. Every earlier core sat in the wall cleft behind the deck slab or was a bare light tube. Arm: a living heartwood on the hollow axis, in the middle of all three frames.",
+ "want_to_see": "a glowing blue-white crystal core inside a cage of braided bark roots at the centre of the hollow, limbs opening above it, and no white zig-zag strokes; the core should bloom without washing out the roots"
+}

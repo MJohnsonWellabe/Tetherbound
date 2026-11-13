@@ -25,8 +25,23 @@ static func decorate(spec: Dictionary, identity_id: String, authored_rank: Strin
 		if floors.has(canonical):
 			result["emission_floor"] = float(floors[canonical])
 	result["night_rim"] = (style.get("night_rim", {}) as Dictionary).duplicate(true)
+	# F41#8 named_tint_1112 (OFF until GPU-judged): the named villagers' pale skin
+	# and hair clip to white under the storm light ("faces burn orange-white", 3/3).
+	# A listed identity's body albedo is multiplied by its own grey; nothing emits.
+	var named_tint: Variant = settings.get("named_tint_1112", {})
+	if named_tint is Dictionary and bool((named_tint as Dictionary).get("enabled", false)):
+		var tints: Dictionary = (named_tint as Dictionary).get("tints", {})
+		if tints.has(canonical):
+			result["tint"] = str(tints[canonical])
 	if uniform_rank.is_empty():
 		return result
+	# F41#18 uniform_cloth_floor_1113 (OFF until GPU-judged; pairs with
+	# character_body_flags.json below6_uniform_cloth): once the cloth itself is
+	# mid-value, the additive floor that kept near-black uniforms visible only
+	# washes them, so uniformed ranks take the block's lower floor.
+	var cloth_floor: Variant = settings.get("uniform_cloth_floor_1113", {})
+	if cloth_floor is Dictionary and bool((cloth_floor as Dictionary).get("enabled", false)):
+		result["emission_floor"] = float((cloth_floor as Dictionary).get("emission_floor", 0.0))
 	result["presentation_rank"] = uniform_rank
 	result["base"] = str(spec.get("config_key", ""))
 	var ranked := NPC_RANKS.config_for(uniform_rank, result.base)

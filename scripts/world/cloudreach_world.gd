@@ -2295,11 +2295,52 @@ func _near_walkable_feature(world_point: Vector3, lines: Array[Dictionary],
 	return false
 
 
+## F40#1 P2-021 `landmass.terrace_mesas_1112` (OFF until judged): the gate and
+## shrine stands read as "broad level grass fields ... where layered elevated
+## land and ledge detail should lead" (PRESENT 3/3 through eight prop arms,
+## each read as pasted on the grass). These are not props: each entry is a low
+## mesa from the same builder, strata and turf as the cliffs behind the stands,
+## with its own collider, placed beside the approach so the ground steps up
+## from lawn to low terrace to cliff. World geometry from shared config, the
+## same on every peer; no save state. `at` is the turf height at the foot.
+func _build_terrace_mesas(root: Node3D) -> void:
+	var cfg: Variant = _visual_config.get("landmass", {}).get("terrace_mesas_1112", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return
+	var index := 0
+	# The stands' own cliffs are the pale installed shelf modules, so the walls
+	# take a pale tint of the shared cliff surface instead of the brown default.
+	var side: Material = _materials["cliff"]
+	var side_tint := str((cfg as Dictionary).get("side_tint", ""))
+	if side_tint != "":
+		side = _textured_material(_surface_tint(_visual_config.get("surface", {}).get("cliff", {}), side_tint), Color(side_tint))
+	for raw: Variant in (cfg as Dictionary).get("mesas", []):
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		var foot := _vec3(spec.get("at", [0, 0, 0]))
+		var size := _vec3(spec.get("size", [14, 14, 12]))
+		var rise := float(spec.get("rise_m", 2.4))
+		var mesa := _mesa(root, "TerraceMesa%02d" % index, Vector3(foot.x, foot.y + rise - size.y * 0.5, foot.z), size,
+			side, _materials["upland"], true, int(spec.get("seed", 7 + index * 13)),
+			bool(spec.get("rugged", false)))
+		# `_mesa` draws every wall band in the shared brown cliff material
+		# whatever side material it is given; the walls take the pale one here.
+		if side_tint != "":
+			for raw_mesh: Node in mesa.find_children("*", "MeshInstance3D", true, false):
+				var visual := raw_mesh as MeshInstance3D
+				for surface in visual.mesh.get_surface_count() if visual.mesh != null else 0:
+					if visual.mesh.surface_get_material(surface) != _materials["upland"]:
+						visual.set_surface_override_material(surface, side)
+		index += 1
+
+
 func _build_routes() -> void:
 	var root := Node3D.new()
 	root.name = "AuthoredRoutes"
 	add_child(root)
 	_collect_all_route_lines()
+	_build_terrace_mesas(root)
 	for raw: Variant in _config.get("routes", []):
 		await _build_breathe()
 		if not raw is Dictionary:
@@ -2767,6 +2808,54 @@ func _resource_position(authored: Vector3) -> Vector3:
 	return best
 
 
+## F40#15 `overlook_ridge_join_1113` (flag-off; scope world_geometry: the
+## collider is built from the same rows, identically on every peer, no save
+## state). The Stormward Overlook is the one landmark whose crown follows two
+## sloped strips (cap radius 0). Away from those strips its crown eases back up
+## to the landmark height, while the approach ridge's rows are pinned only
+## inside the ledge's flat radius; just outside it they drop to the ridge's own
+## height, so the top of the ledge wall shows as a dark seam and wedge on the
+## east side of the approach. With the flag on, a ridge vertex within `ease_m`
+## outside that rim is lifted toward the crown height at the nearest rim point,
+## never lowered, so the grass meets the ledge with no exposed wall.
+func _overlook_join_height(point: Vector3, height: float, config: Dictionary) -> float:
+	var cfg: Dictionary = config.get("overlook_ridge_join_1113", {})
+	if not bool(cfg.get("enabled", false)):
+		return height
+	for pad: Dictionary in _all_pad_points:
+		if float(pad.get("cap_radius", -1.0)) != 0.0:
+			continue
+		var centre: Vector3 = pad["position"]
+		var flat := Vector2(point.x - centre.x, point.z - centre.z)
+		var r := flat.length()
+		var rim := float(pad["flat_radius"])
+		var ease := float(cfg.get("ease_m", 9.0))
+		if r <= rim or r >= rim + ease:
+			continue
+		var on_rim := flat / r * rim * 0.985
+		var crown := _crown_height_at({"position": centre, "flat_radius": rim, "cap_radius": 0.5},
+			Vector3(centre.x + on_rim.x, centre.y, centre.z + on_rim.y), _all_crown_reference_lines)
+		var weight := 1.0 - smoothstep(0.0, ease, r - rim)
+		# Keep the road itself where it is: no lift across a route ribbon's own
+		# width (the lifted grass buried the path), easing in over the next 4 m.
+		var here := Vector2(point.x, point.z)
+		for line: Dictionary in _all_route_lines:
+			if str(line["route_id"]).begins_with("crown:"):
+				continue
+			var from: Vector3 = line["a"]
+			var to: Vector3 = line["b"]
+			var a2 := Vector2(from.x, from.z)
+			var along := Vector2(to.x, to.z) - a2
+			var t := clampf((here - a2).dot(along) / along.length_squared(), 0.0, 1.0)
+			var off := here.distance_to(a2 + along * t)
+			var clear := float(line["half_width"]) + LINE_PIN_MARGIN_M
+			weight *= smoothstep(clear, clear + 4.0, off)
+			if weight <= 0.0:
+				return height
+		return maxf(height, lerpf(height, crown - float(cfg.get("sink_m", 0.03)), weight))
+	return height
+
+
 func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		half_width: float, seed_value: int, top_material: Material, config: Dictionary,
 		self_route_id: String = "", overpass_lines: Array[Dictionary] = []) -> Array:
@@ -2959,7 +3048,8 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 			if record_shoulder_audit:
 				shoulder_audit_vertices.append({"route": self_route_id, "ridge": str(parent.name) + "/" + label,
 					"row": rows.size(), "column": row.size(), "raw": raw})
-			row.append(Vector3(raw.x, _walkable_height(raw, raw.y, lines, pads), raw.z))
+			row.append(Vector3(raw.x, _overlook_join_height(raw,
+				_walkable_height(raw, raw.y, lines, pads), config), raw.z))
 		rows.append(row)
 	# Walls hang from the rows' outer vertices (no separate station-only edge).
 	var wall_left_top: Array[Vector3] = []
@@ -3488,6 +3578,13 @@ func _apply_tree_palette(root_node: Node, seed_value: int) -> void:
 					elif key_name.contains("bark"):
 						material.albedo_color = [Color("#adb5ad"), Color("#929e96"),
 							Color("#a6ac96")][variant]
+						# F40#15 (flag-off): the pale grey tint leaves the bark
+						# texture's own orange at full strength ("orange-stick
+						# trees"). A darker cool tint pulls it to weathered brown.
+						var bark_tone: Dictionary = _visual_config.get("tree_bark_tone_1112", {})
+						var tones: Array = bark_tone.get("colours", [])
+						if bool(bark_tone.get("enabled", false)) and tones.size() == 3:
+							material.albedo_color = Color(str(tones[variant]))
 					material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 					IMPORTED_MATERIALS.apply_thin_foliage_backlight(source.resource_name, material)
 					_tree_palette_materials[cache_key] = material
@@ -4432,6 +4529,120 @@ func _build_realm_gate_crag(root: Node3D) -> void:
 	presentation.position = facade_origin
 	root.add_child(presentation)
 	presentation.call("build", _materials)
+	_build_gate_crag_terrace(root)
+
+
+## F40#1 `gate_crag_terrace_1113` (flag-off, this landmark only; scope
+## world_geometry: static, the same on every peer, no save state). The Realm
+## Gate Crag crown is a 40 m lawn disc and every panel names it "a broad
+## uniform lawn" with nothing stratified in it. This builds real ground on
+## that crown: stacked terrace bands, each a low pale-stone lip with a turf
+## top that follows a wavy outline, inset from the one below. The lips are at
+## or under the walker's step height, so the terrace is walked up, not round.
+## The collider is the same triangles as the render. The crown is not on any
+## route (the arrival road passes 34 m below it), so no ribbon is touched.
+func _build_gate_crag_terrace(root: Node3D) -> void:
+	var cfg: Dictionary = (_visual_config.get("landmass", {}) as Dictionary).get("gate_crag_terrace_1113", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	var centre_raw: Array = cfg.get("centre_xz", [5.0, -7.0])
+	var tiers := maxi(1, int(cfg.get("tiers", 3)))
+	var radius := float(cfg.get("radius_m", 11.5))
+	var inset := float(cfg.get("inset_m", 2.3))
+	var lip := float(cfg.get("lip_m", 0.32))
+	var wave := float(cfg.get("wave", 0.11))
+	var kerb := float(cfg.get("kerb_m", 0.55))
+	var shift_raw: Array = cfg.get("tier_shift_xz", [0.0, 0.0])
+	var shift := Vector2(float(shift_raw[0]), float(shift_raw[1]))
+	var segments := maxi(12, int(cfg.get("segments", 56)))
+	var base_y := 0.10
+	var outlines: Array = []
+	for tier in tiers + 1:
+		var ring := PackedVector3Array()
+		var r := maxf(0.0, radius - inset * float(tier))
+		for index in segments:
+			var angle := TAU * float(index) / float(segments)
+			var wobble := 1.0 + wave * sin(angle * 3.0 + float(tier) * 1.7) \
+				+ wave * 0.45 * sin(angle * 7.0 + float(tier) * 0.9)
+			# Each tier is shifted a little further toward one side, so the
+			# steps bunch on that side and open out on the other.
+			ring.append(Vector3(cos(angle) * r * wobble + shift.x * float(tier), 0.0,
+				sin(angle) * r * wobble + shift.y * float(tier)))
+		outlines.append(ring)
+	if not _materials.has("terrace_stone"):
+		var tint := str(cfg.get("stone_tint", "#dedbd0"))
+		var surface_cfg: Dictionary = (_visual_config.get("surface", {}) as Dictionary).get("cliff", {})
+		_materials["terrace_stone"] = _textured_material(_surface_tint(surface_cfg, tint), Color(tint))
+	var wall := SurfaceTool.new()
+	wall.begin(Mesh.PRIMITIVE_TRIANGLES)
+	wall.set_material(_materials["terrace_stone"])
+	var top := SurfaceTool.new()
+	top.begin(Mesh.PRIMITIVE_TRIANGLES)
+	top.set_material(_materials["upland"])
+	for tier in tiers:
+		var outer: PackedVector3Array = outlines[tier]
+		var inner: PackedVector3Array = outlines[tier + 1]
+		var low := base_y + lip * float(tier) - (0.25 if tier == 0 else 0.0)
+		var high := base_y + lip * float(tier + 1)
+		for index in segments:
+			var next := (index + 1) % segments
+			var a := outer[index] + Vector3.UP * high
+			var b := outer[next] + Vector3.UP * high
+			var c := outer[index] + Vector3.UP * low
+			var d := outer[next] + Vector3.UP * low
+			_add_surface_triangle(wall, a, b, c)
+			_add_surface_triangle(wall, b, d, c)
+			# The turf top: a ring out to this tier's lip; the last tier closes
+			# to its centre.
+			# A stone kerb along the lip, then turf: the step reads as a rock
+			# ledge with grass on it, not a painted line.
+			var e := inner[index] + Vector3.UP * high
+			var f := inner[next] + Vector3.UP * high
+			var ka := a.move_toward(e, kerb)
+			var kb := b.move_toward(f, kerb)
+			_add_surface_triangle(wall, a, ka, b)
+			_add_surface_triangle(wall, b, ka, kb)
+			if tier < tiers - 1:
+				_add_surface_triangle(top, ka, e, kb)
+				_add_surface_triangle(top, kb, e, f)
+			else:
+				var hub := Vector3(shift.x * float(tiers), high, shift.y * float(tiers))
+				_add_surface_triangle(top, ka, hub, kb)
+	wall.generate_normals()
+	top.generate_normals()
+	var mesh := ArrayMesh.new()
+	wall.commit(mesh)
+	top.commit(mesh)
+	var terrace := MeshInstance3D.new()
+	terrace.name = "GateCragTerrace"
+	terrace.mesh = mesh
+	terrace.position = Vector3(float(centre_raw[0]), 0.0, float(centre_raw[1]))
+	terrace.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
+	root.add_child(terrace)
+	# Each tier's turf top is also a ground surface, so anything placed with
+	# ground_height_at() stands on the terrace, not inside it. The disc is the
+	# circle inscribed in the tier's wavy outline.
+	# The landmark chain above is translation only, so the world origin is the
+	# sum of the parents' positions (the tree is not entered yet while building).
+	var origin := Vector3.ZERO
+	var walk: Node = terrace
+	while walk is Node3D:
+		origin += (walk as Node3D).position
+		walk = walk.get_parent()
+	for tier in tiers:
+		var reach := maxf(0.0, radius - inset * float(tier)) * (1.0 - 1.45 * wave)
+		if reach <= 0.05:
+			continue
+		var offset := (shift * float(tier)).rotated(-terrace.rotation.y)
+		register_runtime_surface({"kind": "ellipse", "label": "GateCragTerrace%d" % tier,
+			"centre": Vector2(origin.x + offset.x, origin.z + offset.y),
+			"half": Vector2(reach, reach), "height": origin.y + base_y + lip * float(tier + 1)})
+	var body := StaticBody3D.new()
+	body.name = "Collision"
+	var shape := CollisionShape3D.new()
+	shape.shape = mesh.create_trimesh_shape()
+	body.add_child(shape)
+	terrace.add_child(body)
 
 
 func _build_three_bells(root: Node3D) -> void:
@@ -4759,6 +4970,10 @@ func _build_waterward_overlook(root: Node3D) -> void:
 	presentation.name = "StormwardOverlookPresentation"
 	root.add_child(presentation)
 	presentation.call("build", _materials)
+	# Solid ruins (flag-off `ruin_collision_1113`): null unless enabled.
+	var ruin_collision: Variant = presentation.call("build_ruin_collision")
+	if ruin_collision is Node3D:
+		root.add_child(ruin_collision as Node3D)
 	_exclude_local_wear_segment(root, Vector3(-8.0, -2.4, -28.0), Vector3.ZERO, 5.0)
 
 
@@ -5960,6 +6175,22 @@ func _mesa(
 		_emit_mesa_visual_seam(upper_tool, sides, top_ring)
 	else:
 		_emit_carved_mesa_seam(upper_tool, carved["rim"], carved["natural_rim"])
+	# F40#1 `wall_top_band_1113` (flag-off, material only): the first wall band
+	# under the turf lip is emitted with the same vertices into its own
+	# surface, in a pale strata material, so an island rim seen from outside
+	# shows rock ledge and not a dark soil skirt. No vertex moves; the collider
+	# is built from the crown alone.
+	var top_band_tool: SurfaceTool = null
+	var top_band_cfg: Dictionary = (_visual_config.get("landmass", {}) as Dictionary).get("wall_top_band_1113", {})
+	if bool(top_band_cfg.get("enabled", false)) and label in (top_band_cfg.get("labels", []) as Array) \
+			and side_material != _materials["cliff_shadow"]:
+		if not _materials.has("cliff_pale_band"):
+			var surface_cfg: Dictionary = (_visual_config.get("surface", {}) as Dictionary).get("cliff", {})
+			var tint := str(top_band_cfg.get("tint", "#f1e6cc"))
+			_materials["cliff_pale_band"] = _textured_material(_surface_tint(surface_cfg, tint), Color(tint))
+		top_band_tool = SurfaceTool.new()
+		top_band_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+		top_band_tool.set_material(_materials["cliff_pale_band"])
 	var wall_detail: Dictionary = {}
 	if label == "CliffMass" and parent.name == &"UpperCloudreach":
 		wall_detail = CLIFFHOLD_DETAIL.config().get("plateau_wall", {})
@@ -5969,7 +6200,8 @@ func _mesa(
 		var outward_next := Vector3(top_ring[next].x, 0, top_ring[next].z).normalized()
 		var relief := minf(size.x * 0.055, 15.0)
 		if wall_detail.is_empty():
-			_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next], outward, outward_next, relief)
+			_add_geological_face(top_band_tool if top_band_tool != null else upper_tool,
+				top_ring[i], top_ring[next], upper_ring[i], upper_ring[next], outward, outward_next, relief)
 		else:
 			var edge := CLIFFHOLD_DETAIL.wall_profile(top_ring[i], upper_ring[i], outward, wall_detail)
 			var edge_next := CLIFFHOLD_DETAIL.wall_profile(top_ring[next], upper_ring[next], outward_next, wall_detail)
@@ -6024,6 +6256,9 @@ func _mesa(
 		SETTLEMENT_LIFE.ledge_buttresses(root, top_ring, size, seed_value)
 	lower_tool.generate_normals()
 	lower_tool.commit(mesh)
+	if top_band_tool != null:
+		top_band_tool.generate_normals()
+		top_band_tool.commit(mesh)
 
 	var mass := MeshInstance3D.new()
 	mass.name = "StratifiedCliffBody"

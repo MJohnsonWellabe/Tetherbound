@@ -574,6 +574,15 @@
     }
    }
   },
+  "below6_uniform_cloth": {
+   "_why": "LANE-BELOW6 (13 Nov 2026), F41#18 Stormwood uniforms (5.89). G-below6-uniforms, 3/3: the ask is 'lit mid-value cloth' and 'one bright copper, glass or steel rank accent per uniform, sized to read at distance'. Colour selection on the baked atlases failed (BELOW6-UNIFORM-CLOTH/NOT-SENT.md), so the garment mask is built from the mesh: triangles whose dominant bone is a garment bone are rasterised into UV space; head, neck, forearm and hand triangles are left out (ralph/reports/LANES/BELOW6-UNIFORM-CLOTH/make_uniform_cloth_mesh.py). Inside the mask the dark cloth is lifted to a cool mid-value slate; shoulder-bone triangles carry a brass band. Hair, face and skin are untouched; the .glb files are not modified. Judged together with stormwood_character_presentation.json uniform_cloth_floor_1113. Nothing is red. OFF until GPU-judged.",
+   "enabled": false,
+   "characters": {
+    "grunt_c": {"body_albedo_override": "res://assets/characters/grunt_c/grunt_c_lod0_texture_0_vis1_cloth2.png"},
+    "officer_a": {"body_albedo_override": "res://assets/characters/officer_a/officer_a_lod0_texture_0_vis1_cloth2.png"},
+    "former_tether_member": {"body_albedo_override": "res://assets/characters/former_tether_member/former_tether_member_lod0_texture_0_cloth2.png"}
+   }
+  },
   "below6_marrow_self_lit_off": {
    "_why": "LANE-BELOW6 (12 Nov 2026), F41#15 (GPU High 4.49) and F41#7: Captain Marrow's head is a blown-out white glow (3/3). captain_a is the one cast body in art.json without `body_emission_enabled: false`, so its imported material still emits its own albedo texture at full strength (emission ON, the texture as emission texture; with the Stormwood uniform floor the operator is ADD). CPU probes (same dialogue frame): body mean 168 -> 119 and the face starts to come out of clip with the emission texture and the floor off; the dialogue speaker light, character rim, crown light and deck lanterns each change nothing on the face. The face still clips under the scene light alone, so the pale texels (hair, skin, collar: 11% of the atlas above 0.38) are also compressed by half in a graded albedo (identity, palette and dark cloth unchanged). Pair with stormwood_character_presentation.json identity_floor_1112.",
    "enabled": true,

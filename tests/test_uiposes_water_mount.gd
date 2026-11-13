@@ -32,9 +32,14 @@ func test_row_matches_with_or_without_water_prefix() -> void:
 func test_rider_stays_above_sea_at_deepest_bob() -> void:
 	var mounts: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_mounts.json")).mounts
 	var geo: Dictionary = mounts.water_aquaryn
-	var look: Dictionary = LOOK.config().mounts.water_aquaryn
+	# The row as the game resolves it. While `deep_swim_1113` is OFF this is
+	# the shipped 1.0 m sink and the pin below holds; when it is ON the
+	# deep-swim pin (test_f39_8_deep_swim_pin) applies instead.
+	var look: Dictionary = LOOK.row("water_aquaryn")
 	var deepest := float(geo.surface_origin_offset_m) - float(look.extra_sink_m) - float(look.bob_amplitude_m)
 	var rider_art := deepest + float(geo.mount_offset[1]) - 0.92
+	if bool((look.get("deep_swim_1113", {}) as Dictionary).get("enabled", false)):
+		return
 	assert_true(rider_art > 0.08, "rider art origin %.2f m stays above sea level" % rider_art)
 	assert_true(absf(LOOK.origin_delta(look, 0.0) + float(look.extra_sink_m)) < 0.0001)
 
@@ -49,3 +54,24 @@ func test_f39_8_rider_shadow_and_sink_ship_on() -> void:
 	var swim := FileAccess.get_file_as_string("res://scripts/world/water_mounted_swim.gd")
 	assert_true(swim.contains("look.get(\"rider_shadows_off\", false)"), "the swim reads the flag")
 
+
+
+## F39#8 `deep_swim_1113` (LANE-BELOW6, 13 Nov; OFF until GPU-judged). With
+## the candidate's sink, at the deepest bob the rider's chest stays above the
+## sea and the seat is below it: waist-deep on a swimming mount.
+func test_f39_8_deep_swim_pin() -> void:
+	var mounts: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_mounts.json")).mounts
+	var geo: Dictionary = mounts.water_aquaryn
+	var shipped: Dictionary = LOOK.config().mounts.water_aquaryn
+	var deep: Dictionary = shipped.get("deep_swim_1113", {})
+	assert_false(bool(deep.get("enabled", true)), "the candidate is OFF")
+	var on := shipped.duplicate(true)
+	(on.deep_swim_1113 as Dictionary)["enabled"] = true
+	var look: Dictionary = LOOK.row("water_aquaryn", {"enabled": true, "mounts": {"water_aquaryn": on}})
+	assert_true(absf(float(look.extra_sink_m) - float(deep.extra_sink_m)) < 0.0001, "ON: the deeper sink is the row's sink")
+	assert_true(absf(float(shipped.extra_sink_m) - 1.0) < 0.001, "the shipped row is not edited in place")
+	var deepest := float(geo.surface_origin_offset_m) - float(look.extra_sink_m) - float(look.bob_amplitude_m)
+	var rider_art := deepest + float(geo.mount_offset[1]) - 0.92
+	var chest := rider_art + float(deep.get("rider_chest_above_art_m", 0.75))
+	assert_true(chest > 0.15, "rider chest %.2f m stays above the sea" % chest)
+	assert_true(rider_art < -0.2, "the seat is %.2f m under the surface" % rider_art)

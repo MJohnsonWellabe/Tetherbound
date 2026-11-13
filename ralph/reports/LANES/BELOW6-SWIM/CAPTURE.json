@@ -1,0 +1,38 @@
+{
+ "row": "F39#5 surface swimming trainer pose (5.64); F39#14 swimmer water contact (6.44) shares the frames",
+ "branch": "tb/below6",
+ "tool": "res://tools/phase2_capture_swimming.gd",
+ "args": [
+  "--seed=2042",
+  "--output={OUT}"
+ ],
+ "output_rule": "the tool only accepts an output under res://ralph/reports/VISUAL/phase2/tidewake/",
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080",
+  "--fixed-fps",
+  "20"
+ ],
+ "resolution": [
+  1920,
+  1080
+ ],
+ "presets": [
+  "High"
+ ],
+ "preset": "High",
+ "frames": [
+  "tidewake__swimming__entry",
+  "tidewake__swimming__surface_west",
+  "tidewake__swimming__surface_mid"
+ ],
+ "overlay": "ralph/reports/LANES/BELOW6-SWIM/overlay.json",
+ "capture_both": "base (overlay off) and arm (overlay on), same command as G-rescore-stale-tier2 used for F39#5",
+ "needs_import": "no",
+ "_why": "G-rescore-stale-tier2 3/3: 'the swimmer is a floating head with no stroke'. r5: chest 0.10 m under the surface, body nearly flat, and the stroke is a sideways sweep at the waterline: arms out wide, reaching only a third as far forward and back, no lift.",
+ "want_to_see": "in every stand both arms lying out at the waterline beside the shoulders, as in r4's surface_west frame; no hand above the head. Say if it now reads as a T-pose float instead of a stroke.",
+ "note": "The frames are stills at whatever stroke phase the capture lands on. Judge F39#14 on the same pair if cheap: the wake is unchanged.",
+ "round": "r5 (after the r4 pre-check hold and its GPU frames)"
+}
