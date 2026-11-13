@@ -2,7 +2,7 @@
 
 ## TO THE COORDINATOR (13 Nov, about 18:20 UTC)
 - **New, CPU-ready, NOT queued: BEINGS-TRAILPUP-AMBER** (F36#83, 6.53): the owner-picked amber paws and eyes on the live coyote. Coat flag plus two derived textures, flag-off. Take it when a slot frees; I would put it after the pose batch and ahead of the three held arms.
-- **Still please relay to the GPU lane:** the hit half of BEINGS-STORMRAVEN-WINGS does have a reader at 9c1bb38bc, `scripts/creatures/creature_pose_settle.gd` line 652 inside `settle_hit`. No fix needed; 9c1bb38bc is the right head.
+- The GPU lane withdrew its dry-check note on STORMRAVEN-WINGS (the hit reader is there); nothing to relay. It runs the pose batch on 9ae4ea989.
 - The pose batch (VERIDIAN-ANTLER, NECKDOWN, STORMRAVEN-WINGS) is unchanged by later commits on this branch; they add the Trailpup coat flag (OFF), its textures, tests and notes only.
 
 ## State (13 Nov 2026, lane started)
