@@ -1,0 +1,15 @@
+{
+  "lane": "LANE-THINGS",
+  "row": "F38#17",
+  "date": "2026-11-13",
+  "method": "installed-cast recombination, no Meshy, no new mesh: the lanekit_f38_17 copy's source model with a graded copy of its atlas embedded",
+  "source_model": "res://assets/characters/officer_b/officer_b_lod0.glb",
+  "source_model_sha256": "7fecb7bcd7a9b852ee2f3ca903e5479454d0768db6892b744d655ddbe72fbf89",
+  "atlas_source": "res://assets/characters/officer_b/officer_b_lod0_texture_0_vis1.png",
+  "atlas_source_sha256": "1e01aaa8c2390dac0aca4dcf953263027c4a06a7c5bd7163a09459bdb98a5452",
+  "grade": "texels with luma above 0.38 keep their hue and move half-way down to 0.38 (new_luma = 0.38 + (luma - 0.38) * 0.5); darker texels unchanged; alpha unchanged (the Captain Marrow recipe, below6_marrow_self_lit_off)",
+  "pale_texel_share": 0.026,
+  "producer": "ralph/reports/LANES/ITEM-F38-17/embed_atlas_glb.py",
+  "output_sha256": "ae787176a9aceb10280c5e0ac4dc128901148c996cf29c882a24c617ef7d5cf5",
+  "original_untouched": "res://assets/characters/npc_identity/lanekit_f38_17_solene/solene_lod0.glb"
+}
