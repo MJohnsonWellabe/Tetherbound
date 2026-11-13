@@ -1,0 +1,8 @@
+Wp: "The seated rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response"
+Pm: none
+Hl: "dark olive body with low contrast against the stage"; "faint does not settle onto the ground"
+Io: "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+Eu: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Qu: none
+Hw: "dark body with low contrast against the stage"; "faint lies flat with the trainer inside the tail"
+Tz: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
