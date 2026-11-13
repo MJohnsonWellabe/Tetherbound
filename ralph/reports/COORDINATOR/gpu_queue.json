@@ -4610,6 +4610,22 @@
    "route": "LANE-SCOUT"
   },
   {
+   "id": "things-bandfaint",
+   "kind": "arm (ship per species)",
+   "rows": [
+    "F36#44",
+    "F36#61",
+    "F36#83",
+    "F36#87"
+   ],
+   "branch": "tb/things",
+   "head": "4f91b7ee9",
+   "job": "capture_f36_poses.gd --whole-body --context --roles=hit,faint for duskhush, ribbonray, trailpup, voltwig",
+   "capture": "High, base vs overlay_band_faint.json",
+   "priority": "6.5-7.0 band, cheap pose capture",
+   "route": "LANE-SCOUT"
+  },
+  {
    "id": "things-riftfrill-matte",
    "kind": "arm (near-bar)",
    "rows": [
