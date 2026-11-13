@@ -1,0 +1,134 @@
+[
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/base-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.3569,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/base-High/stormwood__inventory__character__elder_maud__dialogue.jpg",
+  "sky_fraction": 0.225,
+  "lower_edges": 0.369,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/base-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.113,
+  "lower_edges": 0.1742,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/base-High/stormwood__inventory__character__warden_elect_bryn__dialogue.jpg",
+  "sky_fraction": 0.219,
+  "lower_edges": 0.3137,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__officer_nysa_deepwood_rod.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/base-High/stormwood__inventory__trainer__officer_nysa_deepwood_rod.jpg",
+  "sky_fraction": 0.156,
+  "lower_edges": 0.3614,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "preset": "base-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/base-High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "sky_fraction": 0.182,
+  "lower_edges": 0.4045,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/fur-High/stormwood__inventory__character__elder_maud.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.3567,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__character__elder_maud__dialogue.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/fur-High/stormwood__inventory__character__elder_maud__dialogue.jpg",
+  "sky_fraction": 0.225,
+  "lower_edges": 0.368,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/fur-High/stormwood__inventory__character__warden_elect_bryn.jpg",
+  "sky_fraction": 0.113,
+  "lower_edges": 0.1744,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__character__warden_elect_bryn__dialogue.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/fur-High/stormwood__inventory__character__warden_elect_bryn__dialogue.jpg",
+  "sky_fraction": 0.219,
+  "lower_edges": 0.3135,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__officer_nysa_deepwood_rod.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/fur-High/stormwood__inventory__trainer__officer_nysa_deepwood_rod.jpg",
+  "sky_fraction": 0.156,
+  "lower_edges": 0.3596,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ },
+ {
+  "frame": "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "preset": "fur-High",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "tool": "res://tools/phase2_capture_dialogue.gd",
+  "path": "G-below6-staticub-fur-dialogue-c673/fur-High/stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue.jpg",
+  "sky_fraction": 0.182,
+  "lower_edges": 0.404,
+  "script_errors": 0,
+  "note": "BELOW6-STATICUB-FUR (F41#8, F41#18; the bears in Maud's, Bryn's and Nysa's frames): main 4f9ee3967 game content (c673d5285), base = no overlay, arm = BELOW6-STATICUB-FUR/overlay.json (creature_coat_flags below6_staticub_storm_fur). Same Stormwood dialogue boot as the cloth arm, High, blend 1.0. By eye: the Staticub bears behind Officer Nysa go from pale pink to a darker storm-brown coat with lightning marks; Maud/Bryn change little (bears only in the background). World and stage Staticub frames follow as a separate section."
+ }
+]
