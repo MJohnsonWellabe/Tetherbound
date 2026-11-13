@@ -1,0 +1,7 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-mt-cragcut-high @ 58a1371a9, G-land-mt-cragcut-medium @ f46a5a0b0", "arm": "back_face_cut_m 150 on the Veilfall crag shells",
+ "F39#19 High": ["t-000.00 (matched 0.00 m to the warm-up base; mean diff 1.11)"],
+ "F39#19 Medium": ["t-000.00 (matched 0.00 m to ROSTERNAMES base2-Medium: same composition, c673 original crag files, per the GPU lane manifest; mean diff 1.06)"],
+ "excluded": "t-003 and t-023-025 (best-available, unmatched); F39#7 has no matched frame",
+ "judge c note": "judge c scored Rs and Ss as one identical capture and gave only Rs; its Rs score is used for Ss",
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg",
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f04_6_r22"}

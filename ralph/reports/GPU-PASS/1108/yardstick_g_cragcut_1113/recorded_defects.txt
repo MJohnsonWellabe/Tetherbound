@@ -1,0 +1,6 @@
+Nn: none
+Rs: "The left team roster fades to pale low-contrast text against terrain during active combat"
+Vz: none
+Qk: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Ss: "The left team roster fades to pale low-contrast text against terrain during active combat"
+Ui: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
