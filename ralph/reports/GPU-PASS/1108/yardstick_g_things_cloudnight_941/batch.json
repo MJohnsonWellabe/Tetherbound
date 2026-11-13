@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.0,
+   5.2,
+   5.0
+  ],
+  "craft:after": [
+   6.8,
+   6.6,
+   6.9
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   4.7,
+   4.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.0,
+   4.1,
+   4.0
+  ],
+  "f36_0_npc:C1B": [
+   6.6,
+   6.6,
+   6.3
+  ],
+  "f36_0_npc:C1A": [
+   6.6,
+   6.6,
+   6.3
+  ]
+ },
+ "candidates": {
+  "G F40#0 night rain [G-cn_F40_0_night_rain_arm.png]": [
+   5.7,
+   5.6,
+   5.5
+  ],
+  "G F40#0 night rain [G-cn_F40_0_night_rain_base.png]": [
+   5.6,
+   5.5,
+   5.6
+  ],
+  "G Night other stands [G-cn_Night_other_stands_base.png]": [
+   5.9,
+   5.8,
+   5.6
+  ],
+  "G Night other stands [G-cn_Night_other_stands_arm.png]": [
+   5.6,
+   5.4,
+   5.5
+  ],
+  "G F40#0 night clear [G-cn_F40_0_night_clear_arm.png]": [
+   6.0,
+   6.0,
+   5.9
+  ],
+  "G F40#0 night clear [G-cn_F40_0_night_clear_base.png]": [
+   5.7,
+   5.5,
+   5.6
+  ],
+  "G F40#19 night rain sky [G-cn_F40_19_night_rain_sky_arm.png]": [
+   5.5,
+   5.5,
+   5.4
+  ],
+  "G F40#19 night rain sky [G-cn_F40_19_night_rain_sky_base.png]": [
+   5.5,
+   5.5,
+   5.5
+  ],
+  "G F40#21 night clear [G-cn_F40_21_night_clear_base.png]": [
+   5.6,
+   5.3,
+   5.6
+  ],
+  "G F40#21 night clear [G-cn_F40_21_night_clear_arm.png]": [
+   5.9,
+   5.7,
+   5.9
+  ]
+ }
+}
