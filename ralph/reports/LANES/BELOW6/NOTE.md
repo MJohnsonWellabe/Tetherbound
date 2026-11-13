@@ -1,5 +1,9 @@
 # LANE-BELOW6 NOTE (branch `tb/below6`; this file is the channel)
 
+## 13 Nov, overlook vista seam: located (not fixed yet)
+
+Merged main (court fix #941 is in). The seam is not the hidden crown strip either. The route_day / vista_dusk stand is at local (2.5, -21) from the overlook landmark (-420, 5650), which is 21.1 m from its centre; the landmark ledge's flat crown radius is 20.7 m (`ledge_flat_radius`, 0.47 of the 44 m ledge). So the trainer stands on the rim of the landmark ledge, and the straight dark line is that rim where the ledge crown meets the approach ridge. The dark wedge to the right is the top of the ledge's cliff wall showing where the approach shoulder falls away below the crown (the ridge is crowned across its width; the ledge is not). This overlook is the one landmark with cap radius 0, whose crown follows two sloped strips, so the usual pad join does not level it. A fix is terrain work in `_mesa` / the ridge shoulder join for this landmark (ease the ridge's last rows up to the ledge rim across the full width, or carry the turf down over the rim wall). I will try the turf-over-rim version as a flag-off arm next; say if you would rather I leave terrain alone and go to F41#18 uniforms first.
+
 ## 13 Nov, RELAY: overlook stone does NOT ship (parked). Findings on the two overlook bugs.
 
 RELAY from LANE-SCOUT, G-below6-overlook-stone (tb/item-scout-1108 575ffd7f6): F40#15 overlook pair 4.57 -> 3.99 (-0.58, 0/3); routes 5.07 -> 4.53 (-0.54, 0/3); fit r 0.979, RMSE 0.21. The pale stone reads as "a smeared, low-resolution brown blotch, clay, mud or cork"; one judge saw the vista towers go reddish-brown. Parked; thick footed pale masonry is new art.
