@@ -1,0 +1,156 @@
+[
+ {
+  "frame": "stormwood__fulgocobra__attacking.jpg",
+  "preset": "arm-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/arm-High/stormwood__fulgocobra__attacking.jpg",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.3701,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__fainted.jpg",
+  "preset": "arm-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/arm-High/stormwood__fulgocobra__fainted.jpg",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.3883,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__hurt.jpg",
+  "preset": "arm-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/arm-High/stormwood__fulgocobra__hurt.jpg",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.3705,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "arm-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/arm-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.3704,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__moving.jpg",
+  "preset": "arm-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/arm-High/stormwood__fulgocobra__moving.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.37,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__resting.jpg",
+  "preset": "arm-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/arm-High/stormwood__fulgocobra__resting.jpg",
+  "sky_fraction": 0.172,
+  "lower_edges": 0.3742,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__shiny_idle.jpg",
+  "preset": "arm-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/arm-High/stormwood__fulgocobra__shiny_idle.jpg",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.3769,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__attacking.jpg",
+  "preset": "base-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/base-High/stormwood__fulgocobra__attacking.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.371,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__fainted.jpg",
+  "preset": "base-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/base-High/stormwood__fulgocobra__fainted.jpg",
+  "sky_fraction": 0.17,
+  "lower_edges": 0.3882,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__hurt.jpg",
+  "preset": "base-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/base-High/stormwood__fulgocobra__hurt.jpg",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.3717,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__idle.jpg",
+  "preset": "base-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/base-High/stormwood__fulgocobra__idle.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.371,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__moving.jpg",
+  "preset": "base-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/base-High/stormwood__fulgocobra__moving.jpg",
+  "sky_fraction": 0.157,
+  "lower_edges": 0.3709,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__resting.jpg",
+  "preset": "base-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/base-High/stormwood__fulgocobra__resting.jpg",
+  "sky_fraction": 0.172,
+  "lower_edges": 0.3765,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ },
+ {
+  "frame": "stormwood__fulgocobra__shiny_idle.jpg",
+  "preset": "base-High",
+  "tree": "fa88105d845fa869b82bcea3cea8f64ae4e7c74d",
+  "tool": "res://tools/phase2_capture_creatures.gd",
+  "path": "G-below6-fulgocobra-collar-world/base-High/stormwood__fulgocobra__shiny_idle.jpg",
+  "sky_fraction": 0.158,
+  "lower_edges": 0.3769,
+  "script_errors": 0,
+  "note": "below6-fulgocobra-collar: Stormwood world creature states, base vs arm slate collar, --fixed-fps 20, High. Shiny unchanged (no copper on the shiny coat)."
+ }
+]
