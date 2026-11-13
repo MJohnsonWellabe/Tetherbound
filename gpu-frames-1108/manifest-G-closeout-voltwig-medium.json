@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "voltwig-faint-000.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-faint-000.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.0568,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-faint-025.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-faint-025.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0604,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-faint-050.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-faint-050.jpg",
+  "sky_fraction": 0.964,
+  "lower_edges": 0.0573,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-faint-075.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-faint-075.jpg",
+  "sky_fraction": 0.965,
+  "lower_edges": 0.0559,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-faint-100.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-faint-100.jpg",
+  "sky_fraction": 0.965,
+  "lower_edges": 0.0565,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-hit-000.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-hit-000.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.057,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-hit-025.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-hit-025.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0561,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-hit-050.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-hit-050.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0561,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-hit-075.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-hit-075.jpg",
+  "sky_fraction": 0.96,
+  "lower_edges": 0.0559,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ },
+ {
+  "frame": "voltwig-hit-100.png",
+  "preset": "main-Medium",
+  "tree": "fcdf124b4a0ae00f24aea8a8be1850288e6e2451",
+  "tool": "res://tools/art_pipeline/capture_f36_poses.gd",
+  "path": "G-closeout-voltwig-medium/main-Medium/voltwig-hit-100.jpg",
+  "sky_fraction": 0.961,
+  "lower_edges": 0.057,
+  "script_errors": 0,
+  "note": "closeout-voltwig-medium (F36#87, 7.51 High in a confirming batch): main fcdf124b4 as it is, Medium, one side; voltwig hit + faint whole-body with context. Judge with G-things-bandfaint base-High voltwig frames (29cb35dbe) and the F38#38 control. Pose-stage frames: sky flag bypassed after an eye check."
+ }
+]
