@@ -1,0 +1,7 @@
+Wg: none
+Gf: "dark body on the stage"; "hood stays up in the faint"; "the faint does not reach the ground (body, neck or head stays raised, sits upright or floats)"
+Rl: "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+Bs: "none"
+Jw: "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance"
+Kc: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Xr: none
