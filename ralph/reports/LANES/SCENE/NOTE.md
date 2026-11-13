@@ -1,13 +1,15 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov 2026, about 19:40 UTC)
-1. **SCENE-HALLWALLS round 2 is on `tb/scene`** (same overlay, same flag). The remaining rectangle is an exterior buttress standing 0.4 m through the arena wall: 1.6 m wide, floor to near the ceiling, exterior stone. A probe recording every surface along each ray showed it as the nearest surface in 127 of 5,184 cells at frame 03 with round 1 on, and in 0 with round 2 on. Round 2 stops the buttress inside the wall's thickness on roofed chambers; the outside face does not move. The GPU needs `stronghold.gd` from the new head (the shader and config are unchanged since round 1). Details: `ralph/reports/LANES/SCENE-HALLWALLS/ARM.md`, "Round 2".
-2. **TELLDUST3 Warden offset (1.52 m / 1.39 m, same at High and Medium):** I cannot see a cause in the dust code either. `dust_puff` and `_dust_walk` read no RNG and nothing in gameplay reads the dust. One thing to check on your side: which tree each side was captured from. If the arm side used `tb/scene` and the base used c673 or main, the two differ by more than the overlay (tb/scene also carries the HALLWALLS stronghold code, flag-off, and the harvest dressing code). A same-tree pair (tb/scene with and without the overlay) would settle whether the overlay moves the camera.
-3. Bench fix landed (#953), main merged. Still waiting: HALLWALLS r2, SCENE-CACHE, SCENE-WORKSHOP, TELLDUST3.
+## TO THE COORDINATOR (13 Nov 2026, about 20:10 UTC)
+1. **LAND: `tb/scene-telldust3-land` b3c64d2b**, cut from main. `dust_phase_coherence` 1 with the judged values (0.5 / 0.2 / 0.04, cap 400), `_why_dust_coherent_1113` citing G-things-telldust3-grunt-medium.md and both scores, ON pin test, round-1 pin updated to the round-2 values. 338 tests in 43 related files, 0 failed. READY: `ralph/reports/LANES/SCENE-TELLDUST3-LAND/READY.md` on that branch. No criterion closes.
+2. **SCENE-HALLWALLS round 2 is on `tb/scene`** (pushed before your last message crossed): the leftover rectangle is an exterior buttress standing 0.4 m through the arena wall; round 2 clips it on roofed chambers. Probe: nearest surface in 127 of 5,184 cells before, 0 after. The GPU needs `stronghold.gd` from the current head. Details in its ARM.md, "Round 2".
+3. **Taking F39#19 next** (7.47, 0.03 short): short names on the fight roster rows, as judge c asked. F38#16 after it.
+4. Judge flags noted, not yet looked at: Terrapup's HUD element reads "WIND"; a red-orange marker and crate at the bottom right of the grunt fight frames.
+5. Waiting on the GPU: HALLWALLS r2, SCENE-CACHE, SCENE-WORKSHOP.
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
-- Criteria closed: 0. Landed on main: 1 (#953, the camp workbench parts fix, main 4f9ae9e2).
+- Criteria closed: 0. Landed on main: 1 (#953, the camp workbench parts fix, main 4f9ae9e2). Ready to land: `tb/scene-telldust3-land`.
 - `tb/scene` has main 4f9ae9e2 merged in; `tb/scene-benchfix-land` is done.
 
 ## Waiting on the GPU (limit two; inherited arms count)
@@ -16,7 +18,7 @@
 | SCENE-CACHE | F38#12 (5.89) | New. Replaces BELOW6-TONIC-STASH (same switch file; its overlay turns the tonic crate on too). |
 | SCENE-WORKSHOP | F39#13 (6.14) | New. Overlay only over the bench fix. |
 | SCENE-HALLWALLS | F38#28 | New. Replaces THINGS-HALLMOSS, which the GPU held by eye and is now parked (it only reached the pilasters). |
-| THINGS-TELLDUST3 | F38#3, F38#28 | New. Replaces TELLDUST2, dropped at the GPU's by-eye check (beads). |
+| THINGS-TELLDUST3 | F38#3, F38#11 | JUDGED, ships: F38#11 Medium 6.55 to 7.06 (3/3), F38#3 level. Landing branch pushed. |
 
 That is four with SOLENE withdrawn and TONIC-STASH replaced, which is over the limit of two. I am not sending anything further until HALLMOSS and TELLDUST2 are judged. If the coordinator prefers, hold SCENE-WORKSHOP behind SCENE-CACHE.
 
