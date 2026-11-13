@@ -1029,6 +1029,19 @@
           "roughness": 0.88, "specular": 0.25
         }
       }
+    },
+    "below6_stormraven_night": {
+      "_why": "LANE-BELOW6 (13 Nov 2026), F41#13 (GPU High 5.72 level, G-below6-stormraven-masonry 3/3: 'flat, saturated royal-blue bird ... glossy plastic, no feather detail, no rim light, no electric trait' where the board shows a black raven with blue lightning; the eye alone cannot carry it). r3: a near-black feather base from the remake's own albedo (ralph/reports/LANES/BELOW6-STORMRAVEN/make_night_albedo.py: saturation 0.42, value down, feather detail kept; beak, feet and eye keep their colour), the widened lightning glow map with its pupilled eye at 2.4 (3.2 clipped the blue lines to white on CPU), a strong cool rim so the dark body holds its silhouette, and a matte finish. Same species, silhouette and markings; no red. OFF until GPU-judged.",
+      "enabled": true,
+      "_why_on": "13 Nov 2026 (LANE-BELOW6 landing): G-below6-stormraven-r3.md (LANE-SCOUT, tb/item-scout-1108 23aba198), GPU High, F41#13 5.76 -> 6.67 (+0.91, 3/3; per judge 6.56, 6.89, 6.56): a believable black raven with blue-white flecks and short lightning lines; the recorded defect moves from PRESENT to PARTIAL 3/3. Needs Medium before the row can close.",
+      "coats": {
+        "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_Image_0_night.png",
+          "emission": "res://assets/creatures/tetherbound/stormraven/candidate_owner1101/models/creature_stormraven_owner1101_glow_read_r2.png", "emission_energy": 2.4,
+          "rim": 1.0, "rim_tint": 0.55,
+          "roughness": 0.92, "specular": 0.12
+        }
+      }
     }
   }
 }
