@@ -1,6 +1,7 @@
 shader_type spatial;
 render_mode blend_mix, depth_draw_never, diffuse_burley, specular_disabled;
 #include "res://shaders/cloudreach_detail.gdshaderinc"
+global uniform vec4 cloudreach_ground_1112;
 uniform sampler2D soil_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform vec4 soil_tint : source_color=vec4(0.61,0.50,0.37,1.0);
 uniform vec3 patch_centre=vec3(0.0);
@@ -23,12 +24,12 @@ void fragment(){
 	// replacement would paint grass onto cobble and mismatch high battle yards.
 	if(dirt<=0.001){discard;}
 	vec3 soil=texture(soil_tex,world_at.xz*0.48).rgb*soil_tint.rgb;
-	ALBEDO=soil;
+	ALBEDO=soil*mix(vec3(1.0),vec3(0.88,0.82,0.72),cloudreach_ground_1112.x);
 	if (surface_detail_strength > 0.0) {
 		vec3 n = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 		NORMAL = normalize((VIEW_MATRIX * vec4(cloudreach_detail_normal(world_at, n,
 			dot(soil, vec3(0.333333))), 0.0)).xyz);
 	}
 	ALPHA=dirt;
-	ROUGHNESS=0.98;
+	ROUGHNESS=mix(0.98,0.42,cloudreach_ground_1112.x);
 }

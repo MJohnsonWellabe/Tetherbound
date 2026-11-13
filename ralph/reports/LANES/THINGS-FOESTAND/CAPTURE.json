@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-FOESTAND",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; not queued (three arms still waiting). Queue after MEADOWGROUND.",
+ "tool": "F38#3 job.json repro (tools/capture_f38_fight.gd --trainer=south_bridge_grunt ...); one Tidewake and one Stormwood trainer fight as no-loss",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-FOESTAND/overlay_opponent_stand.json"},
+ "rows": {"F38#3": ["job.json frames"], "no-loss": ["F39#7 or F39#19 frames", "F41#3 frames"]}
+}

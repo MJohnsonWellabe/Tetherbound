@@ -1,0 +1,15 @@
+{
+  "lane": "LANE-THINGS",
+  "row": "F38#17",
+  "date": "2026-11-13",
+  "method": "installed-cast recombination, no Meshy, no new mesh: the lanekit_f38_17 copy's source model with a graded copy of its atlas embedded",
+  "source_model": "res://assets/characters/captain_b/captain_b_lod0.glb",
+  "source_model_sha256": "63e3a6d780e5e72e1ed96ebd7f1bfd0fca3e04b0bd3dd0ee2c3ce0a3a861d8df",
+  "atlas_source": "res://assets/characters/captain_b/captain_b_lod0_texture_0_vis1.png",
+  "atlas_source_sha256": "66a78b06023f36bf0e2946289c9c162cf73816c3ce6f315082e2531e30cc6c0c",
+  "grade": "texels with luma above 0.38 keep their hue and move half-way down to 0.38 (new_luma = 0.38 + (luma - 0.38) * 0.5); darker texels unchanged; alpha unchanged (the Captain Marrow recipe, below6_marrow_self_lit_off)",
+  "pale_texel_share": 0.05,
+  "producer": "ralph/reports/LANES/ITEM-F38-17/embed_atlas_glb.py",
+  "output_sha256": "ed1630c69fa8517e2c03b524afb5489968f2445abeebab34b05ae5bdb7e3c82b",
+  "original_untouched": "res://assets/characters/npc_identity/lanekit_f38_17_hald/hald_lod0.glb"
+}

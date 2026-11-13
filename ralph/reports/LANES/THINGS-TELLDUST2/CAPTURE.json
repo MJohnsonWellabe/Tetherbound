@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-TELLDUST2",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High and Medium together, with the F38#38 control",
+ "status": "READY 13 Nov. Not shown on CPU (the wind-up dust does not draw there).",
+ "tool": "tools/capture_f38_fight.gd, Meadows grunt and Warden sets, --attack --dodge --tell-frames, camera-matched pairs",
+ "base": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-TELLDUST/overlay_tell_dust.json (round 1, shipped; or main once tb/things-telldust-land is in)"},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-TELLDUST2/overlay_tell_dust_low.json"},
+ "rows": {"F38#3": "Meadows grunt, especially frame 03 where the band crossed the boar's legs", "F38#28": "Warden 03/05", "F38#11": "no-loss"}
+}

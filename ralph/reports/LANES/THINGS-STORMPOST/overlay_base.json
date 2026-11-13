@@ -1,0 +1,17 @@
+{
+ "data/config/stormheart_presentation.json": {
+  "split_bark_finish": {
+   "aged_heartwood_1112": {
+    "enabled": false
+   }
+  },
+  "built_detail": {
+   "deck_wood_warm_1112": {
+    "enabled": false
+   },
+   "banner_cloth_1112": {
+    "enabled": false
+   }
+  }
+ }
+}

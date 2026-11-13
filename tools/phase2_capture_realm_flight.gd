@@ -32,6 +32,10 @@ func _init() -> void:
 	_run.call_deferred()
 
 
+var _glide_steer := false
+var _glide_steer_frames := 14
+
+
 func _frames(count: int) -> void:
 	for i in count:
 		await physics_frame
@@ -60,6 +64,10 @@ func _run() -> void:
 			_output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg == "--glide-steer":
+			_glide_steer = true
+		elif arg.begins_with("--glide-steer-frames="):
+			_glide_steer_frames = int(arg.trim_prefix("--glide-steer-frames="))
 		elif arg.begins_with("--carrier="):
 			# LANE-THINGS, 12 Nov: every flight capture carried with Galecrest,
 			# so no frame ever showed the starter Galewisp's own carrier.
@@ -179,8 +187,29 @@ func _attempt(xz: Vector2) -> bool:
 	print("FLIGHT STAND index=%d at %s" % [_attempt_index, str(xz)])
 	await _save("launch")
 	await _frames(80)
+	var steer_home: Vector3 = _player.global_position
+	var steer_model: Node3D = _player.get("_model") as Node3D
+	var steer_yaw := steer_model.rotation.y if steer_model != null else 0.0
+	if _glide_steer and bool(_fly.call("is_flying")):
+		# --glide-steer: the default glide frame is a hover with no stick held.
+		# Fly forward, then start a turn, and take the frame mid-turn.
+		_action("move_forward", true)
+		await _frames(50)
+		_action("move_right", true)
+		await _frames(_glide_steer_frames)
 	if bool(_fly.call("is_flying")):
 		await _save("glide")
+	if _glide_steer:
+		_action("move_right", false)
+		_action("move_forward", false)
+		await _frames(30)
+		# Return to the stand and heading the flight started on, so the landed
+		# frame is the row's own side-on bird (G-things-glidebank: the steer
+		# landed it facing away from the lens on both sides).
+		_player.global_position = steer_home
+		_player.velocity = Vector3.ZERO
+		_player.call("_face", Vector3(sin(steer_yaw), 0.0, cos(steer_yaw)), 100.0)
+		await _frames(40)
 	_action("fly_descend", true)
 	for i in 900:
 		if not bool(_fly.call("is_flying")):

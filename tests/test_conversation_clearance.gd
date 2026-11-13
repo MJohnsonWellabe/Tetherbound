@@ -153,3 +153,58 @@ func test_rule_is_scoped_off_stormwood_and_on_elsewhere() -> void:
 	var off := block.duplicate(true)
 	off["enabled"] = false
 	assert_true(RIG.clearance_for_realm({"clearance_1112": off}, "meadows").is_empty())
+
+
+## `creature_cone` (OFF on main): the visible fraction of the speaker joins the
+## trainer score, so a creature over the speaker's body makes the shot not clear.
+func test_creature_cone_ships_off_and_is_inert() -> void:
+	var block := _shipped()
+	assert_false(bool((block.get("creature_cone", {}) as Dictionary).get("enabled", true)), "the creature cone is OFF until judged")
+	var speaker := Vector3(0.0, 1.4, -3.0)
+	var shot := _shot(Vector3(0.0, 1.6, 3.0), speaker)
+	var trainer := Vector3(-1.05, 1.45, 1.2)
+	_rig.set_cone_probe_for_tests(func(_from: Vector3, _to: Vector3) -> bool: return true)
+	assert_eq(_rig._clearance_total(shot, trainer, speaker, block), _rig._clearance_score(shot, trainer, speaker, block),
+		"with the cone off a fully hidden speaker does not change the score")
+
+
+func test_creature_cone_marks_a_covered_speaker_not_clear() -> void:
+	var block := _shipped().duplicate(true)
+	(block["creature_cone"] as Dictionary)["enabled"] = true
+	var speaker := Vector3(0.0, 1.4, -3.0)
+	var shot := _shot(Vector3(0.0, 1.6, 3.0), speaker)
+	var trainer := Vector3(-1.05, 1.45, 1.2)
+	_rig.set_cone_probe_for_tests(func(_from: Vector3, _to: Vector3) -> bool: return false)
+	assert_true(_rig._clearance_total(shot, trainer, speaker, block) >= 0.0, "nothing in the cone: clear")
+	# A creature below the speaker's head: only the head line is clear.
+	_rig.set_cone_probe_for_tests(func(_from: Vector3, to: Vector3) -> bool: return to.y < 1.55)
+	assert_eq(_rig._speaker_visible_fraction(shot, speaker, block["creature_cone"]), 0.2)
+	assert_true(_rig._clearance_total(shot, trainer, speaker, block) < 0.0, "a speaker covered up to the neck is not clear")
+
+
+## `speaker_light_candidate.realm_energy_1112` (OFF on main).
+func test_realm_light_scale_ships_off_and_scales_only_listed_realms_when_on() -> void:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/camera.json"))
+	var light: Dictionary = (parsed.get("conversation", {}) as Dictionary).get("speaker_light_candidate", {})
+	assert_false(bool((light.get("realm_energy_1112", {}) as Dictionary).get("enabled", true)))
+	assert_eq(CONVERSATION.speaker_light_scale(light, "stormwood"), 1.0, "off: no change")
+	var on := light.duplicate(true)
+	(on["realm_energy_1112"] as Dictionary)["enabled"] = true
+	assert_eq(CONVERSATION.speaker_light_scale(on, "stormwood"), 0.4)
+	assert_eq(CONVERSATION.speaker_light_scale(on, "meadows"), 1.0)
+
+
+## `speaker_centre` (OFF on main).
+func test_speaker_centre_ships_off_and_marks_an_edge_speaker_not_clear_when_on() -> void:
+	var block := _shipped()
+	assert_false(bool((block.get("speaker_centre", {}) as Dictionary).get("enabled", true)))
+	var lens := Vector3(0.0, 1.6, 3.0)
+	var aim := Vector3(0.0, 1.4, -3.0)
+	# The trainer is behind the lens; the speaker stands far to the left of the aim.
+	var trainer := Vector3(0.0, 1.45, 5.0)
+	var edge_speaker := Vector3(-2.9, 1.4, -3.0)
+	assert_eq(_rig._clearance_score(_shot(lens, aim), trainer, edge_speaker, block), 1.0, "off: an edge speaker is still clear")
+	var on := block.duplicate(true)
+	(on["speaker_centre"] as Dictionary)["enabled"] = true
+	assert_true(_rig._clearance_score(_shot(lens, aim), trainer, edge_speaker, on) < 0.0, "on: a speaker at the frame edge is not clear")
+	assert_true(_rig._clearance_score(_shot(lens, aim), trainer, aim, on) >= 0.0, "on: a centred speaker is clear")

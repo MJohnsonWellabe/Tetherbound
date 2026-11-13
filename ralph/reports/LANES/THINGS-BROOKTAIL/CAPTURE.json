@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-BROOKTAIL",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; needs one import (two new textures); queue with the Ashtusk pair (close-out: High then Medium)",
+ "tool": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --roles=hit,faint",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-BROOKTAIL/overlay_brooktail_spots.json"},
+ "rows": {"F36#36": ["brooktail"]}
+}

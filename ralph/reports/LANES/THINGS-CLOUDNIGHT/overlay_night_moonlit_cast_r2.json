@@ -1,0 +1,1 @@
+{"data/config/cloudreach_visual.json": {"time_override_arms": {"night_moonlit_cast_1112": {"enabled": true, "overrides": {"night": {"environment": {"ambient_colour": "#5f76c6", "ambient_energy": 2.8, "adjustment_saturation": 0.78}}}}}}}

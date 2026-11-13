@@ -1,0 +1,18 @@
+{
+ "id": "THINGS-STORMRIM",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "QUEUED 12 Nov, ahead of THINGS-STORMRULE (same frames; one session can serve both)",
+ "tool": "phase2_capture_dialogue.gd --biome=stormwood",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-STORMRIM/overlay_player_rim_off.json"},
+ "rows": {
+  "F41#15, F41#7, F41#11, F41#20 (all Stormwood dialogue frames)": [
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue",
+   "stormwood__inventory__character__captain_marrow__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "…all Stormwood dialogue frames as G-things-stormpost"
+  ]
+ }
+}

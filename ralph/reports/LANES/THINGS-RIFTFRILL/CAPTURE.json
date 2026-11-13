@@ -1,0 +1,11 @@
+{
+ "id": "THINGS-RIFTFRILL",
+ "lane": "LANE-THINGS",
+ "branch": "tb/things",
+ "preset": "High",
+ "status": "READY 12 Nov; low priority, capture in the same pose-stage session as the Ashtusk pair and Brooktail",
+ "tool": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context --roles=hit,faint",
+ "base": {"tree": "tb/things", "overlay": null},
+ "arm": {"tree": "tb/things", "overlay": "ralph/reports/LANES/THINGS-RIFTFRILL/overlay_riftfrill_matte.json"},
+ "rows": {"F36#62": ["riftfrill"]}
+}

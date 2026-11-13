@@ -1,0 +1,12 @@
+{
+ "data/config/fly_traversal.json": {
+  "landing_presentation": {
+   "side_m": 2.3
+  },
+  "capabilities": {
+   "galewisp": {
+    "presentation_height_m": 3.4
+   }
+  }
+ }
+}
