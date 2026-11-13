@@ -1,0 +1,30 @@
+[
+ {
+  "label": "G F36#62 riftfrill base-vs-arm",
+  "a": "G-rf_riftfrill_base.png",
+  "b": "G-rf_riftfrill_arm.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: riftfrill - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "glossy dark purple",
+   "back below the trainer's head"
+  ]
+ },
+ {
+  "label": "G F36#87 voltwig High-vs-Medium",
+  "a": "G-rf_voltwig_high.png",
+  "b": "G-rf_voltwig_medium.png",
+  "brief": "One creature on the game's pose stage, whole body beside the 1.80 m trainer (left to right, top to bottom: standing, hit reaction, faint mid, faint end). Catalogue subject: voltwig - hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly. Judge the creature as the game's real look: the poses, silhouette, material, scale against the trainer and fit with the key art's world.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "G F38#38 High-vs-Medium",
+  "a": "G-rf_F38-38_high.png",
+  "b": "G-rf_F38-38_medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Craft and leave button hints are faint gray on the dark translucent craft panel"
+  ]
+ }
+]
