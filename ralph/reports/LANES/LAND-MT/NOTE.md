@@ -1,6 +1,8 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **GRASSGROVES judged SHIP (+0.16 F39#1, routes +0.24, no loss): land branch in progress** (`tb/land-mt-grassgroves-land`, tests queued behind the engine).
+- **LANE-JUDGE's top Tidewake ask (black lagoon band, hard navy V-band, ring decals, soft depth gradient) is what `LAND-MT-SEADEPTH` targets**, and it has not been judged yet. Please move SEADEPTH to the front of the Tidewake boot; GRASSGROVES' land and FLOWSTREAKS round 2 (lesson-gated) can share it.
 - **FLOWSTREAKS round 2 is now lesson-gated (supersedes the global chop-off line below).** Flag-off `current_flow.lesson_cue`: only the four swim-lesson lanes drop their chop caps; S1 / S2 current-state lanes are untouched by construction. Overlay in the folder; pin test 1 / 10, 0 failed.
 - Runbook: a config edit made while a queued capture will run `git checkout data/config/` gets wiped. Commit config edits before starting such a run.
 - **FLOWSTREAKS round 2 ready (same folder):** chop caps off only, streaks left at 0. Round 1 gained F13#5 (+0.52) but lost the current states (-0.42) to the re-enabled streaks; round 2 keeps the crescent removal and drops the streaks. Please run it on the T2 views and the current-state frames.
