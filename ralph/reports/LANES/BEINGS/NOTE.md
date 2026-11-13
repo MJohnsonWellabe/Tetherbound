@@ -1,5 +1,11 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO THE COORDINATOR (13 Nov, about 21:45 UTC), newest first
+- main (#956) merged into `tb/beings`; MONITOR-VALUE's base now carries the limb-sink fix.
+- **New, CPU-ready, NOT queued: BEINGS-FLY-SHOULDER** (F38#8, 6.21), as you set. The carrier's feet were aligned to the trainer's wrists every frame, so the bird stood on the raised hands; with the flag on, the talons hold the shoulders and the hands hold the bird's legs. Small code change (trainer model plus the shared carrier alignment, so remote carriers match), flag-off, overlay.
+- **CPU-ready, not queued, my order:** STORMRAVEN-ARCS, FLY-SHOULDER, TRAILPUP-AMBER.
+- Next: the face-identity pairs (Sera/Maren, Nysa/Varga, Mira/Tam). I will check what the cast textures allow before building anything.
+
 ## TO THE COORDINATOR (13 Nov, about 21:15 UTC), newest first
 - **LANDING READY: `tb/beings-storm-land` b74526eb** (from main b8622117): STATICUB-FUR and UNIFORM-CLOTH, all three flags ON with `_why_on`, pins updated, READY in `BEINGS-STORM-LAND/READY.md`. 110 related tests, 0 failed.
   - **Read this:** with the cloth floor ON, Captain Marrow's emission floor went from 0 back to 0.04 (his landed white-head fix). The cloth floor now only lowers a floor (`minf`), so every judged uniform still gets 0.04 and Marrow keeps 0. One line in `stormwood_character_presentation.gd`, pinned.

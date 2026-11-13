@@ -1287,14 +1287,22 @@ static func align_carrier_grip(visual: Node3D, rig: Skeleton3D, model: Node,
 	var trainer: Skeleton3D = model.call("skeleton")
 	if trainer == null:
 		return
+	# The model names its own grip points (wrists, or shoulders under the
+	# flag-off shoulder grip); a model without the method keeps the wrists.
+	var points: Array = model.call("fly_grip_world_points") if model.has_method("fly_grip_world_points") else []
 	var hands := Vector3.ZERO
 	var feet := Vector3.ZERO
 	for i in 2:
-		var hand := trainer.find_bone("LeftHand" if i == 0 else "RightHand")
 		var foot := rig.find_bone(str(grip_bones[i]))
-		if hand < 0 or foot < 0:
+		if foot < 0:
 			return
-		hands += trainer.to_global(trainer.get_bone_global_pose(hand).origin) * 0.5
+		if points.size() == 2:
+			hands += (points[i] as Vector3) * 0.5
+		else:
+			var hand := trainer.find_bone("LeftHand" if i == 0 else "RightHand")
+			if hand < 0:
+				return
+			hands += trainer.to_global(trainer.get_bone_global_pose(hand).origin) * 0.5
 		feet += rig.to_global(rig.get_bone_global_pose(foot).origin) * 0.5
 	visual.global_position += hands - feet
 
