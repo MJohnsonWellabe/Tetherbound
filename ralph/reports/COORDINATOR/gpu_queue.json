@@ -4785,7 +4785,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-AQUARYN-RIDE/overlay.json (deep_swim_1113 ON: ridden Aquaryn sinks 1.6 m, rider waist-deep), High, phase2_capture_tidewake_mounted_swim.gd --seed=2042 frames 03-05. Frame 04's side view is not stable between runs; if base and arm face different ways, note it for the judges. By-eye: mount legs and belly under the surface, rider's head and chest above.",
    "added": "13 Nov 05:36",
-   "status": "SHIP 13 Nov (LANE-JUDGE 83d0819fd): F39#8 5.97 -> 6.32 (+0.35, 3/3). LANE-BEINGS to land."
+   "status": "SHIP; landing in #956 (tb/beings-poses-land on main b8622117c)."
   },
   {
    "id": "below6-wall-band",
@@ -5227,7 +5227,7 @@
    "ask": "Overlay-only, rides in the beings pose batch as a 4th item (same tree; d2bf0aa13 adds only notes and this overlay over 9ae4ea989). Base vs + ralph/reports/LANES/BEINGS-WMONITOR-GROUND/overlay.json (creature_pose_settle faint per_species water_mangrove_monitor crumple.limb_sink_frac 0.5). CAPTURE.json for frames. By eye on water_mangrove_monitor-faint-050: feet touch the floor and the shadow meets the body; faint-100 same as base. High, then Medium if mapped >= 7.5 (close candidate).",
    "added": "13 Nov 19:25",
    "priority": "near-bar closer; with the pose batch",
-   "status": "SHIP; landing in #955."
+   "status": "SHIP; landing in #956 (tb/beings-poses-land on main b8622117c)."
   },
   {
    "id": "land-mt-duskridge",
@@ -5271,6 +5271,22 @@
    "ask": "Base tb/scene head no overlay vs + ralph/reports/LANES/SCENE-ROSTERNAMES/overlay.json (combat_roster_visual.json compact_names_1113: compact fight roster rows keep each creature's name; rows 232 -> 348 px). phase2_capture_fights.gd Venn fight, frames t-000.00, tell-start-000.57, t-003.02, High AND Medium, F38#38 control (confirming batch, so the row can close). By eye at t-003.02: each of the five roster rows shows the creature's name between portrait and health bar; the wider strip covers no fighter.",
    "added": "13 Nov 19:40",
    "priority": "near-bar closer"
+  },
+  {
+   "id": "places-rescore-d-1113",
+   "branch": "main",
+   "commit": "b8622117c",
+   "rows": [
+    "F40#0/#19/#21 (5.98, predates #939/#941)",
+    "F39#21",
+    "F40#1 (5.90)",
+    "F13#5 (6.28)",
+    "F38#1 (6.58)",
+    "F38#0 (6.60, largest, last)"
+   ],
+   "ask": "One-sided re-score captures on main per ralph/reports/LANES/PLACES-RESCORE/CAPTURE-D-1113.json on tb/places 084cdbcc0. Frames go to tb/gpu-frames-1113; LANE-PLACES judges them (it is the re-scoring lane). Fit into main boots already running.",
+   "added": "13 Nov 20:10",
+   "priority": "re-score: refreshes stale board numbers"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

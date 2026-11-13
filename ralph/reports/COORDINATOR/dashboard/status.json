@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 19:58 UTC",
+ "updated": "13 Nov 2026 20:10 UTC",
  "headline": "13 Nov 19:58: #954 landed three GPU-judged ships (overlook join + solid, coherent wind-up dust). #955 (F36#92 water monitor faint) in CI. GPU judging flowing: 8 re-scores and 6 arm verdicts today; near-bar closers queued: F39#19 roster names, HALLWALLS r2. F38#10 not closed (7.39, strict panel).",
  "batches": [
   {
@@ -2705,8 +2705,8 @@
    "src": "G-dialogue-recapture-tidewake-cloudreach (LANE-SCOUT b09a7923a), main 8df122a83, blend 1.000, GPU High, one-sided: new dialogue baseline; G-things-convclear-other-biomes (52ea1568d): Tidewake and Cloudreach level with the clearance rule; Stormwood held out (Sera regression) | G-things-convtight (13 Nov, GPU High, tb/item-scout-1108 b4ff847a2): conversation camera 3.5->2.9 m, fov 40->36 SHIPS, no set loses: batch 6.61->6.92; landing via tb/things-convtight-land"
   },
   "F40#11": {
-   "gpu": 6.97,
-   "src": "G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88): soft lit cloud sea, 6.17 -> 6.97 (3/3); landed #906 (with #904's cumulus cards). Near-bar: card colour fix next."
+   "gpu": 6.52,
+   "src": "G-newapproach-cloud-sea-only (tb/item-scout-1108 0d66a3a88): soft lit cloud sea, 6.17 -> 6.97 (3/3); landed #906 (with #904's cumulus cards). Near-bar: card colour fix next. | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.97 -> 6.52"
   },
   "F40#12": {
    "gpu": 7.25,
@@ -2717,36 +2717,36 @@
    "src": "G-things-toys-ui High 7.62 and G-f40-13-catch-card-medium (LANE-SCOUT 6dfe45f55) Medium 7.76: CLOSED (landed #914)"
   },
   "F40#14": {
-   "gpu": 6.99,
-   "src": "GPU High 8-9 Nov (A)"
+   "gpu": 7.21,
+   "src": "GPU High 8-9 Nov (A) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.99 -> 7.21"
   },
   "F40#15": {
    "gpu": 5.6,
    "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 5.89 (was 6.08) | G-below6-knifeedge base (current main): 5.77; strips FIXED 3/3 on main already; now held by the flat wall slab (masonry arm queued) | ARM masonry G-below6-stormraven-masonry (832aaa06a): 5.17 -> 5.54 (3/3), landing #936; pooled current-main about 5.47 | FIX overlook pane G-below6-overlook-pane (66760567b, 13 Nov): overlook routes 4.92 -> 5.87 (3/3), edge and vista +0.38 (3/3); landing #939 after #938 | ARM overlook stone (575ffd7f6, 13 Nov): -0.58 (0/3), not shipped; strip defect PRESENT at the overlook vista (3/3), ghost planes in walk_02 (3/3): bugs to LANE-BELOW6 | G-below6-overlook-solid SHIP 5.60 (+1.37 on walk_02/03, ghost glass gone; dark slab strips PARTIAL); overlook-join SHIP +0.42 (seam gone) (LANE-JUDGE tb/judge ae67d0a5e, frames tb/gpu-frames-1113, 13 Nov)"
   },
   "F40#16": {
-   "gpu": 6.19,
-   "src": "GPU High 8-9 Nov (F-cloudreach) | ARM BELOW6-MUSHROOMS pickups (bc115978b): 6.43 -> 6.34 (1/3), Meadows finds -0.74 (0/3); not shipped (finds read as smudges or herbs)"
+   "gpu": 6.93,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | ARM BELOW6-MUSHROOMS pickups (bc115978b): 6.43 -> 6.34 (1/3), Meadows finds -0.74 (0/3); not shipped (finds read as smudges or herbs) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.19 -> 6.93"
   },
   "F40#17": {
    "gpu": 6.18,
    "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08) | ARM BELOW6-MUSHROOMS rim part G-below6-mushrooms (bc115978b, 12 Nov): 6.01 -> 6.94 (3/3, FIXED 3/3), ships as its own part; landing to come"
   },
   "F40#18": {
-   "gpu": 7.1,
-   "src": "GPU High 8-9 Nov (F-cloudreach)"
+   "gpu": 7.49,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 7.1 -> 7.49"
   },
   "F40#2": {
-   "gpu": 6.15,
-   "src": "GPU High 8-9 Nov (F-cloudreach)"
+   "gpu": 6.93,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.15 -> 6.93"
   },
   "F40#3": {
    "gpu": 6.33,
    "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art; G-below6-f40-3-landmarks (LANE-SCOUT cb3ff531d): re-baselined on new stands 6.00 -> 6.33 (2/3), ships; LANDED #919; LANDED #919"
   },
   "F40#4": {
-   "gpu": 6.12,
-   "src": "GPU High 8-9 Nov (F-cloudreach)"
+   "gpu": 6.47,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.12 -> 6.47"
   },
   "F40#5": {
    "gpu": 7.06,
@@ -2757,8 +2757,8 @@
    "src": "G-newapproach-cloud-sea-only: soft lit cloud sea, 5.61 -> 6.33 (3/3); landed #906. Remaining defect: mount upright over open cloud (refuse_drop, owner decision)."
   },
   "F40#7": {
-   "gpu": 6.26,
-   "src": "GPU High 8-9 Nov (F-cloudreach)"
+   "gpu": 6.8,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.26 -> 6.8"
   },
   "F40#8": {
    "gpu": 6.77,
