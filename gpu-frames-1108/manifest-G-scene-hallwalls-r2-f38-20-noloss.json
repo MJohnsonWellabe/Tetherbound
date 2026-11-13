@@ -1,0 +1,60 @@
+[
+ {
+  "row": "F38#20",
+  "item": "P2-003",
+  "frame": "meadows__landmark__stronghold__day__approach",
+  "arm": "base",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=meadows",
+   "--subset=meadows__landmark__stronghold",
+   "--times=day",
+   "--views=approach",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "SCENE-HALLWALLS r2 no-loss: F38#20 (closed at 7.50) stronghold day approach, base vs arm; must be identical outside.",
+  "match": "exact",
+  "path": "G-scene-hallwalls-r2-f38-20-noloss/F38-20/base/High/meadows__landmark__stronghold__day__approach.jpg",
+  "sky_fraction": 0.006,
+  "lower_edges": 0.338
+ },
+ {
+  "row": "F38#20",
+  "item": "P2-003",
+  "frame": "meadows__landmark__stronghold__day__approach",
+  "arm": "arm",
+  "tree": "c673d528525f0de77fe8d7e8380d900b96c90e8e",
+  "preset": "High",
+  "tool": "tools/phase2_capture_locations.gd",
+  "args": [
+   "--rendering-driver",
+   "opengl3",
+   "--resolution",
+   "1920x1080",
+   "--script",
+   "tools/phase2_capture_locations.gd",
+   "--",
+   "--biome=meadows",
+   "--subset=meadows__landmark__stronghold",
+   "--times=day",
+   "--views=approach",
+   "--seed=2042",
+   "--output={OUT}"
+  ],
+  "note": "SCENE-HALLWALLS r2 no-loss: F38#20 (closed at 7.50) stronghold day approach, base vs arm; must be identical outside.",
+  "match": "exact",
+  "path": "G-scene-hallwalls-r2-f38-20-noloss/F38-20/arm/High/meadows__landmark__stronghold__day__approach.jpg",
+  "sky_fraction": 0.006,
+  "lower_edges": 0.339
+ }
+]
