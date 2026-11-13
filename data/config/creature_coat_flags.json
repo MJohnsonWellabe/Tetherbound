@@ -1055,6 +1055,18 @@
         }
       }
     },
+    "below6_fulgocobra_olive_veins": {
+      "_why": "LANE-BELOW6 (13 Nov 2026), F36#46 / F41#13 Fulgocobra (G-below6-stormraven-r3 3/3: the board shows olive-black scales with glowing gold vein lines; in game it is navy with painted gold bands that 'read as decorative stripes', and the copper throat plates look bolted-on). Derived from the live coat (ralph/reports/LANES/BELOW6-FULGOCOBRA/make_olive_veins.py): dark scales to olive, each gold band reduced to its centre line as a lit vein, copper to dark bronze, cyan arcs and eye to gold so the snake has one element colour. Same species, silhouette and scale pattern; no red. OFF until GPU-judged.",
+      "enabled": false,
+      "coats": {
+        "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0.jpg": {
+          "albedo": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_Image_0_olive.png",
+          "emission": "res://assets/creatures/tetherbound/fulgocobra/candidate_owner1101/models/creature_fulgocobra_owner1101_glow_vein_r1.png", "emission_energy": 2.2,
+          "rim": 0.9, "rim_tint": 0.45,
+          "roughness": 0.78, "specular": 0.25
+        }
+      }
+    },
     "below6_floor_fulgocobra": {
       "_why": "LANE-BELOW6 (11 Nov 2026), F36#46 Fulgocobra 5.87 (GPU G-things-faint base: the near-black body sinks into the stage; the copper-brown neck plates sit near the reserved red). Graded from the face coat that ships: blacks lift to blue-charcoal with their scale detail and the copper plates move to the gold of the body bands. Keeps lanekit_face_read_fulgocobra's rim, gold-vein glow and matte values, and supersedes it when on. Script tools/art_pipeline/grade_remakes_floor.py fulgocobra. The raised hood in the faint is LANE-THINGS'. OFF until GPU-judged.",
       "enabled": false,
