@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 22:05 UTC",
+ "updated": "13 Nov 2026 22:35 UTC",
  "headline": "13 Nov 21:48: four landings this evening (#954 overlook + dust, #956 monitor + Aquaryn, #957 Staticub fur + uniform cloth). Staticub stage 8.08 High: close batch queued. New regressions found by re-scores: F39#21 Venn win camera (5.84, LANE-SCENE), F13#5 swim cue (5.38, LANE-LAND-MT).",
  "batches": [
   {
@@ -2906,8 +2906,8 @@
    "src": "G-floor2-dawn-haze-storm-grade (tb/item-scout-1108 5d0858f3b): row 6.12 -> 6.70 (3/3), rain FIXED; dawn band still present 2/3; landed #902"
   },
   "F39#31": {
-   "gpu": 6.02,
-   "src": "G-floor2-dawn-haze-storm-grade: Veilfall rain views 5.56 -> 6.02 (3/3); landed #902. Judges want new art (cliffs, mist at the fall, terraces)."
+   "gpu": 5.93,
+   "src": "G-floor2-dawn-haze-storm-grade: Veilfall rain views 5.56 -> 6.02 (3/3); landed #902. Judges want new art (cliffs, mist at the fall, terraces). | G-rescore-f39-31-clear-day-pre958 (LANE-JUDGE 33302ce5d, 13 Nov): first clear-day baseline 5.93 High, pre-#958; blocky tiled fall, faceted rock, no base mist, no plunge pool"
   },
   "F36#68": {
    "gpu": 7.47,

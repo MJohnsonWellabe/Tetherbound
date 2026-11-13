@@ -5455,6 +5455,20 @@
    "ask": "Base vs + ralph/reports/LANES/BEINGS-TAM-COAT/overlay.json (Tam's coat slate blue with matching plate; Mira and Oskar unchanged; presented gender unchanged; needs the charfix in the tree, which 3780de10a has). Per its CAPTURE.json (tournament_semi_tam dialogue and the F38#16 set), High; Medium too if High maps near 7.5. By eye: Tam in a slate-blue coat, Mira unchanged.",
    "added": "13 Nov 22:10",
    "priority": "near-bar; in the beings boot (use 3780de10a as the single tb/beings import if not yet imported)"
+  },
+  {
+   "id": "land-mt-grassgroves",
+   "branch": "tb/land-mt",
+   "commit": "6c710c034",
+   "rows": [
+    "F39#19 (sand half, 6.92)",
+    "F39#1 (6.14)",
+    "F39#15 (6.14)",
+    "F39#27 (6.16)"
+   ],
+   "ask": "Round 2: base vs + ralph/reports/LANES/LAND-MT-GRASSGROVES/overlay.json (overlays the look profile's dune_grass_candidate: denser grass in fewer clumps with wider bare sand). In the Tidewake routes boot with SEADEPTH and SHOREZONES (stacks), plus the Venn fight t-000 (warm-up, pooled bases) for F39#19. High. By eye: grass in distinct clumps with bare sand between at First Shore and the Venn arena.",
+   "added": "13 Nov 22:35",
+   "priority": "in the Tidewake boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
