@@ -1,5 +1,5 @@
 {
- "updated": "14 Nov 2026 01:10 UTC",
+ "updated": "14 Nov 2026 01:18 UTC",
  "headline": "13 Nov 23:57: seven PRs landed this evening (#954, #956, #957, #958, #959, #960) and the first close (Staticub roster row). FLOWSTREAKS r2 ships (F13#5 5.70 -> 6.55), landing next. Tried-and-failed tab live.",
  "batches": [
   {
@@ -2550,7 +2550,7 @@
   },
   "F38#30": {
    "gpu": 6.48,
-   "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905 | G-things-redleaf (13 Nov): main after #930 4.99 (hillside slab PRESENT 3/3, new art) | G-land-mt-brokenhill SHIP 5.06 -> 6.48 (+1.42, 3/3): slab wall to rock outcrops (LANE-JUDGE tb/judge 292317634, 13 Nov)"
+   "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905 | G-things-redleaf (13 Nov): main after #930 4.99 (hillside slab PRESENT 3/3, new art) | G-land-mt-brokenhill SHIP 5.06 -> 6.48 (+1.42, 3/3): slab wall to rock outcrops (LANE-JUDGE tb/judge 292317634, 13 Nov) | G-land-mt-shellshards-ss SHIP 5.44 -> 5.98 (+0.54, 3/3) on this panel (on top of BROKENHILL): floating shards and backface slivers gone; warrens other +0.59; F38#24 +0.28 (LANE-JUDGE 4db78c054, 14 Nov)"
   },
   "F38#31": {
    "gpu": 7.2,

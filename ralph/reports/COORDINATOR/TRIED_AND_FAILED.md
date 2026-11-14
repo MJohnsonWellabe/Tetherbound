@@ -8,7 +8,7 @@ coordinator's GPU queue and every lane NOTE.md / ARM.md on main and the live lan
 is closed: do not retry it without a new cause or a new idea, and say in the ARM.md what
 is new. `held` means the arm exists and is waiting on a named fix.
 
-224 entries across 83 rows.
+226 entries across 83 rows.
 
 ## F13#5
 - **parked** · G-land-mt-flowstreaks: DO NOT SHIP: current states LOSE 6.08 → 5.66 (−0.42, 0/3); the arm's live streaks read as parallel guide lanes (F39#16 defect PARTIAL → PRESENT 3/3). F13#5 swim views 5.52 → 6.04 (+0.52, 3/3; crescents PRESENT → PARTIAL). Fit r 0.875, RMSE 0.67. Next: gate the streaks to the swim cue, and anchor a wake to the swimmer _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -141,6 +141,8 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · SCENE: New ARM SCENE-CURB (F38#28)**, the new approach after HALLWALLS parked. A low stone curb with a brass inlay replaces the glowing teal ring, in the Warden arena only. Same radius and rules. CPU (brightened) shows it reading as an authored edge. Files: `ralph/reports/LANES/SCENE-CURB/`. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 
 ## F38#30
+- **parked** · G-land-mt-plume: DO NOT SHIP: warrens other LOSE 5.94 → 5.76 (−0.18, 0/3); F38#30 level (+0.04, 1/3). The wide plume reads as a blurry flat card over the cave mouth. Next: one continuous tapered plume (fix the gap in the thin column) that drifts off the entrance _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
+- **parked** · land-mt-plume: DO NOT SHIP 14 Nov: warrens other -0.18 (0/3); wide plume reads as a blurry flat card. Next: one continuous tapered plume. _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · LAND-MT: Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F38#33

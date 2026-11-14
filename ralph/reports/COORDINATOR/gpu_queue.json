@@ -5638,7 +5638,8 @@
    ],
    "ask": "Base vs + ralph/reports/LANES/LAND-MT-SHELLSHARDS/overlay.json (island_strip: drops 276 detached islands off the Meshy mound and fan-fills its open loops, so no sky windows or floating crest shards). Warrens set (route_day, walk_01-03, vista_dusk), High. By eye at walk_02: no sky window or black triangle at the top of frame.",
    "added": "14 Nov 00:50",
-   "priority": "Meadows boot"
+   "priority": "Meadows boot",
+   "status": "SHIP 14 Nov: F38#30 +0.54, warrens other +0.59, F38#24 +0.28 (all 3/3). LANE-LAND-MT to land."
   },
   {
    "id": "land-mt-plume",
@@ -5648,7 +5649,8 @@
     "F38#30 (smoke pillar)"
    ],
    "ask": "Second arm on the same Warrens base: SHELLSHARDS + PLUME overlays vs SHELLSHARDS alone (soft Warrens signal plume: wider foot and crown, thinner discs, more top fade, downwind lean).",
-   "added": "14 Nov 00:50"
+   "added": "14 Nov 00:50",
+   "status": "DO NOT SHIP 14 Nov: warrens other -0.18 (0/3); wide plume reads as a blurry flat card. Next: one continuous tapered plume."
   },
   {
    "id": "land-mt-seadepth-r3",

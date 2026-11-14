@@ -1,5 +1,5 @@
 {
- "entries": 224,
+ "entries": 226,
  "rows": {
   "F13#5": [
    {
@@ -813,6 +813,24 @@
    }
   ],
   "F38#30": [
+   {
+    "rows": [
+     "F38#30"
+    ],
+    "approach": "G-land-mt-plume",
+    "result": "DO NOT SHIP: warrens other LOSE 5.94 → 5.76 (−0.18, 0/3); F38#30 level (+0.04, 1/3). The wide plume reads as a blurry flat card over the cave mouth. Next: one continuous tapered plume (fix the gap in the thin column) that drifts off the entrance",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#30"
+    ],
+    "approach": "land-mt-plume",
+    "result": "DO NOT SHIP 14 Nov: warrens other -0.18 (0/3); wide plume reads as a blurry flat card. Next: one continuous tapered plume.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
    {
     "rows": [
      "F38#30",
