@@ -1,7 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## forest_layers_1113 (LANE-LAND-CS): OFF until judged. On, it patches the
-## Stormwood forest layers by name; the arm drops the wet_soil discs.
+## forest_layers_1113 (LANE-LAND-CS): ships ON (GPU High, 14 Nov 2026,
+## G-land-cs-soiloff: F41#22 5.33 -> 6.03, F41#24 5.29 -> 6.23, both 3/3). It
+## patches the Stormwood forest layers by name and drops the wet_soil discs.
 
 const COVER := preload("res://scripts/world/stormwood_ground_cover.gd")
 
@@ -17,9 +18,18 @@ func _names(layers: Array[Dictionary]) -> Array:
 	return out
 
 
+func test_ships_on_with_its_verdict() -> void:
+	var finish := _finish()
+	var flag: Dictionary = finish.forest_layers_1113
+	assert_true(bool(flag.get("enabled", false)), "forest_layers_1113 ships ON")
+	assert_true(str(flag.get("_why_on", "")).contains("G-land-cs-soiloff.md"), "ON cites its GPU verdict")
+	assert_true(str(flag.get("_why_on", "")).contains("5.33 -> 6.03"), "and its judged score")
+	assert_eq(_names(COVER.forest_layers(finish)), ["canopy_understory"], "the wet-soil discs are not built")
+
+
 func test_off_keeps_the_shipped_layers() -> void:
 	var finish := _finish()
-	assert_false(bool(finish.forest_layers_1113.get("enabled", true)), "forest_layers_1113 ships OFF until judged")
+	finish.forest_layers_1113.enabled = false
 	var layers := COVER.forest_layers(finish)
 	assert_eq(_names(layers), ["wet_soil", "canopy_understory"], "OFF keeps both layers in order")
 	for index in layers.size():
