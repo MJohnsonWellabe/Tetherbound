@@ -1,5 +1,5 @@
 {
- "updated": "13 Nov 2026 23:57 UTC",
+ "updated": "14 Nov 2026 00:12 UTC",
  "headline": "13 Nov 23:57: seven PRs landed this evening (#954, #956, #957, #958, #959, #960) and the first close (Staticub roster row). FLOWSTREAKS r2 ships (F13#5 5.70 -> 6.55), landing next. Tried-and-failed tab live.",
  "batches": [
   {
@@ -2754,8 +2754,8 @@
    "src": "GPU High 8-9 Nov (F-cloudreach) | ARM BELOW6-MUSHROOMS pickups (bc115978b): 6.43 -> 6.34 (1/3), Meadows finds -0.74 (0/3); not shipped (finds read as smudges or herbs) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.19 -> 6.93"
   },
   "F40#17": {
-   "gpu": 5.61,
-   "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08) | ARM BELOW6-MUSHROOMS rim part G-below6-mushrooms (bc115978b, 12 Nov): 6.01 -> 6.94 (3/3, FIXED 3/3), ships as its own part; landing to come | 6.18 -> 5.61: toy-like glow mushrooms, night grade off-palette navy (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6)"
+   "gpu": 6.61,
+   "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08) | ARM BELOW6-MUSHROOMS rim part G-below6-mushrooms (bc115978b, 12 Nov): 6.01 -> 6.94 (3/3, FIXED 3/3), ships as its own part; landing to come | 6.18 -> 5.61: toy-like glow mushrooms, night grade off-palette navy (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6) | G-land-cs-rimglow SHIP 6.03 -> 6.61 (+0.58, 3/3): milky halo balls gone (LANE-JUDGE 99819fd24, 14 Nov)"
   },
   "F40#18": {
    "gpu": 7.49,
