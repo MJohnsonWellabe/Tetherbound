@@ -1,0 +1,24 @@
+[
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+  "path": "G-lcs-wallband-bridge/base-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.19,
+  "lower_edges": 0.1919,
+  "script_errors": 0,
+  "note": "LAND-CS wall-band no-loss (F40#8 Three Bells bridge close, day), High. tb/land-cs 91ac0d6a1 (imported) base no overlay vs LAND-CS wall_top_band overlay. Eye check: camera/sky/grass identical; arm turns the right-hand cliff and the bridge-head wall from brown to mottled pale grey with brown patches (visible change; judge for loss). 'axis must be normalized' errors on both sides (not arm-caused)."
+ },
+ {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "preset": "wallband-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_cloudreach_gaps.gd",
+  "path": "G-lcs-wallband-bridge/wallband-High/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.1864,
+  "script_errors": 0,
+  "note": "LAND-CS wall-band no-loss (F40#8 Three Bells bridge close, day), High. tb/land-cs 91ac0d6a1 (imported) base no overlay vs LAND-CS wall_top_band overlay. Eye check: camera/sky/grass identical; arm turns the right-hand cliff and the bridge-head wall from brown to mottled pale grey with brown patches (visible change; judge for loss). 'axis must be normalized' errors on both sides (not arm-caused)."
+ }
+]
