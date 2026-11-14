@@ -16,6 +16,17 @@
 - **Effect on this verdict: none.** Every frame judged here was captured on both sides: Warrens walk_02, walk_03, route_day, walk_01 and vista_dusk, and stronghold route_day. F38#24's job frames are exactly Warrens walk_02, walk_03 and stronghold route_day.
 - **The missing stronghold views:** they were not part of any judged set, so nothing needs re-judging. If the queued retry lands, those views can be checked as extra no-loss.
 
+## Addendum (14 Nov): stronghold no-loss from the retry run
+- **The run:** G-land-mt-shellshards-retry (07806bb97) re-ran the full arm side, all 10 frames.
+- **What was judged:** the four stronghold views the crash had missed (walk_01, walk_02, walk_03, vista_dusk, as a 2x2), against base.
+- **Result: level.** 6.77 = 6.77, with three ties (raw 6.0/6.0, 6.3/6.3, 6.3/6.3). Fit r 0.951, RMSE 0.43. Yardstick: `yardstick_g_land_mt_shellshards_retry/`.
+- **Confound:** the retry spawned turtles and grey foxes where base had badgers and tan foxes. The judges were told creatures are not the subject, and all three call the subject identical.
+- **What the judges see on both sides (3/3):**
+  - The stronghold is "a small toy Gothic block" rather than the key art's ivy-hung hall.
+  - The mountain backdrop is flat blue cards.
+  - The approach route is a faint worn strip with no staging.
+- **Effect:** the SHIP stands with no loss anywhere.
+
 ## What the judges see (3/3)
 - **Base:** "many floating pale-blue and white triangular shards and leaf cards across the hillside", reading as "sky-coloured holes or exposed backfaces", "a strong artefact".
 - **Arm:** "much cleaner, with only a few dark flecks".
