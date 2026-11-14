@@ -1,0 +1,79 @@
+[
+ {
+  "frame": "cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "dbbfc7842a22fd0c880f3f7d3e08ec077e8db9a0",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-lcs-archstand/arm-High/cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach.jpg",
+  "sky_fraction": 0.134,
+  "lower_edges": 0.1382,
+  "script_errors": 0,
+  "note": "LAND-CS-ARCHSTAND (F40#3, 6.33), High, day approach. tb/land-cs dbbfc7842 (= main 94fe423d3 + flag-off code, imported) base no overlay vs capture_stands.json candidates_1113 ON. F40#3's three landmark frames paired; arm also has cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach (no stand on base, so the base survey reads 3/4 and exits 1, which is expected). Eye check: arch frame, base shows two wall faces; arm frames the whole arch (span and both legs) behind the trainer. Observatory and beacon unchanged (mean diff 2.85 / 5.1). Causeway band frame is near the same arch view. No script errors."
+ },
+ {
+  "frame": "cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "dbbfc7842a22fd0c880f3f7d3e08ec077e8db9a0",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-lcs-archstand/arm-High/cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "sky_fraction": 0.135,
+  "lower_edges": 0.1431,
+  "script_errors": 0,
+  "note": "LAND-CS-ARCHSTAND (F40#3, 6.33), High, day approach. tb/land-cs dbbfc7842 (= main 94fe423d3 + flag-off code, imported) base no overlay vs capture_stands.json candidates_1113 ON. F40#3's three landmark frames paired; arm also has cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach (no stand on base, so the base survey reads 3/4 and exits 1, which is expected). Eye check: arch frame, base shows two wall faces; arm frames the whole arch (span and both legs) behind the trainer. Observatory and beacon unchanged (mean diff 2.85 / 5.1). Causeway band frame is near the same arch view. No script errors."
+ },
+ {
+  "frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "dbbfc7842a22fd0c880f3f7d3e08ec077e8db9a0",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-lcs-archstand/arm-High/cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "sky_fraction": 0.177,
+  "lower_edges": 0.0324,
+  "script_errors": 0,
+  "note": "LAND-CS-ARCHSTAND (F40#3, 6.33), High, day approach. tb/land-cs dbbfc7842 (= main 94fe423d3 + flag-off code, imported) base no overlay vs capture_stands.json candidates_1113 ON. F40#3's three landmark frames paired; arm also has cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach (no stand on base, so the base survey reads 3/4 and exits 1, which is expected). Eye check: arch frame, base shows two wall faces; arm frames the whole arch (span and both legs) behind the trainer. Observatory and beacon unchanged (mean diff 2.85 / 5.1). Causeway band frame is near the same arch view. No script errors."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "preset": "arm-High",
+  "tree": "dbbfc7842a22fd0c880f3f7d3e08ec077e8db9a0",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-lcs-archstand/arm-High/cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "sky_fraction": 0.11,
+  "lower_edges": 0.1502,
+  "script_errors": 0,
+  "note": "LAND-CS-ARCHSTAND (F40#3, 6.33), High, day approach. tb/land-cs dbbfc7842 (= main 94fe423d3 + flag-off code, imported) base no overlay vs capture_stands.json candidates_1113 ON. F40#3's three landmark frames paired; arm also has cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach (no stand on base, so the base survey reads 3/4 and exits 1, which is expected). Eye check: arch frame, base shows two wall faces; arm frames the whole arch (span and both legs) behind the trainer. Observatory and beacon unchanged (mean diff 2.85 / 5.1). Causeway band frame is near the same arch view. No script errors."
+ },
+ {
+  "frame": "cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "dbbfc7842a22fd0c880f3f7d3e08ec077e8db9a0",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-lcs-archstand/base-High/cloudreach__landmark__broken_skyroad_arch__day__approach.jpg",
+  "sky_fraction": 0.123,
+  "lower_edges": 0.404,
+  "script_errors": 0,
+  "note": "LAND-CS-ARCHSTAND (F40#3, 6.33), High, day approach. tb/land-cs dbbfc7842 (= main 94fe423d3 + flag-off code, imported) base no overlay vs capture_stands.json candidates_1113 ON. F40#3's three landmark frames paired; arm also has cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach (no stand on base, so the base survey reads 3/4 and exits 1, which is expected). Eye check: arch frame, base shows two wall faces; arm frames the whole arch (span and both legs) behind the trainer. Observatory and beacon unchanged (mean diff 2.85 / 5.1). Causeway band frame is near the same arch view. No script errors."
+ },
+ {
+  "frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "dbbfc7842a22fd0c880f3f7d3e08ec077e8db9a0",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-lcs-archstand/base-High/cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach.jpg",
+  "sky_fraction": 0.178,
+  "lower_edges": 0.0328,
+  "script_errors": 0,
+  "note": "LAND-CS-ARCHSTAND (F40#3, 6.33), High, day approach. tb/land-cs dbbfc7842 (= main 94fe423d3 + flag-off code, imported) base no overlay vs capture_stands.json candidates_1113 ON. F40#3's three landmark frames paired; arm also has cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach (no stand on base, so the base survey reads 3/4 and exits 1, which is expected). Eye check: arch frame, base shows two wall faces; arm frames the whole arch (span and both legs) behind the trainer. Observatory and beacon unchanged (mean diff 2.85 / 5.1). Causeway band frame is near the same arch view. No script errors."
+ },
+ {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "dbbfc7842a22fd0c880f3f7d3e08ec077e8db9a0",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-lcs-archstand/base-High/cloudreach__windscar_ravine__05__windscar_beacon__day__approach.jpg",
+  "sky_fraction": 0.108,
+  "lower_edges": 0.1559,
+  "script_errors": 0,
+  "note": "LAND-CS-ARCHSTAND (F40#3, 6.33), High, day approach. tb/land-cs dbbfc7842 (= main 94fe423d3 + flag-off code, imported) base no overlay vs capture_stands.json candidates_1113 ON. F40#3's three landmark frames paired; arm also has cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach (no stand on base, so the base survey reads 3/4 and exits 1, which is expected). Eye check: arch frame, base shows two wall faces; arm frames the whole arch (span and both legs) behind the trainer. Observatory and beacon unchanged (mean diff 2.85 / 5.1). Causeway band frame is near the same arch view. No script errors."
+ }
+]
