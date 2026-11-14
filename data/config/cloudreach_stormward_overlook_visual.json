@@ -48,9 +48,10 @@
     }
   },
   "paver_strips_1113": {
-    "enabled": false,
+    "enabled": true,
     "_scope": "world_presentation",
-    "_why": "LANE-LAND-CS (13 Nov 2026), F40#15 5.60 (G-below6-overlook-solid-c673 and -join-c673, 3/3: 'dark slab and plank strips on the grass' at walk_02 and walk_03; 'the dark wedge remains' at route_day and vista_dusk). A pixel probe at those frames (rays against every visible mesh) names StormwardPaver01 under the plank strip in route_day and vista_dusk and StormwardPaver03 at walk_02: the approach pavers, buried by the lifted ridge (overlook_ridge_join_1113) so only a sunken strip of each shows. On: the pavers are not built (stormward_overlook.gd build_pavers). They have no collision. OFF until judged."
+    "_why_on": "ON (GPU High, 14 Nov 2026; ralph/reports/GPU-PASS/1108/G-land-cs-overlook-seams.md on tb/judge fd20f845; confirming batch, r 0.910, RMSE 0.58): F40#15 walk_02/walk_03 5.10 -> 5.41 (+0.31, 3/3) and the overlook's other views 5.10 -> 5.41 (+0.31, 3/3); the green slab, walk_03 slab and cobble strip are gone. The High Perches no-loss set read 6.68 -> 6.38 (0/3), which LANE-JUDGE attributes to creature-spawn staging (the arm does not touch piece 08; court described identically) and did not count.",
+    "_why": "LANE-LAND-CS (13 Nov 2026), F40#15. A pixel probe names StormwardPaver01 under the plank strip in route_day and vista_dusk and StormwardPaver03 at walk_02: the approach pavers, buried by the lifted ridge (overlook_ridge_join_1113) so only a sunken strip of each shows. On: the pavers are not built (stormward_overlook.gd build_pavers). They have no collision."
   },
   "ruin_collision_1113": {
     "enabled": true,
