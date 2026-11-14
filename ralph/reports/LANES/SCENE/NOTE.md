@@ -1,6 +1,16 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (13 Nov 2026, about 23:15 UTC)
+## TO THE COORDINATOR (14 Nov 2026)
+1. **LAND F39#21 correctness fix: `tb/scene-lensground-land` c783b7ad3**, cut from main 94fe423d.
+   - The grey plane is the dune face seen from a lens resting 0.35 m above it.
+   - The 9 Nov lens ground clearance tested the lens at the full `spring_length`. When the arm's own collision had already pulled the camera in against the dune, that point was underground, its downward ray found nothing, and the arm was left alone. Fix: start from `min(spring_length, get_hit_length())`.
+   - In-world probe at the Venn end-of-fight spot with the bad heading and a 19 m arm: the old code puts the lens at (356.26, 7.37, 3813.72), 0.35 m up, which matches the bad run; fixed, 1.03 m up.
+   - The new pin test fails on the old code. Camera-rig tests: 217, 0 failed.
+   - Why after 10 Nov: the heading the fight ends at decides whether the dune cuts the arm. On CPU (one run each, fights drift) the opposing-trainer stand ON ended facing the dune and OFF along the beach. The clearance was the failing part either way.
+   - READY: `ralph/reports/LANES/SCENE-LENSGROUND-LAND/READY.md`. A one-sided F39#21 re-score after it lands gives the number.
+2. Ready and waiting, unchanged: ROSTERNAMES r2, SCENE-CURB, SCENE-PANELFILL, SCENE-TOURNEY, SCENE-CACHE, SCENE-WORKSHOP.
+
+## Earlier (13 Nov, 23:15 UTC)
 0. **Now working on F39#21 (Venn win camera, 5.84).** Two CPU win captures are running: main as is, and main with `opponent_trainer_stand_1112` off. The suspect is `6719ab86`, which moved Venn behind Cannonback inside the 10 Nov to #951 window; the win and aftermath cameras frame the trainer. A probe logs the lens pose and the ground under and ahead of it. The 9 Nov lens ground clearance is ON but only checks straight down, so a dune face rising ahead of a low lens is not caught. I reply with the cause and a landing branch.
 1. ROSTERNAMES r2: noted that the camera shift was a capture artefact. The round-2 footprint code stays in (flag-off): it makes the arm's camera identical to base by construction, which suits matched-camera judging. The solid rows are the substance: no reveal restart, out of the subject fade, white names; CPU solid through the t-012 stagger.
 2. F38#16: noted LANE-BEINGS has the faces. SCENE-TOURNEY is the berry-glow fade and Tam's outfit colour only, so it does not overlap.
