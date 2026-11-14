@@ -5319,7 +5319,7 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-CS-OVERLOOK-SEAMS/overlay.json (stops building the four buried approach_pavers whose sunken strips read as dark slab/plank strips at route_day, vista_dusk, walk_02, walk_03). Per its CAPTURE.json, High. Same tb/land-cs import as TURFGRAIN and SOILOFF.",
    "added": "13 Nov 20:30",
    "priority": "worst row: run in the tb/land-cs boot with TURFGRAIN and SOILOFF",
-   "status": "SHIP 14 Nov: F40#15 5.10 -> 5.41 (+0.31, 3/3); perches -0.30 is a spawn confound (arm does not touch piece 08), disclosed. LANE-LAND-CS to land."
+   "status": "SHIP; landing in #962 (perches confound disclosed; fixed-seed confirm queued)."
   },
   {
    "id": "land-mt-cragback",
@@ -5612,6 +5612,39 @@
    "ask": "Base vs + ralph/reports/LANES/LAND-CS-MASTERFLOOR/overlay.json (Master T4 arena floor: 7 m soil tile and muted earth tint #80776a, replacing the 2 m dirt-path tile that reads as an orange checker disc). High-perch tool frames per its CAPTURE.json, High. By eye: no orange checker on the upper platform. Base must include RIMGLOW once #961 lands (or overlay both).",
    "added": "14 Nov 00:35",
    "priority": "land-cs boot"
+  },
+  {
+   "id": "confirm-perches-seams-fixedseed",
+   "branch": "main",
+   "commit": "after #962",
+   "rows": [
+    "High Perches no-loss check for OVERLOOK-SEAMS (-0.30 attributed to wyvern staging)"
+   ],
+   "ask": "Fixed-seed High Perches capture, main with and without paver_strips_1113 (same wild spawn seed both sides), High. Confirms the -0.30 was staging, not the arm. If the arm still loses, tell the coordinator so the flag can be reverted.",
+   "added": "14 Nov 00:50",
+   "priority": "cheap confirm"
+  },
+  {
+   "id": "land-mt-shellshards",
+   "branch": "tb/land-mt",
+   "commit": "3cbb66b00",
+   "rows": [
+    "F38#30 Warrens hillside (6.48 after BROKENHILL)",
+    "no-loss F38#24"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/LAND-MT-SHELLSHARDS/overlay.json (island_strip: drops 276 detached islands off the Meshy mound and fan-fills its open loops, so no sky windows or floating crest shards). Warrens set (route_day, walk_01-03, vista_dusk), High. By eye at walk_02: no sky window or black triangle at the top of frame.",
+   "added": "14 Nov 00:50",
+   "priority": "Meadows boot"
+  },
+  {
+   "id": "land-mt-plume",
+   "branch": "tb/land-mt",
+   "commit": "3cbb66b00",
+   "rows": [
+    "F38#30 (smoke pillar)"
+   ],
+   "ask": "Second arm on the same Warrens base: SHELLSHARDS + PLUME overlays vs SHELLSHARDS alone (soft Warrens signal plume: wider foot and crown, thinner discs, more top fade, downwind lean).",
+   "added": "14 Nov 00:50"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
