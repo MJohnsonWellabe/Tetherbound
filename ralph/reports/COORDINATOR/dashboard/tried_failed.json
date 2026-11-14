@@ -1,5 +1,5 @@
 {
- "entries": 256,
+ "entries": 271,
  "rows": {
   "F13#5": [
    {
@@ -123,6 +123,17 @@
      "F36#54"
     ],
     "approach": "BEINGS",
+    "result": "F36#49, F36#78, F36#54:** weight relax on boneless wings and spikes.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F36#49",
+     "F36#78",
+     "F36#54"
+    ],
+    "approach": "BEINGS",
     "result": "F36#49 (Glimmermoth), F36#78 (Tempestwing), F36#54 (Mosshock) PARKED: skin-weight relax on wings and spikes. No visible change, because those parts have no bones of their own.",
     "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
     "status": "parked"
@@ -143,6 +154,17 @@
    }
   ],
   "F36#54": [
+   {
+    "rows": [
+     "F36#49",
+     "F36#78",
+     "F36#54"
+    ],
+    "approach": "BEINGS",
+    "result": "F36#49, F36#78, F36#54:** weight relax on boneless wings and spikes.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
    {
     "rows": [
      "F36#49",
@@ -173,12 +195,32 @@
      "F36#74"
     ],
     "approach": "BEINGS",
+    "result": "F36#74:** Stormraven skin weights and tail pitch.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F36#74"
+    ],
+    "approach": "BEINGS",
     "result": "F36#74 (Stormraven) PARKED: skin-weight relax and tail pitch. Neither was the cause; the wing bones swinging on a folded-wing mesh were (BEINGS-STORMRAVEN-WINGS).",
     "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
     "status": "parked"
    }
   ],
   "F36#78": [
+   {
+    "rows": [
+     "F36#49",
+     "F36#78",
+     "F36#54"
+    ],
+    "approach": "BEINGS",
+    "result": "F36#49, F36#78, F36#54:** weight relax on boneless wings and spikes.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
    {
     "rows": [
      "F36#49",
@@ -273,6 +315,15 @@
    }
   ],
   "F38#1": [
+   {
+    "rows": [
+     "F38#1"
+    ],
+    "approach": "BEINGS",
+    "result": "F38#1:** `faint_fold` and `settled_rest` for Terrapup.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
    {
     "rows": [
      "F38#1"
@@ -468,6 +519,15 @@
    }
   ],
   "F38#12": [
+   {
+    "rows": [
+     "F38#12"
+    ],
+    "approach": "SCENE",
+    "result": "F38#12: Kenney props were off-style.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "held"
+   },
    {
     "rows": [
      "F38#12"
@@ -828,6 +888,15 @@
      "F38#28"
     ],
     "approach": "SCENE",
+    "result": "F38#28: wall moss (HALLMOSS, HALLWALLS r1 and r2) and TELLDUST3 for the Warden fight: level.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "SCENE",
     "result": "F38#28: TELLDUST3 parked for this row. SCENE-CURB is the floor-arc swing. The Warden dust \"heart ribbon\" is next in the same arm once CURB has a by-eye result.",
     "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
     "status": "parked"
@@ -964,6 +1033,15 @@
    }
   ],
   "F38#35": [
+   {
+    "rows": [
+     "F38#35"
+    ],
+    "approach": "SCENE",
+    "result": "F38#35: a 1.8x gain on the old role angles did not register.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "held"
+   },
    {
     "rows": [
      "F38#35"
@@ -1473,6 +1551,16 @@
      "F39#15"
     ],
     "approach": "LAND-MT",
+    "result": "Next: if it ships, land it as `cause_tidewake.sea` ON with r3's merge values. If it is a wash, F39#10 sea tone is PARKED (agreed with LANE-JUDGE). The disc chain (F39#15) needs irregular sandbars or the islet rebake (rest-shoal `shape` lobes plus a walk check), not tone.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
     "result": "Ready: SEADEPTH round 3 (`ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json`), the judges' one more tone round for F39#10.** It keeps base's deep navy (and its shallow colour) and softens only the shelf transition: haze off (that, plus the brighter shallow colour, was r2's \"lighter cyan\"), a darker mid band, falloff 10 m. Re-capture F39#10, F39#15 and the current states. The CPU change is modest (sheet in the fol…",
     "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
     "status": "parked"
@@ -1599,6 +1687,16 @@
     "approach": "land-mt-seadepth",
     "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "Next: if it ships, land it as `cause_tidewake.sea` ON with r3's merge values. If it is a wash, F39#10 sea tone is PARKED (agreed with LANE-JUDGE). The disc chain (F39#15) needs irregular sandbars or the islet rebake (rest-shoal `shape` lobes plus a walk check), not tone.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
     "status": "parked"
    },
    {
@@ -1872,6 +1970,15 @@
     "result": "F39#19 DUNETONE: PARKED. Damp tone on the Venn dune is too faint at a believable strength.",
     "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19"
+    ],
+    "approach": "SCENE",
+    "result": "F39#19 ROSTERNAMES r1: translucent rows faded (−0.40).",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "held"
    },
    {
     "rows": [
@@ -2217,6 +2324,15 @@
      "F40#1"
     ],
     "approach": "LAND-CS",
+    "result": "F40#1 grass re-clustering by overlay: no visible change. Course rock surface on the owner's granite: not built (the same surface lost 0/3 in `pale_strata`).",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "LAND-CS",
     "result": "F40#1 HELD: BELOW6-WALL-BAND, F40#1 +0.32 stands; round 2 must limit the band to rim and wall-top geometry (height band or normal mask) and re-judge with the Three Bells bridge frame.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
@@ -2475,6 +2591,15 @@
      "F40#8"
     ],
     "approach": "LAND-CS",
+    "result": "WALL-BAND round 1 as shipped: F40#8 lost 0.43 (whole cliff face repainted); withdrawn from PR #963.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
     "result": "LANE-JUDGE amended G-below6-wall-band-main to **DO NOT SHIP**: the F40#8 no-loss check loses on the Three Bells bridge, 6.29 -> 5.86 (−0.43, 0/3); the band repaints a whole cliff face as grey with faceted brown patches.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "parked"
@@ -2524,6 +2649,24 @@
     "result": "DO NOT SHIP: overlook F40#15 pair 4.57→3.99 (−0.58, 0/3), routes 5.07→4.53 (−0.54, 0/3). The new stone reads as \"smeared brown blotch, clay or mud\", even further from pale stratified stone, because the facet texture stretches across thin wall cards. The ask is still footed pale-stone masonry (new art). Both sides: F40#15 strip defect PRESENT in the overlook vista_dusk (a dark seam at the trainer's feet), ghost plane…",
     "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 dark wedge and walk_02 feet strip: four attempts (ridge sink, route exemption, edge lift, ledge drop), all no visible change. The ridge vertices are about 4 m apart; any next try must first print the ledge face heights to prove a change moves it.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 \"rampart over the void\": no void found under any ruin corner; the left wing floats 0.2 to 0.5 m.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
    },
    {
     "rows": [
@@ -2615,6 +2758,15 @@
     "approach": "land-cs-masterfloor",
     "result": "PARKED 14 Nov: level 6.04 -> 6.13 (+0.09, 1/3, 2 ties); platform is background, not the subject; no more rounds on the platform top for F40#17.",
     "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#17 MASTERFLOOR: level (+0.09); judges: the platform is background, not the subject. No more platform rounds.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "parked"
    },
    {
@@ -2964,6 +3116,15 @@
     "approach": "PLACES",
     "result": "Sent to GPU (arm 1 of 2):** `PLACES-STORMLIGHT/ARM.md` + `CAPTURE.json` + `overlay.json`. P1 Stormwood storm light: `storm_phase_1111` (layered storm sky, held white-violet bolts with a bolt key light, far bolts in Building, mist banks, shafts un-culled) with `distinct_bodies_1111` riding for F41#8. Rows F41#2, #4, #5, #12, #19, #8; riders #6, #13. All code is flag-off on the branch.",
     "source": "main:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#8"
+    ],
+    "approach": "BEINGS",
+    "result": "Staticub world / F41#8:** a bluer coat toward Stormursa's average colour (renders pink under violet light).",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
     "status": "held"
    },
    {
@@ -3806,6 +3967,15 @@
     "result": "What is new versus the parked approaches.** TIERA (removing cascade tiers) and BASEMIST (camera-facing puffs) are parked. This arm keeps the tiers and draws no puffs.",
     "source": "land-mt:ralph/reports/LANES/LAND-MT-VEILREBUILD/ARM.md",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "Status: CPU checked; held, not yet sent to the GPU.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "held"
    },
    {
     "rows": [
