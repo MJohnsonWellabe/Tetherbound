@@ -5067,7 +5067,7 @@
    "ask": "Takes THINGS-STORMPOOL r2's slot. Base vs ralph/reports/LANES/LAND-CS-SOILOFF/overlay.json (stormwood_ground_finish forest_layers_1113: wet_soil layer off, the 1,400 near-black glossy discs), High, capture_stormwood_f10_matrix.gd --stands=forest,giant,rod_line,glass,stormheart --phases=calm,break (+aftermath Calm). By-eye: forest_calm/giant_calm black jagged patches gone; forest_break/giant_break no pale slab by the trainer. Else hold.",
    "added": "13 Nov 16:50",
    "note_tree": "tb/land-cs 91ac0d6a1 contains main b8622117c (#954): base frames are main content.",
-   "status": "CAPTURED 14 Nov (tb/gpu-frames-1113 f6e148f94): by eye black patches and pale break slab gone, no-loss stands clean. Awaiting LANE-JUDGE."
+   "status": "SHIP 14 Nov (G-land-cs-soiloff): F41#22 5.33 -> 6.03 (+0.70, 3/3), F41#24 5.29 -> 6.23 (+0.94, 3/3); no-loss stands level. LANE-LAND-CS to land."
   },
   {
    "id": "beings-neckdown",
@@ -5642,7 +5642,7 @@
    "ask": "Base vs + ralph/reports/LANES/LAND-MT-SHELLSHARDS/overlay.json (island_strip: drops 276 detached islands off the Meshy mound and fan-fills its open loops, so no sky windows or floating crest shards). Warrens set (route_day, walk_01-03, vista_dusk), High. By eye at walk_02: no sky window or black triangle at the top of frame.",
    "added": "14 Nov 00:50",
    "priority": "Meadows boot",
-   "status": "SHIP judged 14 Nov (+0.54). Crash on the arm run was a divide by zero inside the NVIDIA driver (nvoglv64.dll), the same signature as 10 unrelated runs since 13 Oct (G-land-mt-shellshards-crash). Cleared to land if the retry is clean."
+   "status": "SHIP judged 14 Nov (+0.54). Crash on the arm run was a divide by zero inside the NVIDIA driver (nvoglv64.dll), the same signature as 10 unrelated runs since 13 Oct (G-land-mt-shellshards-crash). Cleared to land if the retry is clean. Stronghold no-loss on the retry: LEVEL 6.77 = 6.77. Landing in the PR after #963."
   },
   {
    "id": "land-mt-plume",

@@ -2892,7 +2892,7 @@
   },
   "F41#24": {
    "gpu": 6.46,
-   "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, cleanliness brief, 5 stands; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 7.08; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28"
+   "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, cleanliness brief, 5 stands; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 7.08; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28 | SOILOFF arm (G-land-cs-soiloff, 14 Nov, not landed yet): forest+giant 5.29 -> 6.23 (+0.94), five stands on that panel 6.00 -> 6.38"
   },
   "F13#5": {
    "gpu": 6.55,
@@ -2912,7 +2912,7 @@
   },
   "F41#22": {
    "gpu": 6.46,
-   "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, 5 of 10 matrix stands; baseline 5.90 full row; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 6.96; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28"
+   "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, 5 of 10 matrix stands; baseline 5.90 full row; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 6.96; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28 | SOILOFF arm (G-land-cs-soiloff, 14 Nov, not landed yet): forest+giant 5.33 -> 6.03 (+0.70), five stands on that panel 6.02 -> 6.30"
   },
   "F38#0": {
    "gpu": 6.6,
