@@ -4797,7 +4797,7 @@
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-WALL-BAND/overlay.json (landmass.wall_top_band_1113 ON: top wall band of Cloudreach islands pale), High, phase2_capture_locations.gd --biome=cloudreach --times=day --views=approach,close --seed=2042 for the F40#1 row, plus a day no-loss set at Three Bells bridge, High Perches 07-08 and the overlook routes (it changes every frame that sees an island wall). By-eye pre-check: if the band reads as sand, re-run the arm with tint #d9d6cb in the overlay instead.",
    "added": "13 Nov 06:24",
-   "status": "SHIP 14 Nov: F40#1 6.19 -> 6.51 (+0.32, 3/3). LANE-LAND-CS to land."
+   "status": "AMENDED DO NOT SHIP 14 Nov: F40#8 no-loss at the bridge lost 6.29 -> 5.86 (0/3), triplanar camouflage on the bridge cliff. Withdrawn from #963. Waits on limiting the band to rims and wall tops."
   },
   {
    "id": "below6-gate-terrace",

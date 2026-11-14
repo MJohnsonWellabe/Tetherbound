@@ -1,5 +1,5 @@
 {
- "updated": "14 Nov 2026 01:18 UTC",
+ "updated": "14 Nov 2026 01:52 UTC",
  "headline": "13 Nov 23:57: seven PRs landed this evening (#954, #956, #957, #958, #959, #960) and the first close (Staticub roster row). FLOWSTREAKS r2 ships (F13#5 5.70 -> 6.55), landing next. Tried-and-failed tab live.",
  "batches": [
   {
@@ -2732,8 +2732,8 @@
    "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.42 (was 6.65; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
   },
   "F40#1": {
-   "gpu": 6.51,
-   "src": "GPU High 8-9 Nov (F-cloudreach) | 5.90 -> 5.84: flat empty lawn, terrain-disc edge (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6) | WALL-BAND SHIP 6.19 -> 6.51 (+0.32, 3/3); TURFGRAIN SHIP 6.19 -> 6.39 (3/3); GATE-TERRACE thin SHIP 6.19 -> 6.39 (2/3) (LANE-JUDGE 589da6bec, 14 Nov)"
+   "gpu": 6.39,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | 5.90 -> 5.84: flat empty lawn, terrain-disc edge (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6) | WALL-BAND SHIP 6.19 -> 6.51 (+0.32, 3/3); TURFGRAIN SHIP 6.19 -> 6.39 (3/3); GATE-TERRACE thin SHIP 6.19 -> 6.39 (2/3) (LANE-JUDGE 589da6bec, 14 Nov) | WALL-BAND amended DO NOT SHIP 14 Nov (G-lcs-wallband-bridge: F40#8 6.29 -> 5.86, 0/3); F40#1 read with TURFGRAIN only: 6.39"
   },
   "F40#10": {
    "gpu": 6.77,

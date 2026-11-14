@@ -8,7 +8,7 @@ coordinator's GPU queue and every lane NOTE.md / ARM.md on main and the live lan
 is closed: do not retry it without a new cause or a new idea, and say in the ARM.md what
 is new. `held` means the arm exists and is waiting on a named fix.
 
-226 entries across 83 rows.
+246 entries across 86 rows.
 
 ## F13#5
 - **parked** · G-land-mt-flowstreaks: DO NOT SHIP: current states LOSE 6.08 → 5.66 (−0.42, 0/3); the arm's live streaks read as parallel guide lanes (F39#16 defect PARTIAL → PRESENT 3/3). F13#5 swim views 5.52 → 6.04 (+0.52, 3/3; crescents PRESENT → PARTIAL). Fit r 0.875, RMSE 0.67. Next: gate the streaks to the swim cue, and anchor a wake to the swimmer _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -84,6 +84,10 @@ is new. `held` means the arm exists and is waiting on a named fix.
 
 ## F38#11
 - **parked** · things-dusttrail: HELD unjudged 13 Nov: beads unchanged on base vs arm (diff 0.2-0.8); the beads are the wind-up dust (THINGS-TELLDUST). Parked. _(source: COORDINATOR/gpu_queue.json)_
+- **parked** · SCENE: F38#28 PARKED: TELLDUST3 for the Warden fight. Level with cameras matched (High 7.27 = 7.27); it stays shipped for F38#11 and the grunt. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
+
+## F38#12
+- **parked** · SCENE: F38#12 PARKED: Kenney log, bedroll and fire pit as cache props (CPU only, never judged). Salmon-pink and off-style; replaced inside SCENE-CACHE. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 
 ## F38#13
 - **parked** · PLACES: Meadows Medium (G-closeout-meadows-ui-medium @ e92acfdc9: F38#3 #4 #7 #9 #19 #33 #34) is left to LANE-SCOUT for the close decisions**, so the same frames are not judged twice. I am not judging it unless the coordinator asks for a second panel. The -medium-2 section was dropped by the coordinator (F38#18 and #38 closed on 9 Nov; F38#13 pools to about 7.3). _(source: places:ralph/reports/LANES/PLACES/NOTE.md)_
@@ -94,6 +98,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 ## F38#16
 - **parked** · G-things-speakercentre: DO NOT SHIP as one arm: Hess +1.16 (5.95→7.11, 3/3) but Rae −1.60 (7.60→6.00, 0/3; companion fills frame, Rae pushed left), patrol −0.09. Ship per speaker (Hess only) or clear the companion from the speaker cone; the row frames are untouched by this arm _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
 - **held** · BEINGS: Next: F38#16 Mira and Tam, with the same script, no change to either's presented gender. _(source: beings:ralph/reports/LANES/BEINGS/NOTE.md)_
+- **held** · SCENE: F38#16 HELD: Tam outfit recolour (`scene_tam_outfit_1113`). It overlaps BEINGS-TAM-COAT; held until that verdict. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 
 ## F38#17
 - **parked** · things-hallmoss: WITHDRAWN 13 Nov: replaced by scene-hallwalls (cause: arena wall panels wear exterior stone moss 0.78; hallmoss only reached pilasters). _(source: COORDINATOR/gpu_queue.json)_
@@ -139,10 +144,16 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · SCENE-CURB: With HALLWALLS parked, this is the only F38#28 arm. _(source: scene:ralph/reports/LANES/SCENE-CURB/ARM.md)_
 - **parked** · SCENE: F38#28: TELLDUST3 parked for this row. SCENE-CURB is the floor-arc swing. The Warden dust "heart ribbon" is next in the same arm once CURB has a by-eye result. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 - **parked** · SCENE: New ARM SCENE-CURB (F38#28)**, the new approach after HALLWALLS parked. A low stone curb with a brass inlay replaces the glowing teal ring, in the Warden arena only. Same radius and rules. CPU (brightened) shows it reading as an authored edge. Files: `ralph/reports/LANES/SCENE-CURB/`. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
+- **parked** · SCENE: F38#28 PARKED: interior stone moss 0.46 to 0.22 (THINGS-HALLMOSS). It only reached the pilasters; the GPU by-eye check held it. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
+- **parked** · SCENE: F38#28 PARKED: roofed-room wall moss and buttress clip (SCENE-HALLWALLS r1 and r2). r2 judged level, 0/3, all ties; the change is invisible at sheet size. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
+- **parked** · SCENE: F38#28 PARKED: TELLDUST3 for the Warden fight. Level with cameras matched (High 7.27 = 7.27); it stays shipped for F38#11 and the grunt. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 
 ## F38#30
 - **parked** · G-land-mt-plume: DO NOT SHIP: warrens other LOSE 5.94 → 5.76 (−0.18, 0/3); F38#30 level (+0.04, 1/3). The wide plume reads as a blurry flat card over the cave mouth. Next: one continuous tapered plume (fix the gap in the thin column) that drifts off the entrance _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
 - **parked** · land-mt-plume: DO NOT SHIP 14 Nov: warrens other -0.18 (0/3); wide plume reads as a blurry flat card. Next: one continuous tapered plume. _(source: COORDINATOR/gpu_queue.json)_
+- **parked** · LAND-MT-STEEPGRASS: LAND-MT-STEEPGRASS (F38#30): PARKED on CPU after two misses, not sent _(source: land-mt:ralph/reports/LANES/LAND-MT-STEEPGRASS/ARM.md)_
+- **held** · LAND-MT: F38#30 PLUME: HELD for round 2. The wide crown read as a blurry card over the mouth (Warrens other −0.18). Round 2 is one continuous tapered column (narrow crown, more discs, no gap), drifting away from the entrance. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
+- **parked** · LAND-MT: F38#30 STEEPGRASS: PARKED. A triplanar broad tone, anisotropic sampling and a sharp blend all left walk_02 / walk_03 unchanged on CPU. The smear is the soft grass sheet itself, so it needs a higher-frequency material (the judges' ask c), not a projection fix. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F38#33
@@ -150,6 +161,9 @@ is new. `held` means the arm exists and is waiting on a named fix.
 
 ## F38#34
 - **parked** · THINGS: Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros… _(source: main:ralph/reports/LANES/THINGS/NOTE.md)_
+
+## F38#35
+- **parked** · SCENE: F38#35 PARKED: 1.8x gain on the existing role-posture angles. It barely registered on CPU on 40 px villagers; the row needs authored poses. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 
 ## F38#38
 - **parked** · G-scene-hallwalls-r2: DO NOT SHIP (level): arm = base on every set (0/3, 3 ties). F38#28 NOT CLOSED: 6.81 at High and at Medium on the strictest panel today (control 7.53). The green-rectangle fix is not visible at sheet size. F38#20 frame level at 6.42. PARK the roofed-room walls arm for F38#28 (two rounds of hall-wall moss, no gain). Next: authored floor boundary in place of the teal arc. Flag: red banner in Aldis's arena _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -255,6 +269,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · land-mt-cragcut-probe: WITHDRAWN 13 Nov 21:15: LANE-LAND-MT proved on CPU (fixed t-000 view) the wedge is the crag back faces; CRAGCUT arm follows. _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · LAND-MT: F39#19 CRAGBACK: PARKED. It was level on GPU because the engine already flips back-face normals; CRAGCUT shipped instead. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: F39#19 DUNETONE: PARKED. Damp tone on the Venn dune is too faint at a believable strength. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
+- **parked** · SCENE: F39#19 PARKED: ROSTERNAMES round 1 (names on translucent rows). The re-judge lost 6.78 to 6.38 (0/3); the named roster faded. Round 2 fixes the fade and is queued. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 
 ## F39#21
 - **parked** · PLACES: Checked, not gaps:** F39#21's 4.34 (G-rescore-f39-21-f41-13) was on main 306239e9f (#885, 10 Nov 08:03), before the #893 win at 7.06. F38#20, #21 and #22 differences are partial-frame cross-checks or later closes. _(source: places:ralph/reports/LANES/PLACES/NOTE.md)_
@@ -293,6 +308,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **held** · LAND-CS: Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 
 ## F40#1
+- **parked** · below6-wall-band: AMENDED DO NOT SHIP 14 Nov: F40#8 no-loss at the bridge lost 6.29 -> 5.86 (0/3), triplanar camouflage on the bridge cliff. Withdrawn from #963. Waits on limiting the band to rims and wall tops. _(source: COORDINATOR/gpu_queue.json)_
 - **held** · below6-gate-terrace: Thin SHIP 14 Nov (+0.20, 2/3); judge asks a combined re-judge with WALL-BAND and risers with height. HELD from landing until then. _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · BELOW6: Parked on my side: F40#1 (terraces not sent), F41#8 character side, Fulgocobra, F39#8. _(source: main:ralph/reports/LANES/BELOW6/NOTE.md)_
 - **parked** · BELOW6: F40#1:** `BELOW6-TERRACES/NOT-SENT.md`. Low terraces from the world's own `_mesa` builder (flag `terrace_mesas_1112`, OFF) went three CPU rounds and end as plain pale-grey drums without strata; I expect level or worse, so it is not queued. Parked on my side until there is a new idea (terrace geometry inside `_mesa`). _(source: main:ralph/reports/LANES/BELOW6/NOTE.md)_
@@ -306,6 +322,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **held** · LAND-CS: Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 
 ## F40#3
+- **held** · LAND-CS: Waiting on the GPU:** SOILOFF (F41#22/#24). **Held, CPU-ready:** ARCHSTAND (F40#3), RIMSEAT (F40#17). **Held for a combined re-judge:** GATE-TERRACE round 2 (to build: taller risers, no loops). _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: Not built:** it was GPU-judged inside the cause lane's `pale_strata` (G-newapproach-cloudreach-cause-no-cloudsea): F40#1 and F40#3 lost 0/3, the lips read "smooth, untextured clay-like", and judges preferred base's "textured earth". The untried variant (courses on the owner's granite, no pale retint) removes the same texture hue the judges preferred, so I am not spending a GPU slot on it without a new reason. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
@@ -322,6 +339,10 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · LAND-CS: F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
+
+## F40#8
+- **parked** · G-lcs-wallband-bridge: LOSS: 6.29 → 5.86 (−0.43, 0/3); the band repaints the bridge cliff as patchy grey with brown facets ("triplanar seams, camouflage"). WALL-BAND (G-below6-wall-band-main) is AMENDED to DO NOT SHIP; its F40#1 +0.32 waits on limiting the band to rims and wall tops. Fit r 0.901, RMSE 0.60 _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
+- **parked** · below6-wall-band: AMENDED DO NOT SHIP 14 Nov: F40#8 no-loss at the bridge lost 6.29 -> 5.86 (0/3), triplanar camouflage on the bridge cliff. Withdrawn from #963. Waits on limiting the band to rims and wall tops. _(source: COORDINATOR/gpu_queue.json)_
 
 ## F40#11
 - **parked** · LAND-CS: F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
@@ -340,6 +361,9 @@ is new. `held` means the arm exists and is waiting on a named fix.
 ## F40#17
 - **parked** · G-land-cs-masterfloor: DO NOT SHIP (level): 6.04 → 6.13 (+0.09, 1/3, 2 ties). Checker → soil is noticed as calmer background (2/3), but the row is decided by the clusters (lip seat, pale base spheres, toy scale). Court +0.22 is a creature-spawn confound (ram on the arm side), not counted. Fit r 0.922, RMSE 0.54. Next: seat the tan cluster back from the lip, remove the base spheres, griffin clipping, night moon and rim _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
 - **parked** · land-cs-masterfloor: PARKED 14 Nov: level 6.04 -> 6.13 (+0.09, 1/3, 2 ties); platform is background, not the subject; no more rounds on the platform top for F40#17. _(source: COORDINATOR/gpu_queue.json)_
+- **held** · LAND-CS: Waiting on the GPU:** SOILOFF (F41#22/#24). **Held, CPU-ready:** ARCHSTAND (F40#3), RIMSEAT (F40#17). **Held for a combined re-judge:** GATE-TERRACE round 2 (to build: taller risers, no loops). _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
+- **held** · LAND-CS: F40#17 HELD: LAND-CS-RIMSEAT (tan rim find 1.2 m back from the lip; overlay glow 0.3), CPU-ready, waiting for a queue slot. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
+- **parked** · LAND-CS: F40#17 PARKED: rim finds respaced widely (CPU round 1 of RIMSEAT, not sent): two clusters left the fixed frame. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: F40#17 PARKED: LAND-CS-MASTERFLOOR (Master T4 arena floor soil tile and tint). G-land-cs-masterfloor: level, 6.04 -> 6.13 (+0.09, 1/3, 2 ties); judges call the platform background, not the subject. LANE-JUDGE: no more rounds on the platform top for F40#17. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 
@@ -427,6 +451,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 ## F41#22
 - **parked** · things-stormpool-r2: WITHDRAWN 13 Nov: superseded by land-cs-soiloff (same rows; removes the wet_soil discs instead of making them matte) _(source: COORDINATOR/gpu_queue.json)_
 - **held** · THINGS: STORMPOOL held on the by-eye check** (frames `tb/gpu-frames-1108` 47d9ba2c7, `G-things-stormpool/`): the pale slab on the left of giant_break goes dark, but a new pale sheen appears behind the player and on forest_break's right-hand pool; Calm frames barely change. The GPU lane's read: the sheen is not the pool zone's own roughness or specular; something else reflects the sky there (wet gloss, a rain puddle layer or… _(source: main:ralph/reports/LANES/THINGS/NOTE.md)_
+- **held** · LAND-CS: Waiting on the GPU:** SOILOFF (F41#22/#24). **Held, CPU-ready:** ARCHSTAND (F40#3), RIMSEAT (F40#17). **Held for a combined re-judge:** GATE-TERRACE round 2 (to build: taller risers, no loops). _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: F41#22, F41#24 HELD: LAND-CS-SOILOFF (wet-soil discs not built), queued for the GPU. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 
 ## F41#24
@@ -486,9 +511,12 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · LAND-MT-CRAGCUT: Why attempt 1 (CRAGBACK, flip the back-face normal) was level on GPU: the engine already flips back-face normals there (`shaders/water_veilfall_spray.gdshader` says so and undoes it), so the extra flip did nothing. _(source: land-mt:ralph/reports/LANES/LAND-MT-CRAGCUT/ARM.md)_
 - **parked** · LAND-MT-FLOWSTREAKS: Round 1 verdict (G-land-mt-flowstreaks, LANE-JUDGE): DO NOT SHIP.** _(source: land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md)_
 - **parked** · LAND-MT-FLOWSTREAKS: Two stronger tunings drew long straight bright lanes at this grazing camera (the old "guide lanes" defect), so they were dropped. _(source: land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md)_
+- **parked** · LAND-MT-PLUME: Verdict on round 1** (G-land-mt-plume): DO NOT SHIP. Warrens other frames lost 0.18 (0/3): "a blurry flat card washing over the cave mouth", and the column had "a visible gap, two stacked sprites". _(source: land-mt:ralph/reports/LANES/LAND-MT-PLUME/ARM.md)_
 - **parked** · LAND-MT-SHELLSHARDS: Ruled out, frames unchanged with each hidden: MoundGrowth, the shell's grass tufts and edge flora, InteriorRock, and the excavated chamber hulls. _(source: land-mt:ralph/reports/LANES/LAND-MT-SHELLSHARDS/ARM.md)_
 - **parked** · LAND-MT-SHELLSHARDS: Closes each open loop of up to 80 edges with a fan from its centroid, averaging the loop's attributes. Open edges go from 3,590 to 249; the rest are non-manifold tangles. _(source: land-mt:ralph/reports/LANES/LAND-MT-SHELLSHARDS/ARM.md)_
 - **parked** · LAND-MT-SHOREZONES: `zone_slope_free` 1: the normal gate is dropped; patches depend on height and noise only. _(source: land-mt:ralph/reports/LANES/LAND-MT-SHOREZONES/ARM.md)_
+- **held** · LAND-MT-STEEPGRASS: Triplanar broad tone (it was sampled top down) plus anisotropic fine grass: no visible change on walk_02 or walk_03. _(source: land-mt:ralph/reports/LANES/LAND-MT-STEEPGRASS/ARM.md)_
+- **held** · LAND-MT-STEEPGRASS: Plus a sharp triplanar blend (pow 16 instead of 4), so one projection dominates on 45-degree flanks: no visible change either. _(source: land-mt:ralph/reports/LANES/LAND-MT-STEEPGRASS/ARM.md)_
 - **parked** · LAND-MT: SHOREZONES: PARKED** after its GPU loss. Round 2 (no normal gate, near fade) should remove the near-sand polygons, but the far-dune turf barely registers and the wet band and wrack line do not read from the stands, so the upside is small. The folder keeps round 2 if you want it run anyway. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: SEADEPTH round 2 ready: `ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r2.json`.** The GPU lane's diagonal bands and flecks in the current states are the candidate's wind slicks and whitecaps, which ride along with the depth gradient; round 2 keeps the gradient and turns those two off. If round 1 is judged and loses the states, round 2 is the follow-up; if round 1 has not been judged yet, run round 2 instead. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **held** · LAND-MT: Venn "floating log or plank in the sky": not found on CPU (2 probes).** On a fixed rebuild of t-000, the log-like shape sits on the terrain about 46 m out at (358, 15.7, 3827), next to the `veilfall_plunge` rock ring, with no mesh in front of it; removing the lifted `veilfall_cascade_a` tier changed nothing. It may only float in the GPU framing. A GPU t-000 frame with the object's position (or a crop) would let me n… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
@@ -501,6 +529,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **held** · LAND-MT: A third probe (terrain cliff tint in `water_visual.json` set to magenta) changed nothing in frame, including the lit mossy cliff, so that key does not colour this wall; inconclusive. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-CS-ARCHSTAND: The south rim is the island's drum edge; the island's flat lawn is still the island ("a cylinder dropped on the ground" is a separate ground ask). _(source: land-cs:ralph/reports/LANES/LAND-CS-ARCHSTAND/ARM.md)_
 - **parked** · LAND-CS-TURFGRAIN: The lone blades are the configured density, not a bug.** A temporary probe in `cloudreach_ground_cover.gd` (not committed) printed every patch: 1,905 patches, 2.23 million tufts over 807,000 m², 2.1 to 4.8 tufts per m² (the three largest islands are capped at 135,000 tufts, about 2.1 per m²). A tuft is seven thin blades about 0.25 m across, so tufts cover under a tenth of the ground. Re-clustering them by overlay (`… _(source: land-cs:ralph/reports/LANES/LAND-CS-TURFGRAIN/ARM.md)_
+- **parked** · LAND-CS: `tb/land-cs` dbbfc7842 contains main 94fe423d3. Against main it differs only by flag-off arms (`forest_layers_1113`, `paver`-free now, `rim_pickup_seat_1114`, `master_floor_1114` parked, `candidates_1113` arch stand) and their tests and reports. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: GATE-TERRACE (thin 2/3, +0.20): HELD** for a combined re-judge with the band on. Its next ask: chunky risers with height, drop the loops across the lawn. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: The "orange checker disc" on the upper platform is `MasterT4/ArenaFloor` (pixel probe): the worn-ground soil overlay with a 2 m dirt-path tile at #9b805f. The arm gives Master floors a 7 m tile and a muted earth tint (#80776a); other yards unchanged. CPU: the checker is gone. CPU-ready and held. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: The "toy-like glow blobs" are the shared pickup glow's 0.7 m halo round the three small rim patches (the patches shipped 12 Nov at about 0.6x the old cap; the halo was not resized). The arm scales the glow at those three placements only (0.45); they still glow (owner OP-0830-3). CPU: the balls are gone. CPU-ready and held. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
@@ -521,6 +550,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · BEINGS: Stormraven, skin weights and tail pitch:** both ruled out before the real cause was found (details in `BEINGS-STORMRAVEN-WINGS/ARM.md`). _(source: beings:ralph/reports/LANES/BEINGS/NOTE.md)_
 - **held** · BEINGS: Glimmermoth, Tempestwing, Mosshock weight relax:** no visible change; removed. _(source: beings:ralph/reports/LANES/BEINGS/NOTE.md)_
 - **parked** · SCENE-CACHE: order 1030, "A dropped travel pack": a cold stone fire ring with a cauldron on it, a camp stool and a bucket. An abandoned camp, as the node's own note says ("a pack left by whoever was here before"). _(source: scene:ralph/reports/LANES/SCENE-CACHE/ARM.md)_
+- **parked** · SCENE: SCENE-TOURNEY split as asked:** its overlay is now the berry-glow fade only. Tam's outfit flag stays OFF in code and out of every overlay; it returns only if BEINGS-TAM-COAT loses. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 - **parked** · PLACES: `tb/places` was deleted after landing, and main got an old 18-line copy of this NOTE.** It is restored from 652cad03. The parked flag-off arms dropped at landing (`road_value_1112`, road current `thin_1112`) stay on commit 652cad03; `ground_wet_path_1112` is on main. _(source: places:ralph/reports/LANES/PLACES/NOTE.md)_
 - **parked** · PLACES: Swing 3 failed the GPU pre-check and is withdrawn.** Road yellow share rose at 3 of 8 stands and all 3 dialogue frames; the line was the shipped width with a stronger core, so "thin" was not true (my r2 values, not a reader fault: `thin_1112` is read in `stormwood_road_current.gd config()`). r1 (really thin) vanished on CPU. That is two failures for the thin gold line, after too-faint and too-bright: **the gold line… _(source: places:ralph/reports/LANES/PLACES/NOTE.md)_
 - **parked** · PLACES: `tb/places` was deleted on the remote; recovered from the lane container and re-cut from main d777b905 with `road_value_1112` (flag-off, puddles parked) and this NOTE. _(source: places:ralph/reports/LANES/PLACES/NOTE.md)_
