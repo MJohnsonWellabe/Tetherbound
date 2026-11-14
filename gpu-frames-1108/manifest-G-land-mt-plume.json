@@ -1,0 +1,178 @@
+[
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.3666,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.004,
+  "lower_edges": 0.2926,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.036,
+  "lower_edges": 0.3278,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.002,
+  "lower_edges": 0.3215,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.08,
+  "lower_edges": 0.2505,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.215,
+  "lower_edges": 0.4353,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "sky_fraction": 0.071,
+  "lower_edges": 0.3154,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "sky_fraction": 0.165,
+  "lower_edges": 0.4252,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "sky_fraction": 0.193,
+  "lower_edges": 0.3924,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "preset": "plume-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/plume-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "sky_fraction": 0.169,
+  "lower_edges": 0.3844,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.3686,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "shellshards-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.004,
+  "lower_edges": 0.295,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.037,
+  "lower_edges": 0.3288,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.002,
+  "lower_edges": 0.3237,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.077,
+  "lower_edges": 0.25,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "3cbb66b007008bcfd31b1e6e7b66695faa76495a",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-plume/shellshards-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.214,
+  "lower_edges": 0.435,
+  "script_errors": 0,
+  "note": "LAND-MT-PLUME: SHELLSHARDS + PLUME (camfx smoke_plume ON) judged against SHELLSHARDS alone (the 'shellshards' side here IS the base). COMPOSITION: tb/land-cs 91ac0d6a1 (imported; main b8622117 merged) + tb/land-mt 3cbb66b00's seven non-imported Meadows files byte-copied on every side (burrow_warrens.json/.gd, camfx.json, props.gd, meadows_ridge_vl.json/.gd, meadows_ridge_far.gdshader) = 3cbb66b00's Meadows content. Redleaf routes (warrens route_day, walk_01-03, vista_dusk + stronghold approach for F38#24 no-loss), High. By eye: the Warrens chimney smoke becomes a wider, softer, more diffuse plume (route_day, walk_01, vista_dusk)."
+ }
+]
