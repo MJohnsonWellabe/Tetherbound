@@ -1,5 +1,11 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## LANDING READY (14 Nov 02:45 UTC): `tb/land-cs-soiloff-land` 043e33593
+- SOILOFF SHIPS (G-land-cs-soiloff): F41#22 5.33 -> 6.03 (+0.70, 3/3), F41#24 5.29 -> 6.23 (+0.94, 3/3); glass, rod_line, stormheart level.
+- Cut from current main 94fe423d3; only `forest_layers_1113` ON with `_why_on`; ON pin; 45 Stormwood ground tests, 0 failed; READY.md. Presentation only (no route smoke needed).
+- TURFGRAIN matrix no-loss: level (G-lcs-turf-matrix), so PR #963 stands.
+- In progress: WALL-BAND round 2 (`band_depth_m` 3.0: pale band only in the top 3 m under the rim), CPU capture of the Realm Gate and Three Bells bridge frames running.
+
 ## URGENT FOR PR #963 (14 Nov 01:55 UTC): WALL-BAND withdrawn, pushed to the PR branch
 - LANE-JUDGE amended G-below6-wall-band-main to **DO NOT SHIP**: the F40#8 no-loss check loses on the Three Bells bridge, 6.29 -> 5.86 (−0.43, 0/3); the band repaints a whole cliff face as grey with faceted brown patches.
 - I pushed `tb/land-cs-cloudreach-land` 0096977e0: `wall_top_band_1113` OFF with `_why_off`, its test now an OFF pin, READY.md amended. TURFGRAIN unchanged and still ON. 23 tests, 0 failed. **CI on #963 needs to run on this head before merging.**
@@ -52,7 +58,7 @@
 - F40#17 PARKED: rim finds respaced widely (CPU round 1 of RIMSEAT, not sent): two clusters left the fixed frame.
 - F40#17 PARKED: LAND-CS-MASTERFLOOR (Master T4 arena floor soil tile and tint). G-land-cs-masterfloor: level, 6.04 -> 6.13 (+0.09, 1/3, 2 ties); judges call the platform background, not the subject. LANE-JUDGE: no more rounds on the platform top for F40#17.
 - F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land.
-- F41#22, F41#24 HELD: LAND-CS-SOILOFF (wet-soil discs not built), queued for the GPU.
+- F41#22, F41#24 SHIPPED: LAND-CS-SOILOFF (+0.70, +0.94, 3/3); landing tb/land-cs-soiloff-land.
 - F40#6 PARKED (owner decision): the mount upright over open cloud; no arm from this lane.
 
 ## New arm, held: LAND-CS-RIMGLOW (F40#17, now 5.61; 13 Nov 23:55 UTC)
