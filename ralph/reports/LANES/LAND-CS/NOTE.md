@@ -1,5 +1,11 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## LANDING READY (14 Nov 00:30 UTC): `tb/land-cs-rimglow-land` 1b9bd1ed
+- RIMGLOW SHIPS (LANE-JUDGE G-land-cs-rimglow): F40#17 6.03 -> 6.61 (+0.58, 3/3); court no-loss level (-0.04, noise).
+- Cut from current main; flag ON with `_why_on`; ON pin test; 75 pickup and mushroom tests, 0 failed; READY.md with STATUS: land.
+- A RIMGLOW slot is free: ARCHSTAND (F40#3) can take it.
+- Next on F40#17 from the judges: the orange checker platform top (scene, mine), the orange lip cluster's base (mine), the griffin clipping the tower (LANE-BEINGS, perch), the night grade (CLOUDNIGHT r2).
+
 ## Tried and failed, and held arms (indexed bullets, 14 Nov 00:20 UTC)
 - F40#15 PARKED: lift the ridge above the ledge crown (`overlook_ridge_join_1113.sink_m` -0.12); no change to the dark wedge on CPU.
 - F40#15 PARKED: remove the ridge join's 4 m route exemption (temporary switch); the wedge is unchanged, only the pavers sink.
@@ -10,7 +16,7 @@
 - F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.
 - F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.
 - F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.
-- F40#17 HELD: LAND-CS-RIMGLOW (pickup glow at 0.45 at the three rim placements), CPU-ready, waiting for a queue slot.
+- F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land.
 - F41#22, F41#24 HELD: LAND-CS-SOILOFF (wet-soil discs not built), queued for the GPU.
 - F40#6 PARKED (owner decision): the mount upright over open cloud; no arm from this lane.
 
@@ -67,7 +73,7 @@ On `tb/land-cs` with main 874835ea (#951 and #952) merged, flag on, Compatibilit
 | Arm | Rows | Status |
 |---|---|---|
 | LAND-CS-SOILOFF | F41#22, F41#24 (6.46); riders F41#5, F41#12, F41#2 | New. Cause confirmed by switch-off on CPU. Asks to take THINGS-STORMPOOL round 2's place. |
-| LAND-CS-RIMGLOW | F40#17 (5.61) | New, CPU-ready, held. |
+| LAND-CS-RIMGLOW | F40#17 | SHIP 6.03 -> 6.61; landing branch pushed. |
 | LAND-CS-ARCHSTAND | F40#3 (6.33) | New, CPU-ready, held. |
 | LAND-CS-OVERLOOK-SEAMS | F40#15 (5.60) | New, CPU-ready, held until a slot frees. |
 | LAND-CS-TURFGRAIN | F40#1, F40#7, F40#0/#19/#21, F40#4 | New, CPU-ready, held until a slot frees. |
