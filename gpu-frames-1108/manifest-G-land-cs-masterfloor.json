@@ -1,0 +1,68 @@
+[
+ {
+  "frame": "high-perches-crown-rim-out-day.png",
+  "preset": "arm-High",
+  "tree": "da73dd7e0130babdad39d8c9674d34ec64870899",
+  "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+  "path": "G-land-cs-masterfloor/arm-High/high-perches-crown-rim-out-day.png",
+  "sky_fraction": 0.134,
+  "lower_edges": 0.0827,
+  "script_errors": 0,
+  "note": "LAND-CS-MASTERFLOOR (F40#17, 6.61 after RIMGLOW): COMPOSITION tb/land-cs 91ac0d6a1 (imported) + da73dd7e0's seven non-imported files (capture_stands.json, cloudreach_visual.json, mushroom_pickup_variants.json, cloudreach_world.gd, item_cache_pickup.gd, mushroom_pickup_presentation.gd, cloudreach_worn_ground.gdshader) + LAND-CS-RIMGLOW/overlay.json on BOTH sides (RIMGLOW is on main since #961) = main 1405def4d's look for these views; arm adds master_floor_1114 (7 m soil tile, muted earth tint). High-perch tool, High. By eye: the bright orange checker disc on the upper (Master T4) platform becomes a mottled earth-brown soil patch, no checker, day and night; crown-court no-loss unchanged (diff 1.16)."
+ },
+ {
+  "frame": "high-perches-crown-rim-out-night.png",
+  "preset": "arm-High",
+  "tree": "da73dd7e0130babdad39d8c9674d34ec64870899",
+  "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+  "path": "G-land-cs-masterfloor/arm-High/high-perches-crown-rim-out-night.png",
+  "sky_fraction": 0.377,
+  "lower_edges": 0.0854,
+  "script_errors": 0,
+  "note": "LAND-CS-MASTERFLOOR (F40#17, 6.61 after RIMGLOW): COMPOSITION tb/land-cs 91ac0d6a1 (imported) + da73dd7e0's seven non-imported files (capture_stands.json, cloudreach_visual.json, mushroom_pickup_variants.json, cloudreach_world.gd, item_cache_pickup.gd, mushroom_pickup_presentation.gd, cloudreach_worn_ground.gdshader) + LAND-CS-RIMGLOW/overlay.json on BOTH sides (RIMGLOW is on main since #961) = main 1405def4d's look for these views; arm adds master_floor_1114 (7 m soil tile, muted earth tint). High-perch tool, High. By eye: the bright orange checker disc on the upper (Master T4) platform becomes a mottled earth-brown soil patch, no checker, day and night; crown-court no-loss unchanged (diff 1.16)."
+ },
+ {
+  "frame": "high-perches-crown-court-day.png",
+  "preset": "arm-High",
+  "tree": "da73dd7e0130babdad39d8c9674d34ec64870899",
+  "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+  "path": "G-land-cs-masterfloor/arm-High/high-perches-crown-court-day.png",
+  "sky_fraction": 0.085,
+  "lower_edges": 0.1022,
+  "script_errors": 0,
+  "note": "LAND-CS-MASTERFLOOR (F40#17, 6.61 after RIMGLOW): COMPOSITION tb/land-cs 91ac0d6a1 (imported) + da73dd7e0's seven non-imported files (capture_stands.json, cloudreach_visual.json, mushroom_pickup_variants.json, cloudreach_world.gd, item_cache_pickup.gd, mushroom_pickup_presentation.gd, cloudreach_worn_ground.gdshader) + LAND-CS-RIMGLOW/overlay.json on BOTH sides (RIMGLOW is on main since #961) = main 1405def4d's look for these views; arm adds master_floor_1114 (7 m soil tile, muted earth tint). High-perch tool, High. By eye: the bright orange checker disc on the upper (Master T4) platform becomes a mottled earth-brown soil patch, no checker, day and night; crown-court no-loss unchanged (diff 1.16)."
+ },
+ {
+  "frame": "high-perches-crown-rim-out-day.png",
+  "preset": "base-High",
+  "tree": "da73dd7e0130babdad39d8c9674d34ec64870899",
+  "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+  "path": "G-land-cs-masterfloor/base-High/high-perches-crown-rim-out-day.png",
+  "sky_fraction": 0.134,
+  "lower_edges": 0.0823,
+  "script_errors": 0,
+  "note": "LAND-CS-MASTERFLOOR (F40#17, 6.61 after RIMGLOW): COMPOSITION tb/land-cs 91ac0d6a1 (imported) + da73dd7e0's seven non-imported files (capture_stands.json, cloudreach_visual.json, mushroom_pickup_variants.json, cloudreach_world.gd, item_cache_pickup.gd, mushroom_pickup_presentation.gd, cloudreach_worn_ground.gdshader) + LAND-CS-RIMGLOW/overlay.json on BOTH sides (RIMGLOW is on main since #961) = main 1405def4d's look for these views; arm adds master_floor_1114 (7 m soil tile, muted earth tint). High-perch tool, High. By eye: the bright orange checker disc on the upper (Master T4) platform becomes a mottled earth-brown soil patch, no checker, day and night; crown-court no-loss unchanged (diff 1.16)."
+ },
+ {
+  "frame": "high-perches-crown-rim-out-night.png",
+  "preset": "base-High",
+  "tree": "da73dd7e0130babdad39d8c9674d34ec64870899",
+  "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+  "path": "G-land-cs-masterfloor/base-High/high-perches-crown-rim-out-night.png",
+  "sky_fraction": 0.377,
+  "lower_edges": 0.0851,
+  "script_errors": 0,
+  "note": "LAND-CS-MASTERFLOOR (F40#17, 6.61 after RIMGLOW): COMPOSITION tb/land-cs 91ac0d6a1 (imported) + da73dd7e0's seven non-imported files (capture_stands.json, cloudreach_visual.json, mushroom_pickup_variants.json, cloudreach_world.gd, item_cache_pickup.gd, mushroom_pickup_presentation.gd, cloudreach_worn_ground.gdshader) + LAND-CS-RIMGLOW/overlay.json on BOTH sides (RIMGLOW is on main since #961) = main 1405def4d's look for these views; arm adds master_floor_1114 (7 m soil tile, muted earth tint). High-perch tool, High. By eye: the bright orange checker disc on the upper (Master T4) platform becomes a mottled earth-brown soil patch, no checker, day and night; crown-court no-loss unchanged (diff 1.16)."
+ },
+ {
+  "frame": "high-perches-crown-court-day.png",
+  "preset": "base-High",
+  "tree": "da73dd7e0130babdad39d8c9674d34ec64870899",
+  "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+  "path": "G-land-cs-masterfloor/base-High/high-perches-crown-court-day.png",
+  "sky_fraction": 0.088,
+  "lower_edges": 0.1017,
+  "script_errors": 0,
+  "note": "LAND-CS-MASTERFLOOR (F40#17, 6.61 after RIMGLOW): COMPOSITION tb/land-cs 91ac0d6a1 (imported) + da73dd7e0's seven non-imported files (capture_stands.json, cloudreach_visual.json, mushroom_pickup_variants.json, cloudreach_world.gd, item_cache_pickup.gd, mushroom_pickup_presentation.gd, cloudreach_worn_ground.gdshader) + LAND-CS-RIMGLOW/overlay.json on BOTH sides (RIMGLOW is on main since #961) = main 1405def4d's look for these views; arm adds master_floor_1114 (7 m soil tile, muted earth tint). High-perch tool, High. By eye: the bright orange checker disc on the upper (Master T4) platform becomes a mottled earth-brown soil patch, no checker, day and night; crown-court no-loss unchanged (diff 1.16)."
+ }
+]
