@@ -5649,6 +5649,19 @@
    ],
    "ask": "Second arm on the same Warrens base: SHELLSHARDS + PLUME overlays vs SHELLSHARDS alone (soft Warrens signal plume: wider foot and crown, thinner discs, more top fade, downwind lean).",
    "added": "14 Nov 00:50"
+  },
+  {
+   "id": "land-mt-seadepth-r3",
+   "branch": "tb/land-mt",
+   "commit": "0c417689d",
+   "rows": [
+    "F39#10 (last tone round)",
+    "F39#15",
+    "no-loss F39#16/#17 current states"
+   ],
+   "ask": "Round 3 (final): base vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json (keeps base deep navy and shallow colour, haze off, darker mid band, falloff 10 m: softens only the shelf transition). Re-capture F39#10, F39#15 and the S1/S2 current states, High. If a wash, F39#10 sea tone is PARKED.",
+   "added": "14 Nov 01:05",
+   "priority": "Tidewake step"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
