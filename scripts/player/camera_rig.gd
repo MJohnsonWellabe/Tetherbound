@@ -884,6 +884,14 @@ func set_lens_ground_probe_for_tests(probe: Callable, config: Dictionary) -> voi
 	_lens_ground_probe = probe
 	_lens_ground = config
 
+## Tests stand in for the arm's collision with this (INF = nothing hit).
+var _lens_hit_length_for_tests := INF
+
+func _lens_hit_length() -> float:
+	if _lens_ground_probe.is_valid() or not is_inside_tree():
+		return _lens_hit_length_for_tests
+	return get_hit_length()
+
 func _keep_lens_off_ground() -> void:
 	if _lens_ground.is_empty():
 		return
@@ -901,7 +909,13 @@ func _keep_lens_off_ground() -> void:
 	var excluded: Array[RID] = []
 	if _target is CollisionObject3D:
 		excluded.append((_target as CollisionObject3D).get_rid())
-	var length := spring_length
+	# F39#21 (13 Nov): start from where the lens actually is. When the arm's
+	# own collision has already pulled the camera in (a dune across the arm),
+	# the lens sits at the hit length, not at `spring_length`; testing the
+	# full length probed a point under the dune, found no ground in its short
+	# downward ray, and left a lens resting 0.36 m above the dune face (Venn
+	# win: arm 19 m, lens 11.5 m out; the dune filled the lower frame).
+	var length := minf(spring_length, _lens_hit_length())
 	while length > floor_arm:
 		var lens := global_position + back * length
 		var grounded := false

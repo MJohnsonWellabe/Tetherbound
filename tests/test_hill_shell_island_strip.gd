@@ -1,6 +1,6 @@
 extends "res://tests/test_case.gd"
 ## F38#30 island strip: the Meshy mound keeps its main body and loses the
-## detached floating shards; the config ships the block (flag-gated).
+## detached floating shards; the config ships it ON (G-land-mt-shellshards-ss).
 
 const WARRENS := preload("res://scripts/world/burrow_warrens.gd")
 const MOUND := "res://assets/props/meshy-1020/burrow_hill_mound/burrow_hill_mound.glb"
@@ -154,3 +154,6 @@ func test_config_block() -> void:
 	assert_true(not strip.is_empty(), "island_strip block present")
 	assert_true(str(strip.get("scope", "")) == "client_presentation", "scope declared")
 	assert_true(int(strip.get("min_tris", 0)) == 1000, "min_tris 1000")
+	assert_true(strip.get("enabled") == true, "ships ON (GPU judged)")
+	assert_true(str(strip.get("_why_on", "")).contains("G-land-mt-shellshards-ss"), "_why_on cites the verdict")
+	assert_true(int(strip.get("fill_max_loop", 0)) == 80, "judged fill_max_loop 80")

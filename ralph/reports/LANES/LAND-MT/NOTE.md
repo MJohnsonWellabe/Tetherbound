@@ -1,5 +1,79 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
+## HANDOFF (wrap-up, 14 Nov 2026; owner asked all lanes to wrap)
+
+### State
+- **Lane branch `tb/land-mt`**: merged with main b5cfd21f (#964). Every unlanded arm is flag-off; overlays live in each arm's folder.
+- **On main from this lane:**
+
+| Change | Row(s) | Verdict |
+|---|---|---|
+| Ridge fog sync (#952) | F38#24 | landed |
+| Veilfall mist billow floor (#958) | F39#31 | +0.62 |
+| CRAGCUT | F39#19 | +0.07 |
+| DRIFTFLOAT, floaters only over water 0.4 m deep (#959) | Venn floating log | correctness fix |
+| DUSKRIDGE (#959) | dusk vistas | +0.69 |
+| BROKENHILL (#959) | F38#30 | +1.42 |
+| GRASSGROVES (#960) | F39#1 | +0.16 |
+| FLOWSTREAKS r2, `lesson_cue` (#962) | F13#5 | +0.85 |
+| SHELLSHARDS, `island_strip` (#964) | F38#30 | +0.54 |
+
+### Open candidates (all overlay-only, on `tb/land-mt`)
+- **SEADEPTH round 3** (F39#10, F39#15): `ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json` (0c417689).
+  - Status: on the GPU now.
+  - Next: if it ships, land it as `cause_tidewake.sea` ON with r3's merge values. If it is a wash, F39#10 sea tone is PARKED (agreed with LANE-JUDGE). The disc chain (F39#15) needs irregular sandbars or the islet rebake (rest-shoal `shape` lobes plus a walk check), not tone.
+- **PLUME round 2** (F38#30): `ralph/reports/LANES/LAND-MT-PLUME/overlay.json`, camfx `smoke_plume`.
+  - What it does: the Warrens signal column leans out of the cave mouth before climbing (round 1's "gap" was the column rising through the rock arch).
+  - Status: CPU checked; GPU queued.
+  - Next: judge it on top of SHELLSHARDS (now on main) against main. If it ships, flip `smoke_plume.enabled` and land with `test_warrens_smoke_plume.gd`.
+- **VEILREBUILD** (F39#31, 5.78): `ralph/reports/LANES/LAND-MT-VEILREBUILD/overlay.json`, `falls.rebuild` (bfe3e202).
+  - What reaches the views: streaked fall water (`streak_x` 2.4, `streak_y` 4.0), three layered strands, and a wet dark apron. A plunge pool and mist shell are built but OFF.
+  - Status: CPU checked; held, not yet sent to the GPU.
+  - Next: (1) GPU-judge as is (risk: the apron goes near-black at the left edge of the near view). (2) If it gains, extend the cascade to its plunge ring: the live `veilfall_falls_candidate` ends `veilfall_white_cascade` at `foot_y_m` 40, at (364, 40, 3831); the `veilfall_plunge` rock ring is about 25 m lower. Then turn `rebuild.pool` and `rebuild.mist` on, with `max_foot_y_m` covering the new foot.
+- **Not built:**
+  - F38#30 dark toe cut at the slope base (walk_03, left of the trainer).
+  - F38#30 remaining crest debris, the dark slivers visible at dusk; probably the meadow-match tufts against a low sun.
+  - F38#30 a higher-frequency rock and moss material (the judges' ask c).
+  - The judges' FLOWSTREAKS next asks: stronger aligned streaks, a V-wake instead of the spoked ring, and the shoreline seam.
+
+### What worked
+- **Prove the cause before building.** Ways that found causes:
+  - a false-colour probe (paint one material magenta);
+  - a fixed rebuild of a judged camera from the manifest;
+  - a headless scene probe listing meshes above a surface;
+  - offline mesh analysis of a GLB with numpy (connected components, open edges).
+  This found the crag back faces, the billow gate zeroing the mist, the drift floaters on sand, and the mound's islands and holes.
+- Overlay-only arms on flag-off code; one GPU boot carries stacked arms.
+- Correctness fixes (floaters, mist gate, mesh repair) landed with a pin test each.
+
+### What failed (do not retry without a new idea)
+- **F38#24 TWORANGES:** a stretched copy of the ridge reads as a pale streaky wall. Needs a new far mesh.
+- **F38#30 STEEPGRASS:** a triplanar broad tone, anisotropic sampling and a sharp blend all left the smear unchanged. The grass sheet is too soft; needs a material.
+- **F38#30 PLUME round 1:** a wide crown read as a blurry card.
+- **F39#5 / F39#14 VWAKE and SHALLOWFOAM:** the foam blobs are not the wake or the contact foam.
+- **F39#19 CRAGBACK:** flipping back-face normals does nothing on Forward+.
+- **F39#19 DUNETONE:** damp tone is too faint.
+- **F39#31 BASEMIST:** camera-facing puffs.
+- **F39#31 TIERA:** removing tiers.
+- **F39#31 pool and mist shell at the current cascade foot:** a glassy dome near the near stand.
+- **F39#1 / F39#27 SHOREZONES:** lost on GPU.
+- **F39#15 SHOALBREAK:** contour wander cannot break the round halos.
+- **SEADEPTH r1 and r2:** wind slicks and whitecaps cost the current states; r2's lighter cyan read as noise.
+
+### Runbook
+- **Captures** (CPU, Compatibility, 1280x720, xvfb). The scripts live in the session scratchpad, so re-create them from these lines:
+  - `phase2_capture_routes.gd --biome=meadows|water --subset=<site> --seed=2042 --output=<dir>`. The Warrens is `the_burrow_warrens`; Tidewake shores are `first_shore_horizon_stones` and `drowned_garden_terraces`.
+  - The two F39#31 views: `capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near --capture-size=1280x720 --source-sha=<HEAD> --out=res://ralph/reports/VISUAL/phase2/tidewake/<tmp>`.
+  - Venn fight frames: `phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn`. Output must sit under `res://ralph/reports/VISUAL/phase2/tidewake/`.
+- **Overlays:** a small Python deep-merge of `{config_path: partial_json}` into the config, then `git checkout data/config/` after the capture. Lists are replaced, not merged, so per-item prop changes need a config-level block (see camfx `smoke_plume`).
+- **Harness facts, not yet in TECHNICAL §8.1:**
+  1. Every `tests/test_*.gd` must extend `res://tests/test_case.gd`; the CI suite runner fails a standalone SceneTree script (#964 blocker).
+  2. Commit config edits before any capture that ends in `git checkout data/config/`.
+  3. One Godot process at a time; never run a test while a capture runs.
+  4. This container has no Vulkan; `--rendering-driver vulkan` falls back to OpenGL.
+  5. Packed arrays are shared by reference in Godot 4: appending to a mesh's vertex array grows a local alias too.
+  6. A git worktree of this repo costs several GB; prune scratch worktrees when the disk fills.
+
 ## TO THE COORDINATOR
 - **#964 blocker fixed: `tb/land-mt-shellshards-land` a4a8ed8f** (only `tests/test_hill_shell_island_strip.gd` changed). It now extends `res://tests/test_case.gd`. The standalone vars, `_initialize` and `_check` are gone, the four tests are renamed `test_*`, `_check(` became `assert_true(`, and the helpers and every assertion are unchanged.
   - Real runner (`godot --headless --path . --script tests/run_tests.gd -- --only=<file>`):
