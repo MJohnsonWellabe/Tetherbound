@@ -5318,7 +5318,8 @@
    ],
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-CS-OVERLOOK-SEAMS/overlay.json (stops building the four buried approach_pavers whose sunken strips read as dark slab/plank strips at route_day, vista_dusk, walk_02, walk_03). Per its CAPTURE.json, High. Same tb/land-cs import as TURFGRAIN and SOILOFF.",
    "added": "13 Nov 20:30",
-   "priority": "worst row: run in the tb/land-cs boot with TURFGRAIN and SOILOFF"
+   "priority": "worst row: run in the tb/land-cs boot with TURFGRAIN and SOILOFF",
+   "status": "SHIP 14 Nov: F40#15 5.10 -> 5.41 (+0.31, 3/3); perches -0.30 is a spawn confound (arm does not touch piece 08), disclosed. LANE-LAND-CS to land."
   },
   {
    "id": "land-mt-cragback",
