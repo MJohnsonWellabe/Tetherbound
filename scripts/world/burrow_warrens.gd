@@ -3607,7 +3607,12 @@ func _build_hill_shell() -> void:
 		for raw_strip: Node in model.find_children("*", "MeshInstance3D", true, false):
 			var strip_mesh := raw_strip as MeshInstance3D
 			if strip_mesh.mesh != null:
-				strip_mesh.mesh = strip_mesh_islands(strip_mesh.mesh, int(strip.get("min_tris", 1000)))
+				var repaired: Mesh = strip_mesh_islands(strip_mesh.mesh, int(strip.get("min_tris", 1000)))
+				# `fill_holes`: the mound's main body also has ~514 open loops on
+				# its flanks, where the sky shows through (the "sky holes").
+				if int(strip.get("fill_max_loop", 0)) > 0:
+					repaired = fill_mesh_holes(repaired, int(strip.get("fill_max_loop", 0)))
+				strip_mesh.mesh = repaired
 	var scale_raw: Array = cfg.get("scale_xyz", [1, 1, 1])
 	model.scale = Vector3(float(scale_raw[0]), float(scale_raw[1]), float(scale_raw[2]))
 	# fit_to: the shell's scale and footprint come from these nodes' combined
@@ -4333,6 +4338,147 @@ static func strip_mesh_islands(mesh: Mesh, min_tris: int) -> ArrayMesh:
 		out.add_surface_from_arrays(mesh.surface_get_primitive_type(s), arrays)
 		out.surface_set_material(s, mesh.surface_get_material(s))
 	return out
+
+
+## Returns a copy of `mesh` with every open boundary loop of up to `max_loop`
+## edges closed by a fan from a new centroid vertex (all per-vertex attributes
+## averaged over the loop), wound to match the neighbouring triangles. Vertices
+## are welded by position to find the loops, so UV seams are not holes.
+static func fill_mesh_holes(mesh: Mesh, max_loop: int) -> ArrayMesh:
+	var out := ArrayMesh.new()
+	for s: int in mesh.get_surface_count():
+		var arrays := mesh.surface_get_arrays(s)
+		var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var idx: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+		var weld := {}
+		var vid := PackedInt32Array()
+		vid.resize(verts.size())
+		var rep := PackedInt32Array()
+		for i: int in verts.size():
+			var v := verts[i]
+			var key := Vector3i(roundi(v.x * 100000.0), roundi(v.y * 100000.0), roundi(v.z * 100000.0))
+			if not weld.has(key):
+				weld[key] = weld.size()
+				rep.append(i)
+			vid[i] = int(weld[key])
+		var edge_count := {}
+		var tri_count := idx.size() / 3
+		for t: int in tri_count:
+			for e: int in 3:
+				var a := vid[idx[t * 3 + e]]
+				var b := vid[idx[t * 3 + (e + 1) % 3]]
+				var ek := Vector2i(mini(a, b), maxi(a, b))
+				edge_count[ek] = int(edge_count.get(ek, 0)) + 1
+		var nexts := {}
+		for t: int in tri_count:
+			for e: int in 3:
+				var a := vid[idx[t * 3 + e]]
+				var b := vid[idx[t * 3 + (e + 1) % 3]]
+				if int(edge_count[Vector2i(mini(a, b), maxi(a, b))]) == 1:
+					if not nexts.has(a):
+						nexts[a] = []
+					(nexts[a] as Array).append(b)
+		var used := {}
+		var new_idx := PackedInt32Array(idx)
+		var extra: Array[PackedInt32Array] = []
+		for start: Variant in nexts.keys():
+			for first: Variant in nexts[start]:
+				if used.has(Vector2i(int(start), int(first))):
+					continue
+				var loop: Array[int] = [int(start)]
+				var cur := int(start)
+				var nxt := int(first)
+				var closed := false
+				while loop.size() <= max_loop:
+					used[Vector2i(cur, nxt)] = true
+					if nxt == int(start):
+						closed = true
+						break
+					loop.append(nxt)
+					cur = nxt
+					nxt = -1
+					for cand: Variant in nexts.get(cur, []):
+						if not used.has(Vector2i(cur, int(cand))):
+							nxt = int(cand)
+							break
+					if nxt < 0:
+						break
+				if closed and loop.size() >= 3:
+					var members := PackedInt32Array()
+					for w: int in loop:
+						members.append(rep[w])
+					extra.append(members)
+		if extra.is_empty():
+			out.add_surface_from_arrays(mesh.surface_get_primitive_type(s), arrays)
+			out.surface_set_material(s, mesh.surface_get_material(s))
+			continue
+		var base := verts.size()
+		for k: int in arrays.size():
+			if k == Mesh.ARRAY_INDEX or arrays[k] == null:
+				continue
+			arrays[k] = _append_loop_means(arrays[k], k, base, extra)
+		for li: int in extra.size():
+			var members: PackedInt32Array = extra[li]
+			var centre := base + li
+			for i: int in members.size():
+				# Boundary edge a->b runs this way in its own triangle, so the
+				# fill triangle takes it b->a.
+				new_idx.append(members[(i + 1) % members.size()])
+				new_idx.append(members[i])
+				new_idx.append(centre)
+		arrays[Mesh.ARRAY_INDEX] = new_idx
+		out.add_surface_from_arrays(mesh.surface_get_primitive_type(s), arrays)
+		out.surface_set_material(s, mesh.surface_get_material(s))
+	return out
+
+
+static func _append_loop_means(arr: Variant, k: int, n: int, loops: Array[PackedInt32Array]) -> Variant:
+	if arr is PackedVector3Array:
+		var p3: PackedVector3Array = arr
+		if p3.size() != n:
+			return arr
+		for members: PackedInt32Array in loops:
+			var acc := Vector3.ZERO
+			for m: int in members:
+				acc += p3[m]
+			acc /= float(members.size())
+			if k == Mesh.ARRAY_NORMAL:
+				acc = acc.normalized() if acc.length() > 0.0001 else Vector3.UP
+			p3.append(acc)
+		return p3
+	if arr is PackedVector2Array:
+		var p2: PackedVector2Array = arr
+		if p2.size() != n:
+			return arr
+		for members: PackedInt32Array in loops:
+			var acc := Vector2.ZERO
+			for m: int in members:
+				acc += p2[m]
+			p2.append(acc / float(members.size()))
+		return p2
+	if arr is PackedColorArray:
+		var pc: PackedColorArray = arr
+		if pc.size() != n:
+			return arr
+		for members: PackedInt32Array in loops:
+			var acc := Color(0, 0, 0, 0)
+			for m: int in members:
+				acc += pc[m]
+			pc.append(acc / float(members.size()))
+		return pc
+	if arr is PackedFloat32Array:
+		var pf: PackedFloat32Array = arr
+		if n == 0 or pf.size() % n != 0:
+			return arr
+		var stride := pf.size() / n
+		for members: PackedInt32Array in loops:
+			for c: int in stride:
+				var acc := 0.0
+				for m: int in members:
+					acc += pf[m * stride + c]
+				pf.append(acc / float(members.size()))
+		return pf
+	return arr
 
 
 static func _uf_find(parent: Array[int], x: int) -> int:
