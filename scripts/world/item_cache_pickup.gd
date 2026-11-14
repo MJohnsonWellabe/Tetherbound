@@ -167,7 +167,7 @@ func set_fight_hidden(hidden: bool) -> void:
 			(child as Node3D).visible = show
 	if show:
 		var anchor: Node3D = _presentation_anchor if is_instance_valid(_presentation_anchor) else self
-		PICKUP_GLOW.attach(anchor, _item_colour())
+		PICKUP_GLOW.attach(anchor, _item_colour(), -1.0, MUSHROOM_PRESENTATION.glow_scale(_placement_id))
 	else:
 		_detach_visual_glow()
 
@@ -186,7 +186,7 @@ func set_visual_offset(offset: Vector3) -> void:
 		_presentation_anchor.tree_exiting.connect(_detach_visual_glow)
 	_presentation_anchor.position = offset
 	# Re-registering also marks the shared field dirty after a later offset.
-	PICKUP_GLOW.attach(_presentation_anchor, _item_colour())
+	PICKUP_GLOW.attach(_presentation_anchor, _item_colour(), -1.0, MUSHROOM_PRESENTATION.glow_scale(_placement_id))
 
 
 func _detach_visual_glow() -> void:
@@ -260,7 +260,7 @@ func _build_visual() -> void:
 	# pickup in the game and rides ABOVE the grass canopy rather than trying to
 	# out-shine it. The item's own colour still drives the tint, so a cache
 	# still reads as its own find rather than as a generic marker.
-	PICKUP_GLOW.attach(self, _item_colour())
+	PICKUP_GLOW.attach(self, _item_colour(), -1.0, MUSHROOM_PRESENTATION.glow_scale(_placement_id))
 
 
 ## Pure presentation seam shared with TM and loose-item callers. Each call
@@ -703,7 +703,7 @@ func _ready() -> void:
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	_listen_for_refusals()
 	if _presentation_anchor != null and not _taken:
-		PICKUP_GLOW.attach(_presentation_anchor, _item_colour())
+		PICKUP_GLOW.attach(_presentation_anchor, _item_colour(), -1.0, MUSHROOM_PRESENTATION.glow_scale(_placement_id))
 
 
 ## Padded Helm's icon/canon: a stitched fiber crown, open underneath.

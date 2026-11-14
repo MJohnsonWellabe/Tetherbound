@@ -1,6 +1,6 @@
 extends "res://tests/test_case.gd"
 
-## F13#5 `lesson_cue` (LANE-LAND-MT, 13 Nov, OFF until judged): only the swim
+## F13#5 `lesson_cue` (LANE-LAND-MT, 13 Nov; ON after G-land-mt-flowstreaks-r2): only the swim
 ## lesson's lanes lose their chop-cap crescents; every other lane keeps the
 ## shipped current look (F39#16 / F39#17 no-loss).
 
@@ -27,10 +27,13 @@ func _alphas(view: MeshInstance3D) -> Dictionary:
 	return counts
 
 
-func test_lesson_cue_ships_off_and_marks_only_its_lanes() -> void:
+func test_lesson_cue_ships_on_and_marks_only_its_lanes() -> void:
 	var shipped: Dictionary = _flow(false).get("lesson_cue", {})
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
-	assert_false(bool((((parsed as Dictionary).current_flow as Dictionary).lesson_cue as Dictionary).enabled), "ships OFF")
+	var live: Dictionary = ((parsed as Dictionary).current_flow as Dictionary).lesson_cue
+	assert_true(bool(live.enabled), "ships ON (GPU judged)")
+	assert_true(str(live.get("_why_on", "")).contains("G-land-mt-flowstreaks-r2"), "_why_on cites the verdict")
+	assert_eq(float(live.get("chop_cap_scale", -1.0)), 0.0, "judged chop_cap_scale")
 	assert_eq(str(shipped.get("scope", "")), "client_presentation", "the flag declares scope")
 	var ids: Array = shipped.get("current_ids", [])
 	var known: Array = []
