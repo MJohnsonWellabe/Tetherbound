@@ -4872,6 +4872,16 @@ func dress_master_site(site: Node3D, definition: Dictionary) -> void:
 	var floor_mesh := site.get_node_or_null(^"ArenaFloor") as MeshInstance3D
 	if floor_mesh != null:
 		floor_mesh.material_override = ENVIRONMENT_MATERIALS.worn_ground(site.global_position, radius)
+		# F40#17 `master_floor_1114` (LANE-LAND-CS, OFF until judged): from the
+		# High Perches rim the master_t4 floor's dirt-path texture, repeating every
+		# 2 m, reads as "a flat orange checker disc ... a placeholder" (G-land-cs-
+		# rimglow 3/3; pixel probe names MasterT4/ArenaFloor). On: a longer soil
+		# tile and a muted earth tint on Master floors only; other yards unchanged.
+		var master_floor: Variant = _visual_config.get("master_floor_1114", {})
+		if master_floor is Dictionary and bool((master_floor as Dictionary).get("enabled", false)):
+			var worn := floor_mesh.material_override as ShaderMaterial
+			worn.set_shader_parameter("soil_scale", float((master_floor as Dictionary).get("soil_scale", 0.14)))
+			worn.set_shader_parameter("soil_tint", Color(str((master_floor as Dictionary).get("soil_tint", "#80776a"))))
 	if str(definition.get("access", "")) != "fly_only":
 		return
 	for child: Node in site.get_children():
