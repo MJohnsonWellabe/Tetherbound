@@ -1,0 +1,222 @@
+[
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.099,
+  "lower_edges": 0.0845,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__close.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.0927,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.187,
+  "lower_edges": 0.2695,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.278,
+  "lower_edges": 0.2293,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach.jpg",
+  "sky_fraction": 0.105,
+  "lower_edges": 0.1222,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__close.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__high_roost_sky_shrine__08__the_high_perches__day__close.jpg",
+  "sky_fraction": 0.218,
+  "lower_edges": 0.2157,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.14,
+  "lower_edges": 0.1622,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.183,
+  "lower_edges": 0.243,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "sky_fraction": 0.111,
+  "lower_edges": 0.2219,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/base-High/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.3116,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__approach.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.099,
+  "lower_edges": 0.0868,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__close.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.073,
+  "lower_edges": 0.0929,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+  "sky_fraction": 0.187,
+  "lower_edges": 0.2697,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+  "sky_fraction": 0.278,
+  "lower_edges": 0.2324,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach.jpg",
+  "sky_fraction": 0.106,
+  "lower_edges": 0.1215,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__close.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__high_roost_sky_shrine__08__the_high_perches__day__close.jpg",
+  "sky_fraction": 0.218,
+  "lower_edges": 0.2159,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+  "sky_fraction": 0.139,
+  "lower_edges": 0.1631,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+  "sky_fraction": 0.184,
+  "lower_edges": 0.1875,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+  "sky_fraction": 0.111,
+  "lower_edges": 0.2206,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ },
+ {
+  "frame": "cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "preset": "terrace-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_locations.gd",
+  "path": "G-below6-gate-terrace-main/terrace-High/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+  "sky_fraction": 0.078,
+  "lower_edges": 0.3118,
+  "script_errors": 0,
+  "note": "BELOW6-GATE-TERRACE (F40#1): arm = landmass.gate_crag_terrace_1113 ON. By eye: realm gate approach, stepped terraces climb toward the gate on the right; other frames near-unchanged. tb/land-cs 91ac0d6a1 (main b8622117 merged; lane code flag-off), Cloudreach locations realm_gate_crag + sky_shrine, day approach/close, High. Shares one base run with the other two gate-row arms."
+ }
+]
