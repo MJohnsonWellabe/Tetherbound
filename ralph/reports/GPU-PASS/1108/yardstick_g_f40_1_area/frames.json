@@ -1,0 +1,8 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-cs-turfgrain-rows @ 12f1415a8, G-below6-wall-band-main @ d3f5aeef0, G-below6-gate-terrace-main @ 5f4d30216", "content": "tb/land-cs 91ac0d6a1 (main + flag-off); the three base runs are pixel-identical (diff 0.00)", "preset": "High",
+ "TG F40#1": ["sky_shrine day close", "landmark realm_gate day approach", "landmark heartstone day approach"],
+ "TG F40#7": ["landmark heartstone day close", "high_perches day approach"],
+ "TG F40#4": ["sky_shrine day approach", "landmark heartstone day approach"],
+ "WB / TR F40#1 (2x2)": ["sky_shrine day close", "landmark realm_gate day approach", "landmark heartstone day approach", "landmark realm_gate day close (added: the terrace arm's change is here, diff 19.15)"],
+ "pixel_diff_arm_vs_base": {"turfgrain": "2.2-6.4 on all ten frames", "wallband": "realm_gate approach 17.07; others 0.9-4.3", "terrace": "realm_gate close 19.15; others 0.4-3.4"},
+ "not judged": {"F40#3 no-loss": "its job frames (windscar beacon, broken skyroad arch, old wind observatory) are not in these sections", "F40#0/#19/#21 matrix stands": "follow later per the GPU lane", "WB/TR on non-job frames": "diffs 0.4-4.3, not judged"},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}
