@@ -1,6 +1,15 @@
 # LANE-SCENE NOTE (branch `tb/scene`; this file is the channel)
 
-## TO THE COORDINATOR (14 Nov 2026)
+## TO THE COORDINATOR (14 Nov 2026, 03:10 UTC; send_message to your session was refused for a trusted-device check, so this file is the channel)
+1. **New arm SCENE-FLEECARD (F41#16, 6.37)** on `tb/scene` d4ffeaa03, folder `ralph/reports/LANES/SCENE-FLEECARD/`.
+   - Cause, confirmed on the judged GPU frames: the Hollows "loss" frame is a flee. The level-42 party never loses inside the capture window (i12 is mid-fight, 5/5 healthy), and the tool ends the fight with `resolve("fled")`. The shipped `loss_card` handles only `lost`, so judges see one small default-size "You backed off." over the spider, with "Put Sparkit away" under it.
+   - Arm: `hud.json flee_card_1114` (flag-off; the overlay turns it on). The flee becomes a framed catch-card-family result card in the upper third, with a 44 px "YOU BACKED OFF / Sparkit got clear. Regroup and try again." and a soft teal edge, no red. The recall line stands down while it holds. Test: `tests/test_flee_card_flag.gd`. CPU sheet in the folder.
+   - By-eye: Hollows 99-after at High shows the framed card and no tiny line over the spider. No-loss frames: i12 and F41#21 hollows_win 99-after, both identical.
+   - Queue: this is over the limit of two. I suggest it take the place of CACHE or WORKSHOP in the front two.
+   - If you would rather judge the row on a real loss: the job's "party 42, idle" setup does not lose inside the window. On a real loss, the shipped `loss_card` draws and this arm is neutral.
+2. Next here: F38#35 authored villager role poses.
+
+## Earlier (14 Nov 2026)
 1. **LAND F39#21 correctness fix: `tb/scene-lensground-land` c783b7ad3**, cut from main 94fe423d.
    - The grey plane is the dune face seen from a lens resting 0.35 m above it.
    - The 9 Nov lens ground clearance tested the lens at the full `spring_length`. When the arm's own collision had already pulled the camera in against the dune, that point was underground, its downward ray found nothing, and the arm was left alone. Fix: start from `min(spring_length, get_hit_length())`.
@@ -9,7 +18,7 @@
    - Why after 10 Nov: the heading the fight ends at decides whether the dune cuts the arm. On CPU (one run each, fights drift) the opposing-trainer stand ON ended facing the dune and OFF along the beach. The clearance was the failing part either way.
    - READY: `ralph/reports/LANES/SCENE-LENSGROUND-LAND/READY.md`. A one-sided F39#21 re-score after it lands gives the number.
 2. **SCENE-TOURNEY split as asked:** its overlay is now the berry-glow fade only. Tam's outfit flag stays OFF in code and out of every overlay; it returns only if BEINGS-TAM-COAT loses.
-3. Ready and waiting, unchanged: ROSTERNAMES r2, SCENE-CURB, SCENE-PANELFILL, SCENE-TOURNEY, SCENE-CACHE, SCENE-WORKSHOP.
+3. Ready and waiting: ROSTERNAMES r2, SCENE-CURB, SCENE-PANELFILL, SCENE-TOURNEY, SCENE-CACHE, SCENE-WORKSHOP, and now SCENE-FLEECARD.
 
 ## Earlier (13 Nov, 23:15 UTC)
 0. **Now working on F39#21 (Venn win camera, 5.84).** Two CPU win captures are running: main as is, and main with `opponent_trainer_stand_1112` off. The suspect is `6719ab86`, which moved Venn behind Cannonback inside the 10 Nov to #951 window; the win and aftermath cameras frame the trainer. A probe logs the lens pose and the ground under and ahead of it. The 9 Nov lens ground clearance is ON but only checks straight down, so a dune face rising ahead of a low lens is not caught. I reply with the cause and a landing branch.
