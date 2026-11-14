@@ -5157,7 +5157,7 @@
    "added": "13 Nov 17:55",
    "priority": "ahead of below6-wall-band and below6-gate-terrace (same F40#1 row; turfgrain addresses the judged cause)",
    "note_tree": "tb/land-cs 91ac0d6a1 contains main b8622117c (#954): base frames are main content.",
-   "status": "SHIP 14 Nov: F40#1 +0.20, F40#4 +0.19, F40#7 +0.24 (all 3/3). LANE-LAND-CS to land. | Matrix pieces (F40#0/#19/#21) failed on a GPU entry typo (--out vs --output); re-running in a hook. Rows section unaffected."
+   "status": "SHIP 14 Nov: F40#1 +0.20, F40#4 +0.19, F40#7 +0.24 (all 3/3). LANE-LAND-CS to land. | Matrix pieces (F40#0/#19/#21) failed on a GPU entry typo (--out vs --output); re-running in a hook. Rows section unaffected. | Matrix no-loss done 14 Nov (G-lcs-turf-matrix): gate level, shrine +0.09, overlook -0.05 inside noise; SHIP stands. Landing in #963."
   },
   {
    "id": "scene-hallwalls",
