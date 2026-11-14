@@ -1,7 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## turf_detail_1113 (LANE-LAND-CS): OFF until judged. On, the Cloudreach turf
-## shader adds the grass texture's fine detail back.
+## turf_detail_1113 (LANE-LAND-CS): ships ON (GPU High, 14 Nov 2026,
+## G-land-cs-turfgrain-rows: F40#1 +0.20, F40#4 +0.19, F40#7 +0.24, each 3/3).
+## The Cloudreach turf shader adds the grass texture's fine detail back.
 
 const MATERIALS := preload("res://scripts/world/cloudreach_environment_materials.gd")
 
@@ -10,9 +11,14 @@ func _visual() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
 
 
-func test_ships_off_and_off_sets_nothing() -> void:
+func test_ships_on_with_its_verdict_and_off_sets_nothing() -> void:
 	var visual := _visual()
-	assert_false(bool(visual.surface.turf_detail_1113.get("enabled", true)), "turf_detail_1113 ships OFF until judged")
+	var block: Dictionary = visual.surface.turf_detail_1113
+	assert_true(bool(block.get("enabled", false)), "turf_detail_1113 ships ON")
+	assert_true(str(block.get("_why_on", "")).contains("G-land-cs-turfgrain-rows.md"), "ON cites its GPU verdict")
+	assert_true(str(block.get("_why_on", "")).contains("6.19 -> 6.39"), "and its judged score")
+	assert_false(MATERIALS.turf_detail_from(visual).is_empty(), "ON passes the detail")
+	block.enabled = false
 	assert_true(MATERIALS.turf_detail_from(visual).is_empty(), "OFF passes no detail")
 	assert_true(MATERIALS.turf_detail_from(null).is_empty(), "a missing config passes no detail")
 
