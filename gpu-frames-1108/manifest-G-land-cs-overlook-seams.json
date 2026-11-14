@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.216,
+  "lower_edges": 0.0636,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0456,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.312,
+  "lower_edges": 0.262,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.22,
+  "lower_edges": 0.1351,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "base-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/base-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.194,
+  "lower_edges": 0.1262,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "preset": "seams-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/seams-High/cloudreach__summit_final_stronghold__12__stormward_overlook__route_day.jpg",
+  "sky_fraction": 0.216,
+  "lower_edges": 0.052,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "preset": "seams-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/seams-High/cloudreach__summit_final_stronghold__12__stormward_overlook__vista_dusk.jpg",
+  "sky_fraction": 0.001,
+  "lower_edges": 0.0339,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "preset": "seams-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/seams-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_01_day.jpg",
+  "sky_fraction": 0.312,
+  "lower_edges": 0.2619,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "preset": "seams-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/seams-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_02_day.jpg",
+  "sky_fraction": 0.22,
+  "lower_edges": 0.135,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ },
+ {
+  "frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "preset": "seams-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-cs-overlook-seams/seams-High/cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day.jpg",
+  "sky_fraction": 0.193,
+  "lower_edges": 0.1209,
+  "script_errors": 0,
+  "note": "LAND-CS-OVERLOOK-SEAMS (F40#15, 5.60, worst world row): tb/land-cs 91ac0d6a1 (main b8622117 merged: overlook join + solid ruins ON as landed by #954; lane code flag-off), base = no overlay, arm = paver_strips_1113 ON (the four buried approach pavers are not built). Stormward overlook routes, High. By eye: route_day and vista_dusk the plank strip running down-right from the dark wedge is gone (the wedge stays); walk_02 the dark slab on the grass by the tree behind the trainer is gone; walk_03 the dark plank strip on the grass at upper left is gone. No-loss Sky Shrine + High Perches set follows as G-land-cs-overlook-seams-perches."
+ }
+]
