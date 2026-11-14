@@ -5667,7 +5667,7 @@
    "ask": "Round 3 (final): base vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json (keeps base deep navy and shallow colour, haze off, darker mid band, falloff 10 m: softens only the shelf transition). Re-capture F39#10, F39#15 and the S1/S2 current states, High. If a wash, F39#10 sea tone is PARKED.",
    "added": "14 Nov 01:05",
    "priority": "Tidewake step",
-   "status": "RUNNING 14 Nov 20:53 GPU time (SEADEPTH r2/r3 extras)."
+   "status": "CAPTURED 14 Nov, NOT JUDGED (lanes wrapped): High base/r2/r3 tb/gpu-frames-1113 790e5f876 (48 frames), Medium base/r2 2618730fc. By eye r2 and r3 soften the cyan-to-navy shelf edge, deep water stays navy; r3 slightly darker mid band. Next session: judge from these frames. GPU handoff gpu-frames-1108/HANDOFF-GPU-1113.md (51cabd281)."
   },
   {
    "id": "land-cs-archstand",
@@ -5751,5 +5751,7 @@
    "priority": "high (regression 7.06 -> 5.84; fix landed)"
   }
  ],
- "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
+ "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them.",
+ "notes": [],
+ "wrapup_1114": "Lanes wrapped 14 Nov ~03:20 UTC. GPU runner stopped (STOP_ONE before beings-tam-coat); last frames 2618730fc on tb/gpu-frames-1113; handoff 51cabd281 gpu-frames-1108/HANDOFF-GPU-1113.md. Not captured: rescore-f39-21-lensground, scene-fleecard, land-cs-wallband2, beings-perch-clearance, land-mt-veilrebuild (held), and the continuation runner from beings-tam-coat onward. Unpushed local sections on the GPU machine: cragback-f39-2-noloss, meadowground-medium-time. Driver: nvoglv64.dll 0xC0000094 intermittent; one retry clears it."
 }
