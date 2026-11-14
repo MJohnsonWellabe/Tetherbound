@@ -1,5 +1,11 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## LANDING READY (14 Nov 03:25 UTC): `tb/land-cs-rimarch-land` 06c384847
+- RIMSEAT SHIPS (G-lcs-rimseat): F40#17 6.05 -> 6.68 (+0.63, 3/3). ARCHSTAND RE-BASELINE adopted (G-lcs-archstand): F40#3 6.37 vs 5.74 (+0.63, 3/3).
+- From main 8abc4ad70: `rim_pickup_seat_1114` ON, `rim_glow_1113.scale` 0.3, `candidates_1113` ON, each with its `_why_on`; two ON pins; 110 tests across 15 files, 0 failed.
+- `tb/land-cs` 98670f209 now contains main (#963 TURFGRAIN, #957 Staticub coat) for the next Stormwood capture.
+- CPU-ready, waiting: LAND-CS-WALLBAND2 (F40#1, F40#8 no-loss).
+
 ## LANDING READY (14 Nov 02:45 UTC): `tb/land-cs-soiloff-land` 043e33593
 - SOILOFF SHIPS (G-land-cs-soiloff): F41#22 5.33 -> 6.03 (+0.70, 3/3), F41#24 5.29 -> 6.23 (+0.94, 3/3); glass, rod_line, stormheart level.
 - Cut from current main 94fe423d3; only `forest_layers_1113` ON with `_why_on`; ON pin; 45 Stormwood ground tests, 0 failed; READY.md. Presentation only (no route smoke needed).
@@ -54,8 +60,8 @@
 - F40#1, F40#8 HELD: LAND-CS-WALLBAND2 (band limited to the top 3 m under rims), CPU-ready.
 - F40#1, F40#8 PARKED (as is): BELOW6-WALL-BAND. F40#1 +0.32 (3/3) but F40#8 loses 6.29 -> 5.86 (0/3, cliff face repainted). Withdrawn from PR #963.
 - F40#1 HELD: BELOW6-GATE-TERRACE (+0.20, 2/3, curbs read as generated contour lines); re-judge with the wall band on.
-- F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.
-- F40#17 HELD: LAND-CS-RIMSEAT (tan rim find 1.2 m back from the lip; overlay glow 0.3), CPU-ready, waiting for a queue slot.
+- F40#3 SHIPPED (re-baseline): LAND-CS-ARCHSTAND, 6.37 vs 5.74 (3/3); landing tb/land-cs-rimarch-land.
+- F40#17 SHIPPED: LAND-CS-RIMSEAT, 6.05 -> 6.68 (3/3); landing tb/land-cs-rimarch-land.
 - F40#17 PARKED: rim finds respaced widely (CPU round 1 of RIMSEAT, not sent): two clusters left the fixed frame.
 - F40#17 PARKED: LAND-CS-MASTERFLOOR (Master T4 arena floor soil tile and tint). G-land-cs-masterfloor: level, 6.04 -> 6.13 (+0.09, 1/3, 2 ties); judges call the platform background, not the subject. LANE-JUDGE: no more rounds on the platform top for F40#17.
 - F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land.
