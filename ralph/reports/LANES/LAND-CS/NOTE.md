@@ -1,5 +1,11 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## LANDING READY (14 Nov 01:40 UTC): `tb/land-cs-seams-land` 3abd3fa9
+- OVERLOOK-SEAMS SHIPS (LANE-JUDGE G-land-cs-overlook-seams): F40#15 5.10 -> 5.41 (+0.31, 3/3), overlook other views +0.31 (3/3).
+- **Disclosed:** High Perches no-loss −0.30 (0/3), which LANE-JUDGE attributes to wyvern staging and did not count; a fixed-seed re-capture is offered. Your call before merging.
+- Cut from current main; flag ON with `_why_on`; ON pin; `test_cloudreach_stormward_overlook` paver count 4 -> 0; 18 tests, 0 failed; overlook route smoke PASS.
+- Two slots free now (RIMGLOW and SEAMS judged): ARCHSTAND (F40#3) and MASTERFLOOR (F40#17) are CPU-ready.
+
 ## New arm, held: LAND-CS-MASTERFLOOR (F40#17, 14 Nov 01:10 UTC)
 - The "orange checker disc" on the upper platform is `MasterT4/ArenaFloor` (pixel probe): the worn-ground soil overlay with a 2 m dirt-path tile at #9b805f. The arm gives Master floors a 7 m tile and a muted earth tint (#80776a); other yards unchanged. CPU: the checker is gone. CPU-ready and held.
 - The "griffin clipping the tower" is the player's own Galecrest companion (`AllyCreature`), so it is companion placement for LANE-BEINGS or LANE-THINGS, not this lane.
@@ -15,7 +21,7 @@
 - F40#15 PARKED: remove the ridge join's 4 m route exemption (temporary switch); the wedge is unchanged, only the pavers sink.
 - F40#15 PARKED: `edge_1113` (join over every cap-0 pad, from 1.5 m inside the rim); no visible change, reverted. Ridge vertices are about 4 m apart, so a lift cannot reach the ledge face between them.
 - F40#15 PARKED: `overlook_ledge_drop_1113` (overlook ledge and pad 0.18 m lower); no visible change, reverted. Next try must first confirm the ledge face moves (print its heights).
-- F40#15 HELD: LAND-CS-OVERLOOK-SEAMS (buried approach pavers not built), queued for the GPU.
+- F40#15 SHIPPED: LAND-CS-OVERLOOK-SEAMS, 5.10 -> 5.41 (3/3); landing branch tb/land-cs-seams-land.
 - F40#1 PARKED: re-cluster the Cloudreach grass tufts by overlay (`ground_cover.cluster_frequency` 0.55, `cluster_threshold` 0.9); no visible change on CPU, not sent.
 - F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.
 - F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.
