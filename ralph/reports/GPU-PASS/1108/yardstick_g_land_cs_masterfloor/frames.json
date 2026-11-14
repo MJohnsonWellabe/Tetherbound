@@ -1,0 +1,4 @@
+{"branch": "tb/gpu-frames-1113", "section": "G-land-cs-masterfloor", "content": "tb/land-cs da73dd7e0, RIMGLOW on both sides; arm = Master T4 platform orange checker -> mottled earth soil", "preset": "High",
+ "F40#17": ["high-perches-crown-rim-out-day", "high-perches-crown-rim-out-night"], "Crown court no-loss": ["high-perches-crown-court-day"],
+ "pixel_diff_arm_vs_base": {"rim-out-day": 1.76, "rim-out-night": 0.48, "court-day": 1.19},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}
