@@ -87,6 +87,29 @@ static func ground_cluster() -> Dictionary:
 	return parsed
 
 
+## cloudreach_visual.json surface.turf_detail_1113 when enabled, else {}.
+## Read once: every turf, trail and blade material asks for it.
+static var _turf_detail_loaded := false
+static var _turf_detail: Dictionary = {}
+
+static func turf_detail() -> Dictionary:
+	if not _turf_detail_loaded:
+		_turf_detail_loaded = true
+		_turf_detail = turf_detail_from(JSON.parse_string(
+			FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json")))
+	return _turf_detail
+
+
+static func turf_detail_from(visual: Variant) -> Dictionary:
+	if not visual is Dictionary:
+		return {}
+	var surface: Variant = (visual as Dictionary).get("surface", {})
+	var detail: Variant = (surface as Dictionary).get("turf_detail_1113", {}) if surface is Dictionary else {}
+	if not detail is Dictionary or not bool((detail as Dictionary).get("enabled", false)):
+		return {}
+	return detail
+
+
 ## The same field as cloudreach_turf.gdshaderinc's cloudreach_turf_patch.
 static func turf_patch_field(x: float, z: float, frequency: float) -> float:
 	var px := x * frequency
@@ -104,6 +127,11 @@ static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
 	material.set_shader_parameter("grass_tint",Color(str(turf.get("dry_grass_tint", "#a2ad78"))) if dry \
 		else Color(str(turf.get("grass_tint", "#8ca867"))))
 	material.set_shader_parameter("grass_scale",0.65)
+	# turf_detail_1113 (LANE-LAND-CS, flag-off): fine turf grain.
+	var detail := turf_detail()
+	if not detail.is_empty():
+		material.set_shader_parameter("turf_detail_1113", Vector3(float(detail.get("strength", 1.6)),
+			float(detail.get("fine_scale", 3.1)), float(detail.get("fine_strength", 0.9))))
 	# tb/vis-water-sky group 2 (flag-off): dry/lush turf patches.
 	var cluster := ground_cluster()
 	if not cluster.is_empty():

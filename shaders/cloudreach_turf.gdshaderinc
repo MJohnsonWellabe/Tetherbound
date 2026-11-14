@@ -18,6 +18,14 @@ uniform vec2 turf_lush_band = vec2(0.3,0.55);
 // trail feathers and frays into the turf, z = how far the trail's orange soil
 // is pulled toward a duller earth. Set by cloudreach_weather.gd.
 global uniform vec4 cloudreach_ground_1112;
+// turf_detail_1113 (LANE-LAND-CS, OFF until judged; x = 0 keeps the shipped
+// turf). The 0.52 contrast cut below removes the lumpy patches and with them
+// every blade-scale mark, so the lawn reads as one blurred flat green. On:
+// only the texture's FINE detail comes back (the sample minus its own blurred
+// mip, so no broad patch returns), plus a finer second octave that mipmapping
+// fades out with distance. x = strength, y = fine octave scale, z = fine
+// octave strength. cloudreach_visual.json surface.turf_detail_1113.
+uniform vec3 turf_detail_1113 = vec3(0.0, 3.1, 0.9);
 float cloudreach_turf_patch(vec2 xz) {
 	vec2 p = xz * turf_patch_freq;
 	float a = sin(p.x + sin(p.y * 1.37) * 1.7) * sin(p.y * 0.91 + sin(p.x * 1.13) * 1.3);
@@ -30,6 +38,13 @@ vec3 cloudreach_turf(vec3 at) {
 	vec3 texture_value=mix(fine,turned,0.35);
 	// Keep installed texture detail but suppress large lumpy camouflage patches.
 	texture_value=mix(vec3(0.51),texture_value,0.52);
+	if (turf_detail_1113.x > 0.0) {
+		vec2 uv = at.xz*grass_scale;
+		vec3 grain = fine - textureLod(grass_texture, uv, 4.5).rgb;
+		vec2 fine_uv = mat2(vec2(0.6,0.8),vec2(-0.8,0.6))*uv*turf_detail_1113.y;
+		vec3 fine_grain = texture(grass_texture, fine_uv).rgb - textureLod(grass_texture, fine_uv, 4.5).rgb;
+		texture_value += (grain + fine_grain*turf_detail_1113.z)*turf_detail_1113.x;
+	}
 	float broad=sin(at.x*0.029+sin(at.z*0.041))*0.045;
 	vec3 turf_tint = grass_tint.rgb;
 	if (turf_patch_strength > 0.0) {

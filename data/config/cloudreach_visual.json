@@ -242,6 +242,15 @@
     {"id": "NorthSummitRange", "position": [220, 720, 6260], "size": [1550, 2040, 650], "seed": 407, "profile_exempt": true}
   ],
   "surface": {
+    "turf_detail_1113": {
+      "enabled": true,
+      "scope": "client_presentation",
+      "_why_on": "ON (GPU High, 14 Nov 2026; ralph/reports/GPU-PASS/1108/G-land-cs-turfgrain-rows.md on tb/judge 589da6be; confirming batch, r 0.886, RMSE 0.64): every judged row gains, each 3/3: F40#1 6.19 -> 6.39 (+0.20), F40#4 6.55 -> 6.74 (+0.19), F40#7 6.66 -> 6.90 (+0.24); no row loses; the arm won on both sides of the A/B, so no position bias. Judges: the grain gives the ground a material but tiles to speckle near the camera (next: macro variation).",
+      "_why": "LANE-LAND-CS (13 Nov 2026), Cloudreach ground ('uniform lawn with lone blades, blurry low-resolution path and plot splats'). cloudreach_turf.gdshaderinc cuts the grass texture's contrast to 0.52 to hide lumpy patches, which also removes every blade-scale mark. On: the texture's fine detail only is added back (sample minus its own blurred mip) with a finer second octave that mipmapping fades with distance. Turf, trail shoulder and blade root colours share the function. Shader uniforms only.",
+      "strength": 1.25,
+      "fine_scale": 3.1,
+      "fine_strength": 0.8
+    },
     "cliff": {
       "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
       "normal": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
