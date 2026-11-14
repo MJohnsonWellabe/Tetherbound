@@ -19,6 +19,16 @@
 - **Precedent:** the AQUARYN beach-creature confound (G-below6-aquaryn-ride-c673) and the ROSTERNAMES camera-state withdrawal were handled the same way. The drop is disclosed, not hidden.
 - **If the coordinator wants it proven:** re-capture the 2x2 with a fixed creature seed. I expect it to come back level.
 
+## Addendum (14 Nov): Perches confound confirmed by a second run
+- **The run:** the GPU lane pushed `G-land-cs-seams-perches-confirm`, a second base run and a second arm run of the same 64 Perches/Sky Shrine frames.
+- **On the four frames judged here (my own diff):**
+  - Base run 1 against base run 2: mean difference 5.6 to 7.9.
+  - Base run 1 against the arm: 4.6 to 5.2.
+  - So two base runs differ from each other by more than the arm differs from base, in every judged frame.
+- **Pooled over all 64 frames (GPU lane):** base against base 3.20, best base against arm 1.74.
+- **Conclusion:** the −0.30 is run-to-run creature and rain staging, not the arm. The verdict stands: SHIP, with no Perches loss.
+- **Not re-judged:** no close is at stake, and the pixel evidence settles it.
+
 ## What the judges see
 - **F40#15 and overlook (3/3):** the base adds "a dark green flat slab behind the trainer by the tree", "a dark slab in the grass" in walk_03, and "a cobblestone strip that crosses the wedge and runs off-frame" in route_day and vista_dusk. None of these are on the arm, so the arm removes what it was meant to remove.
 - **What remains on both sides:**
