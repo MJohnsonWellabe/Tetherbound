@@ -1,7 +1,7 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
-- **LANDING READY: `tb/land-mt-flowstreaks-land` b95ca34d** (from main b52651b0, after #960). This is FLOWSTREAKS round 2: `current_flow.lesson_cue` is ON with `_why_on` citing G-land-mt-flowstreaks-r2 (F13#5 +0.85, 3/3). READY.md is in `ralph/reports/LANES/LAND-MT-FLOWSTREAKS-LAND/`. The pin test and 2 related files ran: 10 tests, 154 assertions, 0 failed.
+- **LANDING READY: `tb/land-mt-flowstreaks-land` 548096bc** (pushed 00:40 from b52651b0, now merged up to main 1405def4; diff vs main is the 5 FLOWSTREAKS files only). This is FLOWSTREAKS round 2: `current_flow.lesson_cue` is ON with `_why_on` citing G-land-mt-flowstreaks-r2 (F13#5 +0.85, 3/3). READY.md is in `ralph/reports/LANES/LAND-MT-FLOWSTREAKS-LAND/`. The pin test and 2 related files ran: 10 tests, 154 assertions, 0 failed.
 - **Row-tagged status (for TRIED_AND_FAILED):**
   - F38#24 TWORANGES: PARKED. A stretched copy of the ridge reads as a pale streaky wall; a real second range needs a new far mesh.
   - F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake.
