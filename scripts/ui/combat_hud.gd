@@ -985,7 +985,7 @@ func _draw_prompt() -> void:
 	# ("Call out ..." / "... away") stands down while a story payoff holds the
 	# screen (`presentation_hold.gd`). "Engage X" and a fight's own lines are
 	# never held. Same recall test as `playground_hud.gd`.
-	if not fighting and PRESENTATION_HOLD.active(get_tree()) \
+	if not fighting and (PRESENTATION_HOLD.active(get_tree()) or (_flee_card_up and _outcome_left > 0.0)) \
 			and (line.contains("Call out") or line.contains(" away")):
 		_prompt.text = ""
 		return
@@ -1990,6 +1990,8 @@ func _on_exited(outcome: String) -> void:
 	_outcome_left = 2.5
 	if outcome == "lost":
 		_apply_loss_card()
+	elif outcome == "fled":
+		_apply_flee_card()
 
 
 ## P2-061: hud.json `catch_card` (off unless enabled). The catch verdict is
@@ -2320,6 +2322,72 @@ func _apply_loss_card() -> void:
 	_outcome_left = maxf(_outcome_left, float(cfg.get("seconds", 3.5)))
 
 
+## F41#16 (LANE-SCENE 14 Nov): hud.json `flee_card_1114` (off unless enabled).
+## Backing off a fight drew one small default-size line, "You backed off.",
+## over the foe at screen centre, with the recall prompt still under it, so the
+## end of the fight did not read as a result. When on, the flee verdict is the
+## same framed card family as the catch card: a headline over who got clear, in
+## the upper third, clear of the creature, held for `seconds`; the director's
+## "Put X away" line stands down while it holds. Presentation only; the flee,
+## its timing and every rule after it are unchanged.
+static func flee_card_config() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	var cfg: Variant = parsed.get("flee_card_1114", {}) if parsed is Dictionary else {}
+	return cfg if cfg is Dictionary and cfg.get("enabled") == true else {}
+
+
+## Pure: the flee card's text for a creature name (blank name = generic line).
+static func flee_card_text(cfg: Dictionary, creature_name: String) -> String:
+	var headline := str(cfg.get("headline", "YOU BACKED OFF"))
+	var detail := str(cfg.get("detail", "%s got clear.")) if not creature_name.is_empty() \
+		else str(cfg.get("detail_generic", "Your team got clear."))
+	if detail.contains("%s"):
+		detail = detail % creature_name
+	return headline + ("\n" + detail if not detail.is_empty() else "")
+
+
+var _flee_card_up := false
+
+
+func _apply_flee_card() -> void:
+	var cfg := flee_card_config()
+	if not cfg.is_empty():
+		_show_flee_card(cfg)
+
+
+func _show_flee_card(cfg: Dictionary) -> void:
+	var ally: RefCounted = _manager.call("active_creature") if _manager != null else null
+	var ally_name := str(ally.get("display_name")) if ally != null else ""
+	_outcome.text = flee_card_text(cfg, ally_name)
+	_outcome.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	_outcome.add_theme_font_size_override("font_size", int(cfg.get("headline_px", 40)))
+	_outcome.add_theme_constant_override("line_spacing", 4)
+	_outcome.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_outcome.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	var card := StyleBoxFlat.new()
+	card.bg_color = Color(UITokens.BG_DEEP, float(cfg.get("plate_alpha", 0.94)))
+	card.border_color = UITokens.WARNING if cfg.get("accent") == "warning" else UITokens.TEAL_SOFT
+	card.set_border_width_all(2)
+	card.border_width_left = int(cfg.get("accent_px", 8))
+	card.set_corner_radius_all(12)
+	card.content_margin_left = 28.0
+	card.content_margin_right = 28.0
+	card.content_margin_top = 16.0
+	card.content_margin_bottom = 16.0
+	_outcome.add_theme_stylebox_override("normal", card)
+	if not _outcome.has_meta(&"band_offsets"):
+		_outcome.set_meta(&"band_offsets", Vector2(_outcome.offset_left, _outcome.offset_right))
+		_outcome.set_meta(&"band_vertical", Vector2(_outcome.offset_top, _outcome.offset_bottom))
+	var half := float(cfg.get("card_half_width", 380.0))
+	_outcome.offset_left = -half
+	_outcome.offset_right = half
+	var top := float(cfg.get("card_top", -380.0))
+	_outcome.offset_top = top
+	_outcome.offset_bottom = top + 80.0
+	_outcome_left = maxf(_outcome_left, float(cfg.get("seconds", 3.0)))
+	_flee_card_up = cfg.get("hold_recall_prompt", true) == true
+
+
 ## Optional world phase hook. Ordinary Meadows reads its manager as before.
 static func enemy_identity_text(foe: RefCounted, manager: Node, director: Node) -> String:
 	if foe == null: return ""
@@ -2471,6 +2539,7 @@ func _tick_outcome(delta: float) -> void:
 		_break_focus_restore.clear()
 	if _outcome_left <= 0.0:
 		_breakout_card_up = false
+		_flee_card_up = false
 		_outcome.text = ""
 		_hide_catch_portrait()
 		_outcome.remove_theme_stylebox_override("normal")

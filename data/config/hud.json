@@ -77,6 +77,21 @@
     "enabled": false,
     "_why_off": "Unjudged in a scored batch; stays OFF (fixes the minimap drawing the Meadows bake outside the Meadows)."
   },
+  "flee_card_1114": {
+    "_why": "F41#16 (LANE-SCENE 14 Nov 2026). The judged Hollows result frame is a flee: the fight is ended with resolve(\"fled\") and the only result was one small default-size line, 'You backed off.', drawn over the foe at screen centre with the 'Put Sparkit away' prompt still under it (GPU High 1108 rescore 6.37, PARTIAL 3/3 'the loss result is not clear'). When on, the flee verdict is a framed result card in the catch-card family (headline over who got clear, upper third, clear of the creature) held for `seconds`, and the recall line stands down while it holds (combat_hud.gd _apply_flee_card). Presentation only. OFF until judged.",
+    "scope": "client_presentation",
+    "enabled": false,
+    "headline": "YOU BACKED OFF",
+    "detail": "%s got clear. Regroup and try again.",
+    "detail_generic": "Your team got clear.",
+    "headline_px": 44,
+    "card_half_width": 400,
+    "card_top": -380,
+    "accent_px": 8,
+    "plate_alpha": 0.94,
+    "seconds": 3.0,
+    "hold_recall_prompt": true
+  },
   "loss_card": {
     "_why": "P2-110 (visual-claude lane, 2026-10-12): after a lost wild fight, 'Battle lost' appeared as loose text over the exploration HUD while the roster still looked ready, with no distinct loss result. With this enabled, combat_hud.gd draws the verdict as a framed card (amber warning border, opaque plate) held for `seconds`. Presentation only. Stays OFF until a code-blind PASS.",
     "enabled": true,
