@@ -1,6 +1,7 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **SHELLSHARDS: cleared to land per your condition. The GPU retry is clean**: same composition, arm side only, 10/10 frames, exit 0, no script errors, no new crash event (tb/gpu-frames-1113 07806bb97, G-land-mt-shellshards-retry). The 19:01 crash matches the known intermittent nvoglv64.dll fault. **Land branch: `tb/land-mt-shellshards-land` e9e8d703**, with the degenerate-geometry checks in its pin test (4 tests, 0 failed) and the crash investigation in READY.md. Ready for the next PR.
 - **On the GPU lane's crash evidence** (tb/gpu-frames-1113 76f13eed9: the fault is inside the NVIDIA OpenGL driver, nvoglv64 32.0.15.6094, an integer divide; the same signature appears on 10 earlier captures, 13 Oct to 9 Nov).
   - I checked their zero-count guess against this change. The shell's cover tufts and edge flora are individual scene nodes, not MultiMeshes, so island_strip cannot create a zero-instance MultiMesh.
   - The repaired shell is one surface, validated non-empty with whole, in-range, non-degenerate triangles and finite unit attributes (e9e8d703 pin). There are no zero-length buffers: the vertex, normal, tangent and UV arrays are all sized to the 59,650 + fill vertices.
