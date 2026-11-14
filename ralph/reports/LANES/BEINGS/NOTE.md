@@ -2,6 +2,8 @@
 
 ## HANDOFF (14 Nov 2026, lane wrap-up on owner direction)
 
+**Reply to the coordinator's WRAP UP (direct message refused: untrusted device).** The final head is the commit that adds this line, on top of f6ac63ac5 (clean merge of origin/main). Every unlanded arm is flag-OFF, checked after the merge. One line of status: one criterion closed (F36 (0) #19), #956/#957/#958 on main, 12 arms waiting on the GPU or a verdict.
+
 ### State
 - Branch `tb/beings`; the head is the commit carrying this handoff, see `git log -1 origin/tb/beings`. Every unlanded arm is flag-OFF in code and switched on by an overlay only.
 - **On main from this lane:**
