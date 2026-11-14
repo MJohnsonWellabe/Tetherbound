@@ -1,6 +1,13 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **#964 blocker fixed: `tb/land-mt-shellshards-land` a4a8ed8f** (only `tests/test_hill_shell_island_strip.gd` changed). It now extends `res://tests/test_case.gd`. The standalone vars, `_initialize` and `_check` are gone, the four tests are renamed `test_*`, `_check(` became `assert_true(`, and the helpers and every assertion are unchanged.
+  - Real runner (`godot --headless --path . --script tests/run_tests.gd -- --only=<file>`):
+    - `test_hill_shell_island_strip.gd`: 4 tests, 48 assertions, 0 failed.
+    - `test_warrens_meadow_match.gd`: 3 tests, 19 assertions, 0 failed.
+    - `test_warrens_hill_shell_r2.gd`: 2 tests, 7 assertions, 0 failed.
+    - `test_warrens_hill_foundation.gd`: 3 tests, 7 assertions, 0 failed.
+    - `test_warrens_shell_seat_f38_30.gd`: 1 test, 4 assertions, 0 failed.
 - **Built and HELD for the next free GPU slot: `LAND-MT-VEILREBUILD` (F39#31, the Veilfall rebuild you asked for).** Overlay only (`falls.rebuild.enabled`); no Meshy, no tiers removed, no camera-facing puffs.
   - **What reached the views:** (1) the fall pattern stretched into long thin vertical streaks (the cells were about 7 x 9 m, the judges' "blocky tiled fall"); (2) three layered strands per fall with their own speeds; (3) a wet, multiply-darkened rock apron 2.3x the fall's width either side.
   - **Pool and mist shell:** built but OFF. The near stand is about 40 m from the cascade foot, which the live candidate ends 35 m up the gully, so the shell read as a glassy dome and the pool was hidden.
