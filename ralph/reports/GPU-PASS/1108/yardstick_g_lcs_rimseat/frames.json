@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1113", "section": "G-lcs-rimseat @ b43810834", "content": "tb/land-cs dbbfc7842 (main with RIMGLOW); arm = rim_pickup_seat_1114 ON + rim glow 0.45 -> 0.3", "preset": "High, fixed fps 20",
+ "F40#17": ["crown-rim-out-day", "crown-rim-out-night"], "Crown court no-loss": ["crown-court-day", "crown-court-night"], "Arrival no-loss": ["arrival-far-day", "arrival-lip-day", "arrival-landed-day"],
+ "pixel_diff_arm_vs_base": {"rim-out-day": 2.33, "rim-out-night": 6.31, "court-day": 2.64, "court-night": 6.42, "arrival-far": 0.28, "arrival-lip": 0.63, "arrival-landed": 12.01},
+ "not judged": {"departure-lookback": "incomplete on both sides (glide ended early / launch flake)"},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}
