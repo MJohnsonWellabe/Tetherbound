@@ -2770,7 +2770,7 @@
   },
   "F40#17": {
    "gpu": 6.61,
-   "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08) | ARM BELOW6-MUSHROOMS rim part G-below6-mushrooms (bc115978b, 12 Nov): 6.01 -> 6.94 (3/3, FIXED 3/3), ships as its own part; landing to come | 6.18 -> 5.61: toy-like glow mushrooms, night grade off-palette navy (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6) | G-land-cs-rimglow SHIP 6.03 -> 6.61 (+0.58, 3/3): milky halo balls gone (LANE-JUDGE 99819fd24, 14 Nov)"
+   "src": "GPU High 8-9 Nov (F-cloudreach); RE-SCORE G-rescore-stale-tier2 (LANE-PLACES tb/places 905d09ecc, main b3dc21395, GPU High, 12 Nov): 6.18 (was 6.08) | ARM BELOW6-MUSHROOMS rim part G-below6-mushrooms (bc115978b, 12 Nov): 6.01 -> 6.94 (3/3, FIXED 3/3), ships as its own part; landing to come | 6.18 -> 5.61: toy-like glow mushrooms, night grade off-palette navy (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6) | G-land-cs-rimglow SHIP 6.03 -> 6.61 (+0.58, 3/3): milky halo balls gone (LANE-JUDGE 99819fd24, 14 Nov) | RIMSEAT arm (G-lcs-rimseat, LANE-JUDGE d0e475d15, 14 Nov, not landed yet): 6.05 -> 6.68 (+0.63, 3/3), floating cluster fixed 3/3; court +0.31"
   },
   "F40#18": {
    "gpu": 7.49,

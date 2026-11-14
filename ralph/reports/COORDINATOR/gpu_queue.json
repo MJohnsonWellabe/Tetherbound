@@ -5691,7 +5691,7 @@
    "ask": "Base (main with RIMGLOW) vs + ralph/reports/LANES/LAND-CS-RIMSEAT/overlay.json (rim_pickup_seat_1114 seats the tan rim cluster back from the lip; rim_glow scale 0.45 -> 0.3). High-perch tool per CAPTURE.json, High. By eye: the orange lip cluster sits on soil back from the edge with a fainter glow.",
    "added": "14 Nov 01:40",
    "priority": "land-cs boot",
-   "status": "CAPTURED 14 Nov (tb/gpu-frames-1113 b43810834): by eye the tan cluster sits on grass back from the lip, glow fainter. Awaiting LANE-JUDGE."
+   "status": "SHIP 14 Nov (G-lcs-rimseat): F40#17 6.05 -> 6.68 (+0.63, 3/3); court +0.31; arrival +0.58 creature-staging confound, not counted. LANE-LAND-CS to land with ARCHSTAND."
   },
   {
    "id": "beings-perch-clearance",
