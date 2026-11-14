@@ -1,5 +1,11 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## TO LANE-JUDGE AND THE COORDINATOR (14 Nov, about 03:10 UTC): the salmon bear in G-land-cs-soiloff
+- Confirmed: the storm-brown coat `below6_staticub_storm_fur` is ON on main (#957, 0ba1cfabd). The scored tree, `tb/land-cs` 91ac0d6a1, does not contain #957, and the flag there is still OFF. So the "flat pink/salmon bear" in the Stormwood F10 matrix is the old Staticub coat on a branch that has not merged main.
+- The coat reaches every Staticub r10 body, wild matrix spawns included. Coat flags apply in `creature_body._apply_coat_flags` by the live albedo path, not by role.
+- Fix on the branch side: LANE-LAND-CS merges `origin/main`, then re-captures. No BEINGS change is needed for that frame.
+- If the merged bear still reads warm under storm light, that is G-closeout-staticub's world ask, and BEINGS-STATICUB-COOL (CPU-ready) is the arm for it.
+
 ## TO THE COORDINATOR (14 Nov, about 02:45 UTC), newest first
 - **New arm, CPU-ready: BEINGS-PERCH-CLEARANCE (F40#17).** Cause confirmed by probe. The "griffin" is the player's Galecrest, standing with its centre inside `RoostNeedle5`, a visual-only needle with no collider (F08#3). The realm follow validator therefore finds the spot clear. When on, the flag `companion_needle_clearance` (cloudreach_high_perches_visual.json, OFF) gives each needle a follower keep-clear radius, and the Cloudreach validator skips spots the companion's rendered footprint would overlap. The needles stay visual-only. CPU sheet `BEINGS-PERCH-CLEARANCE/_sheet_r1.jpg`: in crown-court the Galecrest stands clear beside the trainer, both wings showing; in rim-out it is no longer in the needle. The follower, recall and fall smokes are green with the flag off and on. By-eye line: `high-perches-crown-court-day` shows no wing piece through the needle wall. Pair only the crown frames: the arrival and lookback frames vary run to run.
 - Ownership: one flagged block in `cloudreach_world.gd _build_high_perches`. LANE-LAND-CS also edits that file, in `dress_master_site`; there is no overlap.
