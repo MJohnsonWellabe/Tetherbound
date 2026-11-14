@@ -5600,6 +5600,17 @@
    "added": "13 Nov 23:10",
    "priority": "in the land-mt boot after SEADEPTH/SHOREZONES",
    "status": "SHIP 13 Nov: F13#5 5.70 -> 6.55 (+0.85, 3/3); states level. LANE-LAND-MT to land."
+  },
+  {
+   "id": "land-cs-masterfloor",
+   "branch": "tb/land-cs",
+   "commit": "da73dd7e0",
+   "rows": [
+    "F40#17 High Perches (6.61 after RIMGLOW)"
+   ],
+   "ask": "Base vs + ralph/reports/LANES/LAND-CS-MASTERFLOOR/overlay.json (Master T4 arena floor: 7 m soil tile and muted earth tint #80776a, replacing the 2 m dirt-path tile that reads as an orange checker disc). High-perch tool frames per its CAPTURE.json, High. By eye: no orange checker on the upper platform. Base must include RIMGLOW once #961 lands (or overlay both).",
+   "added": "14 Nov 00:35",
+   "priority": "land-cs boot"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
