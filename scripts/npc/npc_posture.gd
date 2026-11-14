@@ -12,6 +12,13 @@ static func install(body: Node3D, cfg: Dictionary, idle: String) -> String:
 	var data := config()
 	var model := str(cfg.get("model", "")).get_file().get_basename()
 	var names: Dictionary = data.get("by_name", {})
+	# F38#35 (LANE-SCENE 14 Nov): `role_poses_1114` (off unless enabled) maps
+	# named villagers onto authored readable silhouettes (folded arms, hands
+	# on hips, one hand on the hip) instead of the small role offsets.
+	var arm: Variant = data.get("role_poses_1114", {})
+	if arm is Dictionary and (arm as Dictionary).get("enabled") == true:
+		names = names.duplicate()
+		names.merge((arm as Dictionary).get("by_name", {}), true)
 	var models: Dictionary = data.get("by_model", {})
 	var role := str(names.get(str(body.name), models.get(model, "")))
 	var profiles: Dictionary = data.get("profiles", {})

@@ -1,5 +1,11 @@
 {
   "_comment": "P2-050: role-specific standing poses, applied to a private copy of each NPC's installed idle. Values are extra bone-local XYZ degrees over the breathing clip. Negative forearm X flexes the elbow, following tools/art_pipeline/blender/animate_humanoid.py's anatomical axes. No hips, legs, feet or translations change. Keep hands below the face and away from each other; these are social postures, not attacks or guards in a human combat system.",
+  "role_poses_1114": {
+    "_why": "F38#35 villager role poses (LANE-SCENE 14 Nov 2026; GPU 6.33). The P2-050 role offsets (4-38 degrees over the breathing idle) do not read on villagers about 40 px tall, and a 1.8x gain still did not register (parked). When on, the named villagers take authored readable silhouettes, drafted and checked on an xvfb pose bench at 40 px: Halda folded arms (her shirt is skinned to the arms, so no raised-elbow pose), Oskar hands on hips (elbows out), Lark one hand on the hip with the other at his strap. Same install path, bone-local offsets on the installed idle; hips, legs and feet untouched. Folded arms bring the hands together, an owner/coordinator-requested exception to the hands-apart note above; they stay below the face and are social, not guards. Presentation only. OFF until judged.",
+    "scope": "client_presentation",
+    "enabled": false,
+    "by_name": {"Halda": "marshal_folded_1114", "Oskar": "keeper_hips_1114", "Lark": "courier_hip_1114"}
+  },
   "by_name": {
     "Mira": "grower",
     "Tam": "artisan",
@@ -40,6 +46,9 @@
     "former_tether_member_lod0": "reserved"
   },
   "profiles": {
+    "marshal_folded_1114": {"LeftArm": [-25, 80, -10], "LeftForeArm": [-115, 0, 0], "RightArm": [-25, -80, 10], "RightForeArm": [-115, 0, 0], "Head": [-4, 0, 0]},
+    "keeper_hips_1114": {"LeftArm": [20, 45, -45], "LeftForeArm": [-105, 0, 0], "RightArm": [20, -45, 45], "RightForeArm": [-105, 0, 0], "Spine02": [-3, 0, 0]},
+    "courier_hip_1114": {"RightArm": [15, -30, 45], "RightForeArm": [-100, 0, 0], "LeftArm": [-15, 60, -5], "LeftForeArm": [-120, 0, 0], "Head": [0, -5, 0]},
     "grower": {"LeftArm": [-7, 0, -4], "LeftForeArm": [-20, 0, 0], "RightForeArm": [-8, 0, 0], "Head": [0, -3, 0]},
     "artisan": {"RightArm": [4, 0, 8], "RightForeArm": [-38, 0, 0], "LeftForeArm": [-12, 0, 0], "Spine02": [0, -3, 0]},
     "keeper": {"LeftArm": [-10, 0, -3], "LeftForeArm": [-38, 0, 0], "RightForeArm": [-12, 0, 0], "Head": [0, 4, 0]},
