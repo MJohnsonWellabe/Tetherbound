@@ -70,8 +70,10 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	ribbon_mesh.name = "VeilfallFallColumns"
 	ribbon_mesh.mesh = ribbons.commit()
 	ribbon_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	ribbon_mesh.material_override = _material(_fall_shader(bool(config.get("unshadowed", false))),
-		config.get("column_shader", {}))
+	var column_params: Dictionary = (config.get("column_shader", {}) as Dictionary).duplicate()
+	if rebuild_on:
+		column_params.merge(rebuild.get("column_shader", {}), true)
+	ribbon_mesh.material_override = _material(_fall_shader(bool(config.get("unshadowed", false))), column_params)
 	apply_visual_settings(ribbon_mesh.material_override as ShaderMaterial, visual)
 	(ribbon_mesh.material_override as ShaderMaterial).set_shader_parameter("centre_xz", centre_xz)
 	materials.append(ribbon_mesh.material_override)
