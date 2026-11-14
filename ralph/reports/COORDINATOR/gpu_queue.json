@@ -4796,7 +4796,8 @@
     "wide Cloudreach no-loss: F40#8 Three Bells, High Perches 07-08, overlook routes"
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-WALL-BAND/overlay.json (landmass.wall_top_band_1113 ON: top wall band of Cloudreach islands pale), High, phase2_capture_locations.gd --biome=cloudreach --times=day --views=approach,close --seed=2042 for the F40#1 row, plus a day no-loss set at Three Bells bridge, High Perches 07-08 and the overlook routes (it changes every frame that sees an island wall). By-eye pre-check: if the band reads as sand, re-run the arm with tint #d9d6cb in the overlay instead.",
-   "added": "13 Nov 06:24"
+   "added": "13 Nov 06:24",
+   "status": "SHIP 14 Nov: F40#1 6.19 -> 6.51 (+0.32, 3/3). LANE-LAND-CS to land."
   },
   {
    "id": "below6-gate-terrace",
@@ -4806,7 +4807,8 @@
     "F40#1 (5.90)"
    ],
    "ask": "Base vs ralph/reports/LANES/BELOW6-GATE-TERRACE/overlay.json (landmass.gate_crag_terrace_1113 ON: five stacked pale-stone terrace lips with turf tops and collision on the Realm Gate Crag crown), High, the same F40#1 row frames as wall-band (phase2_capture_locations.gd --biome=cloudreach --times=day --views=approach,close --seed=2042). Can share wall-band's base if the trees match outside flags. Only the realm_gate_crag approach frame should change. UPDATED 13 Nov 11:50: capture from tb/below6 e22452813 or later (tiers now register as ground for ground_height_at).",
-   "added": "13 Nov 07:32"
+   "added": "13 Nov 07:32",
+   "status": "Thin SHIP 14 Nov (+0.20, 2/3); judge asks a combined re-judge with WALL-BAND and risers with height. HELD from landing until then."
   },
   {
    "id": "things-cloudnight-r2",
@@ -5154,7 +5156,8 @@
    "ask": "Base no overlay vs ralph/reports/LANES/LAND-CS-TURFGRAIN/overlay.json (cloudreach_visual.json surface.turf_detail_1113 on: restores the grass texture's fine detail that cloudreach_turf.gdshaderinc cuts to 0.52 contrast). High; CAPTURE.json lists phase2_capture_locations day approach/close frames plus the F40 matrix sample. By eye: Realm Gate and Sky Shrine approach show fine grass grain up to the camera; hold if unchanged or if mid-distance lawn sparkles. Same tree as land-cs-soiloff: one import, one base capture per tool.",
    "added": "13 Nov 17:55",
    "priority": "ahead of below6-wall-band and below6-gate-terrace (same F40#1 row; turfgrain addresses the judged cause)",
-   "note_tree": "tb/land-cs 91ac0d6a1 contains main b8622117c (#954): base frames are main content."
+   "note_tree": "tb/land-cs 91ac0d6a1 contains main b8622117c (#954): base frames are main content.",
+   "status": "SHIP 14 Nov: F40#1 +0.20, F40#4 +0.19, F40#7 +0.24 (all 3/3). LANE-LAND-CS to land."
   },
   {
    "id": "scene-hallwalls",

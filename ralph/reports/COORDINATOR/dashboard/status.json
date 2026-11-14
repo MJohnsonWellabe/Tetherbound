@@ -1,5 +1,5 @@
 {
- "updated": "14 Nov 2026 00:42 UTC",
+ "updated": "14 Nov 2026 00:52 UTC",
  "headline": "13 Nov 23:57: seven PRs landed this evening (#954, #956, #957, #958, #959, #960) and the first close (Staticub roster row). FLOWSTREAKS r2 ships (F13#5 5.70 -> 6.55), landing next. Tried-and-failed tab live.",
  "batches": [
   {
@@ -2727,8 +2727,8 @@
    "src": "GPU High 8-9 Nov (F-tidewake); RE-SCORE G-rescore-stale-ext-tidewake 6.42 (was 6.65; LANE-PLACES 0a289b570, main, GPU High, 12 Nov)"
   },
   "F40#1": {
-   "gpu": 5.84,
-   "src": "GPU High 8-9 Nov (F-cloudreach) | 5.90 -> 5.84: flat empty lawn, terrain-disc edge (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6)"
+   "gpu": 6.51,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | 5.90 -> 5.84: flat empty lawn, terrain-disc edge (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6) | WALL-BAND SHIP 6.19 -> 6.51 (+0.32, 3/3); TURFGRAIN SHIP 6.19 -> 6.39 (3/3); GATE-TERRACE thin SHIP 6.19 -> 6.39 (2/3) (LANE-JUDGE 589da6bec, 14 Nov)"
   },
   "F40#10": {
    "gpu": 6.77,
@@ -2775,8 +2775,8 @@
    "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art; G-below6-f40-3-landmarks (LANE-SCOUT cb3ff531d): re-baselined on new stands 6.00 -> 6.33 (2/3), ships; LANDED #919; LANDED #919"
   },
   "F40#4": {
-   "gpu": 6.07,
-   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.12 -> 6.47 | cross-check 1 of 3 frames 6.07 (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6)"
+   "gpu": 6.74,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.12 -> 6.47 | cross-check 1 of 3 frames 6.07 (G-rescore-1113, LANE-PLACES tb/places dd4dcc349, main b8622117c, 13 Nov; fit r 0.855, read +/-0.6) | TURFGRAIN SHIP 6.55 -> 6.74 (+0.19, 3/3) (LANE-JUDGE 589da6bec, 14 Nov)"
   },
   "F40#5": {
    "gpu": 7.06,
@@ -2787,8 +2787,8 @@
    "src": "G-newapproach-cloud-sea-only: soft lit cloud sea, 5.61 -> 6.33 (3/3); landed #906. Remaining defect: mount upright over open cloud (refuse_drop, owner decision)."
   },
   "F40#7": {
-   "gpu": 6.8,
-   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.26 -> 6.8"
+   "gpu": 6.9,
+   "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.26 -> 6.8 | TURFGRAIN SHIP 6.66 -> 6.90 (+0.24, 3/3) (LANE-JUDGE 589da6bec, 14 Nov)"
   },
   "F40#8": {
    "gpu": 6.77,

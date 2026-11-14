@@ -8,7 +8,7 @@ coordinator's GPU queue and every lane NOTE.md / ARM.md on main and the live lan
 is closed: do not retry it without a new cause or a new idea, and say in the ARM.md what
 is new. `held` means the arm exists and is waiting on a named fix.
 
-206 entries across 83 rows.
+218 entries across 83 rows.
 
 ## F13#5
 - **parked** · G-land-mt-flowstreaks: DO NOT SHIP: current states LOSE 6.08 → 5.66 (−0.42, 0/3); the arm's live streaks read as parallel guide lanes (F39#16 defect PARTIAL → PRESENT 3/3). F13#5 swim views 5.52 → 6.04 (+0.52, 3/3; crescents PRESENT → PARTIAL). Fit r 0.875, RMSE 0.67. Next: gate the streaks to the swim cue, and anchor a wake to the swimmer _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -122,6 +122,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 
 ## F38#24
 - **parked** · LAND-MT-TWORANGES: LAND-MT-TWORANGES (F38#24): PARKED on CPU, not sent _(source: land-mt:ralph/reports/LANES/LAND-MT-TWORANGES/ARM.md)_
+- **parked** · LAND-MT: F38#24 TWORANGES: PARKED. A stretched copy of the ridge reads as a pale streaky wall; a real second range needs a new far mesh. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: TWORANGES (F38#24): PARKED on CPU after three looks.** The back layer is the same ridge mesh stretched, so its facets turn into vertical streaks. At height 1.4 and 1.6 it reads as a pale wall crowding the stronghold, not as a far range. A real second range needs a different far mesh, which is outside this round (no Meshy credits). Sheet and ARM.md are in `ralph/reports/LANES/LAND-MT-TWORANGES/`. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
@@ -164,6 +165,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · G-land-mt-seadepth-r2: DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a… _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
 - **parked** · land-mt-shorezones: PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand). _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · land-mt-seadepth: R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again. _(source: COORDINATOR/gpu_queue.json)_
+- **parked** · LAND-MT: F39#1 / F39#27 SHOREZONES: PARKED. All rows lost on GPU. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F39#2
 - **parked** · G-land-mt-shorezones: DO NOT SHIP: all LOSE 0/3. F39#1 6.48 → 5.92 (−0.56), F39#15 6.15 → 5.25 (−0.90), F39#2 6.25 → 5.63 (−0.62); hard-edged olive splat polygons on the near sand 3/3. F39#27/#30 not captured. Next: fix the splat mask, wet band and wrack that read _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -179,6 +181,8 @@ is new. `held` means the arm exists and is waiting on a named fix.
 
 ## F39#5
 - **held** · BELOW6: SWIM (F39#5): held by the GPU pre-check** (the body floats on the GPU's transparent water and the raised arm reads as a wave). r3 is pushed: chest 0.07 m under the surface, flatter body, narrower arms, the recovering arm low. CPU recapture queued. _(source: main:ralph/reports/LANES/BELOW6/NOTE.md)_
+- **parked** · LAND-MT: F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
+- **parked** · LAND-MT: F39#5 / F39#14 SHALLOWFOAM (`foam_depth` 0.2): PARKED. The blobs were unchanged. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: Swim "foam blobs" (F39#5, F39#14): PARKED after two misses.** Ruled out on CPU swim frames: (1) the swimmer's wake (VWAKE: blobs identical on and off); (2) the shallow contact foam threshold (`surfaces.water.foam_depth` 0.55 to 0.2, also set under `cause_tidewake.sea`: blobs identical; I did not verify that the overlay reached the water material, so treat this one as weak). The blobs are pale, soft-edged and sit und… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F39#6
@@ -204,9 +208,12 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · G-land-mt-seadepth: DO NOT SHIP: current states LOSE 6.81 → 5.96 (−0.85, 0/3; radiating dark streak bands); F39#1 6.53 → 6.43 (−0.10, 0/3). The gradient gains: F39#10 6.48 → 7.10 (+0.62, 3/3), F39#15 6.15 → 6.58 (+0.43, 3/3; disc chain PRESENT). Fit r 0.900, RMSE 0.61. Next: keep the gradient but kill the streak bands in the states camera, then re-capture _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
 - **parked** · G-land-mt-seadepth-r2: DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a… _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
 - **parked** · land-mt-seadepth: R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again. _(source: COORDINATOR/gpu_queue.json)_
+- **parked** · LAND-MT: F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **held** · PLACES: Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35. _(source: places:ralph/reports/LANES/PLACES/NOTE.md)_
 
 ## F39#14
+- **parked** · LAND-MT: F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
+- **parked** · LAND-MT: F39#5 / F39#14 SHALLOWFOAM (`foam_depth` 0.2): PARKED. The blobs were unchanged. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: Swim "foam blobs" (F39#5, F39#14): PARKED after two misses.** Ruled out on CPU swim frames: (1) the swimmer's wake (VWAKE: blobs identical on and off); (2) the shallow contact foam threshold (`surfaces.water.foam_depth` 0.55 to 0.2, also set under `cause_tidewake.sea`: blobs identical; I did not verify that the overlay reached the water material, so treat this one as weak). The blobs are pale, soft-edged and sit und… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F39#15
@@ -215,6 +222,8 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · G-land-mt-seadepth-r2: DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a… _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
 - **parked** · land-mt-shorezones: PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand). _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · land-mt-seadepth: R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again. _(source: COORDINATOR/gpu_queue.json)_
+- **parked** · LAND-MT: F39#15 SHOALBREAK: PARKED. Contour wander cannot break the round islet halos; it needs a terrain rebake, which is not now. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
+- **parked** · LAND-MT: F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F39#16
 - **parked** · G-land-mt-flowstreaks: DO NOT SHIP: current states LOSE 6.08 → 5.66 (−0.42, 0/3); the arm's live streaks read as parallel guide lanes (F39#16 defect PARTIAL → PRESENT 3/3). F13#5 swim views 5.52 → 6.04 (+0.52, 3/3; crescents PRESENT → PARTIAL). Fit r 0.875, RMSE 0.67. Next: gate the streaks to the swim cue, and anchor a wake to the swimmer _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -240,6 +249,8 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · scene-rosternames: R1 DO NOT SHIP (re-judge, LANE-JUDGE): F39#19 6.78 -> 6.38 (0/3) at both presets on matched t-000; the named roster fades. R2 (solid rows, footprint) queued as scene-rosternames-r2. _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · land-mt-cragback: LEVEL 13 Nov (LANE-JUDGE 93537dc89): matched frames nearly identical (mean diffs 0.02-0.57), 0/3 with 3 ties; the dark overhead wedge still flagged 3/3. Attempt 1 of 2; back to LANE-LAND-MT. _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · land-mt-cragcut-probe: WITHDRAWN 13 Nov 21:15: LANE-LAND-MT proved on CPU (fixed t-000 view) the wedge is the crag back faces; CRAGCUT arm follows. _(source: COORDINATOR/gpu_queue.json)_
+- **parked** · LAND-MT: F39#19 CRAGBACK: PARKED. It was level on GPU because the engine already flips back-face normals; CRAGCUT shipped instead. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
+- **parked** · LAND-MT: F39#19 DUNETONE: PARKED. Damp tone on the Venn dune is too faint at a believable strength. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F39#21
 - **parked** · PLACES: Checked, not gaps:** F39#21's 4.34 (G-rescore-f39-21-f41-13) was on main 306239e9f (#885, 10 Nov 08:03), before the #893 win at 7.06. F38#20, #21 and #22 differences are partial-frame cross-checks or later closes. _(source: places:ralph/reports/LANES/PLACES/NOTE.md)_
@@ -253,6 +264,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 
 ## F39#27
 - **parked** · land-mt-shorezones: PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand). _(source: COORDINATOR/gpu_queue.json)_
+- **parked** · LAND-MT: F39#1 / F39#27 SHOREZONES: PARKED. All rows lost on GPU. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F39#30
 - **parked** · land-mt-shorezones: PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand). _(source: COORDINATOR/gpu_queue.json)_
@@ -262,6 +274,8 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · G-land-mt-tiera: DO NOT SHIP: level 5.78 → 5.74 (−0.04, 1/3); the removed rock cluster is not noticed, and floating props are still reported 3/3. PARK the subtractive cascade-tier approach for F39#31; the ceiling is the landmark form (board rebuild) _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
 - **parked** · land-mt-tiera: PARKED 13 Nov: level 5.78 -> 5.74 (1/3); the removed rock is not noticed. _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · FLOOR2-DAWNRAIN: Veilfall in rain loses contrast** (right-hand column): the mountain is still readable but flatter. That is the trade VIS-TIDEWAKE's notes warned about; F39#31's rain view is in the capture as a control. _(source: main:ralph/reports/LANES/FLOOR2-DAWNRAIN/ARM.md)_
+- **parked** · LAND-MT: F39#31 BASEMIST: PARKED. Camera-facing puffs do not read as base mist at these distances. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
+- **parked** · LAND-MT: F39#31 TIERA: PARKED. It was level. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: F39#31:** #958 (mist fix) is +0.62 on the row (5.16 to 5.78, 3/3). TIERA parked (level). The row's ceiling is a Veilfall rebuild (Meshy hero piece), which is outside this round (no Meshy credits); the in-reach pieces left are the plunge pool and foam at the fall foot and a streaked falling-water material, both bigger builds than a tuning pass. Not started. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: BASEMIST: PARKED after two placement rounds.** With the billow floor (PR #958) the puffs render, but even with mid-fall puffs against the rock (7 extra, `at_fraction` 0.55 to 1.0), 1.25x size and a cooler tone, the F39#31 views show at most a softer base on the main fall. The camera-facing puff approach does not make mist read at these distances. A real base mist likely needs a dedicated effect (a lit mist volume or… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **held** · LAND-MT: Veilfall base mist: cause found, arm held.** The spray shader's billow gate zeroes the whole puff in this renderer (probe: alpha = opacity * radial shows the mist; with the gate, nothing). `LAND-MT-BASEMIST` (flag-off `billow_floor`, `size_scale`) makes it render, but on the F39#31 views it barely reads: the puffs are not where the visible falls end (the cascade's foot is configured at 200 m, mid-cliff), and white m… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
@@ -275,6 +289,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **held** · LAND-CS: Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 
 ## F40#1
+- **held** · below6-gate-terrace: Thin SHIP 14 Nov (+0.20, 2/3); judge asks a combined re-judge with WALL-BAND and risers with height. HELD from landing until then. _(source: COORDINATOR/gpu_queue.json)_
 - **parked** · BELOW6: Parked on my side: F40#1 (terraces not sent), F41#8 character side, Fulgocobra, F39#8. _(source: main:ralph/reports/LANES/BELOW6/NOTE.md)_
 - **parked** · BELOW6: F40#1:** `BELOW6-TERRACES/NOT-SENT.md`. Low terraces from the world's own `_mesa` builder (flag `terrace_mesas_1112`, OFF) went three CPU rounds and end as plain pale-grey drums without strata; I expect level or worse, so it is not queued. Parked on my side until there is a new idea (terrace geometry inside `_mesa`). _(source: main:ralph/reports/LANES/BELOW6/NOTE.md)_
 - **parked** · BELOW6: My rows now:** F41#8 (5.80), F36#46 Fulgocobra (5.87), F40#1 (5.90, back from LANE-PLACES), F39#8 (parked). F38#6, #12 and #14 are LANE-THINGS'. _(source: main:ralph/reports/LANES/BELOW6/NOTE.md)_
@@ -311,6 +326,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · LAND-CS: F40#15 PARKED: remove the ridge join's 4 m route exemption (temporary switch); the wedge is unchanged, only the pavers sink. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: F40#15 PARKED: `edge_1113` (join over every cap-0 pad, from 1.5 m inside the rim); no visible change, reverted. Ridge vertices are about 4 m apart, so a lift cannot reach the ledge face between them. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: F40#15 PARKED: `overlook_ledge_drop_1113` (overlook ledge and pad 0.18 m lower); no visible change, reverted. Next try must first confirm the ledge face moves (print its heights). _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
+- **parked** · LAND-CS: F40#15 PARKED (no cause found): "rampart and tower over the void" at walk_03. Ground probe under every corner of both ruined wings and both piers finds crown turf (1109.7 to 1111.5), none over the void; the right wall stands at the lip and reads as overhanging from the low walk_03 camera. One real fault: `StormwardRuinedWing01` floats 0.2 to 0.5 m above its ground (bottom 1110.22). Seating it is small and not sent a… _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: F40#15 SHIPPED: LAND-CS-OVERLOOK-SEAMS, 5.10 -> 5.41 (3/3); landing branch tb/land-cs-seams-land. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: F40#15 dark wedge and walk_02 feet strip: PARKED after four failed attempts (13 Nov 22:30 UTC) _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: New arm LAND-CS-OVERLOOK-SEAMS** (F40#15, 5.60): a pixel probe names the plank and slab strips at route_day, vista_dusk, walk_02 and walk_03 as the four `approach_pavers`, buried by the ridge join except for a sunken strip. The arm stops building them; the strips are gone on CPU at all four frames. No collision change. **CPU-ready and held**: SOILOFF and TURFGRAIN are my two waiting arms. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_

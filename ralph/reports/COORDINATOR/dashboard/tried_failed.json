@@ -1,5 +1,5 @@
 {
- "entries": 206,
+ "entries": 218,
  "rows": {
   "F13#5": [
    {
@@ -664,6 +664,15 @@
    },
    {
     "rows": [
+     "F38#24"
+    ],
+    "approach": "LAND-MT",
+    "result": "F38#24 TWORANGES: PARKED. A stretched copy of the ridge reads as a pale streaky wall; a real second range needs a new far mesh.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
      "F38#30",
      "F38#24"
     ],
@@ -1007,6 +1016,16 @@
     "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#27"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#1 / F39#27 SHOREZONES: PARKED. All rows lost on GPU.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
    }
   ],
   "F39#2": [
@@ -1107,6 +1126,26 @@
     "result": "SWIM (F39#5): held by the GPU pre-check** (the body floats on the GPU's transparent water and the raised arm reads as a wave). r3 is pushed: chest 0.07 m under the surface, flatter body, narrower arms, the recovering arm low. CPU recapture queued.",
     "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
     "status": "held"
+   },
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#5 / F39#14 SHALLOWFOAM (`foam_depth` 0.2): PARKED. The blobs were unchanged.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
    },
    {
     "rows": [
@@ -1316,6 +1355,16 @@
    },
    {
     "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
      "F39#4",
      "F39#24",
      "F39#17",
@@ -1332,6 +1381,26 @@
    }
   ],
   "F39#14": [
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#5 / F39#14 SHALLOWFOAM (`foam_depth` 0.2): PARKED. The blobs were unchanged.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
    {
     "rows": [
      "F39#5",
@@ -1406,6 +1475,25 @@
     "approach": "land-mt-seadepth",
     "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#15 SHOALBREAK: PARKED. Contour wander cannot break the round islet halos; it needs a terrain rebake, which is not now.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
     "status": "parked"
    }
   ],
@@ -1632,6 +1720,24 @@
     "result": "WITHDRAWN 13 Nov 21:15: LANE-LAND-MT proved on CPU (fixed t-000 view) the wedge is the crag back faces; CRAGCUT arm follows.",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#19 CRAGBACK: PARKED. It was level on GPU because the engine already flips back-face normals; CRAGCUT shipped instead.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#19 DUNETONE: PARKED. Damp tone on the Venn dune is too faint at a believable strength.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
    }
   ],
   "F39#21": [
@@ -1706,6 +1812,16 @@
     "result": "PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand).",
     "source": "COORDINATOR/gpu_queue.json",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#27"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#1 / F39#27 SHOREZONES: PARKED. All rows lost on GPU.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
    }
   ],
   "F39#30": [
@@ -1765,6 +1881,24 @@
     "approach": "FLOOR2-DAWNRAIN",
     "result": "Veilfall in rain loses contrast** (right-hand column): the mountain is still readable but flatter. That is the trade VIS-TIDEWAKE's notes warned about; F39#31's rain view is in the capture as a control.",
     "source": "main:ralph/reports/LANES/FLOOR2-DAWNRAIN/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#31 BASEMIST: PARKED. Camera-facing puffs do not read as base mist at these distances.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#31 TIERA: PARKED. It was level.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
     "status": "parked"
    },
    {
@@ -1867,6 +2001,15 @@
    }
   ],
   "F40#1": [
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "below6-gate-terrace",
+    "result": "Thin SHIP 14 Nov (+0.20, 2/3); judge asks a combined re-judge with WALL-BAND and risers with height. HELD from landing until then.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "held"
+   },
    {
     "rows": [
      "F40#1",
@@ -2144,6 +2287,15 @@
     ],
     "approach": "LAND-CS",
     "result": "F40#15 PARKED: `overlook_ledge_drop_1113` (overlook ledge and pad 0.18 m lower); no visible change, reverted. Next try must first confirm the ledge face moves (print its heights).",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 PARKED (no cause found): \"rampart and tower over the void\" at walk_03. Ground probe under every corner of both ruined wings and both piers finds crown turf (1109.7 to 1111.5), none over the void; the right wall stands at the lip and reads as overhanging from the low walk_03 camera. One real fault: `StormwardRuinedWing01` floats 0.2 to 0.5 m above its ground (bottom 1110.22). Seating it is small and not sent a…",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "parked"
    },
