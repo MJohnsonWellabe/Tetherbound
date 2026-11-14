@@ -37,7 +37,7 @@
 - F40#1 SHIPPED: BELOW6-WALL-BAND (+0.32, 3/3); landing tb/land-cs-wallband-land.
 - F40#1 HELD: BELOW6-GATE-TERRACE (+0.20, 2/3, curbs read as generated contour lines); re-judge with the wall band on.
 - F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.
-- F40#17 HELD: LAND-CS-MASTERFLOOR (Master T4 arena floor: 7 m soil tile, muted earth tint), CPU-ready, waiting for a queue slot.
+- F40#17 PARKED: LAND-CS-MASTERFLOOR (Master T4 arena floor soil tile and tint). G-land-cs-masterfloor: level, 6.04 -> 6.13 (+0.09, 1/3, 2 ties); judges call the platform background, not the subject. LANE-JUDGE: no more rounds on the platform top for F40#17.
 - F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land.
 - F41#22, F41#24 HELD: LAND-CS-SOILOFF (wet-soil discs not built), queued for the GPU.
 - F40#6 PARKED (owner decision): the mount upright over open cloud; no arm from this lane.
