@@ -5702,6 +5702,18 @@
    "ask": "Base (main) vs + ralph/reports/LANES/BEINGS-PERCH-CLEARANCE/overlay.json (companion_needle_clearance: the six visual-only needles join the keep-clear group so the Galecrest follow spot avoids them). High-perch tool per CAPTURE.json, High. Pair only crown-rim-out and crown-court (other frames vary with wild creatures). By eye: Galecrest no longer inside the needle, no floating wing in the wall.",
    "added": "14 Nov 02:05",
    "priority": "beings (F40#17 defect fix; pairs with RIMSEAT, judge separately)"
+  },
+  {
+   "id": "land-mt-veilrebuild",
+   "branch": "tb/land-mt",
+   "commit": "bfe3e2027",
+   "rows": [
+    "F39#31 Veilfall (5.78)"
+   ],
+   "ask": "Base (main) vs + ralph/reports/LANES/LAND-MT-VEILREBUILD/overlay.json (falls.rebuild: streaked fall water, three layered strands, wet rock apron; pool and mist shell built but OFF). Views veilfall-vista and veilfall-near, High, with the F39#31 capture used for rescore-f39-31 (lane has no CAPTURE.json yet; ask LAND-MT if unclear). By eye on near: long thin streaks and dark wet stone either side vs blotchy white cells on pale rock. Risk: near-black apron at the fall's left edge.",
+   "added": "14 Nov 02:25",
+   "priority": "land-mt (F39#31 lowest Tidewake row)",
+   "status": "HELD 14 Nov: LAND-MT already has two arms waiting (SEADEPTH r3, PLUME r2); runs when one clears."
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
