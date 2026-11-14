@@ -876,6 +876,7 @@ func _recall_spot(trainer: PhysicsBody3D, body: Node3D, requested: Vector3, leve
 	# Nearest-to-requested first: the requested direction, its neighbours, then
 	# round to the opposite side.
 	var order := [0, 1, 7, 2, 6, 3, 5, 4]
+	var zones := _keep_clear_zones()
 	var near := maxf(radius + 0.6, 1.2)
 	var rings: Array[float] = [reach]
 	if reach > near + 0.1:
@@ -888,6 +889,8 @@ func _recall_spot(trainer: PhysicsBody3D, body: Node3D, requested: Vector3, leve
 				continue
 			var spot := Vector3(candidate.x, floor_y, candidate.z)
 			if _in_lens_corridor(origin, spot, body, radius):
+				continue
+			if _in_keep_clear(spot, body, zones):
 				continue
 			if _recall_path_on_level(trainer, origin, spot, level, body) \
 					and _recall_body_fits(trainer, spot, body):
@@ -999,6 +1002,31 @@ func _recall_path_on_level(trainer: PhysicsBody3D, from: Vector3, to: Vector3, l
 
 
 ## The body's own collision shape at `spot` touches no world geometry.
+## BEINGS-PERCH-CLEARANCE (F40#17): visual-only scenery with a declared
+## keep-clear radius (follower_creature KEEP_CLEAR_GROUP; the High Perches
+## needles join behind cloudreach_high_perches_visual.json
+## companion_needle_clearance, OFF) has no collider for `_recall_body_fits` to
+## meet. Refuse a spot whose rendered footprint overlaps one. Empty group: no change.
+func _keep_clear_zones() -> Array:
+	var zones: Array = []
+	if not is_inside_tree():
+		return zones
+	for node: Node in get_tree().get_nodes_in_group(FOLLOWER_SCRIPT.KEEP_CLEAR_GROUP):
+		var zone := node as Node3D
+		if zone != null and zone.is_inside_tree():
+			zones.append([Vector2(zone.global_position.x, zone.global_position.z),
+				float(zone.get_meta(FOLLOWER_SCRIPT.KEEP_CLEAR_RADIUS_META, 0.0))])
+	return zones
+
+
+func _in_keep_clear(spot: Vector3, body: Node3D, zones: Array) -> bool:
+	if zones.is_empty():
+		return false
+	var footprint := float(body.call("footprint_radius")) if body.has_method("footprint_radius") \
+		else (float(body.call("body_radius")) if body.has_method("body_radius") else 0.5)
+	return FOLLOWER_SCRIPT.keep_clear_hit(zones, spot, footprint)
+
+
 func _recall_body_fits(trainer: PhysicsBody3D, spot: Vector3, body: Node3D) -> bool:
 	var collision := body.get_node_or_null(^"Collision") as CollisionShape3D
 	if collision == null or collision.shape == null:

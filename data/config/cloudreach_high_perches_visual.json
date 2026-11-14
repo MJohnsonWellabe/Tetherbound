@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "landmark_id": "high_roost_perches",
+  "companion_needle_clearance": {"_why": "LANE-BEINGS (14 Nov 2026), BEINGS-PERCH-CLEARANCE, F40#17 High Perches (6.61; G-land-cs-rimglow 3/3: 'griffin clipping into the tower wall, with a floating wing piece'). Cause (probe on the crown-rim-out and crown-court frames, 14 Nov): the 'griffin' is the player's own Galecrest (AllyCreature); its centre stands 3.3 m from RoostNeedle5's axis, inside the needle's 4 m radius. The six needles are visual-only (F08#3, no collider), so the realm follow validator (cloudreach_encounter_director verified_follow_spot) finds the spot clear. When on, each needle joins follower_creature KEEP_CLEAR_GROUP with its base radius plus margin_m, and the validator refuses follow and recall spots whose rendered footprint overlaps one. No collider, traversal, camera or Fly change. OFF until GPU-judged.", "scope": "client presentation: the local companion's follow and recall spot near the High Perches needles; no state", "enabled": false, "margin_m": 0.3},
   "design_intent": "A maintained high-altitude refuge: a complete south arrival portal, a stone wind compass, four elevated creature roosts, visible supplies and warm landing signals give the six inherited needles human and creature scale without changing the Fly route or survey landing disc.",
   "arrival_arch_position": [0.0, 0.0, -17.0],
   "arrival_arch_size_m": [14.8, 9.5, 2.8],
