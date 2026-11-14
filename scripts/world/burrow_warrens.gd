@@ -3789,6 +3789,10 @@ void fragment() {
 			// down, so on steep flanks it stretched into vertical streaks, and
 			// the fine grass blurred at grazing angles. Both go triplanar, and
 			// the fine grass samples anisotropically.
+			// A sharp blend: at the old pow 4 a 45-degree flank mixed two
+			// misaligned projections half and half, which read as mush.
+			mw = pow(abs(world_normal), vec3(16.0));
+			mw /= max(mw.x + mw.y + mw.z, 0.0001);
 			fine = texture(meadow_tex_aniso, mp.zy).rgb * mw.x + texture(meadow_tex_aniso, mp.xz).rgb * mw.y
 				+ texture(meadow_tex_aniso, mp.xy).rgb * mw.z;
 			vec3 bp = world_pos * meadow_broad_per_m;
