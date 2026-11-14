@@ -5641,7 +5641,7 @@
    "ask": "Base vs + ralph/reports/LANES/LAND-MT-SHELLSHARDS/overlay.json (island_strip: drops 276 detached islands off the Meshy mound and fan-fills its open loops, so no sky windows or floating crest shards). Warrens set (route_day, walk_01-03, vista_dusk), High. By eye at walk_02: no sky window or black triangle at the top of frame.",
    "added": "14 Nov 00:50",
    "priority": "Meadows boot",
-   "status": "SHIP judged 14 Nov (+0.54) but LANDING ON HOLD: Godot crashed with integer divide by zero (0xC0000094) on the arm run after 6/10 frames (intermittent; SHELLSHARDS+PLUME run finished). Root cause and degenerate-mesh asserts required before landing; one GPU retry queued."
+   "status": "SHIP judged 14 Nov (+0.54). Crash on the arm run was a divide by zero inside the NVIDIA driver (nvoglv64.dll), the same signature as 10 unrelated runs since 13 Oct (G-land-mt-shellshards-crash). Cleared to land if the retry is clean."
   },
   {
    "id": "land-mt-plume",
