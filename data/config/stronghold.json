@@ -64,6 +64,7 @@
       "ground_above_skirt_foot_m": 11.5,
       "macro_strength": 0.24,
       "stone_strength": 0.14,
+      "roofed_room_walls_1113": {"enabled": false, "_scope": "world_presentation", "moss_mul": 0.3, "_why": "LANE-SCENE (13 Nov 2026), F38#28 (High 7.47, 0.03 short; G-things-telldust 2/3: 'a translucent green vertical plane behind the dog in the Warden hall'). A ray probe at the Warden fight camera named the surfaces: the arena's walls and tower piers wear the EXTERIOR stone (moss 0.78) on their inside faces, which is why THINGS-HALLMOSS (interior moss 0.46 -> 0.22) changed only the pilasters. When enabled, walls and piers of roofed chambers scale moss by moss_mul on fragments inside the room footprint; outside faces and open yards are untouched. OFF until GPU-judged."},
       "moss_amount": 0.46,
       "moss_scale": 0.3,
       "moss_colour": "#2f4d1c",

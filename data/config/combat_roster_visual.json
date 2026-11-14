@@ -1,4 +1,11 @@
 {
   "stable_compact_pin_reveal": true,
-  "_comment": "P2-088 (judged pass). Repeated true pin requests on the combat compact PartyStrip keep the existing reveal instead of restarting its alpha tween. Exploration strips and unpin/re-pin behavior are unchanged."
+  "_comment": "P2-088 (judged pass). Repeated true pin requests on the combat compact PartyStrip keep the existing reveal instead of restarting its alpha tween. Exploration strips and unpin/re-pin behavior are unchanged.",
+  "compact_names_1113": {
+    "enabled": false,
+    "_scope": "client_presentation",
+    "row_width": 348.0,
+    "name_min_width": 160.0,
+    "_why": "LANE-SCENE (13 Nov 2026), F39#19 fight roster (GPU High 7.47 after the dark roster cells, 0.03 short; G-rescore-tidewake-fights-c673.md, judge c: 'the roster rows show only small icons, no names'). When enabled the fight roster's compact rows widen from 232 to 348 px and keep each creature's name beside its portrait. OFF until GPU-judged."
+  }
 }

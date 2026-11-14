@@ -78,6 +78,7 @@ func build() -> void:
 	if not _session_active():
 		_add_local_card()
 	_add_open_seats()
+	_apply_seat_cards()
 
 	_invite_button = null
 	if _steam_host_requested() and not _session_active():
@@ -163,6 +164,74 @@ func _add_row(peer: Dictionary) -> void:
 
 ## An inactive transport has no admitted peer rows. Show the actual local
 ## trainer separately; this card never invents a Session registry member.
+## F38#10 `panel_fill_1113.players` (menu.json, OFF until judged). The roster
+## was a few short rows over an empty lower half (G-closeout-f38-10-panels,
+## PARTIAL 3/3). When enabled the seats stand side by side as tall cards that
+## fill the panel, each with a large portrait over its name, like the Build
+## tab's piece cards. Presentation only: the same rows, labels and buttons.
+static func panel_fill_cfg(section: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/menu.json"))
+	var block: Variant = parsed.get("panel_fill_1113", {}) if parsed is Dictionary else {}
+	if not block is Dictionary or block.get("enabled") != true:
+		return {}
+	var part: Variant = (block as Dictionary).get(section, {})
+	return part if part is Dictionary else {}
+
+
+func _apply_seat_cards() -> void:
+	var cfg := panel_fill_cfg("players")
+	if cfg.is_empty() or _list == null:
+		return
+	# HBox/VBoxContainer cannot change orientation, so the cards move into a
+	# row of their own and each card's line into a column.
+	var scroll := _list.get_parent() as ScrollContainer
+	if scroll == null:
+		return
+	var cards := HBoxContainer.new()
+	cards.name = "SeatCards"
+	cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cards.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	cards.add_theme_constant_override("separation", 16)
+	var portrait_px := float(cfg.get("portrait_px", 190.0))
+	for child: Node in _list.get_children():
+		_list.remove_child(child)
+		if not child is PanelContainer:
+			# The one-line note under the seats goes below the cards.
+			add_child(child)
+			continue
+		var card := child as PanelContainer
+		cards.add_child(card)
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		var line := card.get_child(0) as BoxContainer
+		if line == null:
+			continue
+		var column := VBoxContainer.new()
+		column.alignment = BoxContainer.ALIGNMENT_CENTER
+		column.add_theme_constant_override("separation", 12)
+		for part: Node in line.get_children():
+			line.remove_child(part)
+			column.add_child(part)
+			if part is TextureRect:
+				(part as TextureRect).custom_minimum_size = Vector2(portrait_px, portrait_px)
+				(part as TextureRect).size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			elif part is Label:
+				var label := part as Label
+				label.custom_minimum_size = Vector2(0, 0)
+				label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			elif part is Button:
+				(part as Button).size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		card.remove_child(line)
+		line.queue_free()
+		card.add_child(column)
+	scroll.remove_child(_list)
+	_list.queue_free()
+	_list = null
+	scroll.add_child(cards)
+
+
 ## P2-007: menu.json `players_open_seats`. When enabled, the roster shows each
 ## unfilled seat up to `seats` as a quiet card, so the panel reads as an
 ## expedition with room in it rather than one card over an empty area. Only
@@ -211,7 +280,7 @@ func _add_open_seats() -> void:
 			mark.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		line.add_child(label)
-		if cfg.get("silhouettes") == true:
+		if cfg.get("silhouettes") == true or not panel_fill_cfg("players").is_empty():
 			# P2-007 r3: each open seat is a trainer-sized card with a dark
 			# silhouette where a portrait will be, matching the card above.
 			var shadow := _portrait("trainer")

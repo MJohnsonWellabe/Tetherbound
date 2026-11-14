@@ -861,6 +861,54 @@ func _wall_material(outer: bool) -> Material:
 	return _material(_stone_light() if outer else _stone(), 0.0, true, outer)
 
 
+## F38#28 `site.weathering.roofed_room_walls_1113` (OFF until GPU-judged). A
+## chamber wall is one box wearing the exterior stone on both faces, so inside
+## a roofed room (the Warden arena) the walls grew the exterior's moss (0.78,
+## patches about 4 m across): the green rectangles behind the fighters. With
+## the flag on, a roofed chamber's walls and tower piers wear a copy of the
+## same material that scales moss by `moss_mul` on fragments inside the room's
+## own footprint. Outside faces, open yards and every other surface are
+## untouched. hall_stone.gdshader `room_*`.
+var _room_wall: Dictionary = {}
+## True while `_build_keep_parapets` dresses a roofed keep chamber's wall.
+var _dressing_roofed_chamber := false
+var _room_wall_materials: Dictionary = {}
+
+
+func _roofed_room_walls_config() -> Dictionary:
+	var block: Variant = (_config.get("site", {}) as Dictionary).get("weathering", {}).get("roofed_room_walls_1113", {})
+	return block as Dictionary if block is Dictionary and bool((block as Dictionary).get("enabled", false)) else {}
+
+
+## Call before building a roofed chamber's walls; `_end_room_walls()` after.
+func _begin_room_walls(id: String, centre: Vector3, size: Vector2) -> void:
+	_room_wall = {}
+	if _roofed_room_walls_config().is_empty():
+		return
+	_room_wall = {"id": id, "centre": centre, "half": Vector3(size.x * 0.5 + 0.08, 0.0, size.y * 0.5 + 0.08)}
+
+
+func _end_room_walls() -> void:
+	_room_wall = {}
+
+
+func _room_wall_material() -> Material:
+	var base := _wall_material(true)
+	if _room_wall.is_empty() or not base is ShaderMaterial:
+		return base
+	var id := str(_room_wall["id"])
+	if _room_wall_materials.has(id):
+		return _room_wall_materials[id]
+	var copy := (base as ShaderMaterial).duplicate() as ShaderMaterial
+	var frame := global_transform if is_inside_tree() else transform
+	copy.set_shader_parameter("room_inverse", Projection(frame.affine_inverse()))
+	copy.set_shader_parameter("room_centre", _room_wall["centre"])
+	copy.set_shader_parameter("room_half", _room_wall["half"])
+	copy.set_shader_parameter("room_moss_mul", clampf(float(_roofed_room_walls_config().get("moss_mul", 0.3)), 0.0, 1.0))
+	_room_wall_materials[id] = copy
+	return copy
+
+
 func _floor_colour() -> Color:
 	return Color(str(_config.get("site", {}).get("floor_colour", "#57503f")))
 
@@ -1119,8 +1167,11 @@ func _build_chambers() -> void:
 			_build_ceiling(id, centre, outer, _floor_y + height + 0.5,
 				_material(_ceiling_colour(), 0.0, true))
 
+		if not bool(chamber.get("open", false)):
+			_begin_room_walls(id, centre, size)
 		for side: String in ["-x", "+x", "-z", "+z"]:
 			_build_wall(centre, size, height, side, _opening_on(id, side))
+		_end_room_walls()
 
 
 ## One ceiling slab, or four around a hole.
@@ -1308,7 +1359,7 @@ func _wall_piece(along_x: bool, at: Vector3, span: float, height: float, base: f
 	var extra := 0.0 if base > 0.0 else _skirt
 	size.y += extra
 	_box(size, Vector3(at.x, _floor_y + base + (height + extra) * 0.5 - extra, at.z),
-		_wall_material(true))
+		_room_wall_material())
 	# A darker base course along the foot of every chamber wall. Thin, slightly
 	# proud, and purely decorative (solid: false) so it can never narrow a
 	# doorway -- the flat-box-into-masonry cue, and the reason the interior no
@@ -1761,7 +1812,9 @@ func _build_keep_parapets() -> void:
 		for side in ["-x", "+x", "-z", "+z"]:
 			if skip.has(side):
 				continue
+			_dressing_roofed_chamber = true
 			_dress_exterior_wall(centre, size, height, side, false)
+			_dressing_roofed_chamber = false
 
 
 ## `along_x`-general for the coping/merlon roofline pass, which
@@ -1867,6 +1920,20 @@ func _dress_exterior_wall(centre: Vector3, size: Vector2, height: float, side: S
 				else Vector3(_wall_t + BUTTRESS_PROUD, b_h, BUTTRESS_W)
 			var b_at := Vector3(wall_centre.x + d, _floor_y - _skirt + b_h * 0.5, wall_centre.z) \
 				if along_x else Vector3(wall_centre.x, _floor_y - _skirt + b_h * 0.5, wall_centre.z + d)
+			# F38#28 `roofed_room_walls_1113`: the buttress is centred on the wall
+			# line, so half its extra depth stands INSIDE the room -- a 1.6 m wide,
+			# full-height slab of exterior stone 0.4 m proud of the arena wall (the
+			# flat green rectangle left after the wall moss fix). On a roofed
+			# chamber, keep the outer face where it is and stop the inner face
+			# inside the wall's own thickness.
+			if _dressing_roofed_chamber and not _roofed_room_walls_config().is_empty():
+				var depth := (_wall_t + BUTTRESS_PROUD) * 0.5
+				if along_x:
+					b_size.z = depth
+					b_at.z += sign_ * depth * 0.5
+				else:
+					b_size.x = depth
+					b_at.x += sign_ * depth * 0.5
 			# NOT `_stone_dark()`, which is what the first cut used. Rendered, a
 			# #463f37 pilaster against the wall's own #9c9083 reads as a black
 			# bar bolted to the stone -- the same failure JUDGE-5 already named
@@ -2527,7 +2594,9 @@ func _build_tower_piers() -> void:
 			var pier := Vector3(x_range.y - x_range.x, height + 0.6, z_range.y - z_range.x)
 			var at := Vector3((x_range.x + x_range.y) * 0.5, _floor_y + pier.y * 0.5 - 0.02,
 				(z_range.x + z_range.y) * 0.5)
-			_box(pier, at, _wall_material(true), false, "TowerPier_%s_%d" % [id, built])
+			_begin_room_walls(id, centre, size)
+			_box(pier, at, _room_wall_material(), false, "TowerPier_%s_%d" % [id, built])
+			_end_room_walls()
 			print("[stronghold] tower pier in %s: %.1f x %.1f m at local (%.1f, %.1f), enclosing %s" % [
 				id, pier.x, pier.z, at.x, at.z, str(module.name)])
 			# The same darker base course every chamber wall stands on.

@@ -399,7 +399,7 @@
    "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
    "model_scale": 0.5,
    "_why_t3_pickups": "Owner directive 2026-08-29. Beside the bramblebun off-route pocket (spawns.json order 1047, centre (-260,950)) which 'rewards cutting the corner instead of following the road's own longer arc' -- the same corner-cut now pays twice, catch temptation and orb supply together.",
-   "visual": {"reward_height_m": 0.38}
+   "visual": {"reward_height_m": 0.38, "cache_dressing_1113": {"enabled": true, "_switch": "data/config/harvest_stash_support.json cache_dressing_enabled (OFF)", "_scope": "world_presentation", "_candidate": "LANE-SCENE (13 Nov 2026), F38#12 harvest reward identity (GPU High 5.89). On the GPU frames each reward reads as its item but sits alone on bare lawn. Candidate: installed camp props stage it as a traveller's cache. Visual only; anchor, prompt, reward and collision unchanged. OFF until GPU-judged.", "props": [{"name": "CacheChest", "model": "res://assets/props/quaternius_fantasy/Chest_Wood.gltf", "height_m": 0.62, "at": [1.0, 0.7], "yaw_deg": 160}, {"name": "CacheCage", "model": "res://assets/props/quaternius_fantasy/Cage_Small.gltf", "height_m": 0.6, "at": [-1.1, 0.3], "yaw_deg": 28}, {"name": "CacheRope", "model": "res://assets/props/quaternius_fantasy/Rope_1.gltf", "height_m": 0.26, "at": [-0.25, -0.9], "yaw_deg": 40}, {"name": "CacheBag", "model": "res://assets/props/quaternius_fantasy/Bag.gltf", "height_m": 0.55, "at": [1.1, -0.25], "yaw_deg": -20}]}}
   },
   {
    "order": 1030,
@@ -413,7 +413,7 @@
    "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
    "model_scale": 0.5,
    "_why_t3_pickups": "T3-REWARD found `travel_pack` (items.json) fully modelled with zero acquisition path anywhere in the game. Placed beside the galecrest off-route pocket (spawns.json order 1048, centre (500,1050)), the 'upper ridge' aggressor sighting -- a pack left by whoever was here before, on the same detour. stack:1 gear, so a respawning crate is harmless: nothing is farmable that changes the equip once worn.",
-   "visual": {"reward_height_m": 0.65}
+   "visual": {"reward_height_m": 0.65, "cache_dressing_1113": {"enabled": true, "_switch": "data/config/harvest_stash_support.json cache_dressing_enabled (OFF)", "_scope": "world_presentation", "_candidate": "LANE-SCENE (13 Nov 2026), F38#12 harvest reward identity (GPU High 5.89). On the GPU frames each reward reads as its item but sits alone on bare lawn. Candidate: installed camp props stage it as a traveller's cache. Visual only; anchor, prompt, reward and collision unchanged. OFF until GPU-judged.", "props": [{"name": "CampFireRing", "model": "res://assets/props/generated_camp/campfire_stone_ring.glb", "height_m": 0.15, "at": [-1.7, -0.35], "yaw_deg": 0}, {"name": "CampCauldron", "model": "res://assets/props/quaternius_fantasy/Cauldron.gltf", "height_m": 0.5, "at": [-1.7, -0.35], "yaw_deg": 20}, {"name": "CampStool", "model": "res://assets/props/quaternius_fantasy/Stool.gltf", "height_m": 0.42, "at": [-1.2, 0.75], "yaw_deg": 15}, {"name": "CampBucket", "model": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf", "height_m": 0.42, "at": [1.3, 0.25], "yaw_deg": 10}]}}
   },
   {
    "order": 1031,

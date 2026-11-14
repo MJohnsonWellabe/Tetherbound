@@ -90,6 +90,15 @@ uniform float damp_height = 4.0;
 uniform float damp_strength : hint_range(0.0, 1.0) = 0.4;
 uniform vec4 damp_colour : source_color = vec4(0.55, 0.58, 0.48, 1.0);
 uniform float streak_strength : hint_range(0.0, 1.0) = 0.22;
+// F38#28 `roofed_room_walls_1113` (stronghold.gd, off by default: half = 0).
+// A chamber wall is one box wearing the EXTERIOR stone on both faces, so the
+// faces inside a roofed room grew the exterior's heavy moss in room-sized
+// patches (the green rectangles on the Warden arena wall). Fragments inside
+// the room's own footprint (stronghold-local metres) scale their moss.
+uniform mat4 room_inverse = mat4(1.0);
+uniform vec3 room_centre = vec3(0.0);
+uniform vec3 room_half = vec3(0.0);
+uniform float room_moss_mul : hint_range(0.0, 1.0) = 1.0;
 
 // VP-HALL-FIX ITEM1b (2026-09-02). See the `fog_disabled` note above this
 // shader's `render_mode` line for the full reasoning; this is the manual
@@ -218,6 +227,9 @@ void fragment() {
 	// upward face) moss takes the joints first and then creeps over the faces.
 	float damp_here = clamp(smoothstep(0.42, 0.72, patch) + low * 0.45 + up * up_moss * 0.5, 0.0, 1.0);
 	float moss = damp_here * (joint * 0.85 + smoothstep(0.55, 0.9, patch) * 0.55 + up * up_moss * 0.25);
+	vec3 room_local = (room_inverse * vec4(world_pos, 1.0)).xyz - room_centre;
+	float in_room = step(0.001, room_half.x) * step(abs(room_local.x), room_half.x) * step(abs(room_local.z), room_half.z);
+	moss *= mix(1.0, room_moss_mul, in_room);
 	moss = clamp(moss * moss_amount, 0.0, 1.0);
 	vec3 moss_rgb = moss_colour.rgb * (0.75 + 0.5 * vnoise(world_pos * 2.7));
 

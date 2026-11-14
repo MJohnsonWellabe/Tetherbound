@@ -28,6 +28,8 @@ const HOLD_CROSS_CHECK_LIFT_M := 0.6
 
 var _boundary_height: float = 3.5
 var _boundary_alpha: float = 0.16
+## F38#28 `arena.boundary_curb_1113`: when set, the edge is a stone curb.
+var _boundary_curb: Dictionary = {}
 
 ## The scatter that stood aside for this fight, and the node that holds it.
 ## See `vegetation.gd::hide_fight_occluders()`.
@@ -70,6 +72,7 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 	radius = float(cfg.get("radius", radius))
 	_boundary_height = float(cfg.get("boundary_height", _boundary_height))
 	_boundary_alpha = float(cfg.get("boundary_alpha", _boundary_alpha))
+	_boundary_curb = cfg.get("boundary_curb", {}) if str(cfg.get("boundary_style", "")) == "curb" else {}
 	_build_boundary()
 	if bool(cfg.get("clear_soft_occluders", false)):
 		_clear_soft_occluders(radius + maxf(maxf(float(cfg.get("occluder_clear_margin", 0.0)), float(cfg.get("camera_occluder_margin", 0.0))), 0.0))
@@ -393,6 +396,9 @@ func clamp_point(point: Vector3, margin: float = 1.0) -> Vector3:
 func _build_boundary() -> void:
 	for child in get_children():
 		child.queue_free()
+	if not _boundary_curb.is_empty():
+		_build_curb(_boundary_curb)
+		return
 
 	var wall := CylinderMesh.new()
 	wall.top_radius = radius
@@ -442,6 +448,76 @@ func _build_boundary() -> void:
 	mesh.position = Vector3(0.0, _boundary_height * 0.5, 0.0)
 	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mesh)
+
+
+## F38#28: a low stone curb along the ring with a thin inlay on its top,
+## instead of the glowing wall (G-scene-hallwalls-r2: "replace the thin teal
+## floor arc with an authored boundary: stone curb, rope or inlay"). Segments
+## of one bevelled block in a MultiMesh, laid on the arena's own floor level,
+## with a small gap between them. Decoration only: no collider (the soft wall
+## in `hold_inside` is still the rule), no shadow onto the fighters.
+const CURB_ROCK := "res://assets/environment/terrain/Rock030_Color.jpg"
+func _build_curb(curb: Dictionary) -> void:
+	var width := float(curb.get("width_m", 0.34))
+	var height := float(curb.get("height_m", 0.13))
+	var length := float(curb.get("segment_m", 0.9))
+	var gap := float(curb.get("gap_m", 0.06))
+	var block := BoxMesh.new()
+	block.size = Vector3(length, height, width)
+	var stone := StandardMaterial3D.new()
+	stone.albedo_color = Color(str(curb.get("stone_colour", "#8f8578")))
+	if ResourceLoader.exists(CURB_ROCK):
+		stone.albedo_texture = load(CURB_ROCK) as Texture2D
+		stone.uv1_triplanar = true
+		stone.uv1_world_triplanar = true
+		stone.uv1_scale = Vector3.ONE * 0.9
+	stone.roughness = 0.9
+	block.material = stone
+	var count := maxi(12, int(floor(TAU * radius / (length + gap))))
+	var multimesh := MultiMesh.new()
+	multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	multimesh.mesh = block
+	multimesh.instance_count = count
+	var inlay_mesh := BoxMesh.new()
+	inlay_mesh.size = Vector3(length * 0.92, 0.012, float(curb.get("inlay_width_m", 0.07)))
+	var inlay_mat := StandardMaterial3D.new()
+	inlay_mat.albedo_color = Color(str(curb.get("inlay_colour", "#b08a4a")))
+	inlay_mat.metallic = 0.0
+	inlay_mat.roughness = 0.55
+	inlay_mesh.material = inlay_mat
+	var inlays := MultiMesh.new()
+	inlays.transform_format = MultiMesh.TRANSFORM_3D
+	inlays.mesh = inlay_mesh
+	inlays.instance_count = count
+	var blocks := curb_transforms(radius, curb, count, false)
+	var lines := curb_transforms(radius, curb, count, true)
+	for i in count:
+		multimesh.set_instance_transform(i, blocks[i])
+		inlays.set_instance_transform(i, lines[i])
+	for pair: Array in [["BoundaryCurb", multimesh], ["BoundaryInlay", inlays]]:
+		var node := MultiMeshInstance3D.new()
+		node.name = pair[0]
+		node.multimesh = pair[1]
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(node)
+
+
+## Where each curb block (or its inlay, `inlay` true) stands: `count` evenly
+## round the ring at `radius`, long side along the circle, resting on the
+## arena's floor level (local y 0) sunk by `sink_m`.
+static func curb_transforms(ring_radius: float, curb: Dictionary, count: int, inlay: bool) -> Array[Transform3D]:
+	var height := float(curb.get("height_m", 0.13))
+	var sink := float(curb.get("sink_m", 0.02))
+	var out: Array[Transform3D] = []
+	for i in count:
+		var angle := TAU * float(i) / float(count)
+		var at := Vector3(sin(angle), 0.0, cos(angle)) * ring_radius
+		# A Y rotation by `angle` turns local x to (cos, 0, -sin), the tangent
+		# at (sin, 0, cos): the block's long side follows the circle.
+		var basis := Basis(Vector3.UP, angle)
+		var lift := (height - sink + 0.006) if inlay else (height * 0.5 - sink)
+		out.append(Transform3D(basis, at + Vector3.UP * lift))
+	return out
 
 
 ## Bake a vertical alpha gradient into the wall's vertex colours.

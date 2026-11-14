@@ -1,4 +1,5 @@
 {
+  "panel_fill_1113": {"enabled": false, "_scope": "device_local_presentation", "_why": "LANE-SCENE (13 Nov 2026), F38#10 Meadows menus (GPU 7.39 at High and Medium, G-closeout-f38-10-panels.md, PARTIAL 3/3: 'Players and Quest Log leave the lower third to half of the panel empty'; Build alone reads 7.75 with its illustrated cards). When enabled, tab_players.gd stands the four seats side by side as tall portrait cards that fill the panel, and tab_quest_log.gd shows the tracked story section as a card with the realm banner art and a chapter progress strip. Presentation only. OFF until GPU-judged.", "players": {"portrait_px": 170.0}, "quest_log": {"art_width": 300.0, "art_height": 168.0, "art_focus": 0.62}},
   "players_open_seats": {
     "_scope": "device_local_presentation",
     "_why": "P2-007 (visual-claude lane, 2026-10-12): the Players tab left a large empty area under a single trainer card. With this enabled, tab_players.gd shows each unfilled seat up to `seats` (the co-op cap of four) as a quiet card. It invites nothing and changes no session state. Stays OFF until a code-blind PASS.",
