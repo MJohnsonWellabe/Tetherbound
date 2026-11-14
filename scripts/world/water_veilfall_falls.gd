@@ -9,6 +9,9 @@ extends Node3D
 ## the whole pass costs two draw calls. Tunables: water_veilfall.json::falls.
 const FALL_SHADER := preload("res://shaders/water_veilfall_fall.gdshader")
 const SPRAY_SHADER := preload("res://shaders/water_veilfall_spray.gdshader")
+const WET_SHADER := preload("res://shaders/water_veilfall_wet.gdshader")
+const POOL_SHADER := preload("res://shaders/water_veilfall_pool.gdshader")
+const MIST_SHELL_SHADER := preload("res://shaders/water_veilfall_mist_shell.gdshader")
 const VISUAL_CONFIG := "res://data/config/water_veilfall_falls_visual.json"
 const VISUAL_UNIFORMS := ["visual_far_core_floor", "visual_far_edge_floor",
 	"visual_far_start_m", "visual_far_end_m", "continuous_core_floor",
@@ -32,6 +35,13 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	var ribbons := SurfaceTool.new()
 	ribbons.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var spray: Array[Dictionary] = []
+	# `falls.rebuild` (F39#31, OFF until judged): layered strands, a wet rock
+	# apron, a plunge pool with foam rings and a mist shell at each foot.
+	var rebuild: Dictionary = config.get("rebuild", {})
+	var rebuild_on := bool(rebuild.get("enabled", false))
+	var wet := SurfaceTool.new()
+	wet.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var plunges: Array[Dictionary] = []
 	for column: Dictionary in config.get("columns", []):
 		var path := _fall_line(column, centre_xz, step)
 		if path.size() < 2:
@@ -39,6 +49,8 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 			continue
 		_ribbon(ribbons, path, float(column.get("width_m", 20.0)), standoff, float(column.get("taper", 0.8)),
 			float(column.get("opacity", 1.0)))
+		if rebuild_on:
+			_rebuild_column(ribbons, wet, plunges, path, column, standoff, rebuild)
 		var foot: Vector3 = path[path.size() - 1]
 		var bearing := deg_to_rad(float(column.get("bearing_deg", 0.0)))
 		var outward := Vector3(cos(bearing), 0.0, sin(bearing))
@@ -67,6 +79,8 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	# bounds; a generous AABB margin keeps frustum culling from popping it.
 	ribbon_mesh.extra_cull_margin = 200.0
 	add_child(ribbon_mesh)
+	if rebuild_on:
+		_build_rebuild_meshes(wet, plunges, rebuild, centre_xz)
 	if not spray.is_empty():
 		var puffs := MeshInstance3D.new()
 		puffs.name = "VeilfallFallSpray"
@@ -116,7 +130,7 @@ func _fall_line(column: Dictionary, centre_xz: Vector2, step: float) -> Array[Ve
 
 
 func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff: float, taper: float,
-		opacity: float) -> void:
+		opacity: float, lateral_offset: float = 0.0, speed_factor: float = 0.0) -> void:
 	var lateral_xz := Vector2(path[path.size() - 1].x - path[0].x, path[path.size() - 1].z - path[0].z).normalized()
 	var lateral := Vector3(-lateral_xz.y, 0.0, lateral_xz.x)
 	var outward := Vector3(lateral_xz.x, 0.0, lateral_xz.y)
@@ -130,8 +144,8 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 	var relief := maxf(0.0, float(_geometry.get("stream_relief_m", 0.0)))
 	var stream_spacing := maxf(1.0, float(_geometry.get("stream_spacing_m", 2.8)))
 	for index in path.size():
-		var centre: Vector3 = path[index]
 		var t := float(index) / float(path.size() - 1)
+		var centre: Vector3 = path[index] + lateral * lateral_offset * lerpf(0.6, 1.0, t)
 		# Falls widen as they drop: narrow lip, full width at the foot.
 		var half := width * 0.5 * lerpf(taper, 1.0, t)
 		var row: Array = []
@@ -183,8 +197,100 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 				surface.set_color(colour)
 				surface.set_normal(corner.normal)
 				surface.set_uv(corner.uv)
-				surface.set_uv2(Vector2(0.0, strand_end.y - float(corner.uv.y)))
+				surface.set_uv2(Vector2(speed_factor, strand_end.y - float(corner.uv.y)))
 				surface.add_vertex(corner.at)
+
+
+## `falls.rebuild` per column: extra strands (each offset across the fall,
+## narrower, with its own speed and opacity) into the shared ribbon surface, a
+## wider wet apron under the fall, and, where the fall lands low enough, a
+## plunge pool and mist shell at its foot.
+func _rebuild_column(ribbons: SurfaceTool, wet: SurfaceTool, plunges: Array[Dictionary], path: Array[Vector3],
+		column: Dictionary, standoff: float, rebuild: Dictionary) -> void:
+	var width := float(column.get("width_m", 20.0))
+	var taper := float(column.get("taper", 0.8))
+	var opacity := float(column.get("opacity", 1.0))
+	var layer := 0
+	for strand: Dictionary in rebuild.get("strands", []):
+		layer += 1
+		_ribbon(ribbons, path, width * float(strand.get("width_frac", 0.4)),
+			standoff + float(rebuild.get("strand_lift_m", 0.35)) * layer, taper,
+			opacity * float(strand.get("opacity", 0.8)),
+			width * 0.5 * float(strand.get("offset_frac", 0.0)), float(strand.get("speed", 1.0)) - 1.0)
+	var apron: Dictionary = rebuild.get("wet_apron", {})
+	if bool(apron.get("enabled", true)):
+		_ribbon(wet, path, width * float(apron.get("width_scale", 1.7)),
+			standoff * float(apron.get("standoff_scale", 0.4)),
+			minf(1.0, taper * float(apron.get("taper_scale", 1.4))), 1.0)
+	var pool: Dictionary = rebuild.get("pool", {})
+	var foot: Vector3 = path[path.size() - 1]
+	if bool(pool.get("enabled", true)) and foot.y <= float(pool.get("max_foot_y_m", 8.0)):
+		var bearing := deg_to_rad(float(column.get("bearing_deg", 0.0)))
+		var outward := Vector3(cos(bearing), 0.0, sin(bearing))
+		var radius := width * float(pool.get("radius_per_width", 0.7))
+		plunges.append({"at": foot + outward * radius * float(pool.get("outward_frac", 0.45))
+			+ Vector3.UP * float(pool.get("lift_m", 0.25)), "radius_m": radius})
+
+
+func _build_rebuild_meshes(wet: SurfaceTool, plunges: Array[Dictionary], rebuild: Dictionary, _centre_xz: Vector2) -> void:
+	var apron := MeshInstance3D.new()
+	apron.name = "VeilfallWetApron"
+	apron.mesh = wet.commit()
+	apron.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	apron.material_override = _material(WET_SHADER, (rebuild.get("wet_apron", {}) as Dictionary).get("shader", {}))
+	apron.extra_cull_margin = 200.0
+	add_child(apron)
+	if plunges.is_empty():
+		return
+	var pool_cfg: Dictionary = rebuild.get("pool", {})
+	var mist_cfg: Dictionary = rebuild.get("mist", {})
+	var discs := SurfaceTool.new()
+	discs.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var shells := SurfaceTool.new()
+	shells.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var segments := clampi(int(pool_cfg.get("segments", 48)), 12, 128)
+	var rings := 6
+	for plunge: Dictionary in plunges:
+		var at: Vector3 = plunge.at
+		var radius := float(plunge.radius_m)
+		for i in segments:
+			var a0 := TAU * float(i) / float(segments)
+			var a1 := TAU * float(i + 1) / float(segments)
+			for corner: Vector2 in [Vector2.ZERO, Vector2(cos(a0), sin(a0)), Vector2(cos(a1), sin(a1))]:
+				discs.set_normal(Vector3.UP)
+				discs.set_uv(corner)
+				discs.add_vertex(at + Vector3(corner.x, 0.0, corner.y) * radius)
+		if not bool(mist_cfg.get("enabled", true)):
+			continue
+		var base_r := radius * float(mist_cfg.get("base_frac", 0.55))
+		var top_r := radius * float(mist_cfg.get("top_frac", 1.25))
+		var height := radius * float(mist_cfg.get("height_per_radius", 1.1))
+		for i in segments:
+			for j in rings:
+				var quad: Array[Vector2] = [Vector2(i, j), Vector2(i + 1, j), Vector2(i + 1, j + 1),
+					Vector2(i, j), Vector2(i + 1, j + 1), Vector2(i, j + 1)]
+				for q: Vector2 in quad:
+					var ang := TAU * q.x / float(segments)
+					var v := q.y / float(rings)
+					var dir := Vector3(cos(ang), 0.0, sin(ang))
+					shells.set_normal(dir)
+					shells.set_uv(Vector2(q.x / float(segments), v))
+					shells.add_vertex(at + dir * lerpf(base_r, top_r, sqrt(v)) + Vector3.UP * (height * v))
+	var pool_mesh := MeshInstance3D.new()
+	pool_mesh.name = "VeilfallPlungePools"
+	pool_mesh.mesh = discs.commit()
+	pool_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	pool_mesh.material_override = _material(POOL_SHADER, pool_cfg.get("shader", {}))
+	materials.append(pool_mesh.material_override)
+	add_child(pool_mesh)
+	if bool(mist_cfg.get("enabled", true)):
+		var shell_mesh := MeshInstance3D.new()
+		shell_mesh.name = "VeilfallMistShells"
+		shell_mesh.mesh = shells.commit()
+		shell_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		shell_mesh.material_override = _material(MIST_SHELL_SHADER, mist_cfg.get("shader", {}))
+		materials.append(shell_mesh.material_override)
+		add_child(shell_mesh)
 
 
 func _spray_mesh(puffs: Array[Dictionary]) -> ArrayMesh:
