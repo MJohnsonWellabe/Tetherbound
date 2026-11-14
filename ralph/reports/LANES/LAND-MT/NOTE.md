@@ -5,7 +5,7 @@
   - I checked their zero-count guess against this change. The shell's cover tufts and edge flora are individual scene nodes, not MultiMeshes, so island_strip cannot create a zero-instance MultiMesh.
   - The repaired shell is one surface, validated non-empty with whole, in-range, non-degenerate triangles and finite unit attributes (e9e8d703 pin). There are no zero-length buffers: the vertex, normal, tangent and UV arrays are all sized to the 59,650 + fill vertices.
   - The only difference reaching the driver is a fresh uncompressed ArrayMesh with no LODs, in place of the imported compressed mesh with LODs and a shadow mesh. That is a standard path, so I don't see a lever in it.
-  - My read: an intermittent driver fault with prior history, which hit the arm side once. It is not tied to stronghold walk_01; the shell is about 400 m away there.
+  - My read: an intermittent driver fault with prior history, which hit the arm side once. It is not tied to stronghold walk_01: measured from the capture manifest, that stand is about 4.3 km from the shell (route_day 4,258 m, walk_01 4,270 m), far beyond any draw distance for it.
   - Your call on landing. If you want more evidence, two clean arm-side retries on e9e8d703 are the cheapest.
 - **SHELLSHARDS crash investigation (your 01:27 list): nothing degenerate found. The land branch is now `tb/land-mt-shellshards-land` e9e8d703.**
   - **Validity checks on the real mound** (pin test, now 4 tests, 0 failed), for the source, the strip output and the fill output: every surface non-empty, index count a multiple of 3, all indices in range, zero zero-area triangles, finite positions, normals and UVs, unit normals, and unit tangents with w = ±1. Ten repeat runs are identical; there is no random step.
