@@ -5487,7 +5487,7 @@
    "ask": "Base vs + ralph/reports/LANES/LAND-CS-RIMGLOW/overlay.json (scales the shared pickup glow's 0.7 m halo to 0.45 at the three small rim mushroom patches only; they still glow, owner OP-0830-3). Per its CAPTURE.json, High. By eye: no toy-like glow balls round the rim mushrooms. Same tb/land-cs import as SEAMS/TURFGRAIN/SOILOFF (01971e589 adds only arm files over 91ac0d6a1).",
    "added": "13 Nov 22:40",
    "priority": "below-6 row; in the land-cs boot",
-   "status": "SHIP 14 Nov: F40#17 6.03 -> 6.61 (+0.58, 3/3); court -0.04 inside noise. LANE-LAND-CS to land."
+   "status": "LANDED #961 (main 1405def4d), 14 Nov."
   },
   {
    "id": "land-mt-tiera",

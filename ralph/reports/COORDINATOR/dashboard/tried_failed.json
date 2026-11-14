@@ -1,5 +1,5 @@
 {
- "entries": 200,
+ "entries": 206,
  "rows": {
   "F13#5": [
    {
@@ -661,6 +661,25 @@
     "result": "LAND-MT-TWORANGES (F38#24): PARKED on CPU, not sent",
     "source": "land-mt:ralph/reports/LANES/LAND-MT-TWORANGES/ARM.md",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#30",
+     "F38#24"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#24"
+    ],
+    "approach": "LAND-MT",
+    "result": "TWORANGES (F38#24): PARKED on CPU after three looks.** The back layer is the same ridge mesh stretched, so its facets turn into vertical streaks. At height 1.4 and 1.6 it reads as a pale wall crowding the stronghold, not as a far range. A real second range needs a different far mesh, which is outside this round (no Meshy credits). Sheet and ARM.md are in `ralph/reports/LANES/LAND-MT-TWORANGES/`.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
    }
   ],
   "F38#28": [
@@ -781,6 +800,18 @@
     "approach": "SCENE",
     "result": "New ARM SCENE-CURB (F38#28)**, the new approach after HALLWALLS parked. A low stone curb with a brass inlay replaces the glowing teal ring, in the Warden arena only. Same radius and rules. CPU (brightened) shows it reading as an authored edge. Files: `ralph/reports/LANES/SCENE-CURB/`.",
     "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#30": [
+   {
+    "rows": [
+     "F38#30",
+     "F38#24"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
     "status": "parked"
    }
   ],
@@ -2121,7 +2152,7 @@
      "F40#15"
     ],
     "approach": "LAND-CS",
-    "result": "F40#15 HELD: LAND-CS-OVERLOOK-SEAMS (buried approach pavers not built), queued for the GPU.",
+    "result": "F40#15 SHIPPED: LAND-CS-OVERLOOK-SEAMS, 5.10 -> 5.41 (3/3); landing branch tb/land-cs-seams-land.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    },
@@ -2150,7 +2181,16 @@
      "F40#17"
     ],
     "approach": "LAND-CS",
-    "result": "F40#17 HELD: LAND-CS-RIMGLOW (pickup glow at 0.45 at the three rim placements), CPU-ready, waiting for a queue slot.",
+    "result": "F40#17 HELD: LAND-CS-MASTERFLOOR (Master T4 arena floor: 7 m soil tile, muted earth tint), CPU-ready, waiting for a queue slot.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    }
@@ -3255,6 +3295,24 @@
     "rows": [
      "(no row named)"
     ],
+    "approach": "LAND-MT-SHELLSHARDS",
+    "result": "Ruled out, frames unchanged with each hidden: MoundGrowth, the shell's grass tufts and edge flora, InteriorRock, and the excavated chamber hulls.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-SHELLSHARDS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-SHELLSHARDS",
+    "result": "Closes each open loop of up to 80 edges with a fan from its centroid, averaging the loop's attributes. Open edges go from 3,590 to 249; the rest are non-manifold tangles.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-SHELLSHARDS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
     "approach": "LAND-MT-SHOREZONES",
     "result": "`zone_slope_free` 1: the normal gate is dropped; patches depend on height and noise only.",
     "source": "land-mt:ralph/reports/LANES/LAND-MT-SHOREZONES/ARM.md",
@@ -3367,6 +3425,15 @@
     "result": "The lone blades are the configured density, not a bug.** A temporary probe in `cloudreach_ground_cover.gd` (not committed) printed every patch: 1,905 patches, 2.23 million tufts over 807,000 m², 2.1 to 4.8 tufts per m² (the three largest islands are capped at 135,000 tufts, about 2.1 per m²). A tuft is seven thin blades about 0.25 m across, so tufts cover under a tenth of the ground. Re-clustering them by overlay (`…",
     "source": "land-cs:ralph/reports/LANES/LAND-CS-TURFGRAIN/ARM.md",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "The \"orange checker disc\" on the upper platform is `MasterT4/ArenaFloor` (pixel probe): the worn-ground soil overlay with a 2 m dirt-path tile at #9b805f. The arm gives Master floors a 7 m tile and a muted earth tint (#80776a); other yards unchanged. CPU: the checker is gone. CPU-ready and held.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
    },
    {
     "rows": [

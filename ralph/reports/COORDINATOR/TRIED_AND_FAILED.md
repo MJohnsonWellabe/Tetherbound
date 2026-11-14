@@ -8,7 +8,7 @@ coordinator's GPU queue and every lane NOTE.md / ARM.md on main and the live lan
 is closed: do not retry it without a new cause or a new idea, and say in the ARM.md what
 is new. `held` means the arm exists and is waiting on a named fix.
 
-200 entries across 82 rows.
+206 entries across 83 rows.
 
 ## F13#5
 - **parked** · G-land-mt-flowstreaks: DO NOT SHIP: current states LOSE 6.08 → 5.66 (−0.42, 0/3); the arm's live streaks read as parallel guide lanes (F39#16 defect PARTIAL → PRESENT 3/3). F13#5 swim views 5.52 → 6.04 (+0.52, 3/3; crescents PRESENT → PARTIAL). Fit r 0.875, RMSE 0.67. Next: gate the streaks to the swim cue, and anchor a wake to the swimmer _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -122,6 +122,8 @@ is new. `held` means the arm exists and is waiting on a named fix.
 
 ## F38#24
 - **parked** · LAND-MT-TWORANGES: LAND-MT-TWORANGES (F38#24): PARKED on CPU, not sent _(source: land-mt:ralph/reports/LANES/LAND-MT-TWORANGES/ARM.md)_
+- **parked** · LAND-MT: Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
+- **parked** · LAND-MT: TWORANGES (F38#24): PARKED on CPU after three looks.** The back layer is the same ridge mesh stretched, so its facets turn into vertical streaks. At height 1.4 and 1.6 it reads as a pale wall crowding the stronghold, not as a far range. A real second range needs a different far mesh, which is outside this round (no Meshy credits). Sheet and ARM.md are in `ralph/reports/LANES/LAND-MT-TWORANGES/`. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F38#28
 - **parked** · G-scene-hallwalls-r2: DO NOT SHIP (level): arm = base on every set (0/3, 3 ties). F38#28 NOT CLOSED: 6.81 at High and at Medium on the strictest panel today (control 7.53). The green-rectangle fix is not visible at sheet size. F38#20 frame level at 6.42. PARK the roofed-room walls arm for F38#28 (two rounds of hall-wall moss, no gain). Next: authored floor boundary in place of the teal arc. Flag: red banner in Aldis's arena _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -136,6 +138,9 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · SCENE-CURB: With HALLWALLS parked, this is the only F38#28 arm. _(source: scene:ralph/reports/LANES/SCENE-CURB/ARM.md)_
 - **parked** · SCENE: F38#28: TELLDUST3 parked for this row. SCENE-CURB is the floor-arc swing. The Warden dust "heart ribbon" is next in the same arm once CURB has a by-eye result. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
 - **parked** · SCENE: New ARM SCENE-CURB (F38#28)**, the new approach after HALLWALLS parked. A low stone curb with a brass inlay replaces the glowing teal ring, in the Warden arena only. Same radius and rules. CPU (brightened) shows it reading as an authored edge. Files: `ralph/reports/LANES/SCENE-CURB/`. _(source: scene:ralph/reports/LANES/SCENE/NOTE.md)_
+
+## F38#30
+- **parked** · LAND-MT: Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'… _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 
 ## F38#33
 - **parked** · THINGS: Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros… _(source: main:ralph/reports/LANES/THINGS/NOTE.md)_
@@ -306,12 +311,13 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · LAND-CS: F40#15 PARKED: remove the ridge join's 4 m route exemption (temporary switch); the wedge is unchanged, only the pavers sink. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: F40#15 PARKED: `edge_1113` (join over every cap-0 pad, from 1.5 m inside the rim); no visible change, reverted. Ridge vertices are about 4 m apart, so a lift cannot reach the ledge face between them. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: F40#15 PARKED: `overlook_ledge_drop_1113` (overlook ledge and pad 0.18 m lower); no visible change, reverted. Next try must first confirm the ledge face moves (print its heights). _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
-- **held** · LAND-CS: F40#15 HELD: LAND-CS-OVERLOOK-SEAMS (buried approach pavers not built), queued for the GPU. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
+- **held** · LAND-CS: F40#15 SHIPPED: LAND-CS-OVERLOOK-SEAMS, 5.10 -> 5.41 (3/3); landing branch tb/land-cs-seams-land. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **parked** · LAND-CS: F40#15 dark wedge and walk_02 feet strip: PARKED after four failed attempts (13 Nov 22:30 UTC) _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: New arm LAND-CS-OVERLOOK-SEAMS** (F40#15, 5.60): a pixel probe names the plank and slab strips at route_day, vista_dusk, walk_02 and walk_03 as the four `approach_pavers`, buried by the ridge join except for a sunken strip. The arm stops building them; the strips are gone on CPU at all four frames. No collision change. **CPU-ready and held**: SOILOFF and TURFGRAIN are my two waiting arms. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 
 ## F40#17
-- **held** · LAND-CS: F40#17 HELD: LAND-CS-RIMGLOW (pickup glow at 0.45 at the three rim placements), CPU-ready, waiting for a queue slot. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
+- **held** · LAND-CS: F40#17 HELD: LAND-CS-MASTERFLOOR (Master T4 arena floor: 7 m soil tile, muted earth tint), CPU-ready, waiting for a queue slot. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
+- **held** · LAND-CS: F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 
 ## F40#19
 - **parked** · G-places-wetpath-r2: SPLIT, closer: gate clear +0.65, gate rain +0.56, summit day +0.56 (all 3/3); overlook −0.04 (level); night −0.12 (1/3, arm path reads as a stain). The night gate does not hold: night grass 83→72 and trail 56→52.5 still darken. Gate the darkening off at night, re-capture p88, then ship _(source: judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md)_
@@ -458,6 +464,8 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **parked** · LAND-MT-CRAGCUT: Why attempt 1 (CRAGBACK, flip the back-face normal) was level on GPU: the engine already flips back-face normals there (`shaders/water_veilfall_spray.gdshader` says so and undoes it), so the extra flip did nothing. _(source: land-mt:ralph/reports/LANES/LAND-MT-CRAGCUT/ARM.md)_
 - **parked** · LAND-MT-FLOWSTREAKS: Round 1 verdict (G-land-mt-flowstreaks, LANE-JUDGE): DO NOT SHIP.** _(source: land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md)_
 - **parked** · LAND-MT-FLOWSTREAKS: Two stronger tunings drew long straight bright lanes at this grazing camera (the old "guide lanes" defect), so they were dropped. _(source: land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md)_
+- **parked** · LAND-MT-SHELLSHARDS: Ruled out, frames unchanged with each hidden: MoundGrowth, the shell's grass tufts and edge flora, InteriorRock, and the excavated chamber hulls. _(source: land-mt:ralph/reports/LANES/LAND-MT-SHELLSHARDS/ARM.md)_
+- **parked** · LAND-MT-SHELLSHARDS: Closes each open loop of up to 80 edges with a fan from its centroid, averaging the loop's attributes. Open edges go from 3,590 to 249; the rest are non-manifold tangles. _(source: land-mt:ralph/reports/LANES/LAND-MT-SHELLSHARDS/ARM.md)_
 - **parked** · LAND-MT-SHOREZONES: `zone_slope_free` 1: the normal gate is dropped; patches depend on height and noise only. _(source: land-mt:ralph/reports/LANES/LAND-MT-SHOREZONES/ARM.md)_
 - **parked** · LAND-MT: SHOREZONES: PARKED** after its GPU loss. Round 2 (no normal gate, near fade) should remove the near-sand polygons, but the far-dune turf barely registers and the wet band and wrack line do not read from the stands, so the upside is small. The folder keeps round 2 if you want it run anyway. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-MT: SEADEPTH round 2 ready: `ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r2.json`.** The GPU lane's diagonal bands and flecks in the current states are the candidate's wind slicks and whitecaps, which ride along with the depth gradient; round 2 keeps the gradient and turns those two off. If round 1 is judged and loses the states, round 2 is the follow-up; if round 1 has not been judged yet, run round 2 instead. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
@@ -471,6 +479,7 @@ is new. `held` means the arm exists and is waiting on a named fix.
 - **held** · LAND-MT: A third probe (terrain cliff tint in `water_visual.json` set to magenta) changed nothing in frame, including the lit mossy cliff, so that key does not colour this wall; inconclusive. _(source: land-mt:ralph/reports/LANES/LAND-MT/NOTE.md)_
 - **parked** · LAND-CS-ARCHSTAND: The south rim is the island's drum edge; the island's flat lawn is still the island ("a cylinder dropped on the ground" is a separate ground ask). _(source: land-cs:ralph/reports/LANES/LAND-CS-ARCHSTAND/ARM.md)_
 - **parked** · LAND-CS-TURFGRAIN: The lone blades are the configured density, not a bug.** A temporary probe in `cloudreach_ground_cover.gd` (not committed) printed every patch: 1,905 patches, 2.23 million tufts over 807,000 m², 2.1 to 4.8 tufts per m² (the three largest islands are capped at 135,000 tufts, about 2.1 per m²). A tuft is seven thin blades about 0.25 m across, so tufts cover under a tenth of the ground. Re-clustering them by overlay (`… _(source: land-cs:ralph/reports/LANES/LAND-CS-TURFGRAIN/ARM.md)_
+- **held** · LAND-CS: The "orange checker disc" on the upper platform is `MasterT4/ArenaFloor` (pixel probe): the worn-ground soil overlay with a 2 m dirt-path tile at #9b805f. The arm gives Master floors a 7 m tile and a muted earth tint (#80776a); other yards unchanged. CPU: the checker is gone. CPU-ready and held. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: The "toy-like glow blobs" are the shared pickup glow's 0.7 m halo round the three small rim patches (the patches shipped 12 Nov at about 0.6x the old cap; the halo was not resized). The arm scales the glow at those three placements only (0.45); they still glow (owner OP-0830-3). CPU: the balls are gone. CPU-ready and held. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: The skyroad arch frame "shows no landmark" because the stand is 8 m from the arch, between its legs: the "two blocky cliff faces" are the legs. The arch's island is about 15 m across, so the tool cannot back off. A stand override from the arch centre toward the south rim frames the whole arch; the band frame broken_causeways 04, which had no stand at all, now captures too. Capture tooling only. CPU-ready and held fo… _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
 - **held** · LAND-CS: Attempt 1: join `sink_m` -0.12 (lift the ridge above the crown). No change. _(source: land-cs:ralph/reports/LANES/LAND-CS/NOTE.md)_
