@@ -1,5 +1,5 @@
 {
- "entries": 218,
+ "entries": 224,
  "rows": {
   "F13#5": [
    {
@@ -1359,6 +1359,16 @@
      "F39#15"
     ],
     "approach": "LAND-MT",
+    "result": "Ready: SEADEPTH round 3 (`ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json`), the judges' one more tone round for F39#10.** It keeps base's deep navy (and its shallow colour) and softens only the shelf transition: haze off (that, plus the brighter shallow colour, was r2's \"lighter cyan\"), a darker mid band, falloff 10 m. Re-capture F39#10, F39#15 and the current states. The CPU change is modest (sheet in the fol…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
     "result": "F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED.",
     "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
     "status": "parked"
@@ -1475,6 +1485,16 @@
     "approach": "land-mt-seadepth",
     "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
     "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: SEADEPTH round 3 (`ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json`), the judges' one more tone round for F39#10.** It keeps base's deep navy (and its shallow colour) and softens only the shelf transition: haze off (that, plus the brighter shallow colour, was r2's \"lighter cyan\"), a darker mid band, falloff 10 m. Re-capture F39#10, F39#15 and the current states. The CPU change is modest (sheet in the fol…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
     "status": "parked"
    },
    {
@@ -1976,14 +1996,12 @@
    {
     "rows": [
      "F40#1",
+     "F40#4",
      "F40#7",
-     "F40#0",
-     "F40#19",
-     "F40#21",
-     "F40#4"
+     "F40#0"
     ],
     "approach": "LAND-CS",
-    "result": "F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.",
+    "result": "F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    },
@@ -2068,14 +2086,30 @@
    {
     "rows": [
      "F40#1",
+     "F40#4",
      "F40#7",
-     "F40#0",
-     "F40#19",
-     "F40#21",
-     "F40#4"
+     "F40#0"
     ],
     "approach": "LAND-CS",
-    "result": "F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.",
+    "result": "F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1 SHIPPED: BELOW6-WALL-BAND (+0.32, 3/3); landing tb/land-cs-wallband-land.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1 HELD: BELOW6-GATE-TERRACE (+0.20, 2/3, curbs read as generated contour lines); re-judge with the wall band on.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    },
@@ -2153,14 +2187,12 @@
    {
     "rows": [
      "F40#1",
+     "F40#4",
      "F40#7",
-     "F40#0",
-     "F40#19",
-     "F40#21",
-     "F40#4"
+     "F40#0"
     ],
     "approach": "LAND-CS",
-    "result": "F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.",
+    "result": "F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    },
@@ -2205,14 +2237,12 @@
    {
     "rows": [
      "F40#1",
+     "F40#4",
      "F40#7",
-     "F40#0",
-     "F40#19",
-     "F40#21",
-     "F40#4"
+     "F40#0"
     ],
     "approach": "LAND-CS",
-    "result": "F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.",
+    "result": "F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    },
@@ -2332,10 +2362,28 @@
     "rows": [
      "F40#17"
     ],
+    "approach": "G-land-cs-masterfloor",
+    "result": "DO NOT SHIP (level): 6.04 → 6.13 (+0.09, 1/3, 2 ties). Checker → soil is noticed as calmer background (2/3), but the row is decided by the clusters (lip seat, pale base spheres, toy scale). Court +0.22 is a creature-spawn confound (ram on the arm side), not counted. Fit r 0.922, RMSE 0.54. Next: seat the tan cluster back from the lip, remove the base spheres, griffin clipping, night moon and rim",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "land-cs-masterfloor",
+    "result": "PARKED 14 Nov: level 6.04 -> 6.13 (+0.09, 1/3, 2 ties); platform is background, not the subject; no more rounds on the platform top for F40#17.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
     "approach": "LAND-CS",
-    "result": "F40#17 HELD: LAND-CS-MASTERFLOOR (Master T4 arena floor: 7 m soil tile, muted earth tint), CPU-ready, waiting for a queue slot.",
+    "result": "F40#17 PARKED: LAND-CS-MASTERFLOOR (Master T4 arena floor soil tile and tint). G-land-cs-masterfloor: level, 6.04 -> 6.13 (+0.09, 1/3, 2 ties); judges call the platform background, not the subject. LANE-JUDGE: no more rounds on the platform top for F40#17.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
-    "status": "held"
+    "status": "parked"
    },
    {
     "rows": [
@@ -2390,20 +2438,6 @@
     "result": "DO NOT SHIP as one arm: night clear 9 stands 6.29→6.72 (+0.43, 3/3) and F40#21 night clear 6.18→6.56 (+0.38, 3/3; the emission floor cut stops the campfire trainer blowout), but the other three stands lose 6.48→6.18 (−0.30, 0/3: the paler fill turns the grass greener and reads as dim day). Night rain level (+0.04), gate crag night-rain sky level (−0.04). Fix: keep the emission and rim cuts, cool-tint the moonlit fil…",
     "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
     "status": "parked"
-   },
-   {
-    "rows": [
-     "F40#1",
-     "F40#7",
-     "F40#0",
-     "F40#19",
-     "F40#21",
-     "F40#4"
-    ],
-    "approach": "LAND-CS",
-    "result": "F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.",
-    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
-    "status": "held"
    }
   ],
   "F40#21": [
@@ -2439,20 +2473,6 @@
     "result": "DO NOT SHIP as one arm: night clear 9 stands 6.29→6.72 (+0.43, 3/3) and F40#21 night clear 6.18→6.56 (+0.38, 3/3; the emission floor cut stops the campfire trainer blowout), but the other three stands lose 6.48→6.18 (−0.30, 0/3: the paler fill turns the grass greener and reads as dim day). Night rain level (+0.04), gate crag night-rain sky level (−0.04). Fix: keep the emission and rim cuts, cool-tint the moonlit fil…",
     "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
     "status": "parked"
-   },
-   {
-    "rows": [
-     "F40#1",
-     "F40#7",
-     "F40#0",
-     "F40#19",
-     "F40#21",
-     "F40#4"
-    ],
-    "approach": "LAND-CS",
-    "result": "F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.",
-    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
-    "status": "held"
    }
   ],
   "F41#1": [
@@ -3577,6 +3597,15 @@
     "result": "The lone blades are the configured density, not a bug.** A temporary probe in `cloudreach_ground_cover.gd` (not committed) printed every patch: 1,905 patches, 2.23 million tufts over 807,000 m², 2.1 to 4.8 tufts per m² (the three largest islands are capped at 135,000 tufts, about 2.1 per m²). A tuft is seven thin blades about 0.25 m across, so tufts cover under a tenth of the ground. Re-clustering them by overlay (`…",
     "source": "land-cs:ralph/reports/LANES/LAND-CS-TURFGRAIN/ARM.md",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "GATE-TERRACE (thin 2/3, +0.20): HELD** for a combined re-judge with the band on. Its next ask: chunky risers with height, drop the loops across the lawn.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
    },
    {
     "rows": [

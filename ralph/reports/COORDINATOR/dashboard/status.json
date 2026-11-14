@@ -1,5 +1,5 @@
 {
- "updated": "14 Nov 2026 00:52 UTC",
+ "updated": "14 Nov 2026 01:10 UTC",
  "headline": "13 Nov 23:57: seven PRs landed this evening (#954, #956, #957, #958, #959, #960) and the first close (Staticub roster row). FLOWSTREAKS r2 ships (F13#5 5.70 -> 6.55), landing next. Tried-and-failed tab live.",
  "batches": [
   {
@@ -2138,6 +2138,11 @@
  "score_ledger_since": "owner push, 4 Nov 2026 00:20 UTC",
  "score_ledger_pending": [],
  "landed_recent": [
+  {
+   "pr": "#962",
+   "what": "F40#15 overlook buried pavers not built (OVERLOOK-SEAMS, 5.10 -> 5.41; Perches staging confound disclosed) and F13#5 lesson-gated current cue (FLOWSTREAKS r2, 5.70 -> 6.55). LANE-LAND-CS, LANE-LAND-MT; full CI green",
+   "when": "14 Nov 01:08"
+  },
   {
    "pr": "#961",
    "what": "F40#17 High Perches rim mushrooms: smaller pickup glow (RIMGLOW, 6.03 -> 6.61). LANE-LAND-CS; full CI green",

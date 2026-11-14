@@ -5322,7 +5322,7 @@
    "ask": "Base no overlay vs + ralph/reports/LANES/LAND-CS-OVERLOOK-SEAMS/overlay.json (stops building the four buried approach_pavers whose sunken strips read as dark slab/plank strips at route_day, vista_dusk, walk_02, walk_03). Per its CAPTURE.json, High. Same tb/land-cs import as TURFGRAIN and SOILOFF.",
    "added": "13 Nov 20:30",
    "priority": "worst row: run in the tb/land-cs boot with TURFGRAIN and SOILOFF",
-   "status": "SHIP; landing in #962 (perches confound disclosed; fixed-seed confirm queued)."
+   "status": "LANDED #962 (main 94fe423d3), 14 Nov."
   },
   {
    "id": "land-mt-cragback",
@@ -5603,7 +5603,7 @@
    "ask": "Round 2: base vs + ralph/reports/LANES/LAND-MT-FLOWSTREAKS/overlay.json (flag-off current_flow.lesson_cue: only the four swim-lesson lanes drop their chop caps; S1/S2 current-state lanes untouched by construction). Four T2 views (capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/T2-current.json --capture-size=1920x1080) plus phase2_capture_current_states.gd S1/S2 as no-loss, High. By eye: no crescents in T2 views; current-state frames identical to base.",
    "added": "13 Nov 23:10",
    "priority": "in the land-mt boot after SEADEPTH/SHOREZONES",
-   "status": "SHIP 13 Nov: F13#5 5.70 -> 6.55 (+0.85, 3/3); states level. LANE-LAND-MT to land."
+   "status": "LANDED #962 (main 94fe423d3), 14 Nov."
   },
   {
    "id": "land-cs-masterfloor",
