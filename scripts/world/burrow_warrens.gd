@@ -4334,6 +4334,10 @@ static func strip_mesh_islands(mesh: Mesh, min_tris: int) -> ArrayMesh:
 				kept.append(idx[t * 3])
 				kept.append(idx[t * 3 + 1])
 				kept.append(idx[t * 3 + 2])
+		if kept.is_empty() or kept.size() == idx.size():
+			# Nothing to keep or nothing removed: the surface stays as built
+			# (never an empty surface handed to the renderer).
+			kept = idx
 		arrays[Mesh.ARRAY_INDEX] = kept
 		out.add_surface_from_arrays(mesh.surface_get_primitive_type(s), arrays)
 		out.surface_set_material(s, mesh.surface_get_material(s))
@@ -4471,6 +4475,19 @@ static func _append_loop_means(arr: Variant, k: int, n: int, loops: Array[Packed
 		if n == 0 or pf.size() % n != 0:
 			return arr
 		var stride := pf.size() / n
+		if k == Mesh.ARRAY_TANGENT and stride == 4:
+			# A tangent stays unit length with w = +1 or -1 (a plain mean of
+			# mirrored seams can give w 0 and a zero vector).
+			for members: PackedInt32Array in loops:
+				var tv := Vector3.ZERO
+				for m: int in members:
+					tv += Vector3(pf[m * 4], pf[m * 4 + 1], pf[m * 4 + 2])
+				tv = tv.normalized() if tv.length() > 0.0001 else Vector3.RIGHT
+				pf.append(tv.x)
+				pf.append(tv.y)
+				pf.append(tv.z)
+				pf.append(-1.0 if pf[members[0] * 4 + 3] < 0.0 else 1.0)
+			return pf
 		for members: PackedInt32Array in loops:
 			for c: int in stride:
 				var acc := 0.0
