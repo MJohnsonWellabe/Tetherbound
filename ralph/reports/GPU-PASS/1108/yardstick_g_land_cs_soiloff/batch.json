@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   4.9,
+   4.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.0,
+   4.0,
+   4.2
+  ],
+  "f36_0_npc:C1A": [
+   6.6,
+   6.8,
+   6.4
+  ],
+  "f36_0_npc:C1B": [
+   6.6,
+   6.8,
+   6.4
+  ],
+  "craft:after": [
+   6.4,
+   6.5,
+   6.3
+  ],
+  "craft:before": [
+   5.0,
+   4.9,
+   4.6
+  ]
+ },
+ "candidates": {
+  "F41#24 forest+giant [arm]": [
+   5.6,
+   5.5,
+   5.4
+  ],
+  "F41#24 forest+giant [base]": [
+   4.9,
+   4.7,
+   4.6
+  ],
+  "F41#24 glass+rod_line+stormheart [arm]": [
+   5.8,
+   5.7,
+   5.6
+  ],
+  "F41#24 glass+rod_line+stormheart [base]": [
+   5.8,
+   5.7,
+   5.6
+  ],
+  "F41#22 glass+rod_line+stormheart [arm]": [
+   5.9,
+   5.8,
+   5.4
+  ],
+  "F41#22 glass+rod_line+stormheart [base]": [
+   5.9,
+   5.8,
+   5.4
+  ],
+  "F41#22 forest+giant [base]": [
+   5.0,
+   4.8,
+   4.5
+  ],
+  "F41#22 forest+giant [arm]": [
+   5.5,
+   5.4,
+   5.1
+  ]
+ }
+}
