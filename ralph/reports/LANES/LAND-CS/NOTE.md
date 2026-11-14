@@ -21,6 +21,7 @@
 - F40#15 PARKED: remove the ridge join's 4 m route exemption (temporary switch); the wedge is unchanged, only the pavers sink.
 - F40#15 PARKED: `edge_1113` (join over every cap-0 pad, from 1.5 m inside the rim); no visible change, reverted. Ridge vertices are about 4 m apart, so a lift cannot reach the ledge face between them.
 - F40#15 PARKED: `overlook_ledge_drop_1113` (overlook ledge and pad 0.18 m lower); no visible change, reverted. Next try must first confirm the ledge face moves (print its heights).
+- F40#15 PARKED (no cause found): "rampart and tower over the void" at walk_03. Ground probe under every corner of both ruined wings and both piers finds crown turf (1109.7 to 1111.5), none over the void; the right wall stands at the lip and reads as overhanging from the low walk_03 camera. One real fault: `StormwardRuinedWing01` floats 0.2 to 0.5 m above its ground (bottom 1110.22). Seating it is small and not sent alone.
 - F40#15 SHIPPED: LAND-CS-OVERLOOK-SEAMS, 5.10 -> 5.41 (3/3); landing branch tb/land-cs-seams-land.
 - F40#1 PARKED: re-cluster the Cloudreach grass tufts by overlay (`ground_cover.cluster_frequency` 0.55, `cluster_threshold` 0.9); no visible change on CPU, not sent.
 - F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.
