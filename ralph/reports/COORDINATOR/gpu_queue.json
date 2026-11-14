@@ -5666,7 +5666,8 @@
    ],
    "ask": "Round 3 (final): base vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json (keeps base deep navy and shallow colour, haze off, darker mid band, falloff 10 m: softens only the shelf transition). Re-capture F39#10, F39#15 and the S1/S2 current states, High. If a wash, F39#10 sea tone is PARKED.",
    "added": "14 Nov 01:05",
-   "priority": "Tidewake step"
+   "priority": "Tidewake step",
+   "status": "RUNNING 14 Nov 20:53 GPU time (SEADEPTH r2/r3 extras)."
   },
   {
    "id": "land-cs-archstand",
@@ -5690,7 +5691,7 @@
    "ask": "Base (main with RIMGLOW) vs + ralph/reports/LANES/LAND-CS-RIMSEAT/overlay.json (rim_pickup_seat_1114 seats the tan rim cluster back from the lip; rim_glow scale 0.45 -> 0.3). High-perch tool per CAPTURE.json, High. By eye: the orange lip cluster sits on soil back from the edge with a fainter glow.",
    "added": "14 Nov 01:40",
    "priority": "land-cs boot",
-   "status": "RUNNING 14 Nov 20:02 GPU time (continuation runner, tb/land-cs dbbfc7842 import)."
+   "status": "CAPTURED 14 Nov (tb/gpu-frames-1113 b43810834): by eye the tan cluster sits on grass back from the lip, glow fainter. Awaiting LANE-JUDGE."
   },
   {
    "id": "beings-perch-clearance",
