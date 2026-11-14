@@ -1,5 +1,12 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## LANDINGS READY (14 Nov 02:30 UTC): TURFGRAIN and WALL-BAND
+- **`tb/land-cs-turfgrain-land` 59feea6b**: `turf_detail_1113` ON. G-land-cs-turfgrain-rows: F40#1 +0.20, F40#4 +0.19, F40#7 +0.24, each 3/3, no loss. 53 tests, 0 failed.
+- **`tb/land-cs-wallband-land` 996efab0**: `wall_top_band_1113` ON (BELOW6 arm). G-below6-wall-band-main: F40#1 6.19 -> 6.51 (+0.32, 3/3), no loss. 45 tests, 0 failed. Landed alone: LANE-JUDGE asks to re-judge it with GATE-TERRACE before both land, so `gate_crag_terrace_1113` stays OFF.
+- Both cut from main 1405def4; different keys in cloudreach_visual.json, so either order.
+- **GATE-TERRACE (thin 2/3, +0.20): HELD** for a combined re-judge with the band on. Its next ask: chunky risers with height, drop the loops across the lawn.
+- Next asks I will work: TURFGRAIN tiles to speckle near the camera (break it with macro variation); the wall band needs strata and a broken top edge, on every disc-rim island edge.
+
 ## LANDING READY (14 Nov 01:40 UTC): `tb/land-cs-seams-land` 3abd3fa9
 - OVERLOOK-SEAMS SHIPS (LANE-JUDGE G-land-cs-overlook-seams): F40#15 5.10 -> 5.41 (+0.31, 3/3), overlook other views +0.31 (3/3).
 - **Disclosed:** High Perches no-loss −0.30 (0/3), which LANE-JUDGE attributes to wyvern staging and did not count; a fixed-seed re-capture is offered. Your call before merging.
@@ -25,7 +32,9 @@
 - F40#15 SHIPPED: LAND-CS-OVERLOOK-SEAMS, 5.10 -> 5.41 (3/3); landing branch tb/land-cs-seams-land.
 - F40#1 PARKED: re-cluster the Cloudreach grass tufts by overlay (`ground_cover.cluster_frequency` 0.55, `cluster_threshold` 0.9); no visible change on CPU, not sent.
 - F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.
-- F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.
+- F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.
+- F40#1 SHIPPED: BELOW6-WALL-BAND (+0.32, 3/3); landing tb/land-cs-wallband-land.
+- F40#1 HELD: BELOW6-GATE-TERRACE (+0.20, 2/3, curbs read as generated contour lines); re-judge with the wall band on.
 - F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.
 - F40#17 HELD: LAND-CS-MASTERFLOOR (Master T4 arena floor: 7 m soil tile, muted earth tint), CPU-ready, waiting for a queue slot.
 - F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land.
