@@ -72,5 +72,6 @@
     "subject_height_m": 1.2,
     "include_shadowless": true,
     "shadowless_min_height_m": 2.5
-  }
+  },
+  "smoke_plume": {"_why": "F38#30 (LANE-LAND-MT, 14 Nov, OFF until GPU-judged). The judges' follow-up on the Warrens frames: 'the plain white smoke column' / 'a solid smoke pillar'. The F03 lure post's column (26 m of stacked discs, 1.4 m foot, 11 m crown, alpha 0.55) reads as one straight pole. ON, for the posts named here only: a wider foot and crown, less alpha per disc (the stacked overlap was what made it solid), more fade at the top and a downwind lean, so it reads as a soft plume and still marks the site from the road. Presentation only.", "scope": "client_presentation", "enabled": false, "names": ["WarrensVaultSignalPost"], "alpha_scale": 0.6, "top_size_scale": 1.6, "base_size_scale": 1.8, "fade": 0.8, "drift_per_m": 0.32}
 }
