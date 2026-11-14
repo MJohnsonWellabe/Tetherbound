@@ -1,0 +1,112 @@
+[
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__route_day.jpg",
+  "sky_fraction": 0.086,
+  "lower_edges": 0.3673,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk.jpg",
+  "sky_fraction": 0.004,
+  "lower_edges": 0.288,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_01_day.jpg",
+  "sky_fraction": 0.035,
+  "lower_edges": 0.3251,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day.jpg",
+  "sky_fraction": 0.002,
+  "lower_edges": 0.3196,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day.jpg",
+  "sky_fraction": 0.08,
+  "lower_edges": 0.248,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band5_stronghold_approach__09__stronghold_approach__route_day.jpg",
+  "sky_fraction": 0.217,
+  "lower_edges": 0.4395,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk.jpg",
+  "sky_fraction": 0.071,
+  "lower_edges": 0.3456,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_01_day.jpg",
+  "sky_fraction": 0.167,
+  "lower_edges": 0.428,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_02_day.jpg",
+  "sky_fraction": 0.196,
+  "lower_edges": 0.4067,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ },
+ {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "preset": "shellshards-High",
+  "tree": "91ac0d6a10e7b04a816611f1ec1416ec959c32e1",
+  "tool": "res://tools/phase2_capture_routes.gd",
+  "path": "G-land-mt-shellshards-retry/shellshards-High/meadows__band5_stronghold_approach__09__stronghold_approach__walk_03_day.jpg",
+  "sky_fraction": 0.171,
+  "lower_edges": 0.3892,
+  "script_errors": 0,
+  "note": "LAND-MT-SHELLSHARDS arm side retry, High, arm side only (pair with base-High in G-land-mt-shellshards). Same composition as the 18:54 run: tb/land-cs 91ac0d6a1 (imported) + 3cbb66b00's seven Meadows files byte-copied + SHELLSHARDS overlay (island_strip ON). Ran clean: exit 0, 10/10, no driver crash (the 19:01 crash was the known intermittent nvoglv64.dll fault). Eye check: terrain, castle, path, grass match base. CREATURE CONFOUND: this run spawned turtles and grey foxes where base, plume and the first arm run (same composition) all spawned badgers and tan foxes, which is run-to-run spawn variation, not the overlay. Ignore creature species when comparing the stronghold walk frames. Run-to-run noise on these route frames is high (plume vs base mean diff 6-8)."
+ }
+]
