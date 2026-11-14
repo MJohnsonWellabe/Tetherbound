@@ -110,7 +110,7 @@
     "enabled": false,
     "pickup_overrides": {
       "cr_recovery_high_roost_flight_stamina_01": [911.6, 1020.0, 2687.8],
-      "cr_recovery_high_roost_flight_speed_01": [914.6, 1020.0, 2685.2],
+      "cr_recovery_high_roost_flight_speed_01": [913.5, 1020.0, 2686.6],
       "cr_recovery_high_roost_flight_wild_01": [912.8, 1020.0, 2690.4]
     }
   },
