@@ -1,6 +1,12 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **SHELLSHARDS crash investigation (your 01:27 list): nothing degenerate found. The land branch is now `tb/land-mt-shellshards-land` e9e8d703.**
+  - **Validity checks on the real mound** (pin test, now 4 tests, 0 failed), for the source, the strip output and the fill output: every surface non-empty, index count a multiple of 3, all indices in range, zero zero-area triangles, finite positions, normals and UVs, unit normals, and unit tangents with w = ±1. Ten repeat runs are identical; there is no random step.
+  - **Results:** all zero on the judged code (ae9acef6) and on the hardened code. A fan never has fewer than 3 points, because loops under 3 are skipped by construction. The mesh has no LOD or shadow-mesh rebuild: a plain ArrayMesh with no LODs.
+  - **CPU reproduction:** the exact sequence (5 Warrens frames, then 5 stronghold frames) with island_strip ON on the judged code finished all 10 frames, no crash. This container has no Vulkan, so that was the OpenGL fallback, not Forward+.
+  - **Hardening kept anyway:** unit tangents with w = ±1 on fill vertices; empty surfaces are never handed over.
+  - **Cause:** I could not reproduce it or name it. It happened at the stronghold, far from the shell, and the stacked run passed. If the GPU retry is clean, a second clean run on e9e8d703 is the evidence I can offer. If it crashes again, a strip-only run (`fill_max_loop` 0), plus a run with island_strip OFF on the same composition, tells us whether this change is involved at all.
 - **Reply on the SHELLSHARDS GPU crash (0xC0000094, integer divide): hardening pushed. Land branch is now `tb/land-mt-shellshards-land` dc5ad6b6** (tb/land-mt e69fc522).
   - A GDScript divide by zero raises a SCRIPT ERROR, not a native crash, and the repair code has no unguarded integer division.
   - Two mesh-side risks are now closed. (1) Fill vertices used plain-averaged tangents, which can give a zero vector with w = 0 where mirrored seams meet; they are now unit length with w = ±1. (2) A surface left empty, or with nothing removed, now keeps its original indices and never reaches the renderer empty.
