@@ -9,6 +9,8 @@ uniform vec4 mist_colour : source_color = vec4(0.93, 0.96, 0.97, 1.0);
 uniform float opacity = 0.55;
 uniform float rise_speed = 0.06;
 uniform float top_falloff = 1.6;
+uniform float near_clear_m = 25.0;
+uniform float near_full_m = 70.0;
 uniform float fade_start_m = 1100.0;
 uniform float fade_end_m = 2600.0;
 varying float v_distance;
@@ -31,7 +33,8 @@ void fragment() {
 	float billow = noise(vec2(UV.x * 11.0, UV.y * 3.0 - TIME * rise_speed)) * 0.65
 		+ noise(vec2(UV.x * 29.0, UV.y * 7.0 - TIME * rise_speed * 1.7)) * 0.35;
 	float height = pow(1.0 - UV.y, top_falloff) * smoothstep(0.0, 0.06, UV.y);
-	float far = 1.0 - smoothstep(fade_start_m, fade_end_m, v_distance);
+	// Clear around the camera, so a stand beside the pool is never inside a sheet.
+	float far = (1.0 - smoothstep(fade_start_m, fade_end_m, v_distance)) * smoothstep(near_clear_m, near_full_m, v_distance);
 	ALBEDO = mist_colour.rgb;
 	ROUGHNESS = 1.0;
 	ALPHA = clamp(opacity * height * soft_side * mix(0.4, 1.0, billow) * far, 0.0, 1.0);
