@@ -10,6 +10,7 @@ extends Node3D
 ## Tunables: water_veilfall.json::current_flow.drift_markers.
 const RESTORED_FLAG := "water_currents_restored"
 const POLL_SECONDS := 1.0
+const HEIGHTFIELD := preload("res://scripts/world/water_heightfield.gd")
 
 var _drifters: Array[Dictionary] = []
 var _flags: RefCounted
@@ -17,6 +18,12 @@ var _restored := false
 var _poll := 0.0
 var _calm := 0.25
 var _sea := 0.0
+## A floater shows only where the water under it is at least this deep. The
+## lanes are straight end-to-end lines with a lateral spread, so some drifters
+## cross beaches; held at sea level they hovered over wet sand next to the
+## dune (the Venn fight's "floating log in the sky", GPU G-venn-floating-log).
+var _min_depth := 0.4
+var _field: RefCounted = null
 var drifter_count := 0
 var buoy_count := 0
 
@@ -33,6 +40,8 @@ func build(world_config: Dictionary, flow_config: Dictionary, flags: RefCounted)
 		return
 	_sea = float(world_config.get("terrain", {}).get("sea_level_m", 0.0)) + float(cfg.get("float_lift_m", 0.05))
 	_calm = float(cfg.get("restored_speed_scale", 0.25))
+	_min_depth = float(cfg.get("min_depth_m", 0.4))
+	_field = HEIGHTFIELD.shared()
 	var full_strength := maxf(0.01, float(flow_config.get("full_strength_m_s", 1.8)))
 	var speed_scale := float(cfg.get("speed_scale", 2.4))
 	var min_speed := float(cfg.get("min_speed_m_s", 0.6))
@@ -200,7 +209,17 @@ func _process(delta: float) -> void:
 		drifter.s = fposmod(float(drifter.s) + float(drifter.speed) * rate * delta, float(drifter.length))
 		var at: Vector2 = (drifter.a as Vector2) + (drifter.dir as Vector2) * float(drifter.s)
 		node.position = Vector3(at.x, _sea + bob, at.y)
+		node.visible = afloat(_field, at, _sea, _min_depth)
 		node.rotation.y = atan2((drifter.dir as Vector2).x, (drifter.dir as Vector2).y) + float(drifter.spin)
+
+
+## True where the sea at `at` is at least `min_depth` deep, or when no
+## heightfield is available (keep the old behaviour rather than hide everything).
+static func afloat(field: RefCounted, at: Vector2, sea: float, min_depth: float) -> bool:
+	if field == null or not field.has_method("height_at"):
+		return true
+	var ground := float(field.call("height_at", at.x, at.y))
+	return not is_finite(ground) or sea - ground >= min_depth
 
 
 func _refresh(force: bool) -> void:

@@ -38,6 +38,10 @@ func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> v
 	var full_strength := maxf(0.01, float(config.get("full_strength_m_s", 1.8)))
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	# F13#5 `lesson_cue` (OFF until judged): the swim-lesson lanes carry
+	# COLOR.a 0 so the shader can treat them on their own.
+	var lesson: Dictionary = config.get("lesson_cue", {})
+	var lesson_ids: Array = lesson.get("current_ids", []) if bool(lesson.get("enabled", false)) else []
 	for current: Dictionary in world_config.get("currents", []):
 		var points: Array = current.get("polyline", [])
 		var direction: Array = current.get("flow_direction_xz", [0.0, 0.0])
@@ -45,7 +49,8 @@ func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> v
 		if points.size() < 2 or flow == Vector2.ZERO:
 			continue
 		var strength := clampf(float(current.get("strength_m_s", 0.0)) / full_strength, 0.0, 1.0)
-		var colour := Color(flow.x * 0.5 + 0.5, flow.y * 0.5 + 0.5, strength, 1.0)
+		var colour := Color(flow.x * 0.5 + 0.5, flow.y * 0.5 + 0.5, strength,
+			0.0 if lesson_ids.has(str(current.get("id", ""))) else 1.0)
 		_ribbon(surface, _densify(points, float(config.get("segment_m", 12.0))),
 			float(current.get("width_m", 18.0)) * width_scale * 0.5, sea, colour)
 		ribbon_count += 1
@@ -60,6 +65,8 @@ func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> v
 			continue
 		var value: Variant = config.shader[key]
 		material.set_shader_parameter(key, Color(str(value)) if value is String else value)
+	if not lesson_ids.is_empty():
+		material.set_shader_parameter("lesson_chop_scale", float(lesson.get("chop_cap_scale", 0.0)))
 	material_override = material
 	var visual: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
 	apply_visual_settings(preload("res://scripts/world/tidewake_look_profile.gd").overlay(
