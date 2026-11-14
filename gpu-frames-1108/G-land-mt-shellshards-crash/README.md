@@ -35,4 +35,10 @@ From the Windows Application log (`eventlog-20261113-1901.txt`) and the WER repo
 
 A guess, not verified: an integer divide in the driver at draw or dispatch time usually means a zero-sized resource or count reached it. Examples are a zero-instance MultiMesh, an empty mesh surface, a zero-size texture or a zero-length buffer. `island_strip` would be the first place to look for a strip that ends up with no instances or no vertices at the stronghold walk_01 stand.
 
-The retry ran later the same evening, on the same composition, arm side only. Its result is in `G-land-mt-shellshards-retry` if it completed; otherwise this folder gets a second set of logs.
+## Retry, 19:52-19:56: did not reproduce
+
+The arm side was rerun on the same composition. It finished clean:
+- exit 0, 10/10 frames ("CATALOGUE SURVEY OK"), no script errors;
+- no new Application-log crash event.
+
+The frames are in `G-land-mt-shellshards-retry`. The crash fits the known intermittent driver fault above, not a deterministic failure of `island_strip`.
