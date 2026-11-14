@@ -1,6 +1,8 @@
 STATUS: land
 
-# tb/land-cs-cloudreach-land: TURFGRAIN and WALL-BAND together (F40#1, F40#4, F40#7)
+# tb/land-cs-cloudreach-land: TURFGRAIN (F40#1, F40#4, F40#7); WALL-BAND withdrawn
+
+**AMENDED 14 Nov: WALL-BAND is OFF on this branch.** LANE-JUDGE amended G-below6-wall-band-main to DO NOT SHIP: the F40#8 no-loss check loses on the Three Bells bridge (6.29 -> 5.86, 0/3; the band repaints a whole cliff face). The last commit turns `wall_top_band_1113` OFF with `_why_off` and makes its test an OFF pin. TURFGRAIN is unchanged and still ships.
 
 One branch for both, as the coordinator asked, from main 1405def4d. It merges `tb/land-cs-turfgrain-land` and `tb/land-cs-wallband-land` (each has its own READY.md with the full detail); land this one instead of those two.
 
