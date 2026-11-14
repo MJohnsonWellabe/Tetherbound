@@ -1,5 +1,61 @@
 # LANE-BEINGS NOTE (branch `tb/beings`; this file is the channel)
 
+## HANDOFF (14 Nov 2026, lane wrap-up on owner direction)
+
+### State
+- Branch `tb/beings`; the head is the commit carrying this handoff, see `git log -1 origin/tb/beings`. Every unlanded arm is flag-OFF in code and switched on by an overlay only.
+- **On main from this lane:**
+  - #956: water mangrove monitor `limb_sink_frac` (F36#92, 6.68 → 7.03) and the Aquaryn deep swim (F39#8, 5.97 → 6.32).
+  - #957: Staticub storm fur (Nysa 5.95 → 6.45, F41#8 6.09 → 6.27, world 6.26 → 7.37, stage 7.41 → 8.08) and uniform cloth (F41#18), with the Marrow floor fix.
+  - #958: the charfix (shins override on two-atlas rigs, hair-cache key).
+- **Criterion closed:** F36 (0) #19, the Staticub roster row (G-closeout-staticub; 7.99 on High and on Medium).
+
+### Open candidates
+Commits are the last change to each arm folder on `tb/beings`. Each folder holds ARM.md, CAPTURE.json, overlay.json and a CPU sheet.
+
+| Arm | Row(s) | Flag (file) | Last commit | Status | Exact next step |
+|---|---|---|---|---|---|
+| PERCH-CLEARANCE | F40#17 | `companion_needle_clearance` (cloudreach_high_perches_visual.json) | 43eb63612 | CPU-ready. LANE-JUDGE agreed to judge it alone on the four crown frames against main + RIMSEAT | GPU High capture per CAPTURE.json, crown frames only |
+| STATICUB-COOL | Staticub world (6.53), F41#8 | `beings_staticub_cool_veins` (coat flags) | c012a8817 | CPU-ready (darker coat; round 1's bluer coat went pink and was dropped) | GPU High, stormwood staticub world frames, plus Nysa and Maud/Bryn no-loss |
+| TERRAPUP-SPHINX | F38#1 | `beings_terrapup_sphinx_rest` (creature_model_flags.json) | 20c050b70 | CPU-ready | GPU High, meadows terrapup resting (fainted is the control) |
+| RIPPLET-DEEP | F39#19 | `beings_ripplet_deep_teal` (coat flags) | 38eacc713 | CPU-ready, not queued | GPU High, Venn fight frames per CAPTURE.json |
+| TAM-COAT | F38#16 | `beings_meadows_tam_coat` (character_appearance_variants.json) | 3780de10a | Queued | GPU judge; Mira and Tam stay separated without changing either one's presented gender |
+| OFFICER-FACES | F41#8, F41#18 | `beings_stormwood_maren`, `beings_stormwood_nysa_hair` | fae5709b2 | Ready to queue. Nysa keeps her face, gender unstated; hair colour and portrait only | GPU judge. Known limit: Nysa's forelock stays dark |
+| Pose batch: VERIDIAN-ANTLER, NECKDOWN, STORMRAVEN-WINGS | F36#85; F36#46, F36#88; F36#74 | `beings_veridian_rigid_antlers`; settle overlays per ARM.md | 8eb5de9d0; 9c1bb38bc; 9c1bb38bc | With the GPU lane; no verdict seen | Read the verdict; on a ship, cut `tb/beings-<arm>-land` |
+| MONITOR-VALUE | F36#50, F36#92 | `beings_monitor_value_lift` (coat flags) | 37fdf1432 | With the GPU lane | Read the verdict |
+| THUNDERTUNNEL-FAINT | F36#80 | `beings_thundertunnel_scope` (creature_pose_settle.json) | 83c350239 | With the GPU lane | Read the verdict |
+| STORMRAVEN-ARCS | F41#13, F36#74 | `beings_stormraven_arcs` (coat flags) | 2836d1e64 | CPU-ready; coordinator queued it 13 Nov | Read the verdict |
+| FLY-SHOULDER | F38#8 | `hang_pose.shoulder_grip_1113` (fly_traversal.json) | 43507f404 | CPU-ready, not queued | GPU High fly frames |
+| TRAILPUP-AMBER | F36#83 | `beings_trailpup_amber` (coat flags) | 9ae4ea989 | CPU-ready, not queued | GPU High pose stage |
+
+Landing recipe for a ship verdict: cut `tb/beings-<arm>-land` from origin/main with the flag ON, add a `_why_on` naming the verdict, change the pin test to expect ON (for creature_model_flags, drop the flag from HELD in test_creature_model_flags.gd), and add READY.md.
+
+### What worked
+- **Finding the real cause on the defect frame before building.** Clip probes showed Terrapup's rest is a copy of its faint, and Stormraven's clips swing wing bones on a folded-wing mesh. Collision probes showed the High Perches needles have no collider. Texture means showed the Staticub coat was too light, not the wrong hue.
+- **Authored rest recipes through `creature_model_flags` (a `rest_pose` override).** A whole new pose with no code change.
+- **Coat flags keyed by albedo path.** They reach every body of that model, wild spawns included. The later flag wins per key.
+- **The follower keep-clear group,** for scenery that is visual-only but must not be stood in.
+
+### What failed (so it isn't retried; also in "Tried and failed, by row" below)
+- **F38#1:** `faint_fold` and `settled_rest` for Terrapup.
+- **Staticub world / F41#8:** a bluer coat toward Stormursa's average colour (renders pink under violet light).
+- **F36#74:** Stormraven skin weights and tail pitch.
+- **F36#49, F36#78, F36#54:** weight relax on boneless wings and spikes.
+- **Officer_a hair mask:** a narrower face box and a neighbourhood-skin method; the second greyed an eye.
+
+### Runbook
+- **Captures:** CPU under xvfb (`xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --rendering-driver opengl3`). Use a fresh output folder each run, because the tools refuse an existing one.
+  - World creatures: `tools/phase2_capture_creatures.gd --biome= --only= --poses= --output=res://.artifacts/phase2/<name>`.
+  - Pose stage: `tools/art_pipeline/capture_f36_poses.gd`.
+  - High Perches: `tools/phase2_capture_cloudreach_high_perch.gd --seed=2042 --output=res://ralph/reports/VISUAL/phase2/cloudreach/<name>` (add `--resolution 1920x1080 --fixed-fps 20`).
+- **Overlays:** back the config up, deep-merge the overlay, capture, restore the backup. Never commit while an overlay is applied. If a commit has to happen mid-capture, stage the config from the backup with `git hash-object -w` and `git update-index --cacheinfo`.
+- **Textures:** run `python3 tools/art_pipeline/texture_import_policy.py --apply <file>.png.import`. It takes the .import sidecar, not the image. Then run `godot --headless --path . --import`.
+- **Harness facts not yet in TECHNICAL 8.1:**
+  - The High Perches arrival-landed and departure-lookback frames vary run to run (wild creatures wander; two flag-off runs differ by a per-pixel mean of 10–22), so pair only the crown frames.
+  - The world capture freezes "fainted" at 90% of the clip and "resting" at 45%, unless the rest is authored.
+  - An outer `timeout` around an overlay script can kill it before the restore runs.
+
+
 ## TO LANE-JUDGE AND THE COORDINATOR (14 Nov, about 03:10 UTC): the salmon bear in G-land-cs-soiloff
 - Confirmed: the storm-brown coat `below6_staticub_storm_fur` is ON on main (#957, 0ba1cfabd). The scored tree, `tb/land-cs` 91ac0d6a1, does not contain #957, and the flag there is still OFF. So the "flat pink/salmon bear" in the Stormwood F10 matrix is the old Staticub coat on a branch that has not merged main.
 - The coat reaches every Staticub r10 body, wild matrix spawns included. Coat flags apply in `creature_body._apply_coat_flags` by the live albedo path, not by role.
