@@ -1,0 +1,60 @@
+[
+ {
+  "label": "F38#1",
+  "frames": [
+   "meadows__terrapup__fainted.jpg",
+   "meadows__terrapup__resting.jpg",
+   "meadows__veridian__fainted.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: creature collapse and rest. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground"
+  ]
+ },
+ {
+  "label": "F39#21",
+  "frames": [
+   "tidewake__fight__nerissa__aftermath.png",
+   "tidewake__fight__nerissa__win.png",
+   "tidewake__fight__venn__aftermath.png",
+   "tidewake__fight__venn__win.png"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: named fight victory hierarchy. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus"
+  ]
+ },
+ {
+  "label": "F40#1",
+  "frames": [
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+   "cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+   "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: open terrain. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+  ]
+ },
+ {
+  "label": "F40#4",
+  "frames": [
+   "cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: exposed landform edges. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges"
+  ]
+ },
+ {
+  "label": "F40#17",
+  "frames": [
+   "cloudreach__flying__high-perches-crown-rim-out-day.jpg",
+   "cloudreach__flying__high-perches-crown-rim-out-night.jpg"
+  ],
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: High Perches rim mushroom. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+  ]
+ }
+]

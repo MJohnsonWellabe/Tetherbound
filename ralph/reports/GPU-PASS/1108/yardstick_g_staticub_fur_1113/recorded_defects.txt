@@ -1,0 +1,6 @@
+Sj: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+At: none
+Fj: none
+Jt: none
+Xk: none
+Js: none

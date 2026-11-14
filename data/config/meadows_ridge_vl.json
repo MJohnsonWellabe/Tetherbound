@@ -16,5 +16,19 @@
     "warm_haze_mix": 0.85,
     "warm_keep_scale": 0.6,
     "_why_warm_haze": "ON (GPU judged, LANE-JUDGE G-land-mt-duskridge, 13 Nov 2026): at golden hour the ridge took 60% of a tan fog and read as a flat peach sheet. These values move the ridge's own haze toward a cool dusk blue by how warm the live fog is, and thin it; blue day and night fog are untouched. Dusk vistas 6.41 -> 7.10 (+0.69, 3/3); F38#24 day frames level at 6.56 (no loss)."
+  },
+  "scale_xz": 1.0,
+  "back_layer": {
+    "_why": "F38#24 (LANE-LAND-MT, 13 Nov, OFF until GPU-judged). LANE-JUDGE G-rescore-f38-24-after-952: the ranges read 'as flat painted cards with little aerial layering' and the walk frames show them only as a thin strip; ask: 'a second, hazier range layer behind the current one so distance reads in depth'. A second copy of the same Blender ridge, turned so its peaks fall between the front ridge's, taller so its crests clear the front ridge, with more of the live fog so it recedes. Presentation only: no collider, shadow, camera or gameplay change. scope client_presentation.",
+    "scope": "client_presentation",
+    "enabled": false,
+    "scale_xz": 1.0,
+    "height_scale": 1.8,
+    "yaw_deg": 23.0,
+    "sink_m": 0.0,
+    "shader": {
+      "fog_keep": 0.85,
+      "base_fog_keep": 1.0
+    }
   }
 }

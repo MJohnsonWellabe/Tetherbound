@@ -1,0 +1,6 @@
+Zs: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Mh: none
+Gk: none
+Kz: "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+Ro: none
+Ti: none

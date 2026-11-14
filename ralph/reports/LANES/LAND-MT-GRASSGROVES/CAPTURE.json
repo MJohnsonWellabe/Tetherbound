@@ -1,0 +1,11 @@
+{
+ "id": "LAND-MT-GRASSGROVES",
+ "lane": "LANE-LAND-MT",
+ "branch": "tb/land-mt",
+ "preset": "High",
+ "tool": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --seed=2042 (camera-matched t-000) and tools/phase2_capture_routes.gd --biome=water --seed=2042 --subset=first_shore_horizon_stones --subset=brine_steps_east_beach --subset=drowned_garden_terraces",
+ "base": {"tree": "tb/land-mt", "overlay": null},
+ "arm": {"tree": "tb/land-mt", "overlay": "ralph/reports/LANES/LAND-MT-GRASSGROVES/overlay.json"},
+ "rows": {"F39#19": ["Venn t-000"], "F39#1": ["its job frames"], "F39#15": ["its job frames"], "F39#27": ["its job frames"], "no-loss": ["F39#30 matrix", "F13#5 T2 views"]},
+ "by_eye": "Grass in distinct clumps with bare sand between, not an even scatter."
+}

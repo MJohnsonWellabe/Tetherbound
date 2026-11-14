@@ -1,0 +1,35 @@
+{
+ "Wm": {
+  "anchor": false,
+  "label": "Matrix shrine",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k29/shrine_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k29/shrine_arm.png"
+ },
+ "Tl": {
+  "anchor": false,
+  "label": "Matrix gate",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k29/gate_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k29/gate_base.png"
+ },
+ "Qr": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ky": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Bc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Rh": {
+  "anchor": false,
+  "label": "Matrix overlook",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k29/overlook_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k29/overlook_base.png"
+ }
+}

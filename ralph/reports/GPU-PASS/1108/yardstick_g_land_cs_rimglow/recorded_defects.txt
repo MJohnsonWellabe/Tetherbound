@@ -1,0 +1,5 @@
+Te: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Mx: none
+Lq: none
+Gk: "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+Gx: none

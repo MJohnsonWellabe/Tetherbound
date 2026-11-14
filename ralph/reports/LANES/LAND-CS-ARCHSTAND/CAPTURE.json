@@ -1,0 +1,14 @@
+{
+ "id": "LAND-CS-ARCHSTAND",
+ "lane": "LANE-LAND-CS",
+ "branch": "tb/land-cs",
+ "preset": "High",
+ "base": {"tree": "tb/land-cs", "overlay": null},
+ "arm": {"tree": "tb/land-cs", "overlay": "ralph/reports/LANES/LAND-CS-ARCHSTAND/overlay.json"},
+ "tool": "res://tools/phase2_capture_locations.gd",
+ "args": ["--biome=cloudreach", "--times=day", "--views=approach", "--seed=2042", "--output={OUT}"],
+ "frames": {"F40#3": ["cloudreach__landmark__old_wind_observatory__day__approach", "cloudreach__landmark__windscar_beacon__day__approach", "cloudreach__landmark__broken_skyroad_arch__day__approach"]},
+ "extra": ["cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach (no stand on base)"],
+ "note": "F40#3's three job frames; only the arch frame changes. Re-baseline per the stand rule.",
+ "by_eye": "Skyroad arch approach: the arch, span and both legs, behind the trainer. Hold if it still shows only two walls."
+}

@@ -131,6 +131,11 @@ var _smoke_fade := 0.85
 ## Downwind lean of the column top in metres per metre of rise (0.35 at the
 ## default 4.6 m top keeps the original lean). A tall lure plume leans further.
 var _smoke_drift := -1.0
+## camfx `smoke_plume` (F38#30): a set direction (local xz) and an early lean
+## curve, so a column whose fire sits under an overhang drifts out first.
+## ZERO keeps the old lean exactly.
+var _smoke_drift_dir := Vector2.ZERO
+var _smoke_drift_power := 2.0
 ## Lazy-looked-up every `_process()` tick, not cached at `_init()`/`_ready()`
 ## time -- `torch.gd::_is_on()`'s own OF18 lesson applies here too: a
 ## campfire can be built and added to the tree before `world_look.gd` has
@@ -545,9 +550,12 @@ func is_rest_source() -> bool:
 ## A signal column marks a lure or landmark (F03 lure cue; the Tether holding
 ## camps), never a place to rest.
 func configure_smoke(top_m: float, alpha: float, top_size_m: float = -1.0, rgb: Color = Color(0, 0, 0, 0),
-		fade: float = 0.85, base_size_m: float = -1.0, drift_per_m: float = -1.0) -> void:
+		fade: float = 0.85, base_size_m: float = -1.0, drift_per_m: float = -1.0,
+		drift_dir_local: Vector2 = Vector2.ZERO, drift_power: float = 2.0) -> void:
 	set_rest_source(false)
 	_smoke_drift = drift_per_m
+	_smoke_drift_dir = drift_dir_local.normalized() if drift_dir_local.length() > 0.001 else Vector2.ZERO
+	_smoke_drift_power = maxf(0.1, drift_power)
 	_smoke_top = maxf(top_m, SMOKE_BASE_HEIGHT + 0.5)
 	_smoke_alpha = clampf(alpha, 0.0, 1.0)
 	_smoke_top_size = top_size_m if top_size_m > 0.0 else SMOKE_TOP_SIZE * _smoke_top / SMOKE_TOP_HEIGHT
@@ -581,6 +589,9 @@ func _build_smoke() -> void:
 			lean * t * t,
 			lerp(SMOKE_BASE_HEIGHT, _smoke_top, t),
 			-0.22 * t * t)
+		if _smoke_drift_dir != Vector2.ZERO:
+			var out := lean * pow(t, _smoke_drift_power)
+			disc.position = Vector3(_smoke_drift_dir.x * out, lerp(SMOKE_BASE_HEIGHT, _smoke_top, t), _smoke_drift_dir.y * out)
 		add_child(disc)
 
 

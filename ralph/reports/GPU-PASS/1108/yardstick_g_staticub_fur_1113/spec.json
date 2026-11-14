@@ -1,0 +1,23 @@
+[
+ {
+  "label": "Staticub world",
+  "a": "Staticub_world_base.png",
+  "b": "Staticub_world_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: a young storm bear creature in the wild: idle, moving, attacking, hurt, fainted, resting (2x3). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ },
+ {
+  "label": "Staticub shiny",
+  "a": "Staticub_shiny_base.png",
+  "b": "Staticub_shiny_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: the rare colour form of a young storm bear creature (one frame). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ },
+ {
+  "label": "Staticub stage",
+  "a": "Staticub_stage_base.png",
+  "b": "Staticub_stage_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the stormwood biome: a young storm bear creature beside the 1.80 m trainer ruler: standing, hit, faint mid, faint end. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ }
+]

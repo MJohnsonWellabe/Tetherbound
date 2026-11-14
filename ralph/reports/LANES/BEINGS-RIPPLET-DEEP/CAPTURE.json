@@ -1,0 +1,5 @@
+{"rows":["F39#19"],"also":["Ripplet's pose row on the stage, as a no-loss check"],
+ "captures":[
+  {"row":"F39#19","tool":"res://tools/phase2_capture_tidewake_fights.gd","args":["--trainer=water_trainer_venn","--out={OUT}","--interval=1.0","--max-frames=32","--level=53","--pilot=READER","--cap-s=180","--render-only-saves","--seed=2042"],"frames":["tidewake__fight__venn__t-000_00"],"output_rule":"--out must be under res://ralph/reports/VISUAL/phase2/tidewake/","pairing":"fights differ run to run: use the pooled-base runbook (TECHNICAL §8.1; GPU-PASS/tools-1113 pair_frames.py) to camera-match base and arm"},
+  {"row":"stage no-loss","tool":"res://tools/art_pipeline/capture_f36_poses.gd","args":["--species=ripplet","--roles=hit,faint","--whole-body","--context","--out={OUT}"],"frames":["ripplet-hit-000","ripplet-hit-050","ripplet-faint-100"]}],
+ "base":"tb/beings head, no overlay","arm":"tb/beings head + overlay.json","presets":["High","Medium"],"control":"F38#38"}

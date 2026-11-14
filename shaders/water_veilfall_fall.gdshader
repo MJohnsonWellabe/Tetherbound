@@ -12,6 +12,11 @@ render_mode blend_mix, cull_disabled, depth_draw_never, diffuse_burley, specular
 uniform vec4 foam_colour : source_color = vec4(0.96, 0.99, 1.0, 1.0);
 uniform vec4 shade_colour : source_color = vec4(0.70, 0.84, 0.88, 1.0);
 uniform float flow_speed = 7.0;
+// falls.rebuild (F39#31): stretch the flow pattern into long, thin vertical
+// streaks instead of near-square cells (judged "blocky tiled"). 1 and 1 keep
+// the shipped pattern exactly.
+uniform float streak_x = 1.0;
+uniform float streak_y = 1.0;
 uniform float opacity = 0.94;
 uniform float edge_feather = 0.16;
 uniform float foot_feather_m = 24.0;
@@ -83,7 +88,11 @@ void fragment() {
 	}
 	float detail = 1.0 - smoothstep(detail_fade_start_m, detail_fade_end_m, v_distance);
 	float strength = COLOR.g * 2.0;
-	vec2 flowing = vec2(UV.x * 14.0, (UV.y - TIME * flow_speed) / 9.0);
+	// falls.rebuild strands (F39#31): UV2.x carries a strand's speed factor
+	// minus one (0 on the shipped ribbons, so they are unchanged); it also
+	// shifts the pattern so neighbouring strands do not move in lockstep.
+	float strand_speed = flow_speed * (1.0 + UV2.x);
+	vec2 flowing = vec2(UV.x * 14.0 * streak_x + UV2.x * 23.0, (UV.y - TIME * strand_speed) / (9.0 * streak_y));
 	float broad = noise(flowing);
 	float fine = noise(flowing * vec2(2.6, 3.1) + vec2(4.2, 1.3));
 	float stream = smoothstep(0.2, 0.8, broad * 0.7 + fine * 0.3);
@@ -91,7 +100,7 @@ void fragment() {
 	// strands keep the column from reading as a painted stripe.
 	// Broad separated streams survive the distance fade; the former saturated
 	// noise made an almost solid white stripe as soon as detail faded out.
-	float far_band = noise(vec2(UV.x * 7.0, (UV.y - TIME * flow_speed) / 65.0));
+	float far_band = noise(vec2(UV.x * 7.0 * streak_x + UV2.x * 11.0, (UV.y - TIME * strand_speed) / (65.0 * streak_y)));
 	float body = mix(smoothstep(0.2, 0.8, far_band), stream, detail);
 	float across = abs(UV.x - 0.5) * 2.0;
 	float core = 1.0 - smoothstep(0.2, 1.0, across);

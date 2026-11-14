@@ -1,0 +1,5 @@
+Vq: "The current direction does not read: white crescent arcs curve in mixed directions and read as hard decal shapes, with no single flow line"
+Bo: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Rj: none
+Dm: "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"; "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
+Tv: none

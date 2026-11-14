@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-mt-grassgroves-r2-routes @ 4985aaa99, G-land-mt-grassgroves-r2-venn @ 0f2ec3211", "content": "tb/land-mt 6c710c034 (dune grass clustered into clumps)", "preset": "High",
+ "F39#1": ["brine walk_03", "first_shore route_day"],
+ "Routes noloss": ["first_shore vista_dusk", "sluice walk_01", "sluice walk_03"],
+ "F39#19 Venn": ["t-000", "t-003 (camera-matched only; t-023..t-025 excluded)"],
+ "not judged": {"F39#15": "frames pixel-identical base vs arm (diff 0.0/0.0/0.94): level by construction", "F39#27": "character inventory frames not captured"}}

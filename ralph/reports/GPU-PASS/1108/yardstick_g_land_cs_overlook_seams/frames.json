@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-cs-overlook-seams @ 20779d3a8, G-land-cs-overlook-seams-perches", "content": "base = tb/land-cs 91ac0d6a1 (main + #954 join + solid ON); arm = paver_strips_1113 (buried approach pavers not built)", "preset": "High",
+ "F40#15": ["stormward_overlook walk_02_day", "walk_03_day"], "Overlook other": ["route_day", "vista_dusk", "walk_01_day"],
+ "Perches no-loss (2x2, the four highest-diff of 64)": ["the_high_perches detail night rain", "gameplay day clear", "detail day clear", "gameplay golden clear"],
+ "pixel_diff_arm_vs_base": {"route_day": 2.39, "vista_dusk": 2.24, "walk_01": 6.37, "walk_02": 3.2, "walk_03": 2.89, "perches_top4": "4.6-5.2 (all 64: mean 1.9, GPU lane: rain and creature-spawn noise)"},
+ "not judged": {"windscar_flight_aerie vista_dusk (F40#15 job frame)": "not in the section"},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}

@@ -1,0 +1,29 @@
+[
+ {
+  "label": "F39#19 High",
+  "a": "F39_19_High_base.png",
+  "b": "F39_19_High_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: a fight against a trainer opponent with the team roster on the left (1 frame). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The left team roster fades to pale low-contrast text against terrain during active combat"
+  ]
+ },
+ {
+  "label": "F39#19 Medium",
+  "a": "F39_19_Medium_base.png",
+  "b": "F39_19_Medium_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: a fight against a trainer opponent with the team roster on the left (2 frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The left team roster fades to pale low-contrast text against terrain during active combat"
+  ]
+ },
+ {
+  "label": "F38#38 High-vs-Medium",
+  "a": "ctl_High.png",
+  "b": "ctl_Medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Craft and leave button hints are faint gray on the dark translucent craft panel"
+  ]
+ }
+]

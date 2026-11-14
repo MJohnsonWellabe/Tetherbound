@@ -339,8 +339,15 @@ func _draw() -> void:
 		]
 
 	var portrait := str(_identity.get("portrait", ""))
+	# `portrait_replaces` (a villager wearing an appearance variant): the
+	# identity's plate stands in only for lines drawn with that base plate, so
+	# other speakers in the same conversation keep their own faces.
+	var replaces := str(_identity.get("portrait_replaces", ""))
+	if not replaces.is_empty() and str(line.get("portrait", "")) != replaces:
+		portrait = ""
 	if portrait == "" or not ResourceLoader.exists(portrait):
 		portrait = str(line.get("portrait", ""))
+	portrait = body_flag_portrait(portrait)
 	var crop: Variant = _identity.get("portrait_region", [])
 	if portrait != _last_portrait or crop != _last_portrait_region:
 		_last_portrait = portrait
@@ -417,3 +424,27 @@ func _conversation_camera() -> Node:
 	if not is_inside_tree():
 		return null
 	return get_tree().get_first_node_in_group(CONVERSATION_CAMERA.GROUP)
+
+
+## An enabled `character_body_flags.json` flag may carry `portrait_remap`
+## (installed portrait path -> recoloured copy), so a body look and the
+## dialogue portrait of the same character change together (F38#16
+## `scene_tam_outfit_1113`). With no flag enabled this returns the path as is.
+static var _portrait_remap: Dictionary = {}
+static var _portrait_remap_loaded := false
+
+
+static func body_flag_portrait(path: String) -> String:
+	if not _portrait_remap_loaded:
+		_portrait_remap_loaded = true
+		var doc: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/character_body_flags.json"))
+		var flags: Variant = (doc as Dictionary).get("flags", {}) if doc is Dictionary else {}
+		if flags is Dictionary:
+			for id: String in flags:
+				var flag: Variant = (flags as Dictionary)[id]
+				if flag is Dictionary and bool((flag as Dictionary).get("enabled", false)):
+					var remap: Variant = (flag as Dictionary).get("portrait_remap", {})
+					if remap is Dictionary:
+						_portrait_remap.merge(remap as Dictionary, true)
+	var swapped := str(_portrait_remap.get(path, path))
+	return swapped if ResourceLoader.exists(swapped) else path

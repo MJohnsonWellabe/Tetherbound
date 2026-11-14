@@ -1,0 +1,18 @@
+[
+ {
+  "label": "F40#17",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k25/F40_17_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k25/F40_17_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: High Perches rim mushroom cluster at the grassy crown rim (two frames, day then night, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+  ]
+ },
+ {
+  "label": "Crown court no-loss",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k25/court_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k25/court_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: the High Perches crown court by day (one frame, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ }
+]

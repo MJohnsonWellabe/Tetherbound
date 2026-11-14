@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.2,
+   5.0,
+   5.2
+  ],
+  "craft:after": [
+   6.4,
+   6.4,
+   6.4
+  ],
+  "f04_6_r22:control": [
+   5.3,
+   5.3,
+   5.3
+  ],
+  "f04_6_r22:r22": [
+   6.4,
+   6.4,
+   6.4
+  ],
+  "f36_0_npc:C1B": [
+   6.6,
+   6.6,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.6,
+   6.6,
+   6.8
+  ]
+ },
+ "candidates": {
+  "Staticub world High-vs-Medium [High]": [
+   6.2,
+   5.7,
+   6.2
+  ],
+  "Staticub world High-vs-Medium [Medium]": [
+   6.2,
+   5.7,
+   6.2
+  ],
+  "F38#38 High-vs-Medium [Medium]": [
+   7.3,
+   7.0,
+   7.4
+  ],
+  "F38#38 High-vs-Medium [High]": [
+   7.3,
+   7.0,
+   7.4
+  ],
+  "Staticub stage High-vs-Medium [Medium]": [
+   7.1,
+   6.8,
+   7.1
+  ],
+  "Staticub stage High-vs-Medium [High]": [
+   7.1,
+   6.8,
+   7.1
+  ]
+ }
+}

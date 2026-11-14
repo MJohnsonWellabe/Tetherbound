@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-things-telldust3-warden-high @ e2da2966e, G-things-telldust3-warden-medium @ 8d6795790",
+ "pairing": "arm = telldust3 runs (c673 + tb/scene 1735a7827 six files + THINGS-TELLDUST3 overlay); base = scene-hallwalls-r2 base runs (c673 + 063c614ca same six files, no overlay); tell_style.gd and combat.json byte-identical; cameras matched 0.00 m on Warden 03/05 (GPU lane manifest)",
+ "F38#28 High / Medium": ["warden_aldis-03", "warden_aldis-05"], "mean diff": "High 0.92/1.13, Medium 0.78/1.10",
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg",
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f04_6_r22"}

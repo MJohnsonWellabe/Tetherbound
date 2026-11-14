@@ -48,8 +48,37 @@ static func build(parent: Node3D, config: Dictionary = {}) -> Node3D:
 	model.position = Vector3(0.0, -float(cfg.get("sink_m", 0.0)), 0.0)
 	model.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	var vertical := float(cfg.get("height_scale", 1.0))
-	model.scale = Vector3(1.0, vertical, 1.0)
+	var across := float(cfg.get("scale_xz", 1.0))
+	model.scale = Vector3(across, vertical, across)
 	var shader_cfg: Dictionary = cfg.get("shader", {}) as Dictionary
+	_apply_far_material(model, shader_cfg)
+	# `back_layer` (F38#24, LANE-LAND-MT 13 Nov, OFF until judged): a second
+	# copy of the same continuous ridge, set further out, taller, turned and
+	# hazier, so the skyline reads as two ranges in depth instead of one card
+	# (LANE-JUDGE G-rescore-f38-24-after-952: "flat painted cards with little
+	# aerial layering"). It is a child of the front ridge, so it follows the
+	# camera with it and sync_fog reaches its materials too. Keep the back
+	# copy's scale_xz at or under 1.0: the ridge's back edge is 1945 m and the
+	# gameplay camera's far plane is 2000 m.
+	var back: Dictionary = cfg.get("back_layer", {}) as Dictionary
+	if bool(back.get("enabled", false)):
+		var far_model := packed.instantiate() as Node3D
+		far_model.name = NODE_NAME + "Back"
+		var back_xz := float(back.get("scale_xz", 1.0)) / maxf(across, 0.01)
+		far_model.scale = Vector3(back_xz, float(back.get("height_scale", 1.0)) / maxf(vertical, 0.01), back_xz)
+		far_model.rotation.y = deg_to_rad(float(back.get("yaw_deg", 0.0)))
+		far_model.position = Vector3(0.0, -float(back.get("sink_m", 0.0)) / maxf(vertical, 0.01), 0.0)
+		var back_shader := shader_cfg.duplicate()
+		back_shader.merge(back.get("shader", {}) as Dictionary, true)
+		_apply_far_material(far_model, back_shader)
+		model.add_child(far_model)
+	parent.add_child(model)
+	return model
+
+
+## Replaces every surface of `model` with the far ridge shader, carrying the
+## source albedo atlas and the given shader values.
+static func _apply_far_material(model: Node3D, shader_cfg: Dictionary) -> void:
 	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
 		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -69,8 +98,6 @@ static func build(parent: Node3D, config: Dictionary = {}) -> Node3D:
 				var value: Variant = shader_cfg[key]
 				far.set_shader_parameter(key, Color(str(value)) if value is String else value)
 			mesh.set_surface_override_material(surface, far)
-	parent.add_child(model)
-	return model
 
 
 ## Copies the live environment fog into the ridge materials (called from

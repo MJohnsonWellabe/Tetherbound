@@ -1,0 +1,35 @@
+{
+ "Yc": {
+  "anchor": false,
+  "label": "F39#19 High",
+  "A": "F39_19_High_base.png",
+  "B": "F39_19_High_arm.png"
+ },
+ "Eq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Bp": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Qw": {
+  "anchor": false,
+  "label": "F38#38 High-vs-Medium",
+  "A": "ctl_High.png",
+  "B": "ctl_Medium.png"
+ },
+ "Nr": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Vd": {
+  "anchor": false,
+  "label": "F39#19 Medium",
+  "A": "F39_19_Medium_arm.png",
+  "B": "F39_19_Medium_base.png"
+ }
+}

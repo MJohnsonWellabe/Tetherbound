@@ -1,0 +1,12 @@
+{
+ "id": "LAND-MT-CRAGCUT",
+ "lane": "LANE-LAND-MT",
+ "branch": "tb/land-mt",
+ "preset": "High (step 1 eye check, no judges); High and Medium for step 2",
+ "tool": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --seed=2042 (same entry as G-land-mt-cragback, camera-matched pairs)",
+ "step1_probe": {"tree": "tb/land-mt", "overlay": "ralph/reports/LANES/LAND-MT-CRAGCUT/probe_overlay.json", "frames": ["t-000", "t-003"], "judge": false},
+ "base": {"tree": "tb/land-mt", "overlay": null},
+ "arm": {"tree": "tb/land-mt", "overlay": "ralph/reports/LANES/LAND-MT-CRAGCUT/overlay.json"},
+ "rows": {"F39#19": ["t-000", "t-003"], "F39#7": ["its job frames, if camera-matched"], "no-loss": ["F39#2 job frames", "F39#31 veilfall-vista, veilfall-near"]},
+ "by_eye": "Step 1: the top-right wedge turns magenta. Step 2: the wedge is gone, showing rock or terrain, with no hole to the sky."
+}

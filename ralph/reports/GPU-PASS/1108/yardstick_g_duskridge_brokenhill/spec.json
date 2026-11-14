@@ -1,0 +1,36 @@
+[
+ {
+  "label": "DR dusk vistas",
+  "a": "DR_dusk_vistas_base.png",
+  "b": "DR_dusk_vistas_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the distant mountain backdrop at dusk (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "DR F38#24 day",
+  "a": "DR_F38_24_day_base.png",
+  "b": "DR_F38_24_day_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the distant mountain backdrop (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "BH F38#30",
+  "a": "BH_F38_30_base.png",
+  "b": "BH_F38_30_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the hillside beside a burrow entrance (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "BH warrens other",
+  "a": "BH_warrens_other_base.png",
+  "b": "BH_warrens_other_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: a burrow warren hillside settlement and its route (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ }
+]

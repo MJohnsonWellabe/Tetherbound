@@ -208,7 +208,7 @@
       "one_time": true
     },
     {
-      "id": "officer_maren_verge_rod",
+      "id": "officer_maren_verge_rod", "appearance_variant_id": "beings_stormwood_maren",
       "display_name": "Officer Maren",
       "region_id": "cinder_verge",
       "position": [
@@ -363,7 +363,7 @@
       "one_time": true
     },
     {
-      "id": "officer_nysa_deepwood_rod",
+      "id": "officer_nysa_deepwood_rod", "appearance_variant_id": "beings_stormwood_nysa_hair",
       "display_name": "Officer Nysa",
       "region_id": "deepwood",
       "position": [

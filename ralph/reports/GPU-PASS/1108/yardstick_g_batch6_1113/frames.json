@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "batch": "one confirming batch for four sections; anchors craft, f36_0_npc:C1, f04_6_r22; judges a, b, c = three fresh general-purpose subagents, standard prompt",
+ "F38#28 High / Medium": "G-scene-hallwalls-r2 @ 84a425ada: warden_aldis-03, -05 stacked; both sides tb/scene 063c614ca hall content; arm roofed_room_walls_1113; cameras matched 0.00 m; mean diff 2.1-2.4 per frame",
+ "F38#20 noloss": "G-scene-hallwalls-r2-f38-20-noloss @ 46b072bb4: meadows__landmark__stronghold__day__approach (mean diff 1.25)",
+ "F41#18 row / dialogue / officers noloss": "G-below6-uniform-cloth-c673 @ 76720376a: dace, varga, sable (world, then __dialogue); officers sera__dialogue, maren_verge_rod__dialogue, circuit_tavi_rodline (largest diffs of the 86 pairs, max 2.64)",
+ "Staticub Nysa / F41#8 Maud Bryn": "G-below6-staticub-fur-dialogue-c673 @ 8a3736f11: officer_nysa_deepwood_rod (+__dialogue); elder_maud, warden_elect_bryn world frames (F41#8 job frame rodkeeper_hesk not in section)",
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg"}

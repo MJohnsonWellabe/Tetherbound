@@ -944,6 +944,18 @@ func set_pinned(pinned: bool) -> void:
 	# treats an already-visible pin as idempotent; unpin/re-pin still reveals.
 	if compact and _stable_compact_pin_reveal and pinned and _pinned and visible:
 		return
+	if compact and compact_names_enabled():
+		# F39#19 round 2 (G-scene-rosternames, 3/3: the named roster read as
+		# ghost text). CombatHUD repeats this call every frame and the pin
+		# flips with switch availability (a stagger); each `_reveal()` restarts
+		# the tween at alpha 0, so the strip sat nearly invisible. With names
+		# on, a strip already showing is left as it is, and it never starts a
+		# fade while the fight runs: it reveals once and stays up.
+		_pinned = pinned
+		_fade_timer = 0.0
+		if not visible:
+			_reveal()
+		return
 	_pinned = pinned
 	if pinned:
 		_reveal()
@@ -1027,19 +1039,68 @@ func _fit_compact_width() -> void:
 		return
 	var nodes: Array = [get_child(0) as Control, _list]
 	nodes.append_array(_rows)
+	var width := compact_row_width()
 	for node: Control in nodes:
-		if node != null and node.size.x > COMPACT_ROW_WIDTH + 0.5:
-			node.size = Vector2(COMPACT_ROW_WIDTH, node.size.y)
+		if node != null and node.size.x > width + 0.5:
+			node.size = Vector2(width, node.size.y)
+
+
+## F39#19 `compact_names_1113` (combat_roster_visual.json, OFF until judged).
+## The fight roster shows only a small portrait and a health bar per row
+## (G-rescore-tidewake-fights-c673, judge c: "only small icons, no names").
+## When enabled the compact rows widen and keep each creature's name beside
+## its portrait. Client presentation only.
+static var _compact_names_cfg: Dictionary = {}
+static var _compact_names_loaded := false
+
+
+static func compact_names_config() -> Dictionary:
+	if not _compact_names_loaded:
+		_compact_names_loaded = true
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(COMPACT_PIN_CONFIG))
+		var block: Variant = (raw as Dictionary).get("compact_names_1113", {}) if raw is Dictionary else {}
+		_compact_names_cfg = block if block is Dictionary and bool((block as Dictionary).get("enabled", false)) else {}
+	return _compact_names_cfg
+
+
+static func compact_names_enabled() -> bool:
+	return not compact_names_config().is_empty()
+
+
+## F39#19 round 2: the fight camera keeps creatures clear of every HUD
+## control's rectangle (combat_hud.gd `fight_occupied_controls`). The named
+## rows are wider, which moved the camera (G-scene-rosternames: F39#7 Medium
+## -1.19). With names on, the camera is handed this footprint at the old
+## compact width instead of the strip itself, so the camera does not move.
+var _camera_footprint: Control = null
+
+
+func camera_footprint() -> Control:
+	if not compact or not compact_names_enabled():
+		return self
+	if not is_instance_valid(_camera_footprint):
+		_camera_footprint = Control.new()
+		_camera_footprint.name = "CameraFootprint"
+		_camera_footprint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_camera_footprint)
+	_camera_footprint.position = Vector2.ZERO
+	_camera_footprint.size = Vector2(COMPACT_ROW_WIDTH, size.y)
+	return _camera_footprint
+
+
+static func compact_row_width() -> float:
+	var cfg := compact_names_config()
+	return maxf(COMPACT_ROW_WIDTH, float(cfg.get("row_width", COMPACT_ROW_WIDTH))) if not cfg.is_empty() else COMPACT_ROW_WIDTH
 
 
 ## Tick plates sit just right of the rows, at whichever width they have.
 func _tick_x() -> float:
-	return (COMPACT_ROW_WIDTH if compact else ROW_SIZE.x) + 10.0
+	return (compact_row_width() if compact else ROW_SIZE.x) + 10.0
 
 
 func set_compact(enabled: bool) -> void:
 	compact = enabled
-	var width := COMPACT_ROW_WIDTH if compact else ROW_SIZE.x
+	var width := compact_row_width() if compact else ROW_SIZE.x
 	size = Vector2(width, TOTAL_HEIGHT)
 	# `_build()` adds the header/list stack first; it is not inside a
 	# Container, so it keeps whatever width it was given until told otherwise.
@@ -1057,7 +1118,9 @@ func set_compact(enabled: bool) -> void:
 		_chips[i].custom_minimum_size = chip_size
 		_portraits[i].size = chip_size - Vector2(4.0, 4.0)
 		_slot_labels[i].size = chip_size
-		_name_labels[i].visible = not compact
+		_name_labels[i].visible = not compact or compact_names_enabled()
+		_name_labels[i].custom_minimum_size = Vector2(
+			float(compact_names_config().get("name_min_width", 150.0)) if compact and compact_names_enabled() else NAME_MIN_WIDTH, 0.0)
 	for i in _name_labels.size():
 		_name_labels[i].add_theme_font_size_override("font_size",
 			COMPACT_NAME_FONT_SIZE if compact else STRIP_READABLE_FONT_SIZE)
@@ -1167,7 +1230,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 		_rows[i].modulate.a = SELECTED_MODULATE
 		_name_labels[i].add_theme_color_override("font_color",
 			UI_TOKENS.TEXT_MUTED if fainted or resting
-			else (UI_TOKENS.TEXT_PRIMARY if selected else UI_TOKENS.TEXT_SECONDARY))
+			else (UI_TOKENS.TEXT_PRIMARY if selected or compact_names_enabled() else UI_TOKENS.TEXT_SECONDARY))
 	# F10#6 review: compact rows hide their names, so the portrait chip carries
 	# the state the name colour did: the active one brightest, benched dimmer,
 	# fainted or resting dimmest (the KO/REST tags still name the state).
@@ -1195,7 +1258,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 	var has_bond := entry.has("bond_nodes")
 	_bond_labels[i].visible = has_bond and not compact
 	_level_labels[i].visible = not compact
-	_name_labels[i].visible = not compact
+	_name_labels[i].visible = not compact or compact_names_enabled()
 	if has_bond:
 		_bond_labels[i].text = "bond %d/%d" % [int(entry.get("bond_nodes", 0)), int(entry.get("bond_total", 5))]
 	_near[i] = bool(entry.get("bond_near", false)) or bool(entry.get("xp_near", false))

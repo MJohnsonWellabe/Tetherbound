@@ -132,6 +132,7 @@ func build() -> void:
 	var game := state()
 	if game != null: _log.call("set_realm", str(game.get("current_realm")))
 	_main_list = _section(page, str(_log.call("chapter_heading")))
+	_quest_card_fill(page)
 	_local_list = _section(page, "LOCAL REQUESTS")
 	if RESEARCH_PANEL.config().get("enabled") == true: _build_bounties(page)
 
@@ -169,6 +170,82 @@ func _poll_bounties() -> void:
 		empty.text = "Visit Halda's board to read your notices."
 		empty.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 		_bounty_list.add_child(empty)
+
+
+## F38#10 `panel_fill_1113.quest_log` (menu.json, OFF until judged). The log
+## was a few text rows over an empty lower half. When enabled the tracked
+## story section becomes a card: the realm's own banner art beside the steps,
+## with a chapter progress strip under them. Presentation only.
+var _progress_bar: ProgressBar = null
+var _progress_label: Label = null
+
+
+func _quest_card_fill(page: VBoxContainer) -> void:
+	_progress_bar = null
+	_progress_label = null
+	var cfg: Dictionary = preload("res://scripts/ui/tab_players.gd").panel_fill_cfg("quest_log")
+	if cfg.is_empty() or _main_list == null:
+		return
+	var box := _section_box(_main_list)
+	if box == null:
+		return
+	var game := state()
+	var realm := str(game.get("current_realm")) if game != null else "meadows"
+	var art_path := "res://assets/ui/region_bands/%s.png" % (realm if not realm.is_empty() else "meadows")
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 24)
+	box.remove_child(_main_list)
+	box.add_child(row)
+	if ResourceLoader.exists(art_path):
+		var art := TextureRect.new()
+		var atlas := AtlasTexture.new()
+		atlas.atlas = load(art_path) as Texture2D
+		# The band art is 8:1; show its middle as a 16:9 thumbnail.
+		var full := atlas.atlas.get_size()
+		var crop_w := minf(full.x, full.y * 16.0 / 9.0)
+		atlas.region = Rect2((full.x - crop_w) * float(cfg.get("art_focus", 0.62)), 0.0, crop_w, full.y)
+		art.texture = atlas
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.custom_minimum_size = Vector2(float(cfg.get("art_width", 420.0)), float(cfg.get("art_height", 236.0)))
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(art)
+	var column := VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.alignment = BoxContainer.ALIGNMENT_CENTER
+	column.add_theme_constant_override("separation", 14)
+	row.add_child(column)
+	column.add_child(_main_list)
+	_progress_label = Label.new()
+	_progress_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_progress_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	column.add_child(_progress_label)
+	_progress_bar = ProgressBar.new()
+	_progress_bar.show_percentage = false
+	_progress_bar.custom_minimum_size = Vector2(0, 14)
+	_progress_bar.min_value = 0.0
+	_progress_bar.max_value = 1.0
+	var back := StyleBoxFlat.new()
+	back.bg_color = Color(UITokens.BG_DEEP, 0.9)
+	back.set_corner_radius_all(7)
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = UITokens.WARNING
+	fill.set_corner_radius_all(7)
+	_progress_bar.add_theme_stylebox_override("background", back)
+	_progress_bar.add_theme_stylebox_override("fill", fill)
+	column.add_child(_progress_bar)
+
+
+func _update_progress(progression: RefCounted) -> void:
+	if _progress_bar == null:
+		return
+	var steps: Array = _log.call("main_entries", progression)
+	var done := 0
+	for entry: Variant in steps:
+		if bool((entry as Dictionary).get("done", false)):
+			done += 1
+	_progress_bar.value = float(done) / maxf(1.0, float(steps.size()))
+	_progress_label.text = "Chapter progress  ·  %d of %d steps" % [done, steps.size()]
 
 
 func _section(parent: VBoxContainer, heading_text: String) -> VBoxContainer:
@@ -215,6 +292,7 @@ func poll() -> void:
 		int(_log.call("current_index", progression))
 	)
 	_fill(_local_list, _log.call("local_entries", progression), "Nothing outstanding right now.")
+	_update_progress(progression)
 
 
 func _read_scroll() -> void:

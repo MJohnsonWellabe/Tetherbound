@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-mt-flowstreaks-r2-t2 @ 770239123, G-land-mt-flowstreaks-r2-states @ 6b9f95303", "content": "tb/land-mt 5ef7e327e + 5b7c12bc6 water/current files on both sides; arm = current_flow.lesson_cue ON", "preset": "High",
+ "F13#5": ["swim-away-day", "swim-across-day", "swim-away-night", "swim-brine-day (2x2)"],
+ "pixel_diff_arm_vs_base": {"swim-away-day": 6.40, "swim-across-day": 7.02, "swim-away-night": 7.08, "swim-brine-day": 4.12, "S1_live": 0.78, "S1_restored": 0.56, "S2_live": 0.71},
+ "F39#16/#17 no-loss": "not judged: states frames near-identical to base (mean diff 0.56-0.78), level by construction",
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}

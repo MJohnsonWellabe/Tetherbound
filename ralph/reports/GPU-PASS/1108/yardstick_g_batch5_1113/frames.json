@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "batch": "one confirming batch for five sections; anchors craft, f36_0_npc:C1, f04_6_r22; judges a, b, c = three fresh general-purpose subagents, standard prompt",
+ "F39#8 High": "G-below6-aquaryn-ride-c673 @ 5be8ac80d: mounted-swim-03/04/05, base vs deep_swim_1113 (mean diff 11.4-11.5; the beach creature differs between runs, spawn noise)",
+ "F36#92 High": "G-beings-wmonitor-ground @ ddaf9cae3: hit-000, hit-050, faint-050, faint-100 2x2 crop (560,200,1560,840); base = exact main, arm = limb_sink_frac 0.5; only faint-050 differs (1.46)",
+ "F36#50 High": "G-rescore-f36-50-mangrove-species @ 69aaecbfb: mangrove_monitor hit-000, hit-050, faint-050, faint-100 2x2 crop; one-sided (A = B; judge b gave 6.2/6.3, averaged)",
+ "F38#10 High-vs-Medium": "High: menu_build from G-rescore-f38-19-c673 @ 7285d72d5 + menu_players, menu_quest_log from G-closeout-f38-10-panels-high @ 902eff4e2; Medium: build, players, quest_log from G-closeout-f38-10-panels-medium @ 27df65c8d. Players panel shows the capture PC's 'network port could not be opened' line (disclosed by the GPU lane)",
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg"}

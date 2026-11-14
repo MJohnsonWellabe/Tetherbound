@@ -1,0 +1,18 @@
+{
+ "id": "LAND-CS-SOILOFF",
+ "lane": "LANE-LAND-CS",
+ "branch": "tb/land-cs",
+ "preset": "High",
+ "replaces": "THINGS-STORMPOOL round 2",
+ "tool": "tools/capture_stormwood_f10_matrix.gd",
+ "args": ["--stands=forest,giant,rod_line,glass,stormheart", "--phases=calm,break"],
+ "note": "The G-rescore-f41-22-24 capture: five stands x Calm, Break and the aftermath Calm. One boot serves both sides if the tree is the same.",
+ "base": {"tree": "tb/land-cs", "overlay": null},
+ "arm": {"tree": "tb/land-cs", "overlay": "ralph/reports/LANES/LAND-CS-SOILOFF/overlay.json"},
+ "frames": {
+  "F41#22, F41#24": ["forest", "giant", "rod_line", "glass (no-loss)", "stormheart (no-loss)"],
+  "F41#12 (rider)": ["rod_line"],
+  "F41#5, F41#2 (riders)": ["forest", "giant"]
+ },
+ "by_eye": "forest_calm and giant_calm: the black jagged ground patches are gone. forest_break and giant_break: no pale flat slab by the trainer."
+}

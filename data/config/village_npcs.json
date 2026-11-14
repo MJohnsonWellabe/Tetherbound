@@ -124,7 +124,7 @@
       "_why": "OWNER-0912. Oskar stays outdoors in the six-metre-deep creature pen behind Mira's shop, between the cottage's east wall and the rear rail. He faces west toward the shop and street; his swap prompt now belongs to a visible pen instead of the old ring between two unrelated cottages."
     },
     {
-      "name": "Tam",
+      "name": "Tam", "appearance_variant_id": "beings_meadows_tam_coat",
       "night_light": true,
       "config_key": "villager_smith",
       "position": [

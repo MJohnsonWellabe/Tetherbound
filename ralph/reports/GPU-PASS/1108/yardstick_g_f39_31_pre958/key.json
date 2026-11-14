@@ -1,0 +1,23 @@
+{
+ "Wp": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ho": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Df": {
+  "anchor": false,
+  "label": "F39#31 High clear-day",
+  "A": "F39_31.png",
+  "B": "F39_31.png"
+ },
+ "Zv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}

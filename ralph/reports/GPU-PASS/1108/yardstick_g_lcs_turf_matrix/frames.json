@@ -1,0 +1,4 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-lcs-turf-matrix-gate @ c7218f56c, -shrine @ ec71c2758, -overlook @ 0a1f93781", "content": "tb/land-cs 91ac0d6a1; base no overlay, arm TURFGRAIN overlay; cameras identical", "preset": "High",
+ "each set (2x2)": ["approach day clear", "gameplay golden clear", "detail night clear", "reverse day rain"],
+ "pixel_diff_all_24_pairs": {"gate": "mean 2.85, max 3.98", "shrine": "mean 4.08, max 6.38", "overlook": "mean 4.65, max 6.59"},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}

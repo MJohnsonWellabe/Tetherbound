@@ -1,0 +1,4217 @@
+{
+ "entries": 256,
+ "rows": {
+  "F13#5": [
+   {
+    "rows": [
+     "F13#5",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-flowstreaks",
+    "result": "DO NOT SHIP: current states LOSE 6.08 → 5.66 (−0.42, 0/3); the arm's live streaks read as parallel guide lanes (F39#16 defect PARTIAL → PRESENT 3/3). F13#5 swim views 5.52 → 6.04 (+0.52, 3/3; crescents PRESENT → PARTIAL). Fit r 0.875, RMSE 0.67. Next: gate the streaks to the swim cue, and anchor a wake to the swimmer",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F13#5",
+     "F39#16",
+     "F39#17",
+     "F39#30",
+     "F39#2",
+     "F39#10"
+    ],
+    "approach": "land-mt-seadepth",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F13#5",
+     "F39#16"
+    ],
+    "approach": "land-mt-flowstreaks",
+    "result": "DO NOT SHIP 13 Nov: F13#5 +0.52 but current states lose -0.42 (guide lanes). Attempt 1; next: gate streaks to the swim cue, wake anchored to the swimmer.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F13#5",
+     "F39#16",
+     "F39#17"
+    ],
+    "approach": "LAND-MT-FLOWSTREAKS",
+    "result": "Round 1 (G-land-mt-flowstreaks): DO NOT SHIP.** F13#5 +0.52 (3/3), but F39#16 / F39#17 current states -0.42 (0/3), because the re-enabled streaks drew guide lanes everywhere.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F13#5",
+     "F39#16",
+     "F39#17"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: `LAND-MT-FLOWSTREAKS` for F13#5 (5.38).** Cause confirmed by probe: the crescents are the current shader's chop caps (`current_flow.state_shader.live.chop_cap_opacity` 0.45); at 0 every crescent goes in all four T2 views. The arm removes them and brings the shader's own flow-aligned foam groups back faintly. Two stronger tunings drew long straight lanes at the T2 grazing camera, so they were dropped. Honest r…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F36#46": [
+   {
+    "rows": [
+     "F36#46",
+     "F41#13"
+    ],
+    "approach": "G-below6-fulgocobra-r2",
+    "result": "DO NOT SHIP: F41#13 7.37→6.91 (−0.46, 0/3), F36#46 5.94→5.64 (−0.30, 2/3 prefer base). The olive body with gold veins blends into the grass and is off the white-violet Stormwood palette; base navy with white-cyan veins reads as charged (FIXED 1/3). The F36#46 faint is unchanged (neck raised, hood flared, 3/3). Park the recolour. F41#13 base on tb/below6 with the Stormraven night coat is 7.37, a close-out candidate",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F36#46"
+    ],
+    "approach": "BELOW6",
+    "result": "13 Nov, F36#46 Fulgocobra faint: two approaches tried on CPU, neither works, nothing sent",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F36#46"
+    ],
+    "approach": "BELOW6",
+    "result": "F36#46's real lever (3/3): in the faint the neck stays raised with the hood flared and never reaches the ground; the hit pose barely differs from standing. That is a pose job and my next F36#46 arm.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F36#46",
+     "F40#1",
+     "F39#8",
+     "F38#6"
+    ],
+    "approach": "BELOW6",
+    "result": "My rows now:** F41#8 (5.80), F36#46 Fulgocobra (5.87), F40#1 (5.90, back from LANE-PLACES), F39#8 (parked). F38#6, #12 and #14 are LANE-THINGS'.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F36#46",
+     "F41#15"
+    ],
+    "approach": "BELOW6",
+    "result": "Coordinator: both my assigned rows are parked (F41#8 character side, F36#46 Fulgocobra). GPU slots used: 0 of 2. Please assign the next below-6 row.** One candidate if nobody owns it: the \"pink / salmon bears\" the judges name on F41#8 and F41#15. Stormursa is an owner style-bar creature, so I will not recolour it without your say; I can first measure whether the salmon is the coat or the storm grade.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F36#49": [
+   {
+    "rows": [
+     "F36#49",
+     "F36#78",
+     "F36#54"
+    ],
+    "approach": "BEINGS",
+    "result": "F36#49 (Glimmermoth), F36#78 (Tempestwing), F36#54 (Mosshock) PARKED: skin-weight relax on wings and spikes. No visible change, because those parts have no bones of their own.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F36#50": [
+   {
+    "rows": [
+     "F36#50",
+     "F36#92",
+     "F36#80",
+     "F36#83"
+    ],
+    "approach": "BEINGS",
+    "result": "CPU-ready queue, my order:** MONITOR-VALUE (F36#50, F36#92), THUNDERTUNNEL-FAINT (F36#80), TRAILPUP-AMBER (F36#83), then held STATICUB-FUR and UNIFORM-CLOTH.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F36#54": [
+   {
+    "rows": [
+     "F36#49",
+     "F36#78",
+     "F36#54"
+    ],
+    "approach": "BEINGS",
+    "result": "F36#49 (Glimmermoth), F36#78 (Tempestwing), F36#54 (Mosshock) PARKED: skin-weight relax on wings and spikes. No visible change, because those parts have no bones of their own.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F36#62": [
+   {
+    "rows": [
+     "F36#62",
+     "F36#87"
+    ],
+    "approach": "G-riftfrill-matte-voltwig-closeout",
+    "result": "Riftfrill matte DO NOT SHIP: level at 6.52 (identical per judge; the glossy purple patches still read, PRESENT 2/3), so it needs an albedo re-material, not roughness. Voltwig does NOT close: High 7.27 / Medium 7.27 (7.60, 7.10, 7.10), pooled High 7.39; control F38#38 8.10 (about 0.1 strict). Levers: value separation and rim on the mono-green hide, and a readable faint end (it rolls into a legless cylinder)",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   }
+  ],
+  "F36#74": [
+   {
+    "rows": [
+     "F36#74"
+    ],
+    "approach": "BEINGS",
+    "result": "F36#74 (Stormraven) PARKED: skin-weight relax and tail pitch. Neither was the cause; the wing bones swinging on a folded-wing mesh were (BEINGS-STORMRAVEN-WINGS).",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F36#78": [
+   {
+    "rows": [
+     "F36#49",
+     "F36#78",
+     "F36#54"
+    ],
+    "approach": "BEINGS",
+    "result": "F36#49 (Glimmermoth), F36#78 (Tempestwing), F36#54 (Mosshock) PARKED: skin-weight relax on wings and spikes. No visible change, because those parts have no bones of their own.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F36#80": [
+   {
+    "rows": [
+     "F36#50",
+     "F36#92",
+     "F36#80",
+     "F36#83"
+    ],
+    "approach": "BEINGS",
+    "result": "CPU-ready queue, my order:** MONITOR-VALUE (F36#50, F36#92), THUNDERTUNNEL-FAINT (F36#80), TRAILPUP-AMBER (F36#83), then held STATICUB-FUR and UNIFORM-CLOTH.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F36#83": [
+   {
+    "rows": [
+     "F36#50",
+     "F36#92",
+     "F36#80",
+     "F36#83"
+    ],
+    "approach": "BEINGS",
+    "result": "CPU-ready queue, my order:** MONITOR-VALUE (F36#50, F36#92), THUNDERTUNNEL-FAINT (F36#80), TRAILPUP-AMBER (F36#83), then held STATICUB-FUR and UNIFORM-CLOTH.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F36#83"
+    ],
+    "approach": "BEINGS",
+    "result": "My CPU-ready queue, in the order I would send it:** MONITOR-VALUE (two rows, one near the bar), TRAILPUP-AMBER (F36#83), then the held STATICUB-FUR and UNIFORM-CLOTH.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F36#83"
+    ],
+    "approach": "BEINGS",
+    "result": "New, CPU-ready, NOT queued: BEINGS-TRAILPUP-AMBER** (F36#83, 6.53): the owner-picked amber paws and eyes on the live coyote. Coat flag plus two derived textures, flag-off. Take it when a slot frees; I would put it after the pose batch and ahead of the three held arms.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F36#87": [
+   {
+    "rows": [
+     "F36#62",
+     "F36#87"
+    ],
+    "approach": "G-riftfrill-matte-voltwig-closeout",
+    "result": "Riftfrill matte DO NOT SHIP: level at 6.52 (identical per judge; the glossy purple patches still read, PRESENT 2/3), so it needs an albedo re-material, not roughness. Voltwig does NOT close: High 7.27 / Medium 7.27 (7.60, 7.10, 7.10), pooled High 7.39; control F38#38 8.10 (about 0.1 strict). Levers: value separation and rim on the mono-green hide, and a readable faint end (it rolls into a legless cylinder)",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   }
+  ],
+  "F36#92": [
+   {
+    "rows": [
+     "F36#50",
+     "F36#92",
+     "F36#80",
+     "F36#83"
+    ],
+    "approach": "BEINGS",
+    "result": "CPU-ready queue, my order:** MONITOR-VALUE (F36#50, F36#92), THUNDERTUNNEL-FAINT (F36#80), TRAILPUP-AMBER (F36#83), then held STATICUB-FUR and UNIFORM-CLOTH.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F36#92"
+    ],
+    "approach": "BEINGS",
+    "result": "BEINGS-WMONITOR-GROUND is ready** (F36#92, 7.47): overlay only, one number, no code. Please add it as the fourth item in the pose batch. Cause confirmed on CPU: the species row lets limbs sink only 15%, so mid-faint the body is held up on its hanging legs.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F38#1": [
+   {
+    "rows": [
+     "F38#1"
+    ],
+    "approach": "BEINGS",
+    "result": "F38#1 (Terrapup faint) PARKED: `faint_fold` for Terrapup. It turns off face-camera, so the plated back faces the lens and the legs and head vanish; no better than the base on CPU.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#1"
+    ],
+    "approach": "BEINGS",
+    "result": "F38#1 (Terrapup rest) PARKED: `settled_rest` for Terrapup. It does not apply, because Terrapup rests on its own `rest` clip through the authored path, not on `rest_faint`. Replaced by BEINGS-TERRAPUP-SPHINX.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#3": [
+   {
+    "rows": [
+     "F38#3",
+     "F38#28",
+     "F38#11",
+     "F41#3"
+    ],
+    "approach": "things-dusttrail",
+    "result": "HELD unjudged 13 Nov: beads unchanged on base vs arm (diff 0.2-0.8); the beads are the wind-up dust (THINGS-TELLDUST). Parked.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#3",
+     "F38#28"
+    ],
+    "approach": "things-telldust2",
+    "result": "WITHDRAWN 13 Nov: GPU by-eye failed (beads). Cause is per-puff random alpha phase in tell_style.gd; replaced by things-telldust3 (LANE-SCENE code flag).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#3"
+    ],
+    "approach": "scene-rosternames",
+    "result": "R1 DO NOT SHIP (re-judge, LANE-JUDGE): F39#19 6.78 -> 6.38 (0/3) at both presets on matched t-000; the named roster fades. R2 (solid rows, footprint) queued as scene-rosternames-r2.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#20",
+     "F38#3"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (G-closeout-f38-20-f38-3, bebe5fa9): F38#20 stronghold CLOSES (7.50 / 7.50, zero margin). F38#3 stays open (6.89 / 7.03 on a strict panel).** F38#3 holds (3/3): the dust trails read as strings of pale dotted beads over both creatures; Terrapup merges with the grass; the HUD covers a third of the frame. The dust-trail effect is my next shared-cause arm for the fight rows, after the uniform rim.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#9",
+     "F38#3",
+     "F38#33",
+     "F38#7",
+     "F38#19",
+     "F38#34",
+     "F38#4",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#3",
+     "F38#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** eleven rows map at 7.5 or above (F38#3, #4, #7, #9, #13, #14 partial, #18, #19, #33, #34, #38): candidates for a Medium capture plus a confirming two-sided judgement, not High passes yet. F38#23 dropped 7.58 → 6.57 (its defect is fixed; the yard is now an empty stretched-cobble plane). None below 6.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#3",
+     "F38#18",
+     "F38#13"
+    ],
+    "approach": "PLACES",
+    "result": "Meadows Medium (G-closeout-meadows-ui-medium @ e92acfdc9: F38#3 #4 #7 #9 #19 #33 #34) is left to LANE-SCOUT for the close decisions**, so the same frames are not judged twice. I am not judging it unless the coordinator asks for a second panel. The -medium-2 section was dropped by the coordinator (F38#18 and #38 closed on 9 Nov; F38#13 pools to about 7.3).",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#4": [
+   {
+    "rows": [
+     "F38#9",
+     "F38#3",
+     "F38#33",
+     "F38#7",
+     "F38#19",
+     "F38#34",
+     "F38#4",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#6": [
+   {
+    "rows": [
+     "F41#8",
+     "F36#46",
+     "F40#1",
+     "F39#8",
+     "F38#6"
+    ],
+    "approach": "BELOW6",
+    "result": "My rows now:** F41#8 (5.80), F36#46 Fulgocobra (5.87), F40#1 (5.90, back from LANE-PLACES), F39#8 (parked). F38#6, #12 and #14 are LANE-THINGS'.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#7": [
+   {
+    "rows": [
+     "F38#9",
+     "F38#3",
+     "F38#33",
+     "F38#7",
+     "F38#19",
+     "F38#34",
+     "F38#4",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#9": [
+   {
+    "rows": [
+     "F38#9",
+     "F38#3",
+     "F38#33",
+     "F38#7",
+     "F38#19",
+     "F38#34",
+     "F38#4",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#11": [
+   {
+    "rows": [
+     "F38#3",
+     "F38#28",
+     "F38#11",
+     "F41#3"
+    ],
+    "approach": "things-dusttrail",
+    "result": "HELD unjudged 13 Nov: beads unchanged on base vs arm (diff 0.2-0.8); the beads are the wind-up dust (THINGS-TELLDUST). Parked.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#11"
+    ],
+    "approach": "SCENE",
+    "result": "F38#28 PARKED: TELLDUST3 for the Warden fight. Level with cameras matched (High 7.27 = 7.27); it stays shipped for F38#11 and the grunt.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#12": [
+   {
+    "rows": [
+     "F38#12"
+    ],
+    "approach": "SCENE",
+    "result": "F38#12 PARKED: Kenney log, bedroll and fire pit as cache props (CPU only, never judged). Salmon-pink and off-style; replaced inside SCENE-CACHE.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#13": [
+   {
+    "rows": [
+     "F38#3",
+     "F38#18",
+     "F38#13"
+    ],
+    "approach": "PLACES",
+    "result": "Meadows Medium (G-closeout-meadows-ui-medium @ e92acfdc9: F38#3 #4 #7 #9 #19 #33 #34) is left to LANE-SCOUT for the close decisions**, so the same frames are not judged twice. I am not judging it unless the coordinator asks for a second panel. The -medium-2 section was dropped by the coordinator (F38#18 and #38 closed on 9 Nov; F38#13 pools to about 7.3).",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#15": [
+   {
+    "rows": [
+     "F38#15"
+    ],
+    "approach": "THINGS",
+    "result": "SPEAKERCENTRE: dropped as told** (Hess +1.16, Rae -1.60; flag stays off). **F38#15: 7.70 at High** (G-f38-15-row.md, ce551ce9), Medium capture is with you. LANE-SCOUT asks me to relay both verdicts because its messages to you are refused; they are also in VERDICT-LINES.md.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#16": [
+   {
+    "rows": [
+     "F38#16"
+    ],
+    "approach": "G-things-speakercentre",
+    "result": "DO NOT SHIP as one arm: Hess +1.16 (5.95→7.11, 3/3) but Rae −1.60 (7.60→6.00, 0/3; companion fills frame, Rae pushed left), patrol −0.09. Ship per speaker (Hess only) or clear the companion from the speaker cone; the row frames are untouched by this arm",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#16"
+    ],
+    "approach": "BEINGS",
+    "result": "Next: F38#16 Mira and Tam, with the same script, no change to either's presented gender.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F38#16"
+    ],
+    "approach": "SCENE",
+    "result": "F38#16 HELD: Tam outfit recolour (`scene_tam_outfit_1113`). It overlaps BEINGS-TAM-COAT; held until that verdict.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F38#17": [
+   {
+    "rows": [
+     "F38#28",
+     "F38#17",
+     "F38#20"
+    ],
+    "approach": "things-hallmoss",
+    "result": "WITHDRAWN 13 Nov: replaced by scene-hallwalls (cause: arena wall panels wear exterior stone moss 0.78; hallmoss only reached pilasters).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#17"
+    ],
+    "approach": "things-solene",
+    "result": "WITHDRAWN 13 Nov at LANE-SCENE request (small on CPU; lane over limit).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#20",
+     "F38#17"
+    ],
+    "approach": "scene-hallwalls",
+    "result": "PARKED 13 Nov after 2 attempts: r2 level (0/3, 3 ties); rectangle gone by pixels but not visible at sheet size. F38#28 6.81 on a strict panel. Next idea: authored floor boundary in place of the teal arc.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   }
+  ],
+  "F38#18": [
+   {
+    "rows": [
+     "F38#3",
+     "F38#18",
+     "F38#13"
+    ],
+    "approach": "PLACES",
+    "result": "Meadows Medium (G-closeout-meadows-ui-medium @ e92acfdc9: F38#3 #4 #7 #9 #19 #33 #34) is left to LANE-SCOUT for the close decisions**, so the same frames are not judged twice. I am not judging it unless the coordinator asks for a second panel. The -medium-2 section was dropped by the coordinator (F38#18 and #38 closed on 9 Nov; F38#13 pools to about 7.3).",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#19": [
+   {
+    "rows": [
+     "F38#9",
+     "F38#3",
+     "F38#33",
+     "F38#7",
+     "F38#19",
+     "F38#34",
+     "F38#4",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#20": [
+   {
+    "rows": [
+     "F38#28",
+     "F38#20",
+     "F38#38"
+    ],
+    "approach": "G-scene-hallwalls-r2",
+    "result": "DO NOT SHIP (level): arm = base on every set (0/3, 3 ties). F38#28 NOT CLOSED: 6.81 at High and at Medium on the strictest panel today (control 7.53). The green-rectangle fix is not visible at sheet size. F38#20 frame level at 6.42. PARK the roofed-room walls arm for F38#28 (two rounds of hall-wall moss, no gain). Next: authored floor boundary in place of the teal arc. Flag: red banner in Aldis's arena",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#17",
+     "F38#20"
+    ],
+    "approach": "things-hallmoss",
+    "result": "WITHDRAWN 13 Nov: replaced by scene-hallwalls (cause: arena wall panels wear exterior stone moss 0.78; hallmoss only reached pilasters).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#20",
+     "F38#17"
+    ],
+    "approach": "scene-hallwalls",
+    "result": "PARKED 13 Nov after 2 attempts: r2 level (0/3, 3 ties); rectangle gone by pixels but not visible at sheet size. F38#28 6.81 on a strict panel. Next idea: authored floor boundary in place of the teal arc.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#20"
+    ],
+    "approach": "BELOW6",
+    "result": "STRONGHOLD-STAND (F38#20): held by the GPU pre-check** (the keep's top is cropped at z 7405). Screening z 7385, 7365 and (-18, 7350) on CPU now; I will move the block to the first one with sky above the battlements.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F38#20",
+     "F38#3"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (G-closeout-f38-20-f38-3, bebe5fa9): F38#20 stronghold CLOSES (7.50 / 7.50, zero margin). F38#3 stays open (6.89 / 7.03 on a strict panel).** F38#3 holds (3/3): the dust trails read as strings of pale dotted beads over both creatures; Terrapup merges with the grass; the HUD covers a third of the frame. The dust-trail effect is my next shared-cause arm for the fight rows, after the uniform rim.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#21",
+     "F38#20"
+    ],
+    "approach": "PLACES",
+    "result": "Checked, not gaps:** F39#21's 4.34 (G-rescore-f39-21-f41-13) was on main 306239e9f (#885, 10 Nov 08:03), before the #893 win at 7.06. F38#20, #21 and #22 differences are partial-frame cross-checks or later closes.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#21": [
+   {
+    "rows": [
+     "F38#21"
+    ],
+    "approach": "G-things-meadowground",
+    "result": "DO NOT SHIP: arm barely visible (5 of 7 sets level/identical); F38#21 −0.20 (0/3; loses the yellow flower cluster); F38#30 +0.24 is badger pose timing, hillside defect PRESENT on both. FLAG: Burrow Warrens badgers carry a red crest (3/3), red outside Team Tether. P-GROUND needs clustering and rock/root dressing, not a tint",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   }
+  ],
+  "F38#23": [
+   {
+    "rows": [
+     "F38#3",
+     "F38#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** eleven rows map at 7.5 or above (F38#3, #4, #7, #9, #13, #14 partial, #18, #19, #33, #34, #38): candidates for a Medium capture plus a confirming two-sided judgement, not High passes yet. F38#23 dropped 7.58 → 6.57 (its defect is fixed; the yard is now an empty stretched-cobble plane). None below 6.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#24": [
+   {
+    "rows": [
+     "F38#24"
+    ],
+    "approach": "LAND-MT-TWORANGES",
+    "result": "LAND-MT-TWORANGES (F38#24): PARKED on CPU, not sent",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-TWORANGES/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#24"
+    ],
+    "approach": "LAND-MT",
+    "result": "F38#24 TWORANGES: PARKED. A stretched copy of the ridge reads as a pale streaky wall; a real second range needs a new far mesh.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#30",
+     "F38#24"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#24"
+    ],
+    "approach": "LAND-MT",
+    "result": "TWORANGES (F38#24): PARKED on CPU after three looks.** The back layer is the same ridge mesh stretched, so its facets turn into vertical streaks. At height 1.4 and 1.6 it reads as a pale wall crowding the stronghold, not as a far range. A real second range needs a different far mesh, which is outside this round (no Meshy credits). Sheet and ARM.md are in `ralph/reports/LANES/LAND-MT-TWORANGES/`.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#28": [
+   {
+    "rows": [
+     "F38#28",
+     "F38#20",
+     "F38#38"
+    ],
+    "approach": "G-scene-hallwalls-r2",
+    "result": "DO NOT SHIP (level): arm = base on every set (0/3, 3 ties). F38#28 NOT CLOSED: 6.81 at High and at Medium on the strictest panel today (control 7.53). The green-rectangle fix is not visible at sheet size. F38#20 frame level at 6.42. PARK the roofed-room walls arm for F38#28 (two rounds of hall-wall moss, no gain). Next: authored floor boundary in place of the teal arc. Flag: red banner in Aldis's arena",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#38"
+    ],
+    "approach": "G-things-telldust3-warden",
+    "result": "DO NOT SHIP (level): High 7.27 = 7.27, Medium 7.27 → 7.32 (1/3 each); cameras matched; diff about 1. F38#28 NOT CLOSED. What remains: the thin teal floor arc (PARTIAL 3/3) and the looping translucent dust ribbon. Control 7.99. PARK TELLDUST3 for F38#28",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "things-wardenring-r2",
+    "result": "High judged level (6.91->6.87, 0/3); approach parked; Medium pass dropped",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#3",
+     "F38#28",
+     "F38#11",
+     "F41#3"
+    ],
+    "approach": "things-dusttrail",
+    "result": "HELD unjudged 13 Nov: beads unchanged on base vs arm (diff 0.2-0.8); the beads are the wind-up dust (THINGS-TELLDUST). Parked.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#17",
+     "F38#20"
+    ],
+    "approach": "things-hallmoss",
+    "result": "WITHDRAWN 13 Nov: replaced by scene-hallwalls (cause: arena wall panels wear exterior stone moss 0.78; hallmoss only reached pilasters).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#3",
+     "F38#28"
+    ],
+    "approach": "things-telldust2",
+    "result": "WITHDRAWN 13 Nov: GPU by-eye failed (beads). Cause is per-puff random alpha phase in tell_style.gd; replaced by things-telldust3 (LANE-SCENE code flag).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#20",
+     "F38#17"
+    ],
+    "approach": "scene-hallwalls",
+    "result": "PARKED 13 Nov after 2 attempts: r2 level (0/3, 3 ties); rectangle gone by pixels but not visible at sheet size. F38#28 6.81 on a strict panel. Next idea: authored floor boundary in place of the teal arc.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "THINGS-WARDENRING",
+    "result": "Ask.** The F38#28 Warden fight set at Medium, base vs arm. If it reaches 7.5 the row closes (High is already there); add a High no-loss read.",
+    "source": "main:ralph/reports/LANES/THINGS-WARDENRING/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT, `G-cw-collar-wardenring-r2.md` (d958f1cc): WARDENRING round 2 is level at High; do not ship. The ring-alpha approach is PARKED.** F38#28 row frames 6.91 to 6.87 (0/3 prefer round 2); other Warden frames identical at 6.77. F38#28 is not closed (High 6.87, pooled about 6.98), so the held Medium re-run cannot close it this round. The round-2 overlay stays unlanded; round 1 on main is unchanged.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "SCENE-CURB",
+    "result": "With HALLWALLS parked, this is the only F38#28 arm.",
+    "source": "scene:ralph/reports/LANES/SCENE-CURB/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "SCENE",
+    "result": "F38#28: TELLDUST3 parked for this row. SCENE-CURB is the floor-arc swing. The Warden dust \"heart ribbon\" is next in the same arm once CURB has a by-eye result.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "SCENE",
+    "result": "New ARM SCENE-CURB (F38#28)**, the new approach after HALLWALLS parked. A low stone curb with a brass inlay replaces the glowing teal ring, in the Warden arena only. Same radius and rules. CPU (brightened) shows it reading as an authored edge. Files: `ralph/reports/LANES/SCENE-CURB/`.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "SCENE",
+    "result": "F38#28 PARKED: interior stone moss 0.46 to 0.22 (THINGS-HALLMOSS). It only reached the pilasters; the GPU by-eye check held it.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28"
+    ],
+    "approach": "SCENE",
+    "result": "F38#28 PARKED: roofed-room wall moss and buttress clip (SCENE-HALLWALLS r1 and r2). r2 judged level, 0/3, all ties; the change is invisible at sheet size.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#11"
+    ],
+    "approach": "SCENE",
+    "result": "F38#28 PARKED: TELLDUST3 for the Warden fight. Level with cameras matched (High 7.27 = 7.27); it stays shipped for F38#11 and the grunt.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#30": [
+   {
+    "rows": [
+     "F38#30"
+    ],
+    "approach": "G-land-mt-plume",
+    "result": "DO NOT SHIP: warrens other LOSE 5.94 → 5.76 (−0.18, 0/3); F38#30 level (+0.04, 1/3). The wide plume reads as a blurry flat card over the cave mouth. Next: one continuous tapered plume (fix the gap in the thin column) that drifts off the entrance",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#30"
+    ],
+    "approach": "land-mt-plume",
+    "result": "DO NOT SHIP 14 Nov: warrens other -0.18 (0/3); wide plume reads as a blurry flat card. Next: one continuous tapered plume.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#30"
+    ],
+    "approach": "LAND-MT-STEEPGRASS",
+    "result": "LAND-MT-STEEPGRASS (F38#30): PARKED on CPU after two misses, not sent",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-STEEPGRASS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#30"
+    ],
+    "approach": "LAND-MT",
+    "result": "F38#30 PLUME: HELD for round 2. The wide crown read as a blurry card over the mouth (Warrens other −0.18). Round 2 is one continuous tapered column (narrow crown, more discs, no gap), drifting away from the entrance.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F38#30"
+    ],
+    "approach": "LAND-MT",
+    "result": "F38#30 STEEPGRASS: PARKED. A triplanar broad tone, anisotropic sampling and a sharp blend all left walk_02 / walk_03 unchanged on CPU. The smear is the soft grass sheet itself, so it needs a higher-frequency material (the judges' ask c), not a projection fix.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#30",
+     "F38#24"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell'…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#33": [
+   {
+    "rows": [
+     "F38#9",
+     "F38#3",
+     "F38#33",
+     "F38#7",
+     "F38#19",
+     "F38#34",
+     "F38#4",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#34": [
+   {
+    "rows": [
+     "F38#9",
+     "F38#3",
+     "F38#33",
+     "F38#7",
+     "F38#19",
+     "F38#34",
+     "F38#4",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#35": [
+   {
+    "rows": [
+     "F38#35"
+    ],
+    "approach": "SCENE",
+    "result": "F38#35 PARKED: 1.8x gain on the existing role-posture angles. It barely registered on CPU on 40 px villagers; the row needs authored poses.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F38#38": [
+   {
+    "rows": [
+     "F38#28",
+     "F38#20",
+     "F38#38"
+    ],
+    "approach": "G-scene-hallwalls-r2",
+    "result": "DO NOT SHIP (level): arm = base on every set (0/3, 3 ties). F38#28 NOT CLOSED: 6.81 at High and at Medium on the strictest panel today (control 7.53). The green-rectangle fix is not visible at sheet size. F38#20 frame level at 6.42. PARK the roofed-room walls arm for F38#28 (two rounds of hall-wall moss, no gain). Next: authored floor boundary in place of the teal arc. Flag: red banner in Aldis's arena",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#38"
+    ],
+    "approach": "G-scene-rosternames",
+    "result": "DO NOT SHIP: F39#7 Medium LOSES 7.31 → 6.12 (−1.19, 0/3). The arm moves the fight camera, so the trainer stands inside Ripplet's back. F39#19 NOT CLOSED: 6.88 → 6.97 (+0.09, 2/3) at both presets, and the arm's named roster fades to pale ghost text in the stagger frame (FIXED → PRESENT 3/3). Control 7.98. Next: decouple the camera from roster width; named rows on solid cells that never fade",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F38#38"
+    ],
+    "approach": "G-land-mt-cragback",
+    "result": "DO NOT SHIP (level): base = arm on the matched frames (0/3, 3 ties; mean diffs 0.02-0.57). F39#19 NOT CLOSED: 6.95 High, 7.27 Medium, roster FIXED 3/3. The dark overhead wedge is still flagged 3/3 on both sides. F39#7 not judged (no matched frames). Control 7.87",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#28",
+     "F38#38"
+    ],
+    "approach": "G-things-telldust3-warden",
+    "result": "DO NOT SHIP (level): High 7.27 = 7.27, Medium 7.27 → 7.32 (1/3 each); cameras matched; diff about 1. F38#28 NOT CLOSED. What remains: the thin teal floor arc (PARTIAL 3/3) and the looping translucent dust ribbon. Control 7.99. PARK TELLDUST3 for F38#28",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#38"
+    ],
+    "approach": "G-scene-rosternames-rejudge",
+    "result": "SUPERSEDES G-scene-rosternames (and its AMENDED line). DO NOT SHIP: F39#19 LOSES 6.78 → 6.38 (−0.40, 0/3) at both presets. The arm's named roster fades to pale ghost text in the t-003 stagger frame (FIXED → PRESENT 3/3); t-000 camera-matched. F39#7 −0.62 High / +0.22 Medium on unmatched frames (disclosed). Control 8.02. Next: names on base's solid cells, never fading",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F38#38"
+    ],
+    "approach": "G-land-mt-cragcut",
+    "result": "SHIP, small: 6.85 → 6.92 (+0.07, 2/3, 1 tie) at both presets on matched t-000. F39#19 NOT CLOSED: 6.92 High and Medium. PARK the crag-shell approach for F39#19 (two rounds under 0.5). What holds it: plastic Ripplet merging into flat beige sand. F39#7 not judged (no matched frame). Control 8.08",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (15:06), G-closeout-tidewake (bf8e1cee): F39#4 shiny creature finish CLOSES (7.77 / 7.77) and F39#24 creature rest poses CLOSES (7.65 / 7.61).** Control F38#38 read 7.77. Margin notes only: F39#4 reads as a recolour and heads crane skyward; F39#24 poses read alert, Riptusk sinks into the sand, a hard shadow quad under Torrentoad.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F38#9",
+     "F38#3",
+     "F38#33",
+     "F38#7",
+     "F38#19",
+     "F38#34",
+     "F38#4",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (14:52), G-closeout-meadows-ui (d3be8b49), High and Medium: F38#9 menu shell CLOSES (7.70 / 7.70).** Not closed: F38#3 7.17 / 7.35 (grunt behind Terrapup's legs, a wooden prop intruding, dust loops read as debug splines), F38#33 7.30 / 7.35 (a second hare in the background; payoff frame shows only the orb), F38#7 6.77 / 7.26 (High frame 3 camera sits in a bush; tiny cyan reticle; sky beam acros…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#1": [
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F39#10",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth",
+    "result": "DO NOT SHIP: current states LOSE 6.81 → 5.96 (−0.85, 0/3; radiating dark streak bands); F39#1 6.53 → 6.43 (−0.10, 0/3). The gradient gains: F39#10 6.48 → 7.10 (+0.62, 3/3), F39#15 6.15 → 6.58 (+0.43, 3/3; disc chain PRESENT). Fit r 0.900, RMSE 0.61. Next: keep the gradient but kill the streak bands in the states camera, then re-capture",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#15",
+     "F39#2"
+    ],
+    "approach": "G-land-mt-shorezones",
+    "result": "DO NOT SHIP: all LOSE 0/3. F39#1 6.48 → 5.92 (−0.56), F39#15 6.15 → 5.25 (−0.90), F39#2 6.25 → 5.63 (−0.62); hard-edged olive splat polygons on the near sand 3/3. F39#27/#30 not captured. Next: fix the splat mask, wet band and wrack that read",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15",
+     "F39#1",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth-r2",
+    "result": "DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#15",
+     "F39#27",
+     "F39#2",
+     "F39#30"
+    ],
+    "approach": "land-mt-shorezones",
+    "result": "PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F13#5",
+     "F39#16",
+     "F39#17",
+     "F39#30",
+     "F39#2",
+     "F39#10"
+    ],
+    "approach": "land-mt-seadepth",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#27"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#1 / F39#27 SHOREZONES: PARKED. All rows lost on GPU.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#2": [
+   {
+    "rows": [
+     "F39#1",
+     "F39#15",
+     "F39#2"
+    ],
+    "approach": "G-land-mt-shorezones",
+    "result": "DO NOT SHIP: all LOSE 0/3. F39#1 6.48 → 5.92 (−0.56), F39#15 6.15 → 5.25 (−0.90), F39#2 6.25 → 5.63 (−0.62); hard-edged olive splat polygons on the near sand 3/3. F39#27/#30 not captured. Next: fix the splat mask, wet band and wrack that read",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#15",
+     "F39#27",
+     "F39#2",
+     "F39#30"
+    ],
+    "approach": "land-mt-shorezones",
+    "result": "PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F13#5",
+     "F39#16",
+     "F39#17",
+     "F39#30",
+     "F39#2",
+     "F39#10"
+    ],
+    "approach": "land-mt-seadepth",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   }
+  ],
+  "F39#3": [
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F39#17",
+     "F39#8",
+     "F39#3",
+     "F39#7",
+     "F39#10",
+     "F39#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F39#4": [
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (15:06), G-closeout-tidewake (bf8e1cee): F39#4 shiny creature finish CLOSES (7.77 / 7.77) and F39#24 creature rest poses CLOSES (7.65 / 7.61).** Control F38#38 read 7.77. Margin notes only: F39#4 reads as a recolour and heads crane skyward; F39#24 poses read alert, Riptusk sinks into the sand, a hard shadow quad under Torrentoad.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F39#17",
+     "F39#8",
+     "F39#3",
+     "F39#7",
+     "F39#10",
+     "F39#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F39#5": [
+   {
+    "rows": [
+     "F39#5"
+    ],
+    "approach": "BELOW6",
+    "result": "SWIM (F39#5): held by the GPU pre-check** (the body floats on the GPU's transparent water and the raised arm reads as a wave). r3 is pushed: chest 0.07 m under the surface, flatter body, narrower arms, the recovering arm low. CPU recapture queued.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#5 / F39#14 SHALLOWFOAM (`foam_depth` 0.2): PARKED. The blobs were unchanged.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "Swim \"foam blobs\" (F39#5, F39#14): PARKED after two misses.** Ruled out on CPU swim frames: (1) the swimmer's wake (VWAKE: blobs identical on and off); (2) the shallow contact foam threshold (`surfaces.water.foam_depth` 0.55 to 0.2, also set under `cause_tidewake.sea`: blobs identical; I did not verify that the overlay reached the water material, so treat this one as weak). The blobs are pale, soft-edged and sit und…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#6": [
+   {
+    "rows": [
+     "F39#6"
+    ],
+    "approach": "MESHY-HANDOFF",
+    "result": "An authored faint pose for Aquaryn (the raised forelimb lies on the sand, no clipping): closes F39#6.",
+    "source": "main:ralph/reports/LANES/MESHY-HANDOFF/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#7": [
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#38"
+    ],
+    "approach": "G-scene-rosternames",
+    "result": "DO NOT SHIP: F39#7 Medium LOSES 7.31 → 6.12 (−1.19, 0/3). The arm moves the fight camera, so the trainer stands inside Ripplet's back. F39#19 NOT CLOSED: 6.88 → 6.97 (+0.09, 2/3) at both presets, and the arm's named roster fades to pale ghost text in the stagger frame (FIXED → PRESENT 3/3). Control 7.98. Next: decouple the camera from roster width; named rows on solid cells that never fade",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7"
+    ],
+    "approach": "G-scene-rosternames (AMENDED)",
+    "result": "The GPU lane found the Venn camera offsets were capture state, not the arm. Only Medium t-000 was matched, so the unmatched frames are excluded. The F39#7 −1.19 is WITHDRAWN, and there is NO SHIP VERDICT: re-capture with matched cameras. The arm's roster fade in the stagger frame (PRESENT 3/3) still stands: fix it first",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#38"
+    ],
+    "approach": "G-scene-rosternames-rejudge",
+    "result": "SUPERSEDES G-scene-rosternames (and its AMENDED line). DO NOT SHIP: F39#19 LOSES 6.78 → 6.38 (−0.40, 0/3) at both presets. The arm's named roster fades to pale ghost text in the t-003 stagger frame (FIXED → PRESENT 3/3); t-000 camera-matched. F39#7 −0.62 High / +0.22 Medium on unmatched frames (disclosed). Control 8.02. Next: names on base's solid cells, never fading",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#3"
+    ],
+    "approach": "scene-rosternames",
+    "result": "R1 DO NOT SHIP (re-judge, LANE-JUDGE): F39#19 6.78 -> 6.38 (0/3) at both presets on matched t-000; the named roster fades. R2 (solid rows, footprint) queued as scene-rosternames-r2.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7"
+    ],
+    "approach": "land-mt-cragback",
+    "result": "LEVEL 13 Nov (LANE-JUDGE 93537dc89): matched frames nearly identical (mean diffs 0.02-0.57), 0/3 with 3 ties; the dark overhead wedge still flagged 3/3. Attempt 1 of 2; back to LANE-LAND-MT.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7"
+    ],
+    "approach": "land-mt-cragcut-probe",
+    "result": "WITHDRAWN 13 Nov 21:15: LANE-LAND-MT proved on CPU (fixed t-000 view) the wedge is the crag back faces; CRAGCUT arm follows.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F39#17",
+     "F39#8",
+     "F39#3",
+     "F39#7",
+     "F39#10",
+     "F39#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F39#8": [
+   {
+    "rows": [
+     "F40#1",
+     "F41#8",
+     "F39#8"
+    ],
+    "approach": "BELOW6",
+    "result": "Parked on my side: F40#1 (terraces not sent), F41#8 character side, Fulgocobra, F39#8.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F36#46",
+     "F40#1",
+     "F39#8",
+     "F38#6"
+    ],
+    "approach": "BELOW6",
+    "result": "My rows now:** F41#8 (5.80), F36#46 Fulgocobra (5.87), F40#1 (5.90, back from LANE-PLACES), F39#8 (parked). F38#6, #12 and #14 are LANE-THINGS'.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#8"
+    ],
+    "approach": "BELOW6",
+    "result": "F39#8 stays parked (no new idea yet).",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#8",
+     "F41#8",
+     "F41#18"
+    ],
+    "approach": "BEINGS",
+    "result": "Held until a slot frees: BELOW6-AQUARYN-RIDE (F39#8), BELOW6-STATICUB-FUR (F41#8, F41#18), BELOW6-UNIFORM-CLOTH (F41#18).",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F39#17",
+     "F39#8",
+     "F39#3",
+     "F39#7",
+     "F39#10",
+     "F39#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F39#10": [
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F39#10",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth",
+    "result": "DO NOT SHIP: current states LOSE 6.81 → 5.96 (−0.85, 0/3; radiating dark streak bands); F39#1 6.53 → 6.43 (−0.10, 0/3). The gradient gains: F39#10 6.48 → 7.10 (+0.62, 3/3), F39#15 6.15 → 6.58 (+0.43, 3/3; disc chain PRESENT). Fit r 0.900, RMSE 0.61. Next: keep the gradient but kill the streak bands in the states camera, then re-capture",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15",
+     "F39#1",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth-r2",
+    "result": "DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F13#5",
+     "F39#16",
+     "F39#17",
+     "F39#30",
+     "F39#2",
+     "F39#10"
+    ],
+    "approach": "land-mt-seadepth",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: SEADEPTH round 3 (`ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json`), the judges' one more tone round for F39#10.** It keeps base's deep navy (and its shallow colour) and softens only the shelf transition: haze off (that, plus the brighter shallow colour, was r2's \"lighter cyan\"), a darker mid band, falloff 10 m. Re-capture F39#10, F39#15 and the current states. The CPU change is modest (sheet in the fol…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F39#17",
+     "F39#8",
+     "F39#3",
+     "F39#7",
+     "F39#10",
+     "F39#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F39#14": [
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#5 / F39#14 SHALLOWFOAM (`foam_depth` 0.2): PARKED. The blobs were unchanged.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#5",
+     "F39#14"
+    ],
+    "approach": "LAND-MT",
+    "result": "Swim \"foam blobs\" (F39#5, F39#14): PARKED after two misses.** Ruled out on CPU swim frames: (1) the swimmer's wake (VWAKE: blobs identical on and off); (2) the shallow contact foam threshold (`surfaces.water.foam_depth` 0.55 to 0.2, also set under `cause_tidewake.sea`: blobs identical; I did not verify that the overlay reached the water material, so treat this one as weak). The blobs are pale, soft-edged and sit und…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#15": [
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F39#10",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth",
+    "result": "DO NOT SHIP: current states LOSE 6.81 → 5.96 (−0.85, 0/3; radiating dark streak bands); F39#1 6.53 → 6.43 (−0.10, 0/3). The gradient gains: F39#10 6.48 → 7.10 (+0.62, 3/3), F39#15 6.15 → 6.58 (+0.43, 3/3; disc chain PRESENT). Fit r 0.900, RMSE 0.61. Next: keep the gradient but kill the streak bands in the states camera, then re-capture",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#15",
+     "F39#2"
+    ],
+    "approach": "G-land-mt-shorezones",
+    "result": "DO NOT SHIP: all LOSE 0/3. F39#1 6.48 → 5.92 (−0.56), F39#15 6.15 → 5.25 (−0.90), F39#2 6.25 → 5.63 (−0.62); hard-edged olive splat polygons on the near sand 3/3. F39#27/#30 not captured. Next: fix the splat mask, wet band and wrack that read",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15",
+     "F39#1",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth-r2",
+    "result": "DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#15",
+     "F39#27",
+     "F39#2",
+     "F39#30"
+    ],
+    "approach": "land-mt-shorezones",
+    "result": "PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F13#5",
+     "F39#16",
+     "F39#17",
+     "F39#30",
+     "F39#2",
+     "F39#10"
+    ],
+    "approach": "land-mt-seadepth",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: SEADEPTH round 3 (`ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json`), the judges' one more tone round for F39#10.** It keeps base's deep navy (and its shallow colour) and softens only the shelf transition: haze off (that, plus the brighter shallow colour, was r2's \"lighter cyan\"), a darker mid band, falloff 10 m. Re-capture F39#10, F39#15 and the current states. The CPU change is modest (sheet in the fol…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#15 SHOALBREAK: PARKED. Contour wander cannot break the round islet halos; it needs a terrain rebake, which is not now.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#16": [
+   {
+    "rows": [
+     "F13#5",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-flowstreaks",
+    "result": "DO NOT SHIP: current states LOSE 6.08 → 5.66 (−0.42, 0/3); the arm's live streaks read as parallel guide lanes (F39#16 defect PARTIAL → PRESENT 3/3). F13#5 swim views 5.52 → 6.04 (+0.52, 3/3; crescents PRESENT → PARTIAL). Fit r 0.875, RMSE 0.67. Next: gate the streaks to the swim cue, and anchor a wake to the swimmer",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F39#10",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth",
+    "result": "DO NOT SHIP: current states LOSE 6.81 → 5.96 (−0.85, 0/3; radiating dark streak bands); F39#1 6.53 → 6.43 (−0.10, 0/3). The gradient gains: F39#10 6.48 → 7.10 (+0.62, 3/3), F39#15 6.15 → 6.58 (+0.43, 3/3; disc chain PRESENT). Fit r 0.900, RMSE 0.61. Next: keep the gradient but kill the streak bands in the states camera, then re-capture",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#10",
+     "F39#15",
+     "F39#1",
+     "F39#16"
+    ],
+    "approach": "G-land-mt-seadepth-r2",
+    "result": "DO NOT SHIP: F39#10 LOSES 6.60 → 6.31 (−0.29, 0/3) on this panel, though round 1 read the same frames +0.62 (sides swapped: both panels lean to side B, so the tone change is within position noise). States now level 6.31 (round-1 streak loss fixed); F39#15 +0.20 (3/3, disc chain PRESENT); F39#1 −0.04. Fit r 0.928, RMSE 0.52. Next: keep the deep navy, soften only the transition; fix the disc chain. PARK the sea-tone a…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F13#5",
+     "F39#16",
+     "F39#17",
+     "F39#30",
+     "F39#2",
+     "F39#10"
+    ],
+    "approach": "land-mt-seadepth",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F13#5",
+     "F39#16"
+    ],
+    "approach": "land-mt-flowstreaks",
+    "result": "DO NOT SHIP 13 Nov: F13#5 +0.52 but current states lose -0.42 (guide lanes). Attempt 1; next: gate streaks to the swim cue, wake anchored to the swimmer.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F13#5",
+     "F39#16",
+     "F39#17"
+    ],
+    "approach": "LAND-MT-FLOWSTREAKS",
+    "result": "Round 1 (G-land-mt-flowstreaks): DO NOT SHIP.** F13#5 +0.52 (3/3), but F39#16 / F39#17 current states -0.42 (0/3), because the re-enabled streaks drew guide lanes everywhere.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F13#5",
+     "F39#16",
+     "F39#17"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: `LAND-MT-FLOWSTREAKS` for F13#5 (5.38).** Cause confirmed by probe: the crescents are the current shader's chop caps (`current_flow.state_shader.live.chop_cap_opacity` 0.45); at 0 every crescent goes in all four T2 views. The arm removes them and brings the shader's own flow-aligned foam groups back faintly. Two stronger tunings drew long straight lanes at the T2 grazing camera, so they were dropped. Honest r…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#17": [
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F13#5",
+     "F39#16",
+     "F39#17",
+     "F39#30",
+     "F39#2",
+     "F39#10"
+    ],
+    "approach": "land-mt-seadepth",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F13#5",
+     "F39#16",
+     "F39#17"
+    ],
+    "approach": "LAND-MT-FLOWSTREAKS",
+    "result": "Round 1 (G-land-mt-flowstreaks): DO NOT SHIP.** F13#5 +0.52 (3/3), but F39#16 / F39#17 current states -0.42 (0/3), because the re-enabled streaks drew guide lanes everywhere.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F13#5",
+     "F39#16",
+     "F39#17"
+    ],
+    "approach": "LAND-MT",
+    "result": "Ready: `LAND-MT-FLOWSTREAKS` for F13#5 (5.38).** Cause confirmed by probe: the crescents are the current shader's chop caps (`current_flow.state_shader.live.chop_cap_opacity` 0.45); at 0 every crescent goes in all four T2 views. The arm removes them and brings the shader's own flow-aligned foam groups back faintly. Two stronger tunings drew long straight lanes at the T2 grazing camera, so they were dropped. Honest r…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F39#17",
+     "F39#8",
+     "F39#3",
+     "F39#7",
+     "F39#10",
+     "F39#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F39#19": [
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#38"
+    ],
+    "approach": "G-scene-rosternames",
+    "result": "DO NOT SHIP: F39#7 Medium LOSES 7.31 → 6.12 (−1.19, 0/3). The arm moves the fight camera, so the trainer stands inside Ripplet's back. F39#19 NOT CLOSED: 6.88 → 6.97 (+0.09, 2/3) at both presets, and the arm's named roster fades to pale ghost text in the stagger frame (FIXED → PRESENT 3/3). Control 7.98. Next: decouple the camera from roster width; named rows on solid cells that never fade",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7"
+    ],
+    "approach": "G-scene-rosternames (AMENDED)",
+    "result": "The GPU lane found the Venn camera offsets were capture state, not the arm. Only Medium t-000 was matched, so the unmatched frames are excluded. The F39#7 −1.19 is WITHDRAWN, and there is NO SHIP VERDICT: re-capture with matched cameras. The arm's roster fade in the stagger frame (PRESENT 3/3) still stands: fix it first",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F38#38"
+    ],
+    "approach": "G-land-mt-cragback",
+    "result": "DO NOT SHIP (level): base = arm on the matched frames (0/3, 3 ties; mean diffs 0.02-0.57). F39#19 NOT CLOSED: 6.95 High, 7.27 Medium, roster FIXED 3/3. The dark overhead wedge is still flagged 3/3 on both sides. F39#7 not judged (no matched frames). Control 7.87",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#38"
+    ],
+    "approach": "G-scene-rosternames-rejudge",
+    "result": "SUPERSEDES G-scene-rosternames (and its AMENDED line). DO NOT SHIP: F39#19 LOSES 6.78 → 6.38 (−0.40, 0/3) at both presets. The arm's named roster fades to pale ghost text in the t-003 stagger frame (FIXED → PRESENT 3/3); t-000 camera-matched. F39#7 −0.62 High / +0.22 Medium on unmatched frames (disclosed). Control 8.02. Next: names on base's solid cells, never fading",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F38#38"
+    ],
+    "approach": "G-land-mt-cragcut",
+    "result": "SHIP, small: 6.85 → 6.92 (+0.07, 2/3, 1 tie) at both presets on matched t-000. F39#19 NOT CLOSED: 6.92 High and Medium. PARK the crag-shell approach for F39#19 (two rounds under 0.5). What holds it: plastic Ripplet merging into flat beige sand. F39#7 not judged (no matched frame). Control 8.08",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7",
+     "F38#3"
+    ],
+    "approach": "scene-rosternames",
+    "result": "R1 DO NOT SHIP (re-judge, LANE-JUDGE): F39#19 6.78 -> 6.38 (0/3) at both presets on matched t-000; the named roster fades. R2 (solid rows, footprint) queued as scene-rosternames-r2.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7"
+    ],
+    "approach": "land-mt-cragback",
+    "result": "LEVEL 13 Nov (LANE-JUDGE 93537dc89): matched frames nearly identical (mean diffs 0.02-0.57), 0/3 with 3 ties; the dark overhead wedge still flagged 3/3. Attempt 1 of 2; back to LANE-LAND-MT.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19",
+     "F39#7"
+    ],
+    "approach": "land-mt-cragcut-probe",
+    "result": "WITHDRAWN 13 Nov 21:15: LANE-LAND-MT proved on CPU (fixed t-000 view) the wedge is the crag back faces; CRAGCUT arm follows.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#19 CRAGBACK: PARKED. It was level on GPU because the engine already flips back-face normals; CRAGCUT shipped instead.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#19 DUNETONE: PARKED. Damp tone on the Venn dune is too faint at a believable strength.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#19"
+    ],
+    "approach": "SCENE",
+    "result": "F39#19 PARKED: ROSTERNAMES round 1 (names on translucent rows). The re-judge lost 6.78 to 6.38 (0/3); the named roster faded. Round 2 fixes the fade and is queued.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#21": [
+   {
+    "rows": [
+     "F39#21",
+     "F38#20"
+    ],
+    "approach": "PLACES",
+    "result": "Checked, not gaps:** F39#21's 4.34 (G-rescore-f39-21-f41-13) was on main 306239e9f (#885, 10 Nov 08:03), before the #893 win at 7.06. F38#20, #21 and #22 differences are partial-frame cross-checks or later closes.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#23": [
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F39#17",
+     "F39#8",
+     "F39#3",
+     "F39#7",
+     "F39#10",
+     "F39#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F39#24": [
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F38#38"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (15:06), G-closeout-tidewake (bf8e1cee): F39#4 shiny creature finish CLOSES (7.77 / 7.77) and F39#24 creature rest poses CLOSES (7.65 / 7.61).** Control F38#38 read 7.77. Margin notes only: F39#4 reads as a recolour and heads crane skyward; F39#24 poses read alert, Riptusk sinks into the sand, a hard shadow quad under Torrentoad.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#4",
+     "F39#24",
+     "F39#17",
+     "F39#8",
+     "F39#3",
+     "F39#7",
+     "F39#10",
+     "F39#23"
+    ],
+    "approach": "PLACES",
+    "result": "Flags:** at 7.5 or above, need Medium: **F39#4 7.81, F39#24 7.77** (defects FIXED 3/3). Below 6: **F39#17 5.50** (was 6.27; restoration shows no visible change, PRESENT 3/3) and F39#8 5.82 (was 5.66). Out of the 6–7 band upward: F39#3 7.26, F39#7 7.07, F39#10 7.02, F39#23 7.35.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F39#27": [
+   {
+    "rows": [
+     "F39#1",
+     "F39#15",
+     "F39#27",
+     "F39#2",
+     "F39#30"
+    ],
+    "approach": "land-mt-shorezones",
+    "result": "PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#1",
+     "F39#27"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#1 / F39#27 SHOREZONES: PARKED. All rows lost on GPU.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F39#30": [
+   {
+    "rows": [
+     "F39#1",
+     "F39#15",
+     "F39#27",
+     "F39#2",
+     "F39#30"
+    ],
+    "approach": "land-mt-shorezones",
+    "result": "PARKED 13 Nov: all rows lose 0/3 (hard-edged olive splats on near sand).",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#15",
+     "F39#1",
+     "F13#5",
+     "F39#16",
+     "F39#17",
+     "F39#30",
+     "F39#2",
+     "F39#10"
+    ],
+    "approach": "land-mt-seadepth",
+    "result": "R2 DO NOT SHIP 13 Nov: F39#10 -0.29 on this panel (round 1 read +0.62 on the same frames; side-B lean); states now level; F39#15 +0.20. One more round (keep deep navy, soften only the transition, fix the disc chain); park if a wash again.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   }
+  ],
+  "F39#31": [
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "G-land-mt-tiera",
+    "result": "DO NOT SHIP: level 5.78 → 5.74 (−0.04, 1/3); the removed rock cluster is not noticed, and floating props are still reported 3/3. PARK the subtractive cascade-tier approach for F39#31; the ceiling is the landmark form (board rebuild)",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "land-mt-tiera",
+    "result": "PARKED 13 Nov: level 5.78 -> 5.74 (1/3); the removed rock is not noticed.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "land-mt-veilrebuild",
+    "result": "HELD 14 Nov: LAND-MT already has two arms waiting (SEADEPTH r3, PLUME r2); runs when one clears.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "FLOOR2-DAWNRAIN",
+    "result": "Veilfall in rain loses contrast** (right-hand column): the mountain is still readable but flatter. That is the trade VIS-TIDEWAKE's notes warned about; F39#31's rain view is in the capture as a control.",
+    "source": "main:ralph/reports/LANES/FLOOR2-DAWNRAIN/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "Built and HELD for the next free GPU slot: `LAND-MT-VEILREBUILD` (F39#31, the Veilfall rebuild you asked for).** Overlay only (`falls.rebuild.enabled`); no Meshy, no tiers removed, no camera-facing puffs.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#31 BASEMIST: PARKED. Camera-facing puffs do not read as base mist at these distances.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#31 TIERA: PARKED. It was level.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "F39#31:** #958 (mist fix) is +0.62 on the row (5.16 to 5.78, 3/3). TIERA parked (level). The row's ceiling is a Veilfall rebuild (Meshy hero piece), which is outside this round (no Meshy credits); the in-reach pieces left are the plunge pool and foam at the fall foot and a streaked falling-water material, both bigger builds than a tuning pass. Not started.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "BASEMIST: PARKED after two placement rounds.** With the billow floor (PR #958) the puffs render, but even with mid-fall puffs against the rock (7 extra, `at_fraction` 0.55 to 1.0), 1.25x size and a cooler tone, the F39#31 views show at most a softer base on the main fall. The camera-facing puff approach does not make mist read at these distances. A real base mist likely needs a dedicated effect (a lit mist volume or…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "Veilfall base mist: cause found, arm held.** The spray shader's billow gate zeroes the whole puff in this renderer (probe: alpha = opacity * radial shows the mist; with the gate, nothing). `LAND-MT-BASEMIST` (flag-off `billow_floor`, `size_scale`) makes it render, but on the F39#31 views it barely reads: the puffs are not where the visible falls end (the cascade's foot is configured at 200 m, mid-cliff), and white m…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F40#0": [
+   {
+    "rows": [
+     "F40#0",
+     "F40#19"
+    ],
+    "approach": "G-places-wetpath-r2",
+    "result": "SPLIT, closer: gate clear +0.65, gate rain +0.56, summit day +0.56 (all 3/3); overlook −0.04 (level); night −0.12 (1/3, arm path reads as a stain). The night gate does not hold: night grass 83→72 and trail 56→52.5 still darken. Gate the darkening off at night, re-capture p88, then ship",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudrain",
+    "result": "DO NOT SHIP as is: F40#19 rain sky loses (6.46→6.34, −0.12, 2/3 prefer base; the brighter overcast reads paler and washed out, reversing the +0.44 the slate deck earned). F40#0 day rain +0.21, night +0.24, F40#21 +0.20 (all 3/3), but partly confounded: at the High Perches tile the arm has a compass floor and a blue drake, base a plain ring and a panda (3/3 named it). Clear weather identical. Next: the arm's ground g…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudrain-r2",
+    "result": "DO NOT SHIP; PARK the rain-overcast arm (two rounds under 0.5). F40#19 now level (+0.05; slate deck kept, round 1 loss undone); day rain level (+0.04; the ground lift does not register). Night −0.38 and F40#21 −0.13 come from the High Perches crown-court floor rendering as a flat line ring on the arm vs cobbles on base, even within one boot (3/3 named it). Real bug: that floor material falls back to a placeholder ri…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudnight-941",
+    "result": "DO NOT SHIP as one arm: night clear 9 stands 6.29→6.72 (+0.43, 3/3) and F40#21 night clear 6.18→6.56 (+0.38, 3/3; the emission floor cut stops the campfire trainer blowout), but the other three stands lose 6.48→6.18 (−0.30, 0/3: the paler fill turns the grass greener and reads as dim day). Night rain level (+0.04), gate crag night-rain sky level (−0.04). Fix: keep the emission and rim cuts, cool-tint the moonlit fil…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#4",
+     "F40#7",
+     "F40#0"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#7",
+     "F40#0",
+     "F40#4"
+    ],
+    "approach": "LAND-CS",
+    "result": "Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F40#1": [
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "below6-wall-band",
+    "result": "AMENDED DO NOT SHIP 14 Nov: F40#8 no-loss at the bridge lost 6.29 -> 5.86 (0/3), triplanar camouflage on the bridge cliff. Withdrawn from #963. Waits on limiting the band to rims and wall tops.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "below6-gate-terrace",
+    "result": "Thin SHIP 14 Nov (+0.20, 2/3); judge asks a combined re-judge with WALL-BAND and risers with height. HELD from landing until then.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F41#8",
+     "F39#8"
+    ],
+    "approach": "BELOW6",
+    "result": "Parked on my side: F40#1 (terraces not sent), F41#8 character side, Fulgocobra, F39#8.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "BELOW6",
+    "result": "F40#1:** `BELOW6-TERRACES/NOT-SENT.md`. Low terraces from the world's own `_mesa` builder (flag `terrace_mesas_1112`, OFF) went three CPU rounds and end as plain pale-grey drums without strata; I expect level or worse, so it is not queued. Parked on my side until there is a new idea (terrace geometry inside `_mesa`).",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F36#46",
+     "F40#1",
+     "F39#8",
+     "F38#6"
+    ],
+    "approach": "BELOW6",
+    "result": "My rows now:** F41#8 (5.80), F36#46 Fulgocobra (5.87), F40#1 (5.90, back from LANE-PLACES), F39#8 (parked). F38#6, #12 and #14 are LANE-THINGS'.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1 HELD: BELOW6-WALL-BAND, F40#1 +0.32 stands; round 2 must limit the band to rim and wall-top geometry (height band or normal mask) and re-judge with the Three Bells bridge frame.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1 PARKED: re-cluster the Cloudreach grass tufts by overlay (`ground_cover.cluster_frequency` 0.55, `cluster_threshold` 0.9); no visible change on CPU, not sent.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#3",
+     "F40#4",
+     "F40#7",
+     "F40#11"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#4",
+     "F40#7",
+     "F40#0"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#8 HELD: LAND-CS-WALLBAND2 (band limited to the top 3 m under rims), CPU-ready.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#8 PARKED (as is): BELOW6-WALL-BAND. F40#1 +0.32 (3/3) but F40#8 loses 6.29 -> 5.86 (0/3, cliff face repainted). Withdrawn from PR #963.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1 HELD: BELOW6-GATE-TERRACE (+0.20, 2/3, curbs read as generated contour lines); re-judge with the wall band on.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#3"
+    ],
+    "approach": "LAND-CS",
+    "result": "Not built:** it was GPU-judged inside the cause lane's `pale_strata` (G-newapproach-cloudreach-cause-no-cloudsea): F40#1 and F40#3 lost 0/3, the lips read \"smooth, untextured clay-like\", and judges preferred base's \"textured earth\". The untried variant (courses on the owner's granite, no pale retint) removes the same texture hue the judges preferred, so I am not spending a GPU slot on it without a new reason.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#7",
+     "F40#0",
+     "F40#4"
+    ],
+    "approach": "LAND-CS",
+    "result": "Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F40#3": [
+   {
+    "rows": [
+     "F41#22",
+     "F40#3",
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "Waiting on the GPU:** SOILOFF (F41#22/#24). **Held, CPU-ready:** ARCHSTAND (F40#3), RIMSEAT (F40#17). **Held for a combined re-judge:** GATE-TERRACE round 2 (to build: taller risers, no loops).",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#3",
+     "F40#4",
+     "F40#7",
+     "F40#11"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#3"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#3 SHIPPED (re-baseline): LAND-CS-ARCHSTAND, 6.37 vs 5.74 (3/3); landing tb/land-cs-rimarch-land.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#3"
+    ],
+    "approach": "LAND-CS",
+    "result": "Not built:** it was GPU-judged inside the cause lane's `pale_strata` (G-newapproach-cloudreach-cause-no-cloudsea): F40#1 and F40#3 lost 0/3, the lips read \"smooth, untextured clay-like\", and judges preferred base's \"textured earth\". The untried variant (courses on the owner's granite, no pale retint) removes the same texture hue the judges preferred, so I am not spending a GPU slot on it without a new reason.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F40#4": [
+   {
+    "rows": [
+     "F40#1",
+     "F40#3",
+     "F40#4",
+     "F40#7",
+     "F40#11"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#4",
+     "F40#7",
+     "F40#0"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#7",
+     "F40#0",
+     "F40#4"
+    ],
+    "approach": "LAND-CS",
+    "result": "Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F40#6": [
+   {
+    "rows": [
+     "F40#6"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#6 PARKED (owner decision): the mount upright over open cloud; no arm from this lane.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F40#7": [
+   {
+    "rows": [
+     "F40#1",
+     "F40#3",
+     "F40#4",
+     "F40#7",
+     "F40#11"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#4",
+     "F40#7",
+     "F40#0"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#7",
+     "F40#0",
+     "F40#4"
+    ],
+    "approach": "LAND-CS",
+    "result": "Arm LAND-CS-TURFGRAIN, `tb/land-cs`, rows F40#1, F40#7, F40#0/#19/#21, F40#4.** CPU-ready and held: the inherited arms already fill the two-waiting limit. Queue it when a Cloudreach slot frees; it can share a boot with any other `tb/land-cs` overlay.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F40#8": [
+   {
+    "rows": [
+     "F40#8"
+    ],
+    "approach": "G-lcs-wallband-bridge",
+    "result": "LOSS: 6.29 → 5.86 (−0.43, 0/3); the band repaints the bridge cliff as patchy grey with brown facets (\"triplanar seams, camouflage\"). WALL-BAND (G-below6-wall-band-main) is AMENDED to DO NOT SHIP; its F40#1 +0.32 waits on limiting the band to rims and wall tops. Fit r 0.901, RMSE 0.60",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "below6-wall-band",
+    "result": "AMENDED DO NOT SHIP 14 Nov: F40#8 no-loss at the bridge lost 6.29 -> 5.86 (0/3), triplanar camouflage on the bridge cliff. Withdrawn from #963. Waits on limiting the band to rims and wall tops.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#8"
+    ],
+    "approach": "LAND-CS-WALLBAND2",
+    "result": "F40#8 no-loss, 6.29: round 1 lost there, 6.29 -> 5.86 (0/3, G-lcs-wallband-bridge), so the verdict was amended to DO NOT SHIP and the flag came out of PR #963.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS-WALLBAND2/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
+    "result": "LANE-JUDGE amended G-below6-wall-band-main to **DO NOT SHIP**: the F40#8 no-loss check loses on the Three Bells bridge, 6.29 -> 5.86 (−0.43, 0/3); the band repaints a whole cliff face as grey with faceted brown patches.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#8 HELD: LAND-CS-WALLBAND2 (band limited to the top 3 m under rims), CPU-ready.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#8 PARKED (as is): BELOW6-WALL-BAND. F40#1 +0.32 (3/3) but F40#8 loses 6.29 -> 5.86 (0/3, cliff face repainted). Withdrawn from PR #963.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F40#11": [
+   {
+    "rows": [
+     "F40#1",
+     "F40#3",
+     "F40#4",
+     "F40#7",
+     "F40#11"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F40#15": [
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "G-below6-overlook-stone",
+    "result": "DO NOT SHIP: overlook F40#15 pair 4.57→3.99 (−0.58, 0/3), routes 5.07→4.53 (−0.54, 0/3). The new stone reads as \"smeared brown blotch, clay or mud\", even further from pale stratified stone, because the facet texture stretches across thin wall cards. The ask is still footed pale-stone masonry (new art). Both sides: F40#15 strip defect PRESENT in the overlook vista_dusk (a dark seam at the trainer's feet), ghost plane…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 PARKED: lift the ridge above the ledge crown (`overlook_ridge_join_1113.sink_m` -0.12); no change to the dark wedge on CPU.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 PARKED: remove the ridge join's 4 m route exemption (temporary switch); the wedge is unchanged, only the pavers sink.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 PARKED: `edge_1113` (join over every cap-0 pad, from 1.5 m inside the rim); no visible change, reverted. Ridge vertices are about 4 m apart, so a lift cannot reach the ledge face between them.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 PARKED: `overlook_ledge_drop_1113` (overlook ledge and pad 0.18 m lower); no visible change, reverted. Next try must first confirm the ledge face moves (print its heights).",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 PARKED (no cause found): \"rampart and tower over the void\" at walk_03. Ground probe under every corner of both ruined wings and both piers finds crown turf (1109.7 to 1111.5), none over the void; the right wall stands at the lip and reads as overhanging from the low walk_03 camera. One real fault: `StormwardRuinedWing01` floats 0.2 to 0.5 m above its ground (bottom 1110.22). Seating it is small and not sent a…",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 SHIPPED: LAND-CS-OVERLOOK-SEAMS, 5.10 -> 5.41 (3/3); landing branch tb/land-cs-seams-land.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#15 dark wedge and walk_02 feet strip: PARKED after four failed attempts (13 Nov 22:30 UTC)",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#15"
+    ],
+    "approach": "LAND-CS",
+    "result": "New arm LAND-CS-OVERLOOK-SEAMS** (F40#15, 5.60): a pixel probe names the plank and slab strips at route_day, vista_dusk, walk_02 and walk_03 as the four `approach_pavers`, buried by the ridge join except for a sunken strip. The arm stops building them; the strips are gone on CPU at all four frames. No collision change. **CPU-ready and held**: SOILOFF and TURFGRAIN are my two waiting arms.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F40#17": [
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "G-land-cs-masterfloor",
+    "result": "DO NOT SHIP (level): 6.04 → 6.13 (+0.09, 1/3, 2 ties). Checker → soil is noticed as calmer background (2/3), but the row is decided by the clusters (lip seat, pale base spheres, toy scale). Court +0.22 is a creature-spawn confound (ram on the arm side), not counted. Fit r 0.922, RMSE 0.54. Next: seat the tan cluster back from the lip, remove the base spheres, griffin clipping, night moon and rim",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "land-cs-masterfloor",
+    "result": "PARKED 14 Nov: level 6.04 -> 6.13 (+0.09, 1/3, 2 ties); platform is background, not the subject; no more rounds on the platform top for F40#17.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#22",
+     "F40#3",
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "Waiting on the GPU:** SOILOFF (F41#22/#24). **Held, CPU-ready:** ARCHSTAND (F40#3), RIMSEAT (F40#17). **Held for a combined re-judge:** GATE-TERRACE round 2 (to build: taller risers, no loops).",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#17 SHIPPED: LAND-CS-RIMSEAT, 6.05 -> 6.68 (3/3); landing tb/land-cs-rimarch-land.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#17 PARKED: rim finds respaced widely (CPU round 1 of RIMSEAT, not sent): two clusters left the fixed frame.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#17 PARKED: LAND-CS-MASTERFLOOR (Master T4 arena floor soil tile and tint). G-land-cs-masterfloor: level, 6.04 -> 6.13 (+0.09, 1/3, 2 ties); judges call the platform background, not the subject. LANE-JUDGE: no more rounds on the platform top for F40#17.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F40#19": [
+   {
+    "rows": [
+     "F40#0",
+     "F40#19"
+    ],
+    "approach": "G-places-wetpath-r2",
+    "result": "SPLIT, closer: gate clear +0.65, gate rain +0.56, summit day +0.56 (all 3/3); overlook −0.04 (level); night −0.12 (1/3, arm path reads as a stain). The night gate does not hold: night grass 83→72 and trail 56→52.5 still darken. Gate the darkening off at night, re-capture p88, then ship",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudrain",
+    "result": "DO NOT SHIP as is: F40#19 rain sky loses (6.46→6.34, −0.12, 2/3 prefer base; the brighter overcast reads paler and washed out, reversing the +0.44 the slate deck earned). F40#0 day rain +0.21, night +0.24, F40#21 +0.20 (all 3/3), but partly confounded: at the High Perches tile the arm has a compass floor and a blue drake, base a plain ring and a panda (3/3 named it). Clear weather identical. Next: the arm's ground g…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudrain-r2",
+    "result": "DO NOT SHIP; PARK the rain-overcast arm (two rounds under 0.5). F40#19 now level (+0.05; slate deck kept, round 1 loss undone); day rain level (+0.04; the ground lift does not register). Night −0.38 and F40#21 −0.13 come from the High Perches crown-court floor rendering as a flat line ring on the arm vs cobbles on base, even within one boot (3/3 named it). Real bug: that floor material falls back to a placeholder ri…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudnight-941",
+    "result": "DO NOT SHIP as one arm: night clear 9 stands 6.29→6.72 (+0.43, 3/3) and F40#21 night clear 6.18→6.56 (+0.38, 3/3; the emission floor cut stops the campfire trainer blowout), but the other three stands lose 6.48→6.18 (−0.30, 0/3: the paler fill turns the grass greener and reads as dim day). Night rain level (+0.04), gate crag night-rain sky level (−0.04). Fix: keep the emission and rim cuts, cool-tint the moonlit fil…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   }
+  ],
+  "F40#21": [
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudrain",
+    "result": "DO NOT SHIP as is: F40#19 rain sky loses (6.46→6.34, −0.12, 2/3 prefer base; the brighter overcast reads paler and washed out, reversing the +0.44 the slate deck earned). F40#0 day rain +0.21, night +0.24, F40#21 +0.20 (all 3/3), but partly confounded: at the High Perches tile the arm has a compass floor and a blue drake, base a plain ring and a panda (3/3 named it). Clear weather identical. Next: the arm's ground g…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudrain-r2",
+    "result": "DO NOT SHIP; PARK the rain-overcast arm (two rounds under 0.5). F40#19 now level (+0.05; slate deck kept, round 1 loss undone); day rain level (+0.04; the ground lift does not register). Night −0.38 and F40#21 −0.13 come from the High Perches crown-court floor rendering as a flat line ring on the arm vs cobbles on base, even within one boot (3/3 named it). Real bug: that floor material falls back to a placeholder ri…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#0",
+     "F40#19",
+     "F40#21"
+    ],
+    "approach": "G-things-cloudnight-941",
+    "result": "DO NOT SHIP as one arm: night clear 9 stands 6.29→6.72 (+0.43, 3/3) and F40#21 night clear 6.18→6.56 (+0.38, 3/3; the emission floor cut stops the campfire trainer blowout), but the other three stands lose 6.48→6.18 (−0.30, 0/3: the paler fill turns the grass greener and reads as dim day). Night rain level (+0.04), gate crag night-rain sky level (−0.04). Fix: keep the emission and rim cuts, cool-tint the moonlit fil…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   }
+  ],
+  "F41#1": [
+   {
+    "rows": [
+     "F41#11",
+     "F41#14",
+     "F41#1"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (16:06), G-closeout-stormwood (b17cc0d0), control on scale (8.18): F41#11 portrait identity CLOSES (7.61 / 7.61).** Not closed: F41#14 candy pickup tiers 7.05 (Good and Great share one wrapped form and scale; black pool ground fills half the frame); F41#1 Stormheart finale 6.54 (camera crops the trunk so the crown never shows 3/3; core is a flat white-blue slab; root path crushed black). The ea…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#2": [
+   {
+    "rows": [
+     "F41#8",
+     "F41#2"
+    ],
+    "approach": "PLACES",
+    "result": "Sent to GPU (arm 1 of 2):** `PLACES-STORMLIGHT/ARM.md` + `CAPTURE.json` + `overlay.json`. P1 Stormwood storm light: `storm_phase_1111` (layered storm sky, held white-violet bolts with a bolt key light, far bolts in Building, mist banks, shafts un-culled) with `distinct_bodies_1111` riding for F41#8. Rows F41#2, #4, #5, #12, #19, #8; riders #6, #13. All code is flag-off on the branch.",
+    "source": "main:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#12",
+     "F41#5",
+     "F41#2",
+     "F41#8",
+     "F41#4"
+    ],
+    "approach": "PLACES",
+    "result": "Road value (no puddles) was judged: do not land alone** (`G-places-roadvalue.md`, tb/item-scout-1108 4061fd99). F41#12 6.01 → 6.44, F41#5 5.78 → 6.17, F41#2 6.09 → 6.40, F41#8 6.01 → 6.25, each 3/3. F41#4 loses twice (−0.23 at 0/3, then −0.09 at 0/3 with one tie): the gold path line loses contrast on the lighter road; judges praise the road itself. Every gain is under 0.5, so it does not stand alone (owner, 25 Oct).",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#3": [
+   {
+    "rows": [
+     "F38#3",
+     "F38#28",
+     "F38#11",
+     "F41#3"
+    ],
+    "approach": "things-dusttrail",
+    "result": "HELD unjudged 13 Nov: beads unchanged on base vs arm (diff 0.2-0.8); the beads are the wind-up dust (THINGS-TELLDUST). Parked.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   }
+  ],
+  "F41#4": [
+   {
+    "rows": [
+     "F41#4",
+     "F41#12"
+    ],
+    "approach": "(0.5-rule follow-up, coordinator request 12 Nov)",
+    "result": "Every 1108 verdict that passed the ship rule but was held only for a gain under 0.5 is ALREADY ON main c73dcc80: G-below6-stormdeck (deck_wood_warm_1112, banner_cloth_1112, aged_heartwood_1112 enabled; BELOW6), G-meshy-f41-8-distinct-bodies (distinct_bodies_1111 enabled via G-places-stormlight; BELOW6), G-f40-19-mist sky-only (weather_arms.rain_storm_sky enabled, sky keys only; THINGS), G-things-faint2 mosshock/stor…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#12",
+     "F41#4",
+     "F41#5",
+     "F41#8"
+    ],
+    "approach": "PLACES",
+    "result": "Swing 2 was judged: DO NOT SHIP** (`G-places-swing2`, 7e327f36). F41#12 −0.71 (\"thick, bright, saturated gold stripes\"), F41#4 −0.17, F41#5 −0.16; F41#8 +0.38. The umber road has now won twice against the black slab; the gold line is the problem at both strengths. Gold brightness alone is parked; `contrast_1112` is removed.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#12",
+     "F41#5",
+     "F41#2",
+     "F41#8",
+     "F41#4"
+    ],
+    "approach": "PLACES",
+    "result": "Road value (no puddles) was judged: do not land alone** (`G-places-roadvalue.md`, tb/item-scout-1108 4061fd99). F41#12 6.01 → 6.44, F41#5 5.78 → 6.17, F41#2 6.09 → 6.40, F41#8 6.01 → 6.25, each 3/3. F41#4 loses twice (−0.23 at 0/3, then −0.09 at 0/3 with one tie): the gold path line loses contrast on the lighter road; judges praise the road itself. Every gain is under 0.5, so it does not stand alone (owner, 25 Oct).",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#5": [
+   {
+    "rows": [
+     "F41#12",
+     "F41#4",
+     "F41#5",
+     "F41#8"
+    ],
+    "approach": "PLACES",
+    "result": "Swing 2 was judged: DO NOT SHIP** (`G-places-swing2`, 7e327f36). F41#12 −0.71 (\"thick, bright, saturated gold stripes\"), F41#4 −0.17, F41#5 −0.16; F41#8 +0.38. The umber road has now won twice against the black slab; the gold line is the problem at both strengths. Gold brightness alone is parked; `contrast_1112` is removed.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#12",
+     "F41#5",
+     "F41#2",
+     "F41#8",
+     "F41#4"
+    ],
+    "approach": "PLACES",
+    "result": "Road value (no puddles) was judged: do not land alone** (`G-places-roadvalue.md`, tb/item-scout-1108 4061fd99). F41#12 6.01 → 6.44, F41#5 5.78 → 6.17, F41#2 6.09 → 6.40, F41#8 6.01 → 6.25, each 3/3. F41#4 loses twice (−0.23 at 0/3, then −0.09 at 0/3 with one tie): the gold path line loses contrast on the lighter road; judges praise the road itself. Every gain is under 0.5, so it does not stand alone (owner, 25 Oct).",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#7": [
+   {
+    "rows": [
+     "F41#7",
+     "F41#11",
+     "F41#15",
+     "F41#20"
+    ],
+    "approach": "things-stormrule",
+    "result": "held by LANE-THINGS (after RULER)",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "held"
+   }
+  ],
+  "F41#8": [
+   {
+    "rows": [
+     "F41#8"
+    ],
+    "approach": "G-below6-namedposts",
+    "result": "DO NOT SHIP: the lantern posts lose the row 5.92 → 5.43 (−0.49, 0/3) and the dialogue frames 6.38 → 5.65 (−0.73, 0/3): the post crowds the speakers and its bloom blows faces to white. Clamp character bloom instead; Hesk and Bryn share a wrong portrait",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F41#8",
+     "F39#8"
+    ],
+    "approach": "BELOW6",
+    "result": "Parked on my side: F40#1 (terraces not sent), F41#8 character side, Fulgocobra, F39#8.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F36#46",
+     "F40#1",
+     "F39#8",
+     "F38#6"
+    ],
+    "approach": "BELOW6",
+    "result": "My rows now:** F41#8 (5.80), F36#46 Fulgocobra (5.87), F40#1 (5.90, back from LANE-PLACES), F39#8 (parked). F38#6, #12 and #14 are LANE-THINGS'.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8"
+    ],
+    "approach": "BELOW6",
+    "result": "12 Nov, 09:15 UTC: F41#8 character side is parked; I need a row",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8"
+    ],
+    "approach": "BELOW6",
+    "result": "With the posts (-0.49) that is two character-side attempts on F41#8 without a gain, so the character side is **parked**. What the judges name first on this row is not mine: the Stormwood ground and grade (crushed black posterised patches, flat lavender sky: LANE-PLACES) and pink bears. Bryn's and Hesk's face textures (\"blown out\", \"blotchy and posterised\") would need texture work on the installed bodies; no idea yet…",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F36#46",
+     "F41#15"
+    ],
+    "approach": "BELOW6",
+    "result": "Coordinator: both my assigned rows are parked (F41#8 character side, F36#46 Fulgocobra). GPU slots used: 0 of 2. Please assign the next below-6 row.** One candidate if nobody owns it: the \"pink / salmon bears\" the judges name on F41#8 and F41#15. Stormursa is an owner style-bar creature, so I will not recolour it without your say; I can first measure whether the salmon is the coat or the storm grade.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8"
+    ],
+    "approach": "BELOW6",
+    "result": "Named posts: DO NOT SHIP** (G-below6-namedposts: F41#8 row 5.92 -> 5.43, dialogue 6.38 -> 5.65, 0/3). `named_posts_1112` stays OFF; parked.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8"
+    ],
+    "approach": "BELOW6",
+    "result": "Not mine, named by the judges on F41#8: repeated background sentinels and tan-vest figures (new art), salmon bears and cobalt wolves, hard black path patches, the player's own bloom.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F41#2"
+    ],
+    "approach": "PLACES",
+    "result": "Sent to GPU (arm 1 of 2):** `PLACES-STORMLIGHT/ARM.md` + `CAPTURE.json` + `overlay.json`. P1 Stormwood storm light: `storm_phase_1111` (layered storm sky, held white-violet bolts with a bolt key light, far bolts in Building, mist banks, shafts un-culled) with `distinct_bodies_1111` riding for F41#8. Rows F41#2, #4, #5, #12, #19, #8; riders #6, #13. All code is flag-off on the branch.",
+    "source": "main:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#8"
+    ],
+    "approach": "BEINGS",
+    "result": "New arm, CPU-ready: BEINGS-STATICUB-COOL**, the Staticub world-frame follow-up (6.53; it also feeds F41#8). Two causes: the storm coat is too light, and the r10 vein glow map is not lit in the game. The flag `beings_staticub_cool_veins` (coat flags, OFF) gives a coat about a third darker with red trimmed, plus the model's own glow map at strength 2.5. CPU round 1 (blue pushed up toward Stormursa's average) rendered …",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F36 (0) #19"
+    ],
+    "approach": "BEINGS",
+    "result": "F41#8 and the Staticub world frames (F36 (0) #19 world read) PARKED: a bluer coat toward Stormursa's average (fur x 0.90, 0.95, 1.35). It renders pink under Stormwood's violet light (CPU round 1). Replaced by the darker coat in BEINGS-STATICUB-COOL.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#8",
+     "F41#8",
+     "F41#18"
+    ],
+    "approach": "BEINGS",
+    "result": "Held until a slot frees: BELOW6-AQUARYN-RIDE (F39#8), BELOW6-STATICUB-FUR (F41#8, F41#18), BELOW6-UNIFORM-CLOTH (F41#18).",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#12",
+     "F41#4",
+     "F41#5",
+     "F41#8"
+    ],
+    "approach": "PLACES",
+    "result": "Swing 2 was judged: DO NOT SHIP** (`G-places-swing2`, 7e327f36). F41#12 −0.71 (\"thick, bright, saturated gold stripes\"), F41#4 −0.17, F41#5 −0.16; F41#8 +0.38. The umber road has now won twice against the black slab; the gold line is the problem at both strengths. Gold brightness alone is parked; `contrast_1112` is removed.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#12",
+     "F41#5",
+     "F41#2",
+     "F41#8",
+     "F41#4"
+    ],
+    "approach": "PLACES",
+    "result": "Road value (no puddles) was judged: do not land alone** (`G-places-roadvalue.md`, tb/item-scout-1108 4061fd99). F41#12 6.01 → 6.44, F41#5 5.78 → 6.17, F41#2 6.09 → 6.40, F41#8 6.01 → 6.25, each 3/3. F41#4 loses twice (−0.23 at 0/3, then −0.09 at 0/3 with one tie): the gold path line loses contrast on the lighter road; judges praise the road itself. Every gain is under 0.5, so it does not stand alone (owner, 25 Oct).",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#11": [
+   {
+    "rows": [
+     "F41#7",
+     "F41#11",
+     "F41#15",
+     "F41#20"
+    ],
+    "approach": "things-stormrule",
+    "result": "held by LANE-THINGS (after RULER)",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#11",
+     "F41#14",
+     "F41#1"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (16:06), G-closeout-stormwood (b17cc0d0), control on scale (8.18): F41#11 portrait identity CLOSES (7.61 / 7.61).** Not closed: F41#14 candy pickup tiers 7.05 (Good and Great share one wrapped form and scale; black pool ground fills half the frame); F41#1 Stormheart finale 6.54 (camera crops the trunk so the crown never shows 3/3; core is a flat white-blue slab; root path crushed black). The ea…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#12": [
+   {
+    "rows": [
+     "F41#12"
+    ],
+    "approach": "G-places-swing2",
+    "result": "DO NOT SHIP: the brighter, branching gold current brings back 'thick gold stripes' (F41#12 6.07 → 5.36, −0.71, 0/3, defect PRESENT 3/3); F41#4 −0.17 and #5 −0.16 also lose; only F41#8 gains (+0.38, 3/3). Keep the umber road with a single thin dark-edged or white-violet line",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#4",
+     "F41#12"
+    ],
+    "approach": "(0.5-rule follow-up, coordinator request 12 Nov)",
+    "result": "Every 1108 verdict that passed the ship rule but was held only for a gain under 0.5 is ALREADY ON main c73dcc80: G-below6-stormdeck (deck_wood_warm_1112, banner_cloth_1112, aged_heartwood_1112 enabled; BELOW6), G-meshy-f41-8-distinct-bodies (distinct_bodies_1111 enabled via G-places-stormlight; BELOW6), G-f40-19-mist sky-only (weather_arms.rain_storm_sky enabled, sky keys only; THINGS), G-things-faint2 mosshock/stor…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#12",
+     "F41#4",
+     "F41#5",
+     "F41#8"
+    ],
+    "approach": "PLACES",
+    "result": "Swing 2 was judged: DO NOT SHIP** (`G-places-swing2`, 7e327f36). F41#12 −0.71 (\"thick, bright, saturated gold stripes\"), F41#4 −0.17, F41#5 −0.16; F41#8 +0.38. The umber road has now won twice against the black slab; the gold line is the problem at both strengths. Gold brightness alone is parked; `contrast_1112` is removed.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#12",
+     "F41#5",
+     "F41#2",
+     "F41#8",
+     "F41#4"
+    ],
+    "approach": "PLACES",
+    "result": "Road value (no puddles) was judged: do not land alone** (`G-places-roadvalue.md`, tb/item-scout-1108 4061fd99). F41#12 6.01 → 6.44, F41#5 5.78 → 6.17, F41#2 6.09 → 6.40, F41#8 6.01 → 6.25, each 3/3. F41#4 loses twice (−0.23 at 0/3, then −0.09 at 0/3 with one tie): the gold path line loses contrast on the lighter road; judges praise the road itself. Every gain is under 0.5, so it does not stand alone (owner, 25 Oct).",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#13": [
+   {
+    "rows": [
+     "F36#46",
+     "F41#13"
+    ],
+    "approach": "G-below6-fulgocobra-r2",
+    "result": "DO NOT SHIP: F41#13 7.37→6.91 (−0.46, 0/3), F36#46 5.94→5.64 (−0.30, 2/3 prefer base). The olive body with gold veins blends into the grass and is off the white-violet Stormwood palette; base navy with white-cyan veins reads as charged (FIXED 1/3). The F36#46 faint is unchanged (neck raised, hood flared, 3/3). Park the recolour. F41#13 base on tb/below6 with the Stormraven night coat is 7.37, a close-out candidate",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#13"
+    ],
+    "approach": "BELOW6",
+    "result": "F41#13 reads 7.37 on base here** (Stormraven night coat ON, no Fulgocobra overlay): Scout calls it a close-out candidate, near the bar.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F41#14": [
+   {
+    "rows": [
+     "F41#11",
+     "F41#14",
+     "F41#1"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from LANE-SCOUT (16:06), G-closeout-stormwood (b17cc0d0), control on scale (8.18): F41#11 portrait identity CLOSES (7.61 / 7.61).** Not closed: F41#14 candy pickup tiers 7.05 (Good and Great share one wrapped form and scale; black pool ground fills half the frame); F41#1 Stormheart finale 6.54 (camera crops the trunk so the crown never shows 3/3; core is a flat white-blue slab; root path crushed black). The ea…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#15": [
+   {
+    "rows": [
+     "F41#7",
+     "F41#11",
+     "F41#15",
+     "F41#20"
+    ],
+    "approach": "things-stormrule",
+    "result": "held by LANE-THINGS (after RULER)",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#8",
+     "F36#46",
+     "F41#15"
+    ],
+    "approach": "BELOW6",
+    "result": "Coordinator: both my assigned rows are parked (F41#8 character side, F36#46 Fulgocobra). GPU slots used: 0 of 2. Please assign the next below-6 row.** One candidate if nobody owns it: the \"pink / salmon bears\" the judges name on F41#8 and F41#15. Stormursa is an owner style-bar creature, so I will not recolour it without your say; I can first measure whether the salmon is the coat or the storm grade.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "F41#18": [
+   {
+    "rows": [
+     "F41#18"
+    ],
+    "approach": "G-things-stormuniform",
+    "result": "DO NOT SHIP: F41#18 row 5.56→5.60 (+0.04, 1/3), dialogue level (0.00, 2/3 prefer base). Arm removes the base's ghostly grey wash (3/3) but the darker cloth now sinks into the dark ground (3/3). Officer dialogue +0.27 (3/3); civilians identical. Next: keep floor 0 and add a cool rim/key on uniforms plus a copper/steel rank trim. T-IDENTITY 3/3: Maren = Sera mesh/portrait, Nysa = Varga mesh. Pooled current-main F41#18…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#18"
+    ],
+    "approach": "G-below6-uniforms",
+    "result": "DO NOT SHIP and PARK lighting arms on this row: row (Dace, Varga, Sable at the normal camera) 6.05→5.59 (−0.46, 0/3; without the emission floor the coats sink into the mud again and the 0.6 rim and knots do not read at distance). Dialogue gains: row dialogue 6.14→6.55 (3/3), officers +0.14 (2/3), civilians +0.13 (no loss). Second round under 0.5 after G-things-stormuniform (+0.04). Next: lit mid-value cloth with a s…",
+    "source": "judge:ralph/reports/GPU-PASS/1108/VERDICT-LINES.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#18"
+    ],
+    "approach": "BELOW6",
+    "result": "13 Nov, uniform cloth albedo (F41#18): tried three texture passes, NOT SENT",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#18"
+    ],
+    "approach": "BELOW6",
+    "result": "13 Nov, RELAY: uniforms do NOT ship; lighting-only arms on F41#18 parked and removed",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#18"
+    ],
+    "approach": "BELOW6",
+    "result": "13 Nov, overlook rim turf: tried once, no effect, not sent. Moving to F41#18.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F39#8",
+     "F41#8",
+     "F41#18"
+    ],
+    "approach": "BEINGS",
+    "result": "Held until a slot frees: BELOW6-AQUARYN-RIDE (F39#8), BELOW6-STATICUB-FUR (F41#8, F41#18), BELOW6-UNIFORM-CLOTH (F41#18).",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F41#20": [
+   {
+    "rows": [
+     "F41#7",
+     "F41#11",
+     "F41#15",
+     "F41#20"
+    ],
+    "approach": "things-stormrule",
+    "result": "held by LANE-THINGS (after RULER)",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "held"
+   }
+  ],
+  "F41#22": [
+   {
+    "rows": [
+     "F41#22",
+     "F41#24"
+    ],
+    "approach": "things-stormpool-r2",
+    "result": "WITHDRAWN 13 Nov: superseded by land-cs-soiloff (same rows; removes the wet_soil discs instead of making them matte)",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#22",
+     "F41#24"
+    ],
+    "approach": "THINGS",
+    "result": "STORMPOOL held on the by-eye check** (frames `tb/gpu-frames-1108` 47d9ba2c7, `G-things-stormpool/`): the pale slab on the left of giant_break goes dark, but a new pale sheen appears behind the player and on forest_break's right-hand pool; Calm frames barely change. The GPU lane's read: the sheen is not the pool zone's own roughness or specular; something else reflects the sky there (wet gloss, a rain puddle layer or…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#22",
+     "F40#3",
+     "F40#17"
+    ],
+    "approach": "LAND-CS",
+    "result": "Waiting on the GPU:** SOILOFF (F41#22/#24). **Held, CPU-ready:** ARCHSTAND (F40#3), RIMSEAT (F40#17). **Held for a combined re-judge:** GATE-TERRACE round 2 (to build: taller risers, no loops).",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#22",
+     "F41#24"
+    ],
+    "approach": "LAND-CS",
+    "result": "F41#22, F41#24 SHIPPED: LAND-CS-SOILOFF (+0.70, +0.94, 3/3); landing tb/land-cs-soiloff-land.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F41#24": [
+   {
+    "rows": [
+     "F41#22",
+     "F41#24"
+    ],
+    "approach": "things-stormpool-r2",
+    "result": "WITHDRAWN 13 Nov: superseded by land-cs-soiloff (same rows; removes the wet_soil discs instead of making them matte)",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F41#22",
+     "F41#24"
+    ],
+    "approach": "THINGS",
+    "result": "STORMPOOL held on the by-eye check** (frames `tb/gpu-frames-1108` 47d9ba2c7, `G-things-stormpool/`): the pale slab on the left of giant_break goes dark, but a new pale sheen appears behind the player and on forest_break's right-hand pool; Calm frames barely change. The GPU lane's read: the sheen is not the pool zone's own roughness or specular; something else reflects the sky there (wet gloss, a rain puddle layer or…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F41#22",
+     "F41#24"
+    ],
+    "approach": "LAND-CS",
+    "result": "F41#22, F41#24 SHIPPED: LAND-CS-SOILOFF (+0.70, +0.94, 3/3); landing tb/land-cs-soiloff-land.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   }
+  ],
+  "F36 (0) #19": [
+   {
+    "rows": [
+     "F41#8",
+     "F36 (0) #19"
+    ],
+    "approach": "BEINGS",
+    "result": "F41#8 and the Staticub world frames (F36 (0) #19 world read) PARKED: a bluer coat toward Stormursa's average (fur x 0.90, 0.95, 1.35). It renders pink under Stormwood's violet light (CPU round 1). Replaced by the darker coat in BEINGS-STATICUB-COOL.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   }
+  ],
+  "(no row named)": [
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6-ABYSSAL",
+    "result": "Land form: albedo `..._Image_0_floor1.png` (navy loses 40% saturation toward slate sea-blue, fine value mottling from its own detail inside the navy, belly from pure white to grey-cream), roughness 0.86, specular 0.3. Cyan markings and eyes keep their pixels. Script: `tools/art_pipeline/grade_remakes_floor.py abyssal_guardian`.",
+    "source": "main:ralph/reports/LANES/BELOW6-ABYSSAL/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6-ABYSSAL",
+    "result": "Water form: almost no visible change on CPU.",
+    "source": "main:ralph/reports/LANES/BELOW6-ABYSSAL/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6-HEARTWOOD",
+    "result": "On CPU the two `approach` stands seat outside the trunk and show no change. The GPU's 8 Nov `approach` frame stood under the deck looking in; if it does again, the heartwood is in it at about 40 m.",
+    "source": "main:ralph/reports/LANES/BELOW6-HEARTWOOD/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6-NAMEDFACES",
+    "result": "Why:** G-below6-namedposts (3/3, base and arm): \"speakers' faces burn orange-white\". Two CPU checks ruled out the usual causes: emission floor 0 for the three (no change) and the character rim at 0.2 (near-white pixels 6.7 -> 6.3% on Maud, faces still white). The skin textures are not bright (p99 value 0.69-0.76), so it is the storm light on pale skin and hair.",
+    "source": "main:ralph/reports/LANES/BELOW6-NAMEDFACES/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6-NAMEDFACES",
+    "result": "Dropped:** `named_posts_1112` (G-below6-namedposts, -0.49 and -0.73). Its flag stays OFF.",
+    "source": "main:ralph/reports/LANES/BELOW6-NAMEDFACES/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6-OVERLOOK-JOIN",
+    "result": "`_sheet_base_top_arm_bottom.jpg`: vista_dusk (left) and route_day (right), seed 2042. The straight seam at the trainer's feet is gone and the path is intact. The dark wedge beside the path is shorter but still there: it sits inside the road's keep-clear width, where the lift is held off.",
+    "source": "main:ralph/reports/LANES/BELOW6-OVERLOOK-JOIN/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6-STATICUB-FUR",
+    "result": "No-loss: Staticub outside Stormwood (Meadows or stage light), since the coat is per model, not per biome. In daylight it will be a darker brown than the lifted coat; the lift was judged ON at 6.80 (`test_dark_value_lift_flags.gd`), so if it loses in daylight the coat needs a Stormwood-only switch.",
+    "source": "main:ralph/reports/LANES/BELOW6-STATICUB-FUR/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6-VOLTARACH",
+    "result": "The gold is painted into the albedo: 20% of texels are saturated gold, in wide fields and halos. The maps are already matte (metallic 0, roughness mean 0.67), which is why the matte-only arm CO-F36-7 changed nothing.",
+    "source": "main:ralph/reports/LANES/BELOW6-VOLTARACH/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6",
+    "result": "Every flag that has not shipped is OFF in the wrap-up. Nothing in it changes what the game shows.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6",
+    "result": "Recolouring a whole creature body (Fulgocobra olive lost twice; parked and removed).",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6",
+    "result": "BELOW6-NAMEDFACES is ready for the GPU queue**: `ralph/reports/LANES/BELOW6-NAMEDFACES/` (ARM.md, CAPTURE.json, overlay.json, CPU sheet). Flag `stormwood_character_presentation.json named_tint_1112` (OFF): Maud, Hesk and Bryn's body albedo is multiplied by a neutral grey so their faces stop clipping to white. On CPU the emission floor and the rim were both ruled out first (no change); with the tint, near-white pixel…",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6",
+    "result": "`stormheart_presentation.json heartwood_1111.core_v2` and `stormheart_heartwood_core.gdshader`: parked after three CPU looks (`BELOW6-COREV2/NOT-SENT.md`).",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BELOW6",
+    "result": "`creature_coat_flags.json below6_floor_fulgocobra` (+ its texture and the `fulgocobra` grade in `grade_remakes_floor.py`): not sent, no visible change on CPU.",
+    "source": "main:ralph/reports/LANES/BELOW6/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "FLOOR2-STORMGLOW",
+    "result": "The stormraven \"blooms to a near-white ghost\" at close range and loses its feather detail.",
+    "source": "main:ralph/reports/LANES/FLOOR2-STORMGLOW/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES-STORMLIGHT",
+    "result": "Break frames vary with bolt timing; a frame between bolts still has the held floor light and crawlers.",
+    "source": "main:ralph/reports/LANES/PLACES-STORMLIGHT/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES-STORMWOOD2",
+    "result": "`road_value_1112` (`stormwood_ground_finish.json`), exactly the judged no-puddles road: cool dark-umber road and damp slots, softer texture blend, lifted zone pools. Puddles stay parked (failed CPU and the GPU pre-check).",
+    "source": "main:ralph/reports/LANES/PLACES-STORMWOOD2/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-BANDFAINT",
+    "result": "Trailpup's arm end may read as a flat pelt seen from the back (judges said that of Stormtrail). If it loses, Trailpup and Voltwig are parked for good on settle changes and need an authored clip.",
+    "source": "main:ralph/reports/LANES/THINGS-BANDFAINT/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-BANDFAINT",
+    "result": "Water Cragclaw and Water Mosshell: no visible change.",
+    "source": "main:ralph/reports/LANES/THINGS-BANDFAINT/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-BROOKTAIL",
+    "result": "CPU** (`_sheet_spots_off_vs_on_cpu.jpg`; top main, bottom arm; standing and faint end): the scatter of small dots is gone and the large ovals are smaller; the head keeps its eye markings. Two stronger settings were tried and dropped (one left a single spot).",
+    "source": "main:ralph/reports/LANES/THINGS-BROOKTAIL/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-CLOUDNIGHT",
+    "result": "This is the approach's second round: if a stand loses again, park it.**",
+    "source": "main:ralph/reports/LANES/THINGS-CLOUDNIGHT/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-GLIDEBANK",
+    "result": "Capture.** The glide frame on main is a hover with no stick held, so a bank cannot show. New capture option `--glide-steer` (both sides): fly forward, start a right turn, take the frame mid-turn (`--glide-steer-frames=20`). Use the default carrier, `--seed=2042`, and pin time of day and weather on both sides (LANE-SCOUT's note: part of the last gain was the sky).",
+    "source": "main:ralph/reports/LANES/THINGS-GLIDEBANK/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-SOLENE",
+    "result": "What I ruled out first (CPU).**",
+    "source": "main:ralph/reports/LANES/THINGS-SOLENE/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-STORMPOOL",
+    "result": "Round 1 was held by the GPU lane's by-eye check** (`tb/gpu-frames-1108` 47d9ba2c7): the pale slab left of the trainer went dark at giant_break, but a new pale sheen showed behind the trainer and on forest_break's right-hand patch; Calm barely changed.",
+    "source": "main:ralph/reports/LANES/THINGS-STORMPOOL/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-STORMPOST",
+    "result": "Unchanged:** posts, encounter counts, tables, rewards. A spawn inside the radius is moved out, not dropped. A body already in a fight is not moved.",
+    "source": "main:ralph/reports/LANES/THINGS-STORMPOST/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-STORMPOST",
+    "result": "The washed-out speakers and the player's head blooming white (3/3): not the conversation lights (tested, no change). Stormwood NPC presentation; parked arms cover it.",
+    "source": "main:ralph/reports/LANES/THINGS-STORMPOST/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-STORMRULE",
+    "result": "No change on Nysa or Sera.** With the posts clear the default shot already has the player at the left edge and the speaker in view, so the rule counts both shots as clear and leaves them alone. (The creatures behind Nysa differ between the two frames only because they wander.)",
+    "source": "main:ralph/reports/LANES/THINGS-STORMRULE/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS-TELLDUST2",
+    "result": "Risk.** A thinner band is a little easier to miss. If it loses, round 1 stays as it is.",
+    "source": "main:ralph/reports/LANES/THINGS-TELLDUST2/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Faint crumples for quadrupeds, ring alpha, rain grade:** two rounds each under 0.5. Parked.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from the GPU lane: CLOUDNIGHT is with the judges** (eef5b8efa; night clear loses the cobalt wash, trainer less self-lit); WARDENRING is capturing.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Bandfaint is on main (#941); main 317b3372 is merged into `tb/things`.** The merge took main's `creature_coat_flags.json` and `creature_pose_settle.json`, so the parked flag-off Riftfrill matte and Brooktail spot flags are no longer on this branch.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "CLOUDRAIN round 2: do not ship; the rain-overcast arm is PARKED** (two rounds under 0.5). Rain sky +0.05, day rain +0.04.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Relay from the GPU lane (13 Nov): STORMPOOL is HELD, BANDFAINT is with the judges** (`G-things-bandfaint`, 29cb35dbe; GPU by eye: all four faint ends lie settled on the floor, nothing floats or sinks, hit poses nearly unchanged).",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Checked on CPU and left out:** Glimmermoth and Tempestwing (wings stay up, no wing bones), Voltarach (a leg goes through the floor), Water Cragclaw and Water Mosshell (no change). Abyssal Guardian, Mangrove Monitor, Paddlenewt and Mosshock already have the settle on main.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "PARKED after two attempts: the belly-down collapse for stormtrail, trailpup, voltwig and sparkit.** Attempt 1 (FAINT2) lost 0/3 on the GPU (\"cowering\"). Attempt 2, CPU only, not sent: two flatter prone settings (torso right down, legs splayed 70 to 80 degrees). The bodies turn into shapeless mounds with no readable head, and Sparkit's foot separates from the leg. The side-lying faint on main is better than either. A…",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "The light dimmer (`realm_energy_1112`) does nothing on CPU: not sent.** Nysa is as washed out with both conversation lights at 0.4 as on main, so the blow-out is not those lights. It belongs with the parked NPC emission and floor arms.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Fight staging (T-FIGHTSTAGE): not filing the existing Tidewake `trainer_aside.realm_1104`.** The Meadows version of the same flag lost 0/3 (G-f38-3-standoff-full: the aside offset drops the fight camera to a grass-level wide view). It needs the camera held at standard height first.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "`meadows_look.json cause_light` is also unjudged (OFF since 1 Nov), but I am not filing it.** CPU, village close: lit faces are much the same, shade and trees go clearly darker and cooler, the far hill loses detail. Its author warned it may crush shade on Compatibility. It may read better on Forward+, so it is a GPU-only question: worth one High pair if a slot is spare, after MEADOWGROUND.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Brooktail spots: PARKED** (6.09 = 6.09; the flag stays OFF). A new idea would be the head: eye value or a rim, not the spots.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Relay for you from LANE-SCOUT:** nothing is left to cut under the no-threshold rule; every held verdict is already ON on main c73dcc80 (list in VERDICT-LINES.md, 13764aa9).",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Understood: no changes to an arm after it is queued.** GLIDEBANK at 24 degrees is fine to judge; 36 only if needed.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "Held (not queued until a slot frees): `THINGS-STORMRULE`** (`ralph/reports/LANES/THINGS-STORMRULE/`): the conversation clearance rule in Stormwood now that wild creatures keep off the posts (needs batch 77 on main as its base). Low expectation; judge after SPEAKERCENTRE.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "THINGS",
+    "result": "(Parked, see above) the four dropped faints.",
+    "source": "main:ralph/reports/LANES/THINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-BASEMIST",
+    "result": "A varying for the puff corner instead of reading UV2 in fragment(): no change (wrong guess, reverted, never committed).",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-BASEMIST/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-BROKENHILL",
+    "result": "Check: with the arm on, the same shell (no new mesh) loses the straight edge and the brown slabs in all four day frames, so both come from the shell's shape and texture.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-BROKENHILL/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-BROKENHILL",
+    "result": "First CPU try (rock on most faces, loose Rock_Medium boulders) read as a grey quarry with pale plastic boulders; boulders are dropped and rock is limited to steep faces and patches.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-BROKENHILL/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-CRAGCUT",
+    "result": "Why attempt 1 (CRAGBACK, flip the back-face normal) was level on GPU: the engine already flips back-face normals there (`shaders/water_veilfall_spray.gdshader` says so and undoes it), so the extra flip did nothing.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-CRAGCUT/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-FLOWSTREAKS",
+    "result": "Round 1 verdict (G-land-mt-flowstreaks, LANE-JUDGE): DO NOT SHIP.**",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-FLOWSTREAKS",
+    "result": "Two stronger tunings drew long straight bright lanes at this grazing camera (the old \"guide lanes\" defect), so they were dropped.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-FLOWSTREAKS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-PLUME",
+    "result": "Verdict on round 1** (G-land-mt-plume): DO NOT SHIP. Warrens other frames lost 0.18 (0/3): \"a blurry flat card washing over the cave mouth\", and the column had \"a visible gap, two stacked sprites\".",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-PLUME/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-SHELLSHARDS",
+    "result": "Ruled out, frames unchanged with each hidden: MoundGrowth, the shell's grass tufts and edge flora, InteriorRock, and the excavated chamber hulls.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-SHELLSHARDS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-SHELLSHARDS",
+    "result": "Closes each open loop of up to 80 edges with a fan from its centroid, averaging the loop's attributes. Open edges go from 3,590 to 249; the rest are non-manifold tangles.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-SHELLSHARDS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-SHOREZONES",
+    "result": "`zone_slope_free` 1: the normal gate is dropped; patches depend on height and noise only.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-SHOREZONES/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-STEEPGRASS",
+    "result": "Triplanar broad tone (it was sampled top down) plus anisotropic fine grass: no visible change on walk_02 or walk_03.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-STEEPGRASS/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-STEEPGRASS",
+    "result": "Plus a sharp triplanar blend (pow 16 instead of 4), so one projection dominates on 45-degree flanks: no visible change either.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-STEEPGRASS/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT-VEILREBUILD",
+    "result": "What is new versus the parked approaches.** TIERA (removing cascade tiers) and BASEMIST (camera-facing puffs) are parked. This arm keeps the tiers and draws no puffs.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-VEILREBUILD/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "SHOREZONES: PARKED** after its GPU loss. Round 2 (no normal gate, near fade) should remove the near-sand polygons, but the far-dune turf barely registers and the wet band and wrack line do not read from the stands, so the upside is small. The folder keeps round 2 if you want it run anyway.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "SEADEPTH round 2 ready: `ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r2.json`.** The GPU lane's diagonal bands and flecks in the current states are the candidate's wind slicks and whitecaps, which ride along with the depth gradient; round 2 keeps the gradient and turns those two off. If round 1 is judged and loses the states, round 2 is the follow-up; if round 1 has not been judged yet, run round 2 instead.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "Venn \"floating log or plank in the sky\": not found on CPU (2 probes).** On a fixed rebuild of t-000, the log-like shape sits on the terrain about 46 m out at (358, 15.7, 3827), next to the `veilfall_plunge` rock ring, with no mesh in front of it; removing the lifted `veilfall_cascade_a` tier changed nothing. It may only float in the GPU framing. A GPU t-000 frame with the object's position (or a crop) would let me n…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "Shoal rebake:** understood, parked.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "Irregular shoal rings: not reachable by shader; needs your call.** The live water has `depth_falloff` 5 m and no contour wander, so the halos round the rest islets are clean circles. SEADEPTH (wander 1.4) softens the edge, and `LAND-MT-SHOALBREAK` (wander 2.4, stacked on SEADEPTH) looks the same as SEADEPTH on the terraces frames: the rings stay concentric because they follow the islets' baked round shape, and the w…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "DUNETONE (Venn dune value structure): PARKED, not sent.** A probe proved the dune shader does reach the Venn sand (sand painted green, damp magenta). Damp patches at 0.45 to 0.5 strength (30 m, then 11 m patches) give only a faint tone shift on the fixed t-000 view (mean frame difference about 9.5). Stronger would put dark damp stains on 14 m dune crests, which is not believable. A better lever for the judges' ask i…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "CRAGBACK, likely why it was level on GPU:** `shaders/water_veilfall_spray.gdshader` says \"undo the engine's back-face normal flip\", so the engine (at least Forward+) already flips back-face normals; my extra flip did nothing useful there. This supports CRAGCUT's renderer-independent discard; the GPU eye check is still the first step.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "CRAGBACK: not shipped (level on GPU). The t-000 wedge is now PROVEN to be the crag shells' inner side.** CPU, deterministic: I rebuilt the GPU's t-000 fight camera as a fixed view (position from the fight tool's frames.json, aimed at the fighters' midpoint) and painted crag back faces magenta: the whole black wedge turned magenta (`ralph/reports/LANES/LAND-MT-CRAGCUT/_sheet_t0_backface_probe_cpu.jpg`). CRAGBACK fail…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "VWAKE: HOLD, do not queue.** The CPU look showed I had the wrong cause. The \"large cloud-like foam discs strewn across open water\" are identical with and without the V-wake (mean frame difference about 3) and cover the whole shallows far from the swimmer: they are the water shader's shallow contact foam, not the swim wake. Live `foam_depth` is 0.55 m, so on the swim-lesson flats, mostly under that depth, the noise-g…",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-MT",
+    "result": "A third probe (terrain cliff tint in `water_visual.json` set to magenta) changed nothing in frame, including the lit mossy cliff, so that key does not colour this wall; inconclusive.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS-ARCHSTAND",
+    "result": "The south rim is the island's drum edge; the island's flat lawn is still the island (\"a cylinder dropped on the ground\" is a separate ground ask).",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS-ARCHSTAND/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS-TURFGRAIN",
+    "result": "The lone blades are the configured density, not a bug.** A temporary probe in `cloudreach_ground_cover.gd` (not committed) printed every patch: 1,905 patches, 2.23 million tufts over 807,000 m², 2.1 to 4.8 tufts per m² (the three largest islands are capped at 135,000 tufts, about 2.1 per m²). A tuft is seven thin blades about 0.25 m across, so tufts cover under a tenth of the ground. Re-clustering them by overlay (`…",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS-TURFGRAIN/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "`tb/land-cs` dbbfc7842 contains main 94fe423d3. Against main it differs only by flag-off arms (`forest_layers_1113`, `paver`-free now, `rim_pickup_seat_1114`, `master_floor_1114` parked, `candidates_1113` arch stand) and their tests and reports.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "GATE-TERRACE (thin 2/3, +0.20): HELD** for a combined re-judge with the band on. Its next ask: chunky risers with height, drop the loops across the lawn.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "The \"orange checker disc\" on the upper platform is `MasterT4/ArenaFloor` (pixel probe): the worn-ground soil overlay with a 2 m dirt-path tile at #9b805f. The arm gives Master floors a 7 m tile and a muted earth tint (#80776a); other yards unchanged. CPU: the checker is gone. CPU-ready and held.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "The \"toy-like glow blobs\" are the shared pickup glow's 0.7 m halo round the three small rim patches (the patches shipped 12 Nov at about 0.6x the old cap; the halo was not resized). The arm scales the glow at those three placements only (0.45); they still glow (owner OP-0830-3). CPU: the balls are gone. CPU-ready and held.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "The skyroad arch frame \"shows no landmark\" because the stand is 8 m from the arch, between its legs: the \"two blocky cliff faces\" are the legs. The arch's island is about 15 m across, so the tool cannot back off. A stand override from the arch centre toward the south rim frames the whole arch; the band frame broken_causeways 04, which had no stand at all, now captures too. Capture tooling only. CPU-ready and held fo…",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "Attempt 1: join `sink_m` -0.12 (lift the ridge above the crown). No change.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "Attempt 2: remove the join's 4 m route exemption (temporary code switch). No change to the wedge; only the pavers sink out of sight. So the wedge is outside the join's ease band or not on the ridge rows it lifts.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "Attempt 3 (probe-led): the wedge points are ridge 1108.46-1108.58 and the ledge side face (normal_y 0.10) up to 1108.64, at about 20.6 m from the overlook centre, just inside the larger cap-0 pad's 20.68 m rim (the other cap-0 pad is 13.12 m). A flag-off change made the join consider every cap-0 pad, take the highest lift and start 1.5 m inside the rim. No visible change on CPU at route_day or vista_dusk, so I rever…",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "LAND-CS",
+    "result": "Attempt 4 (coordinator's OVERLOOK-LEDGES idea, tuck the ledge): a flag-off `overlook_ledge_drop_1113` lowered the overlook's `ledge_y` (mesa and pad) by 0.18 m. No visible change on CPU (mean pixel difference 2.7 at route_day, inside the 1.7 to 5.7 run-to-run noise of the other experiments). Reverted. Not verified that the drop reaches this mesa: its crown follows the two sloped hidden crown strips per vertex, possi…",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS-OFFICER-FACES",
+    "result": "Owner, 13 Nov 2026 (via the coordinator):** Nysa keeps her current face and her gender stays unstated; she is told apart from Varga by hair colour and portrait only. The officer_b body swap built earlier was dropped (record, model copy and plate removed).",
+    "source": "beings:ralph/reports/LANES/BEINGS-OFFICER-FACES/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS-PERCH-CLEARANCE",
+    "result": "With the companion out of `crown-rim-out`, the frame loses its creature. A judge may not miss it, since the defect is gone.",
+    "source": "beings:ralph/reports/LANES/BEINGS-PERCH-CLEARANCE/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS-STORMRAVEN-WINGS",
+    "result": "faint 100: **only partly better.** A raised fan remains behind the body, lower and smaller than base. It is not the wing or tail joints, the leg splay or the tail relax (each switched off in turn, no change). Not claimed as fixed.",
+    "source": "beings:ralph/reports/LANES/BEINGS-STORMRAVEN-WINGS/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS-STORMRAVEN-WINGS",
+    "result": "The hit loses its small wing flare, so the hit reads as a rear-up only. If judges call the hit stiff, set `hit.per_species.stormraven.rest_joints.keep` to about 0.3.",
+    "source": "beings:ralph/reports/LANES/BEINGS-STORMRAVEN-WINGS/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS-TERRAPUP-SPHINX",
+    "result": "The faint stays the stiff side-lie. A folded faint for Terrapup (`faint_fold`) was tried on CPU and was no better: the fold turns off face-camera, so the plated back faces the lens and the legs and head disappear. That approach is parked for Terrapup.",
+    "source": "beings:ralph/reports/LANES/BEINGS-TERRAPUP-SPHINX/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS",
+    "result": "Parked for Terrapup: `faint_fold` (the fold turns off face-camera, so the plated back faces the lens and the legs and head vanish) and `settled_rest` (it does not apply, because Terrapup rests on its own clip).",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS",
+    "result": "Correction to my earlier lines: STATICUB-FUR and UNIFORM-CLOTH are judged and landing, not held.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS",
+    "result": "Look at this:** `tests/smoke_water_mounted_swimming.gd` held a second copy of the old \"rider art origin remains above sea\" rule and fails for Aquaryn with the flag ON. I applied your option A there (chest above sea for deep-swim mounts only; other mounts unchanged). Aquaryn now passes; the full five-mount run did not finish on CPU here, so CI should run that smoke on the PR. If the dry-rider rule should stand, do no…",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS",
+    "result": "Order I would use after the pose batch: TRAILPUP-AMBER, then the three held arms.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS",
+    "result": "A copied `owner1101` GLB re-extracts its embedded textures under the new name and loses the graded coat (Mosshock came out darker). A copy of a `nat1024` GLB does not. Check the albedo path in a test when copying a model.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS",
+    "result": "Stormraven, skin weights and tail pitch:** both ruled out before the real cause was found (details in `BEINGS-STORMRAVEN-WINGS/ARM.md`).",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS",
+    "result": "Glimmermoth, Tempestwing, Mosshock weight relax:** no visible change; removed.",
+    "source": "beings:ralph/reports/LANES/BEINGS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "SCENE-CACHE",
+    "result": "order 1030, \"A dropped travel pack\": a cold stone fire ring with a cauldron on it, a camp stool and a bucket. An abandoned camp, as the node's own note says (\"a pack left by whoever was here before\").",
+    "source": "scene:ralph/reports/LANES/SCENE-CACHE/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "SCENE-FLEECARD",
+    "result": "`combat_hud.gd _apply_flee_card` draws the flee verdict in the same framed family as the catch card. The card is an opaque plate with a soft teal edge (no red). It shows a 44 px headline \"YOU BACKED OFF\" over \"<creature> got clear. Regroup and try again.\", placed in the upper third, clear of the creature, and held 3 s.",
+    "source": "scene:ralph/reports/LANES/SCENE-FLEECARD/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "SCENE",
+    "result": "Cause, confirmed on the judged GPU frames: the Hollows \"loss\" frame is a flee. The level-42 party never loses inside the capture window (i12 is mid-fight, 5/5 healthy), and the tool ends the fight with `resolve(\"fled\")`. The shipped `loss_card` handles only `lost`, so judges see one small default-size \"You backed off.\" over the spider, with \"Put Sparkit away\" under it.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "SCENE",
+    "result": "SCENE-TOURNEY split as asked:** its overlay is now the berry-glow fade only. Tam's outfit flag stays OFF in code and out of every overlay; it returns only if BEINGS-TAM-COAT loses.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES",
+    "result": "`tb/places` was deleted after landing, and main got an old 18-line copy of this NOTE.** It is restored from 652cad03. The parked flag-off arms dropped at landing (`road_value_1112`, road current `thin_1112`) stay on commit 652cad03; `ground_wet_path_1112` is on main.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES",
+    "result": "Swing 3 failed the GPU pre-check and is withdrawn.** Road yellow share rose at 3 of 8 stands and all 3 dialogue frames; the line was the shipped width with a stronger core, so \"thin\" was not true (my r2 values, not a reader fault: `thin_1112` is read in `stormwood_road_current.gd config()`). r1 (really thin) vanished on CPU. That is two failures for the thin gold line, after too-faint and too-bright: **the gold line…",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES",
+    "result": "`tb/places` was deleted on the remote; recovered from the lane container and re-cut from main d777b905 with `road_value_1112` (flag-off, puddles parked) and this NOTE.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES",
+    "result": "Built, held (not sent): `paving_scale_1112`** (`cloudreach_f40_items.json`, `cloudreach_settlement_life.gd`; overlay and CPU sheet in `PLACES-GATEPAVING/`). Cause found: the gate's stone-trail pieces are sized by a 0.28 m height, which scales the model about 2.5x and stands its top a shin's height proud. On: 0.12 m pieces sunk 55%. CPU (gate approach, day clear): the torso-sized pad becomes a line of boot-sized step…",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES",
+    "result": "Standing rules for this lane: lightning is Break-only (owner); puddles parked; check older test pins and `texture_import_policy.py` before a landing; no unrelated `.uid` files.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES",
+    "result": "To finish it later (LANE-SCOUT's list):** restore the gold line's contrast on the umber road (more emission or a dark edge), then ride the road inside a bigger Stormwood swing: layered treeline and depth steps, groves in place of even turf, recolour the salmon stumps and peach bears, glow and branching on the road charge, separate Calm from Building. Puddles stay parked.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES",
+    "result": "Puddles are parked.** The puddle overlay failed the GPU pre-check (lilac and white slabs on the road at 5 stands) and was not judged; CPU round 1 showed the same. Two failures on one approach, so `road_value_1112` now carries puddles off by default (`puddle` [0, 0]), the same values as `overlay_no_puddles.json`.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "PLACES",
+    "result": "`road_value_1112`: `scripts/world/stormwood_ground_zones.gd` (puddle uniforms, `blend_sharpness`, candidate list) and `data/config/stormwood_ground_finish.json`. Inert while OFF. If it loses, drop both files' changes; `tb/places` then has nothing ahead of main but reports.",
+    "source": "places:ralph/reports/LANES/PLACES/NOTE.md",
+    "status": "parked"
+   }
+  ]
+ }
+}

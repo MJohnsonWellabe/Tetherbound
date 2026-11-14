@@ -1,0 +1,1 @@
+{"data/config/tidewake_look.json": {"cause_tidewake": {"sea": {"enabled": true, "merge": {"surfaces": {"water": {"depth_band_break_m": 2.4}}}}}}}

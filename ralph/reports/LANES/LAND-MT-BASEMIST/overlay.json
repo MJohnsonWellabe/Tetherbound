@@ -1,0 +1,173 @@
+{
+ "data/config/water_veilfall.json": {
+  "falls": {
+   "columns": [
+    {
+     "id": "veilfall_white_cascade",
+     "bearing_deg": -62.0,
+     "top_y_m": 520.0,
+     "foot_y_m": 200.0,
+     "width_m": 96.0,
+     "taper": 0.45,
+     "opacity": 1.0,
+     "spray": [
+      {
+       "offset": [
+        0,
+        4.0,
+        10
+       ],
+       "radius_m": 30.0
+      },
+      {
+       "offset": [
+        -22,
+        4.0,
+        16
+       ],
+       "radius_m": 19.0
+      },
+      {
+       "offset": [
+        17,
+        4.0,
+        6
+       ],
+       "radius_m": 16.0
+      },
+      {
+       "at_fraction": 0.55,
+       "offset": [
+        0,
+        0,
+        8
+       ],
+       "radius_m": 30.0
+      },
+      {
+       "at_fraction": 0.8,
+       "offset": [
+        -10,
+        0,
+        10
+       ],
+       "radius_m": 34.0
+      },
+      {
+       "at_fraction": 1.0,
+       "offset": [
+        0,
+        6,
+        12
+       ],
+       "radius_m": 44.0
+      }
+     ]
+    },
+    {
+     "id": "west_face_fall",
+     "bearing_deg": -92.0,
+     "top_y_m": 450.0,
+     "foot_y_m": 1.0,
+     "width_m": 60.0,
+     "taper": 0.35,
+     "opacity": 0.85,
+     "spray": [
+      {
+       "offset": [
+        0,
+        8,
+        8
+       ],
+       "radius_m": 38.0
+      },
+      {
+       "offset": [
+        -20,
+        4,
+        18
+       ],
+       "radius_m": 22.0
+      },
+      {
+       "offset": [
+        16,
+        12,
+        2
+       ],
+       "radius_m": 18.0
+      },
+      {
+       "at_fraction": 0.7,
+       "offset": [
+        0,
+        0,
+        8
+       ],
+       "radius_m": 26.0
+      },
+      {
+       "at_fraction": 0.9,
+       "offset": [
+        0,
+        0,
+        10
+       ],
+       "radius_m": 32.0
+      }
+     ]
+    },
+    {
+     "id": "east_face_fall",
+     "bearing_deg": -40.0,
+     "top_y_m": 390.0,
+     "foot_y_m": 1.0,
+     "width_m": 40.0,
+     "taper": 0.35,
+     "opacity": 0.75,
+     "spray": [
+      {
+       "offset": [
+        0,
+        7,
+        8
+       ],
+       "radius_m": 30.0
+      },
+      {
+       "offset": [
+        14,
+        3,
+        16
+       ],
+       "radius_m": 18.0
+      },
+      {
+       "at_fraction": 0.75,
+       "offset": [
+        0,
+        0,
+        8
+       ],
+       "radius_m": 22.0
+      },
+      {
+       "at_fraction": 0.92,
+       "offset": [
+        0,
+        0,
+        10
+       ],
+       "radius_m": 26.0
+      }
+     ]
+    }
+   ],
+   "spray_shader": {
+    "billow_floor": 0.6,
+    "size_scale": 1.25,
+    "mist_colour": "#e4edf1"
+   }
+  }
+ }
+}

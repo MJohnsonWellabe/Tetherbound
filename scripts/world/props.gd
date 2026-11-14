@@ -14,6 +14,7 @@ extends Node3D
 
 const PROPS_DIR := "res://assets/props/quaternius_fantasy"
 const CONFIG_PATH := "res://data/config/props.json"
+const CAMFX := preload("res://scripts/vfx/camfx.gd")
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 
 ## BAND-SPLIT. The `clusters` array is cut per corridor band under
@@ -269,6 +270,38 @@ func placed() -> int:
 ## re-implemented because the collider-from-combined-AABB and the `sink_m`
 ## reasoning below are the two things a second copy would get subtly wrong,
 ## and a crate you can walk through is a hologram underground too.
+## The `configure_smoke` arguments for a signal prop. camfx.json `smoke_plume`
+## (F38#30, OFF until judged) turns the listed posts' straight pole into a
+## soft, wind-leaning plume: wider at the foot and crown, thinner per disc so
+## the overlap does not compound, more fade, and a drift downwind.
+static func smoke_column_args(spec: Dictionary) -> Array:
+	var top := float(spec.get("smoke_top_m"))
+	var alpha := float(spec.get("smoke_alpha", CAMPFIRE_GLOW.SMOKE_COLOUR.a))
+	var top_size := float(spec.get("smoke_top_size_m", -1.0))
+	var colour := Color(str(spec.get("smoke_colour", "#00000000")))
+	var fade := float(spec.get("smoke_fade", 0.85))
+	var base_size := float(spec.get("smoke_base_size_m", -1.0))
+	var drift := -1.0
+	var plume := CAMFX.block("smoke_plume")
+	if not plume.is_empty() and (plume.get("names", []) as Array).has(str(spec.get("name", ""))):
+		alpha *= float(plume.get("alpha_scale", 1.0))
+		if top_size > 0.0:
+			top_size *= float(plume.get("top_size_scale", 1.0))
+		if base_size > 0.0:
+			base_size *= float(plume.get("base_size_scale", 1.0))
+		fade = float(plume.get("fade", fade))
+		drift = float(plume.get("drift_per_m", -1.0))
+		var world_dir: Array = plume.get("drift_dir_world", [])
+		if world_dir.size() == 2:
+			# The overlay sits under the prop root, so turn the world heading
+			# into the root's own frame (yaw only; the props stand upright).
+			var local := Vector3(float(world_dir[0]), 0.0, float(world_dir[1])).rotated(Vector3.UP,
+				-deg_to_rad(float(spec.get("yaw_deg", 0.0))))
+			return [top, alpha, top_size, colour, fade, base_size, drift, Vector2(local.x, local.z),
+				float(plume.get("drift_power", 2.0))]
+	return [top, alpha, top_size, colour, fade, base_size, drift]
+
+
 func place(into: Node3D, spec: Dictionary) -> void:
 	if spec.has("walkable_segment"):
 		_place_walkable_segment(into, spec)
@@ -455,12 +488,8 @@ func place(into: Node3D, spec: Dictionary) -> void:
 		# `smoke_fade` / `smoke_base_size_m` (optional): a signal fire meant to be
 		# found from a road (F03 lure cue). Absent, the column is unchanged.
 		if spec.has("smoke_top_m"):
-			overlay.call("configure_smoke", float(spec.get("smoke_top_m")),
-				float(spec.get("smoke_alpha", CAMPFIRE_GLOW.SMOKE_COLOUR.a)),
-				float(spec.get("smoke_top_size_m", -1.0)),
-				Color(str(spec.get("smoke_colour", "#00000000"))),
-				float(spec.get("smoke_fade", 0.85)),
-				float(spec.get("smoke_base_size_m", -1.0)))
+			var smoke_args := smoke_column_args(spec)
+			overlay.callv("configure_smoke", smoke_args)
 			signal_overlay = overlay
 		if not is_zero_approx(scale_factor):
 			overlay.scale = Vector3.ONE / scale_factor

@@ -25,6 +25,7 @@ const MESHY_ITEM_VISUALS := preload("res://scripts/world/meshy_item_visuals.gd")
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
+const CACHE_DRESSING := preload("res://scripts/world/harvest_cache_dressing.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
@@ -159,6 +160,9 @@ func setup(spec: Dictionary) -> void:
 	add_to_group("progression_restore")
 
 	_build_visual(spec)
+	# F38#12 `cache_dressing_1113` (flag-off): installed camp props round the reward.
+	if CACHE_DRESSING.build(self, spec.get("visual", {})) != null and is_inside_tree():
+		CACHE_DRESSING.settle(self)
 	if _model_is_a_soft_occluder() or _water_fight_ring_hidden():
 		add_to_group(FIGHT_RING_OCCLUDER_GROUP)
 	_prompt = INTERACTABLE.new()
@@ -1001,6 +1005,7 @@ func _ready() -> void:
 	# So a tool swing can find this without knowing which of the two gather
 	# scripts drew it (`harvest_logic.gd::GROUP`).
 	add_to_group(HARVEST_LOGIC.GROUP)
+	CACHE_DRESSING.settle(self)
 	# Also connected in `setup()`; `listen()` is idempotent, and a caller that
 	# sets this node up before adding it to the tree would otherwise never hear
 	# a committed delta.

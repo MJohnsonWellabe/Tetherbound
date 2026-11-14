@@ -716,10 +716,45 @@ func _apply_fly_hang() -> void:
 				rig.set_bone_pose_rotation(index, rest * Quaternion.from_euler(Vector3(deg_to_rad(float(entry[1])), 0.0, deg_to_rad(float(entry[2])))))
 	# Aim each arm chain toward the creature's grip points. Bone rest axes are
 	# read from the actual installed rig, not assumed to be Mixamo or KayKit.
+	# F38#8 shoulder_grip_1113 (flag-off): the talons hold the trainer's
+	# shoulders and the hands reach up to the bird's ankles, instead of the
+	# arms hanging straight up from the talons.
+	var shoulder := shoulder_grip()
 	for side: String in ["Left", "Right"]:
 		var side_sign := 1.0 if side == "Left" else -1.0
+		if not shoulder.is_empty():
+			var upper: Array = shoulder.get("upper", [0.9, 0.35, 0.15])
+			var fore: Array = shoulder.get("forearm", [-0.35, 1.0, 0.1])
+			_aim_hang_bone(rig, side + "Arm", side + "ForeArm", Vector3(side_sign * float(upper[0]), float(upper[1]), float(upper[2])))
+			_aim_hang_bone(rig, side + "ForeArm", side + "Hand", Vector3(side_sign * float(fore[0]), float(fore[1]), float(fore[2])))
+			continue
 		_aim_hang_bone(rig, side + "Arm", side + "ForeArm", Vector3(side_sign * float(_fly_pose.get("upper_lateral", 0.8)), 1.0, 0.08))
 		_aim_hang_bone(rig, side + "ForeArm", side + "Hand", Vector3(side_sign * float(_fly_pose.get("forearm_lateral", 0.65)), 1.0, 0.0))
+
+
+## The hang pose's `shoulder_grip_1113` block while it is on, else empty.
+func shoulder_grip() -> Dictionary:
+	var block: Variant = _fly_pose.get("shoulder_grip_1113", {})
+	return block if block is Dictionary and bool((block as Dictionary).get("enabled", false)) else {}
+
+
+## Where the carrier's two feet hold this trainer, in world space, left then
+## right: the wrists by default; the tops of the shoulders with the shoulder
+## grip on. Empty when the rig lacks the bones.
+func fly_grip_world_points() -> Array:
+	var rig := skeleton()
+	if rig == null:
+		return []
+	var shoulder := shoulder_grip()
+	var names := ["LeftArm", "RightArm"] if not shoulder.is_empty() else ["LeftHand", "RightHand"]
+	var lift := Vector3.UP * float(shoulder.get("grip_lift_m", 0.0))
+	var out: Array = []
+	for bone_name: String in names:
+		var bone := rig.find_bone(bone_name)
+		if bone < 0:
+			return []
+		out.append(rig.to_global(rig.get_bone_global_pose(bone).origin) + lift)
+	return out
 
 
 ## [bone, local X degrees, local Z degrees] for the flag-off trailing hang.

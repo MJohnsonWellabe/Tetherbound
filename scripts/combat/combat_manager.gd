@@ -2566,13 +2566,28 @@ static func named_fight_camera_cap(opponent: Node, candidate_on: bool) -> float:
 static func arena_boundary_for(cfg: Dictionary, trainer_id: String) -> Dictionary:
 	var candidate: Variant = cfg.get("boundary_per_trainer_candidate", {})
 	if not candidate is Dictionary or not bool((candidate as Dictionary).get("enabled", false)) or trainer_id.is_empty():
-		return cfg
+		return _with_boundary_curb(cfg, trainer_id)
 	var row: Variant = (candidate as Dictionary).get(trainer_id, {})
 	if not row is Dictionary:
-		return cfg
+		return _with_boundary_curb(cfg, trainer_id)
 	for key: String in ["boundary_alpha", "boundary_height"]:
 		if (row as Dictionary).has(key):
 			cfg[key] = float((row as Dictionary)[key])
+	return _with_boundary_curb(cfg, trainer_id)
+
+
+## F38#28 `arena.boundary_curb_1113` (OFF until GPU-judged): for the trainers
+## it lists, the boundary is drawn as a low stone curb with an inlay instead of
+## the glowing ring (combat_arena.gd `_build_curb`). Radius and every rule are
+## unchanged; only the look of the edge.
+static func _with_boundary_curb(cfg: Dictionary, trainer_id: String) -> Dictionary:
+	var curb: Variant = cfg.get("boundary_curb_1113", {})
+	if not curb is Dictionary or not bool((curb as Dictionary).get("enabled", false)):
+		return cfg
+	if not trainer_id in ((curb as Dictionary).get("trainers", []) as Array):
+		return cfg
+	cfg["boundary_style"] = "curb"
+	cfg["boundary_curb"] = curb
 	return cfg
 
 
@@ -7393,6 +7408,10 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary, include_traine
 				invalid_hud.append(path)
 		for property: String in cfg.get("hud_dynamic_controls", []):
 			var value: Variant = hud.get(property)
+			# The roster reports its camera footprint (party_strip.gd), so a
+			# wider named roster does not move the fight camera.
+			if value is Control and (value as Control).has_method("camera_footprint"):
+				value = (value as Control).call("camera_footprint")
 			if value is Control and not controls.has(value): controls.append(value)
 	var margin := clampf(float(cfg.get("hud_margin_px", 12.0)), 0.0, 64.0)
 	# F10#2 candidate: a wider HUD keep-out while the Stormwood sight-line fade

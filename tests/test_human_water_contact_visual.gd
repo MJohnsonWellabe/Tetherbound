@@ -196,3 +196,39 @@ func test_swimmer_meshes_stop_casting_shadow_in_water_and_restore_on_land() -> v
 	assert_eq(lit.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_ON)
 	assert_eq(double.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED)
 	model.free()
+
+
+## F39#5 / F39#14 `v_wake` (LANE-LAND-MT, 13 Nov, OFF until judged): OFF keeps
+## every ring a full disc; ON turns trailing rings to the swim direction and
+## keeps only their side arcs, while the ring at the body stays full.
+func test_v_wake_ships_off_and_arcs_only_the_trailing_rings() -> void:
+	var shipped: Dictionary = VIEW.load_settings().get("v_wake", {})
+	assert_false(bool(shipped.get("enabled", true)), "the V-wake ships OFF")
+	assert_true(str(shipped.get("scope", "")).begins_with("presentation"), "the new flag declares scope")
+	for v_on: bool in [false, true]:
+		var view := _view()
+		(view.settings["v_wake"] as Dictionary)["enabled"] = v_on
+		var at := Vector3.ZERO
+		for _step in 8:
+			view.step_visual(0.2, _human(), at)
+			at += Vector3(0.0, 0.0, -0.6)
+		var contact := 0
+		var trailing := 0
+		for child: Node in view.get_children():
+			var ring := child as MeshInstance3D
+			if ring == null:
+				continue
+			var arcs := float((ring.material_override as ShaderMaterial).get_shader_parameter("side_arcs"))
+			if ring == view.get("_contact"):
+				contact += 1
+				assert_eq(arcs, 0.0, "the ring at the body stays a full ring")
+				continue
+			trailing += 1
+			assert_eq(arcs, 1.0 if v_on else 0.0, "trailing rings are arcs only when ON")
+			if v_on:
+				# Swimming toward -z: the ring's local x points along -z.
+				var local_x := ring.global_transform.basis.x.normalized() if ring.is_inside_tree() else ring.transform.basis.x.normalized()
+				assert_true(local_x.dot(Vector3(0.0, 0.0, -1.0)) > 0.99, "a trailing ring faces the swim direction")
+		assert_eq(contact, 1, "one ring at the body")
+		assert_true(trailing > 0, "the swimmer leaves a trail")
+		view.free()

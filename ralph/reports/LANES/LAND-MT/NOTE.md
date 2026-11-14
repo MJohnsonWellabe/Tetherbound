@@ -1,0 +1,205 @@
+# LANE-LAND-MT: Meadows and Tidewake world look
+
+## HANDOFF (wrap-up, 14 Nov 2026; owner asked all lanes to wrap)
+
+### State
+- **Lane branch `tb/land-mt`**: merged with main b5cfd21f (#964). Every unlanded arm is flag-off; overlays live in each arm's folder.
+- **On main from this lane:**
+
+| Change | Row(s) | Verdict |
+|---|---|---|
+| Ridge fog sync (#952) | F38#24 | landed |
+| Veilfall mist billow floor (#958) | F39#31 | +0.62 |
+| CRAGCUT | F39#19 | +0.07 |
+| DRIFTFLOAT, floaters only over water 0.4 m deep (#959) | Venn floating log | correctness fix |
+| DUSKRIDGE (#959) | dusk vistas | +0.69 |
+| BROKENHILL (#959) | F38#30 | +1.42 |
+| GRASSGROVES (#960) | F39#1 | +0.16 |
+| FLOWSTREAKS r2, `lesson_cue` (#962) | F13#5 | +0.85 |
+| SHELLSHARDS, `island_strip` (#964) | F38#30 | +0.54 |
+
+### Open candidates (all overlay-only, on `tb/land-mt`)
+- **SEADEPTH round 3** (F39#10, F39#15): `ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json` (0c417689).
+  - Status: on the GPU now.
+  - Next: if it ships, land it as `cause_tidewake.sea` ON with r3's merge values. If it is a wash, F39#10 sea tone is PARKED (agreed with LANE-JUDGE). The disc chain (F39#15) needs irregular sandbars or the islet rebake (rest-shoal `shape` lobes plus a walk check), not tone.
+- **PLUME round 2** (F38#30): `ralph/reports/LANES/LAND-MT-PLUME/overlay.json`, camfx `smoke_plume`.
+  - What it does: the Warrens signal column leans out of the cave mouth before climbing (round 1's "gap" was the column rising through the rock arch).
+  - Status: CPU checked; GPU queued.
+  - Next: judge it on top of SHELLSHARDS (now on main) against main. If it ships, flip `smoke_plume.enabled` and land with `test_warrens_smoke_plume.gd`.
+- **VEILREBUILD** (F39#31, 5.78): `ralph/reports/LANES/LAND-MT-VEILREBUILD/overlay.json`, `falls.rebuild` (bfe3e202).
+  - What reaches the views: streaked fall water (`streak_x` 2.4, `streak_y` 4.0), three layered strands, and a wet dark apron. A plunge pool and mist shell are built but OFF.
+  - Status: CPU checked; held, not yet sent to the GPU.
+  - Next: (1) GPU-judge as is (risk: the apron goes near-black at the left edge of the near view). (2) If it gains, extend the cascade to its plunge ring: the live `veilfall_falls_candidate` ends `veilfall_white_cascade` at `foot_y_m` 40, at (364, 40, 3831); the `veilfall_plunge` rock ring is about 25 m lower. Then turn `rebuild.pool` and `rebuild.mist` on, with `max_foot_y_m` covering the new foot.
+- **Not built:**
+  - F38#30 dark toe cut at the slope base (walk_03, left of the trainer).
+  - F38#30 remaining crest debris, the dark slivers visible at dusk; probably the meadow-match tufts against a low sun.
+  - F38#30 a higher-frequency rock and moss material (the judges' ask c).
+  - The judges' FLOWSTREAKS next asks: stronger aligned streaks, a V-wake instead of the spoked ring, and the shoreline seam.
+
+### What worked
+- **Prove the cause before building.** Ways that found causes:
+  - a false-colour probe (paint one material magenta);
+  - a fixed rebuild of a judged camera from the manifest;
+  - a headless scene probe listing meshes above a surface;
+  - offline mesh analysis of a GLB with numpy (connected components, open edges).
+  This found the crag back faces, the billow gate zeroing the mist, the drift floaters on sand, and the mound's islands and holes.
+- Overlay-only arms on flag-off code; one GPU boot carries stacked arms.
+- Correctness fixes (floaters, mist gate, mesh repair) landed with a pin test each.
+
+### What failed (do not retry without a new idea)
+- **F38#24 TWORANGES:** a stretched copy of the ridge reads as a pale streaky wall. Needs a new far mesh.
+- **F38#30 STEEPGRASS:** a triplanar broad tone, anisotropic sampling and a sharp blend all left the smear unchanged. The grass sheet is too soft; needs a material.
+- **F38#30 PLUME round 1:** a wide crown read as a blurry card.
+- **F39#5 / F39#14 VWAKE and SHALLOWFOAM:** the foam blobs are not the wake or the contact foam.
+- **F39#19 CRAGBACK:** flipping back-face normals does nothing on Forward+.
+- **F39#19 DUNETONE:** damp tone is too faint.
+- **F39#31 BASEMIST:** camera-facing puffs.
+- **F39#31 TIERA:** removing tiers.
+- **F39#31 pool and mist shell at the current cascade foot:** a glassy dome near the near stand.
+- **F39#1 / F39#27 SHOREZONES:** lost on GPU.
+- **F39#15 SHOALBREAK:** contour wander cannot break the round halos.
+- **SEADEPTH r1 and r2:** wind slicks and whitecaps cost the current states; r2's lighter cyan read as noise.
+
+### Runbook
+- **Captures** (CPU, Compatibility, 1280x720, xvfb). The scripts live in the session scratchpad, so re-create them from these lines:
+  - `phase2_capture_routes.gd --biome=meadows|water --subset=<site> --seed=2042 --output=<dir>`. The Warrens is `the_burrow_warrens`; Tidewake shores are `first_shore_horizon_stones` and `drowned_garden_terraces`.
+  - The two F39#31 views: `capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near --capture-size=1280x720 --source-sha=<HEAD> --out=res://ralph/reports/VISUAL/phase2/tidewake/<tmp>`.
+  - Venn fight frames: `phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn`. Output must sit under `res://ralph/reports/VISUAL/phase2/tidewake/`.
+- **Overlays:** a small Python deep-merge of `{config_path: partial_json}` into the config, then `git checkout data/config/` after the capture. Lists are replaced, not merged, so per-item prop changes need a config-level block (see camfx `smoke_plume`).
+- **Harness facts, not yet in TECHNICAL §8.1:**
+  1. Every `tests/test_*.gd` must extend `res://tests/test_case.gd`; the CI suite runner fails a standalone SceneTree script (#964 blocker).
+  2. Commit config edits before any capture that ends in `git checkout data/config/`.
+  3. One Godot process at a time; never run a test while a capture runs.
+  4. This container has no Vulkan; `--rendering-driver vulkan` falls back to OpenGL.
+  5. Packed arrays are shared by reference in Godot 4: appending to a mesh's vertex array grows a local alias too.
+  6. A git worktree of this repo costs several GB; prune scratch worktrees when the disk fills.
+
+## TO THE COORDINATOR
+- **#964 blocker fixed: `tb/land-mt-shellshards-land` a4a8ed8f** (only `tests/test_hill_shell_island_strip.gd` changed). It now extends `res://tests/test_case.gd`. The standalone vars, `_initialize` and `_check` are gone, the four tests are renamed `test_*`, `_check(` became `assert_true(`, and the helpers and every assertion are unchanged.
+  - Real runner (`godot --headless --path . --script tests/run_tests.gd -- --only=<file>`):
+    - `test_hill_shell_island_strip.gd`: 4 tests, 48 assertions, 0 failed.
+    - `test_warrens_meadow_match.gd`: 3 tests, 19 assertions, 0 failed.
+    - `test_warrens_hill_shell_r2.gd`: 2 tests, 7 assertions, 0 failed.
+    - `test_warrens_hill_foundation.gd`: 3 tests, 7 assertions, 0 failed.
+    - `test_warrens_shell_seat_f38_30.gd`: 1 test, 4 assertions, 0 failed.
+- **Built and HELD for the next free GPU slot: `LAND-MT-VEILREBUILD` (F39#31, the Veilfall rebuild you asked for).** Overlay only (`falls.rebuild.enabled`); no Meshy, no tiers removed, no camera-facing puffs.
+  - **What reached the views:** (1) the fall pattern stretched into long thin vertical streaks (the cells were about 7 x 9 m, the judges' "blocky tiled fall"); (2) three layered strands per fall with their own speeds; (3) a wet, multiply-darkened rock apron 2.3x the fall's width either side.
+  - **Pool and mist shell:** built but OFF. The near stand is about 40 m from the cascade foot, which the live candidate ends 35 m up the gully, so the shell read as a glassy dome and the pool was hidden.
+  - **CPU:** the near view clearly streakier, framed in dark wet stone; the vista changes little.
+  - **Risk:** the apron is near-black at the left edge. Sheet and ARM.md are in the folder.
+  - **If it gains:** extend the cascade to its plunge ring and turn the pool and mist on there.
+- **SHELLSHARDS: cleared to land per your condition. The GPU retry is clean**: same composition, arm side only, 10/10 frames, exit 0, no script errors, no new crash event (tb/gpu-frames-1113 07806bb97, G-land-mt-shellshards-retry). The 19:01 crash matches the known intermittent nvoglv64.dll fault. **Land branch: `tb/land-mt-shellshards-land` e9e8d703**, with the degenerate-geometry checks in its pin test (4 tests, 0 failed) and the crash investigation in READY.md. Ready for the next PR.
+- **On the GPU lane's crash evidence** (tb/gpu-frames-1113 76f13eed9: the fault is inside the NVIDIA OpenGL driver, nvoglv64 32.0.15.6094, an integer divide; the same signature appears on 10 earlier captures, 13 Oct to 9 Nov).
+  - I checked their zero-count guess against this change. The shell's cover tufts and edge flora are individual scene nodes, not MultiMeshes, so island_strip cannot create a zero-instance MultiMesh.
+  - The repaired shell is one surface, validated non-empty with whole, in-range, non-degenerate triangles and finite unit attributes (e9e8d703 pin). There are no zero-length buffers: the vertex, normal, tangent and UV arrays are all sized to the 59,650 + fill vertices.
+  - The only difference reaching the driver is a fresh uncompressed ArrayMesh with no LODs, in place of the imported compressed mesh with LODs and a shadow mesh. That is a standard path, so I don't see a lever in it.
+  - My read: an intermittent driver fault with prior history, which hit the arm side once. It is not tied to stronghold walk_01: measured from the capture manifest, that stand is about 4.3 km from the shell (route_day 4,258 m, walk_01 4,270 m), far beyond any draw distance for it.
+  - Your call on landing. If you want more evidence, two clean arm-side retries on e9e8d703 are the cheapest.
+- **SHELLSHARDS crash investigation (your 01:27 list): nothing degenerate found. The land branch is now `tb/land-mt-shellshards-land` e9e8d703.**
+  - **Validity checks on the real mound** (pin test, now 4 tests, 0 failed), for the source, the strip output and the fill output: every surface non-empty, index count a multiple of 3, all indices in range, zero zero-area triangles, finite positions, normals and UVs, unit normals, and unit tangents with w = ±1. Ten repeat runs are identical; there is no random step.
+  - **Results:** all zero on the judged code (ae9acef6) and on the hardened code. A fan never has fewer than 3 points, because loops under 3 are skipped by construction. The mesh has no LOD or shadow-mesh rebuild: a plain ArrayMesh with no LODs.
+  - **CPU reproduction:** the exact sequence (5 Warrens frames, then 5 stronghold frames) with island_strip ON on the judged code finished all 10 frames, no crash. This container has no Vulkan, so that was the OpenGL fallback, not Forward+.
+  - **Hardening kept anyway:** unit tangents with w = ±1 on fill vertices; empty surfaces are never handed over.
+  - **Cause:** I could not reproduce it or name it. It happened at the stronghold, far from the shell, and the stacked run passed. If the GPU retry is clean, a second clean run on e9e8d703 is the evidence I can offer. If it crashes again, a strip-only run (`fill_max_loop` 0), plus a run with island_strip OFF on the same composition, tells us whether this change is involved at all.
+- **Reply on the SHELLSHARDS GPU crash (0xC0000094, integer divide): hardening pushed. Land branch is now `tb/land-mt-shellshards-land` dc5ad6b6** (tb/land-mt e69fc522).
+  - A GDScript divide by zero raises a SCRIPT ERROR, not a native crash, and the repair code has no unguarded integer division.
+  - Two mesh-side risks are now closed. (1) Fill vertices used plain-averaged tangents, which can give a zero vector with w = 0 where mirrored seams meet; they are now unit length with w = ±1. (2) A surface left empty, or with nothing removed, now keeps its original indices and never reaches the renderer empty.
+  - Pin test: 3 tests, 0 failed.
+  - The crash hit between stronghold route_day and walk_01, far from the shell, and the SHELLSHARDS+PLUME run (same flag) finished all 10 frames, so it may not be this mesh.
+  - If the retry reproduces, please rerun once on dc5ad6b6. If it still crashes, one run with island_strip ON and `fill_max_loop` 0 (strip only) separates the fill from the strip.
+- **Ready: PLUME round 2 (`ralph/reports/LANES/LAND-MT-PLUME/overlay.json`, re-judge on top of SHELLSHARDS as asked).** Cause of the "gap / two stacked sprites": the signal post stands inside the cave mouth, so the column rose through the rock arch. Round 2 keeps the authored crown (no wide card) and leans the column out of the mouth toward the approach on an early curve, so it climbs in front of the arch as one continuous tapered plume. Test: 1 test, 0 failed (flag off and on). By-eye: walk_01, one unbroken column at the mouth. This is one of two arms waiting; SEADEPTH r3 is the other.
+- **LANDING READY: `tb/land-mt-shellshards-land` 8818353e** (from main 94fe423d). This is SHELLSHARDS: `bank.hill_shell.island_strip` ON with `_why_on` citing G-land-mt-shellshards-ss (F38#30 +0.54, 3/3). It carries only the judged strip and fill code, not the later flag-off steep-face work. READY.md is in `ralph/reports/LANES/LAND-MT-SHELLSHARDS-LAND/`. The pin and 4 related Warrens files ran: 12 tests, 0 failed.
+- **Row-tagged status:**
+  - F38#30 PLUME: HELD for round 2. The wide crown read as a blurry card over the mouth (Warrens other −0.18). Round 2 is one continuous tapered column (narrow crown, more discs, no gap), drifting away from the entrance.
+  - F38#30 STEEPGRASS: PARKED. A triplanar broad tone, anisotropic sampling and a sharp blend all left walk_02 / walk_03 unchanged on CPU. The smear is the soft grass sheet itself, so it needs a higher-frequency material (the judges' ask c), not a projection fix.
+- **Ready: SEADEPTH round 3 (`ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json`), the judges' one more tone round for F39#10.** It keeps base's deep navy (and its shallow colour) and softens only the shelf transition: haze off (that, plus the brighter shallow colour, was r2's "lighter cyan"), a darker mid band, falloff 10 m. Re-capture F39#10, F39#15 and the current states. The CPU change is modest (sheet in the folder). If it is a wash, F39#10 sea tone is PARKED. That makes two arms waiting: SHELLSHARDS+PLUME (one boot) and this.
+- **Built, flag-off, not yet looked at:** `meadow_match.steep_fix` for the stretched grass on the Warrens steep flanks (F38#30). The shell shader sampled the broad grass tone top down, so it ran in vertical streaks; the fix makes it triplanar and gives the fine grass anisotropic sampling. I will do a CPU look after SHELLSHARDS is judged, so it can stack on it.
+- **LANDING READY: `tb/land-mt-flowstreaks-land` 548096bc** (pushed 00:40 from b52651b0, now merged up to main 1405def4; diff vs main is the 5 FLOWSTREAKS files only). This is FLOWSTREAKS round 2: `current_flow.lesson_cue` is ON with `_why_on` citing G-land-mt-flowstreaks-r2 (F13#5 +0.85, 3/3). READY.md is in `ralph/reports/LANES/LAND-MT-FLOWSTREAKS-LAND/`. The pin test and 2 related files ran: 10 tests, 154 assertions, 0 failed.
+- **Row-tagged status (for TRIED_AND_FAILED):**
+  - F38#24 TWORANGES: PARKED. A stretched copy of the ridge reads as a pale streaky wall; a real second range needs a new far mesh.
+  - F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake.
+  - F39#5 / F39#14 SHALLOWFOAM (`foam_depth` 0.2): PARKED. The blobs were unchanged.
+  - F39#19 CRAGBACK: PARKED. It was level on GPU because the engine already flips back-face normals; CRAGCUT shipped instead.
+  - F39#19 DUNETONE: PARKED. Damp tone on the Venn dune is too faint at a believable strength.
+  - F39#31 BASEMIST: PARKED. Camera-facing puffs do not read as base mist at these distances.
+  - F39#31 TIERA: PARKED. It was level.
+  - F39#1 / F39#27 SHOREZONES: PARKED. All rows lost on GPU.
+  - F39#15 SHOALBREAK: PARKED. Contour wander cannot break the round islet halos; it needs a terrain rebake, which is not now.
+  - F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED.
+- **Ready, stacks on SHELLSHARDS: `LAND-MT-PLUME` (the "solid smoke pillar").** Flag-off camfx `smoke_plume`, for the Warrens F03 lure post only: wider foot and crown, thinner discs, more top fade and a downwind lean, so the 26 m column reads as a soft plume and still marks the site from the road. Test: 1 test, 0 failed. Gain is modest: please judge SHELLSHARDS+PLUME against SHELLSHARDS in the same Warrens boot (overlay only; 2 arms waiting in total).
+- **Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell's dark inside. Five probes ruled out MoundGrowth, the tufts, the edge flora, InteriorRock and the chamber hulls. Flag-off `island_strip` drops the islands and fan-fills the loops when the shell loads (3,590 → 249 open edges, about 0.35 s once). Test: 3 tests, 0 failed. Overlay only. By-eye: walk_02, top of frame, no sky window or black triangle. It is also a geometry correctness fix, so I can cut a land branch straight away if you prefer that over judging.
+- **TWORANGES (F38#24): PARKED on CPU after three looks.** The back layer is the same ridge mesh stretched, so its facets turn into vertical streaks. At height 1.4 and 1.6 it reads as a pale wall crowding the stronghold, not as a far range. A real second range needs a different far mesh, which is outside this round (no Meshy credits). Sheet and ARM.md are in `ralph/reports/LANES/LAND-MT-TWORANGES/`.
+- **SEADEPTH: please run round 2 next (`overlay_r2.json`).** Round 1 lost the current states to "long diagonal darker-blue streaks plus confetti white flecks". Those are the candidate's wind slicks (`slick_colour` #4f8b9b, a darker teal, on long streaks) and whitecaps (`cap_strength` 0.22). Round 2 turns both off and keeps the gradient that gained F39#10 +0.62 and F39#15 +0.43. Re-capture S1 live, S1 restored, S2 live, F39#1, F39#10 and F39#15.
+- **SHOREZONES: PARKED** after its GPU loss. Round 2 (no normal gate, near fade) should remove the near-sand polygons, but the far-dune turf barely registers and the wet band and wrack line do not read from the stands, so the upside is small. The folder keeps round 2 if you want it run anyway.
+- **SEADEPTH round 2 ready: `ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r2.json`.** The GPU lane's diagonal bands and flecks in the current states are the candidate's wind slicks and whitecaps, which ride along with the depth gradient; round 2 keeps the gradient and turns those two off. If round 1 is judged and loses the states, round 2 is the follow-up; if round 1 has not been judged yet, run round 2 instead.
+- **F39#31:** #958 (mist fix) is +0.62 on the row (5.16 to 5.78, 3/3). TIERA parked (level). The row's ceiling is a Veilfall rebuild (Meshy hero piece), which is outside this round (no Meshy credits); the in-reach pieces left are the plunge pool and foam at the fall foot and a streaked falling-water material, both bigger builds than a tuning pass. Not started.
+- **SHOREZONES round 2 ready (same folder)**, answering the GPU lane's facet warning: the turf drops its terrain-normal gate (likely per-triangle steps on GPU), gets a softer edge, and fades out within 45 m of the camera, so only the far-dune mottling stays. Overlay only. If round 1 is judged first, round 2 is the follow-up.
+- **LANDING READY: `tb/land-mt-grassgroves-land` e4c65b5e** (GRASSGROVES judged SHIP: F39#1 +0.16, routes +0.24, no loss). READY.md in `ralph/reports/LANES/LAND-MT-GRASSGROVES-LAND/`; pin test plus 3 related files, 27 tests, 0 failed.
+- **LANE-JUDGE's top Tidewake ask (black lagoon band, hard navy V-band, ring decals, soft depth gradient) is what `LAND-MT-SEADEPTH` targets**, and it has not been judged yet. Please move SEADEPTH to the front of the Tidewake boot; GRASSGROVES' land and FLOWSTREAKS round 2 (lesson-gated) can share it.
+- **FLOWSTREAKS round 2 is now lesson-gated (supersedes the global chop-off line below).** Flag-off `current_flow.lesson_cue`: only the four swim-lesson lanes drop their chop caps; S1 / S2 current-state lanes are untouched by construction. Overlay in the folder; pin test 1 / 10, 0 failed.
+- Runbook: a config edit made while a queued capture will run `git checkout data/config/` gets wiped. Commit config edits before starting such a run.
+- **FLOWSTREAKS round 2 ready (same folder):** chop caps off only, streaks left at 0. Round 1 gained F13#5 (+0.52) but lost the current states (-0.42) to the re-enabled streaks; round 2 keeps the crescent removal and drops the streaks. Please run it on the T2 views and the current-state frames.
+- **LANDING READY: `tb/land-mt-meadows-land` e43377c3** (from main 13a7ab15, after #958; `ralph/reports/LANES/LAND-MT-MEADOWS-LAND/READY.md`). DUSKRIDGE (+0.69 dusk, 3/3) and BROKENHILL (F38#30 +1.42, 3/3) ON with verdicts cited; pin test plus 4 related files, 12 tests, 0 failed. Next in my queue: the taller ridge and second range (TWORANGES, built) now that DUSKRIDGE is judged, and BROKENHILL round 2 (the walk_03 straight edge, floating crest shards and leaf cards, the smoke pillar).
+- **F39#31 (5.93 clear-day baseline):** `LAND-MT-TIERA` is ready, overlay only. The judges' "rock cluster floating on the sheet" is, at least in part, the lifted Meshy cascade tier A (`veilfall_hero_candidate`). A ray from `veilfall-near` names it; without it the big rock on the fall sheet is gone. A smaller rock and sapling higher on the sheet is a second, unnamed piece. Please re-shoot the two F39#31 frames after #958 (LANE-JUDGE's ask), with TIERA as an arm against them. Plunge pool and foam: not started.
+- **LANDING READY: `tb/land-mt-driftfloat-land` 411bb0ad** (from main; READY.md in `ralph/reports/LANES/LAND-MT-DRIFTFLOAT-LAND/`). The Venn "floating log" is a current-lane drift floater (the Meshy driftwood in the GPU crop, thanks for the camera-A frame): floaters rode a straight lane line at sea level and hovered over wet sand where a lane crosses the beach. They now show only over water at least 0.4 m deep. Correctness fix; tests 3 + 2, 0 failed. By-eye: Venn t-000 camera A, no log at the top left.
+- **Venn "floating log or plank in the sky": not found on CPU (2 probes).** On a fixed rebuild of t-000, the log-like shape sits on the terrain about 46 m out at (358, 15.7, 3827), next to the `veilfall_plunge` rock ring, with no mesh in front of it; removing the lifted `veilfall_cascade_a` tier changed nothing. It may only float in the GPU framing. A GPU t-000 frame with the object's position (or a crop) would let me name it.
+- **Ready: `LAND-MT-GRASSGROVES` (round 2).** Layer found: the look profile's `dune_grass_candidate` is applied last to the grass field and overwrote round 1. Round 2 overlays it (denser, fewer clumps; wider bare gaps). CPU: grass gathers into distinct clumps with bare sand between at Venn and at First Shore (sheet in the folder). Rows F39#19 (sand half), F39#1, F39#15, F39#27; it stacks with SEADEPTH and SHOREZONES in one Tidewake boot.
+- **LANDING READY: `tb/land-mt-cragcut-land` 00d1242c** (from main 0ba1cfab; `ralph/reports/LANES/LAND-MT-CRAGCUT-LAND/READY.md`). CRAGCUT judged SHIP (+0.07, 2/3, no loss). Flag ON with the verdict cited, pin test 2 tests / 6 assertions, 0 failed. Crag-shell approach parked for F39#19 as the verdict says. Next from the verdict: the Venn dune (DUNETONE was too faint; trying grass clustering instead) and the floating log at the top of the Venn frames.
+- **BASEMIST: PARKED after two placement rounds.** With the billow floor (PR #958) the puffs render, but even with mid-fall puffs against the rock (7 extra, `at_fraction` 0.55 to 1.0), 1.25x size and a cooler tone, the F39#31 views show at most a softer base on the main fall. The camera-facing puff approach does not make mist read at these distances. A real base mist likely needs a dedicated effect (a lit mist volume or a particle sheet at the plunge), which is a bigger build; not started.
+- **F13#5: `LAND-MT-FLOWSTREAKS` is ready** (see the entry below); it is my next GPU candidate after CRAGCUT.
+- **LANDING READY: `tb/land-mt-veilfallmist-land` 6a2b28f6** (from main 0ba1cfab; `ralph/reports/LANES/LAND-MT-VEILFALLMIST-LAND/READY.md`). The Veilfall mist correctness fix: the spray billow gate erased every puff; a 0.55 floor keeps them. Pin test 2 tests / 5 assertions, 0 failed. Small visible effect (faint whitening at the main fall base); placement remains follow-up in `LAND-MT-BASEMIST`.
+- **Ready: `LAND-MT-FLOWSTREAKS` for F13#5 (5.38).** Cause confirmed by probe: the crescents are the current shader's chop caps (`current_flow.state_shader.live.chop_cap_opacity` 0.45); at 0 every crescent goes in all four T2 views. The arm removes them and brings the shader's own flow-aligned foam groups back faintly. Two stronger tunings drew long straight lanes at the T2 grazing camera, so they were dropped. Honest read: in stills it is mostly "crescents gone", with the direction left to wave motion (the owner's 10 Nov direction). Overlay only. No-loss: F39#16 and F39#17 current-state frames.
+- **Shoal rebake:** understood, parked.
+- **Irregular shoal rings: not reachable by shader; needs your call.** The live water has `depth_falloff` 5 m and no contour wander, so the halos round the rest islets are clean circles. SEADEPTH (wander 1.4) softens the edge, and `LAND-MT-SHOALBREAK` (wander 2.4, stacked on SEADEPTH) looks the same as SEADEPTH on the terraces frames: the rings stay concentric because they follow the islets' baked round shape, and the wander's 11 m and 40 m scales are too coarse for 20 m islets. The heightfield already supports lobed islet outlines (rest-shoal `shape`: major/minor extension, lobes; `water_heightfield.gd` `_compile_rest_shape`), but giving the islets lobes changes baked terrain and collision, so it needs a terrain rebake and a walk check of the rest routes. **I have not started it; tell me if you want it.** SHOALBREAK is parked.
+- **DUNETONE (Venn dune value structure): PARKED, not sent.** A probe proved the dune shader does reach the Venn sand (sand painted green, damp magenta). Damp patches at 0.45 to 0.5 strength (30 m, then 11 m patches) give only a faint tone shift on the fixed t-000 view (mean frame difference about 9.5). Stronger would put dark damp stains on 14 m dune crests, which is not believable. A better lever for the judges' ask is probably clustered grass and real slope relief, which is ground-cover and terrain work rather than a sand tint.
+- **Veilfall base mist: cause found, arm held.** The spray shader's billow gate zeroes the whole puff in this renderer (probe: alpha = opacity * radial shows the mist; with the gate, nothing). `LAND-MT-BASEMIST` (flag-off `billow_floor`, `size_scale`) makes it render, but on the F39#31 views it barely reads: the puffs are not where the visible falls end (the cascade's foot is configured at 200 m, mid-cliff), and white mist on a white fall and pale sand has no contrast. Held in its folder with the next step written; not sent.
+- **Ready, attempt 2 for F39#19: `LAND-MT-CRAGCUT`** (`ralph/reports/LANES/LAND-MT-CRAGCUT/`). On the fixed rebuild of the judged t-000 camera, the black polygon is gone: the real mossy cliff and sand show, with a soft shadow where the shell still blocks the sun (sheet in the folder). Overlay only (`back_face_cut_m` 150). Please run it at High and Medium with the control, as for CRAGBACK. A by-eye look at t-000 first is sensible.
+- **Veilfall base mist (F39#31, F39#2): the existing spray does not render.** CPU probe on the two new F39#31 views (`veilfall-vista`, `veilfall-near`): with `falls.spray_shader` set to solid magenta at opacity 1.0, no magenta appears anywhere. The configured puffs (2 or 3 per fall, 16 to 38 m) exist as a node (`VeilfallWhiteFalls/VeilfallFallSpray`) but never reach the screen. So "no mist at the base" is a bug, not a tuning gap. Next: check the puff positions against the ground at each fall's foot (my guess: buried or behind the rock lip), then fix as a correctness change with a test.
+- **CRAGBACK, likely why it was level on GPU:** `shaders/water_veilfall_spray.gdshader` says "undo the engine's back-face normal flip", so the engine (at least Forward+) already flips back-face normals; my extra flip did nothing useful there. This supports CRAGCUT's renderer-independent discard; the GPU eye check is still the first step.
+- **Swim "foam blobs" (F39#5, F39#14): PARKED after two misses.** Ruled out on CPU swim frames: (1) the swimmer's wake (VWAKE: blobs identical on and off); (2) the shallow contact foam threshold (`surfaces.water.foam_depth` 0.55 to 0.2, also set under `cause_tidewake.sea`: blobs identical; I did not verify that the overlay reached the water material, so treat this one as weak). The blobs are pale, soft-edged and sit under the surface across the whole swim-lesson flat, so my next guess is the sand seabed seen through clear shallow water, not foam. Next idea for whoever picks it up: paint the underwater terrain a false colour (the dune shader's sand below 0 m) and see if the blobs change. Not building further on it now.
+- **CRAGBACK: not shipped (level on GPU). The t-000 wedge is now PROVEN to be the crag shells' inner side.** CPU, deterministic: I rebuilt the GPU's t-000 fight camera as a fixed view (position from the fight tool's frames.json, aimed at the fighters' midpoint) and painted crag back faces magenta: the whole black wedge turned magenta (`ralph/reports/LANES/LAND-MT-CRAGCUT/_sheet_t0_backface_probe_cpu.jpg`). CRAGBACK failed on GPU because the engine already flips back-face normals there (see the spray shader's own comment), so lighting them changed nothing. **`LAND-MT-CRAGCUT` (discard crag back faces within 150 m) is attempt 2;** its CPU look on the same fixed view is queued. The GPU eye check is no longer needed, but a by-eye look at t-000 before judging still applies.
+- **Dune value structure (3/3 top ask on the Venn frames):** next build, a shore-level wet and dry tone plus slope shading for the low sand round the Venn arena (SHOREZONES starts at 8 m, so it never reaches the arena).
+- **VWAKE: HOLD, do not queue.** The CPU look showed I had the wrong cause. The "large cloud-like foam discs strewn across open water" are identical with and without the V-wake (mean frame difference about 3) and cover the whole shallows far from the swimmer: they are the water shader's shallow contact foam, not the swim wake. Live `foam_depth` is 0.55 m, so on the swim-lesson flats, mostly under that depth, the noise-gated foam blooms into patches. Next: a probe at 0.2 m (`LAND-MT-SHALLOWFOAM` overlay, also stacks over SEADEPTH, which sets the same key), then an arm if it clears the blobs. VWAKE stays parked until a swimmer-wake complaint remains after that.
+- **F39#31 frame set added** (capture tooling, `ralph/reports/VISUAL/item-scores/job.json`, new F39#31 item): the clear-day twins of the two reviewed Veilfall stands it was scored on in rain, from `tools/visual_judge/camera_sets/F39-look.json`: `veilfall-vista` (about 750 m offshore, whole island) and `veilfall-near` (the landing stand). Tool: `capture_tidewake_f13_5.gd --camera-set=tools/visual_judge/camera_sets/F39-look.json --views=veilfall-vista,veilfall-near --source-sha=<tree>`. No new stand was needed. A one-sided re-score on main gives F39#31 a fair baseline; the base mist comes next and will be judged on these two.
+- **Ready: `LAND-MT-CRAGBACK`** (`ralph/reports/LANES/LAND-MT-CRAGBACK/`), the Venn dark-mass fix for F39#19 (7.47) and F39#7. **Cause confirmed by probe:** the black wedge is the inner side (back faces) of the Veilfall crag shells, which the `cull_disabled` crag shader lit with the outer normal. The overlay lights back faces as rock facing the viewer. CPU: the corner goes from near-black (2, 18, 26) to grey rock (107, 125, 108). One shader value; ships 0. It can go in the same boot as LANE-SCENE's ROSTERNAMES if you want both on F39#19 at once.
+- **Reply to your 13 Nov list (newest first):**
+  - **(2) Swim foam: `LAND-MT-VWAKE` built** (`ralph/reports/LANES/LAND-MT-VWAKE/`, code and pin test pushed, flag-off; CPU look still to do). Cause: every trailing foam ring is a full disc (lip plus churn) that spreads to 2.3x, so twelve overlap into blobs and a slab. ON turns each trailing ring to the swim direction and keeps only its two side arcs, so the trail draws a V; the ring at the body is unchanged. It stacks on SEADEPTH (different files). The trailing boots are a pose fix, outside this lane.
+  - **(2) Irregular shoal rings:** next after the VWAKE CPU look.
+  - **(3) F38#8 is not a world row:** it is the trainer's grip pose under Galecrest in flight ("hangs rigidly upright with raised straight arms"). That is a character pose (LANE-THINGS/creature-pose scope), so I am leaving it unless you reassign it.
+  - **(4) F39#31 has no job.json frames of its own.** Its 6.02 comes from the two Veilfall rain frames, where it rode along as a no-loss check (G-floor2-dawn-haze-storm-grade). Its brief is "Veilfall reads at distance and up close". A cheap step: give it a frame set (a clear-day distance view plus a close view) and re-score; F39#2 reads 6.79 on day frames of the same mountain. The judges' real ask is new art (terraced mossy cliff, layered falls, mist at the base). Without Meshy, the in-reach piece is mist at the fall's base from the existing spray; I can build that after the Venn fix.
+- **Ready: `LAND-MT-SEADEPTH`** (`ralph/reports/LANES/LAND-MT-SEADEPTH/`). The soft depth gradient, overlay only, no new code: it switches on an existing flag-off sea candidate that has no GPU verdict on record. CPU sheet shows the navy band gone in all three frames. It touches every Tidewake water row, so it needs the current-state frames and F39#10 as no-loss. **It can share one Tidewake boot with `LAND-MT-SHOREZONES`** (both are `tidewake_look.json` overlays on different keys); I would run SEADEPTH first.
+- Queued (per your message): `LAND-MT-BROKENHILL`, `LAND-MT-DUSKRIDGE`, then `LAND-MT-SHOREZONES`. With SEADEPTH that is more than two waiting; I stop adding arms now and work on the Venn surface and the F38#24 stand.
+- **Venn fight dark mass: SURFACE NAMED.** It is the Veilfall crag kitbash (`WaterVeilfall/VeilfallCragKitbash`: Crag_boulder_1..3 / CragCore, 700 to 1,100 m meshes, no collider, shader `cull_disabled`), drawn in its wet colour. Proof: with the look profile's crag override (`tidewake_look.json` `veilfall_family_candidate.crag_kitbash.crag_shader`) painted, the corner turned the wet colour (magenta) and nothing else changed. My earlier crag probe edited `water_veilfall_crag_kitbash.json`, which that override replaces, so it showed nothing. One last probe is running: back faces (the shader does not flip normals on back faces) versus front-face wet rock. **It is a world-surface fix, so LAND-MT takes it; LANE-SCENE can keep the roster side of F39#19.**
+- GPU confirmation of #952 (LANE-JUDGE, G-rescore-f38-24-after-952): stronghold route_day shot right after a dusk frame kept its day haze. F38#24 6.59 on main.
+- **F38#24 mountain stand: a re-aim at the Warrens does not make the mountains the subject. No stand entry added yet.** Heading sweep on CPU at the reviewed open-ground stand (-318, 2642), six headings (131, 181, 206, 256, 281, 306): the hill leaves the frame below about 181, but the range is a thin strip on the horizon in every direction and trees cover most of it. The mountains are small from meadow level everywhere near the Warrens; they read in the stronghold frame because that view is long and open.
+  - So the lever for the two weak frames is the range's size, not the stand. Next arm for this row, after DUSKRIDGE's verdict (same config file): a taller ridge (`height_scale`, overlay only) plus the second hazier layer LANE-JUDGE asked for, checked for no loss on the stronghold route_day frame (7.73).
+  - If you still want a stand swap now, heading 181 at that position is the best of the six (snow caps centre-left, hill at the left edge); Warrens `walk_01` is used by no row and could carry it.
+
+## Venn fight dark mass (F39#19, F39#7), open
+- CPU capture (`phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn`, 40 frames): a near-black mass (RGB about 2, 18, 26) with a scalloped edge fills the top-right corner and runs down the right edge. The top of the frame is the mossy Veilfall cliff foot with a mossy log on it (the judges' "floating olive object").
+- **Not sky or a missing horizon:** the fight camera looks down; no sky is in frame.
+- **Not the open sea:** deep water in the same build is RGB about 0, 82, 122.
+- **Not the crag kitbash rock colours:** false-colour probe with `water_veilfall_crag_kitbash.json` `body_colour` green and `wet_colour` magenta (flip confirmed by `git diff`); the mass stayed near-black.
+- **It sits where the Veilfall mountain wall is.** The fight camera is at about (377, 10, 3790) looking toward (-x, +z); `water_heightfield.height_at` shows the ground in the top-right of its view (x 300 to 330, z 3800 to 3850) climbing from about 20 m to over 100 m. So the mass is the mountain's steep face or a rock formation standing against it, in shadow.
+- A third probe (terrain cliff tint in `water_visual.json` set to magenta) changed nothing in frame, including the lit mossy cliff, so that key does not colour this wall; inconclusive.
+- **Stopping config-flip probes here (three runs, no identification).** Next step is different: a ray from the fight camera through the top-right pixel that prints the node hit (terrain or a `PhysicalCragSupport` body), then lift that surface's shadow value or keep the fight camera off it.
+- Seen on the way: `water_veilfall_silhouette.gd` copies fog on a 0.25 s poll, the same pattern as the ridge bug fixed in #952. Not yet shown to cause a bad frame.
+
+## Waiting on the GPU
+1. `LAND-MT-BROKENHILL` (F38#30): queued.
+2. `LAND-MT-SHOREZONES` (F39#1, F39#15, F39#27): turf patches on the dunes. Moderate change; honest read in its ARM.md.
+
+## Next
+1. F38#24: taller ridge and a second hazier range layer (after DUSKRIDGE's verdict).
+1b. Tidewake shoal rings: irregular instead of concentric (after SEADEPTH's verdict).
+2. Mist at the Veilfall fall's base (F39#31, F39#2), judged on the new F39#31 frames.
+3. F38#24: second hazier range layer behind the ridge (LANE-JUDGE ask).
+4. Shore props (driftwood, rock clusters, grass groves) if SHOREZONES gains.
+
+## Runbook
+TECHNICAL §8.1. First import in this container: about 45 min.
+- CPU arm look: flip the flag in the working tree only, capture, `git checkout` the config. Commit the flag-off version.
+- Tidewake's capture biome id is `water`, and frame ids start `water__`.
+- A probe edit by `sed` must be checked before the capture (`git diff --stat`, or a headless print of the resolved value): two probes here shot an unchanged tree.
+- Tidewake islands rise to 18 to 29 m and stands sit near 18 m; height-keyed shore bands under about 5 m are a hairline from them.
+- A `var` declared inside an `if` block is not visible after it; `--check-only` on the script catches it before a 20-minute capture.

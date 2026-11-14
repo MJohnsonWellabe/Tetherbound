@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-mt-seadepth-r2 @ 783a2029a (base-High = round-1 base, pixel-identical), G-land-mt-seadepth-r2-states @ b83578874 (arm only; base = G-land-mt-seadepth-states base)", "content": "tb/land-mt 5ef7e327e; arm = overlay_r2 (depth gradient kept, wind slicks and whitecaps off)", "preset": "High",
+ "F39#15": ["drowned_garden route_day", "drowned_garden walk_01", "sluice route_day"], "F39#1": ["brine walk_03", "first_shore route_day"], "F39#10": ["drowned_garden route_day", "first_shore route_day"], "F39#17-16": ["S1_live", "S1_restored", "S2_live"],
+ "pixel_diff_arm_vs_base": {"brine_w3": 0.64, "fs_route": 2.44, "dg_route": 3.44, "dg_w1": 2.68, "sluice_route": 3.72, "S1_live": 11.25, "S1_restored": 11.94, "S2_live": 10.09},
+ "pixel_diff_r2arm_vs_r1arm_routes": "0.15-0.32 (route frames effectively the round-1 arm)",
+ "side_assignment": {"r1 (j19)": "F39#10 A=base B=arm; F39#15 A=base B=arm", "r2 (j21)": "F39#10 A=arm B=base; F39#15 A=base B=arm; F39#17 A=arm B=base; F39#1 A=arm B=base"},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}

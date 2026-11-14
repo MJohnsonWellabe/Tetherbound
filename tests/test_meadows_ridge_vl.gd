@@ -96,3 +96,43 @@ func test_ridge_fog_follows_the_environment_without_delay() -> void:
 	horizon.call("sync_ridge_fog", env)
 	assert_false(bool(far.get_shader_parameter("fog_enabled")), "fog off follows too")
 	horizon.free()
+
+
+## F38#24 back range (LANE-LAND-MT, 13 Nov, OFF until judged): OFF ships the
+## front ridge exactly as before; ON adds one hazier copy, kept inside the
+## camera's 2000 m far plane.
+func test_back_layer_is_off_and_builds_a_hazier_copy_when_on() -> void:
+	var shipped := RIDGE.settings()
+	var back: Dictionary = shipped.get("back_layer", {})
+	assert_false(bool(back.get("enabled", true)), "the back range ships OFF")
+	assert_eq(str(back.get("scope", "")), "client_presentation", "the new flag declares scope")
+	assert_eq(float(shipped.get("scale_xz", 1.0)), 1.0, "the front ridge keeps its shipped radius")
+	var parent := Node3D.new()
+	var front := RIDGE.build(parent, _with_on())
+	assert_true(front != null, "the front ridge builds")
+	assert_eq(front.get_node_or_null("MeadowsRidgeVLBack"), null, "OFF adds no back range")
+	parent.free()
+	var on := _with_on()
+	on["scale_xz"] = 0.82
+	(on["back_layer"] as Dictionary)["enabled"] = true
+	parent = Node3D.new()
+	front = RIDGE.build(parent, on)
+	var far := front.get_node_or_null("MeadowsRidgeVLBack") as Node3D
+	assert_true(far != null, "ON adds the back range under the front ridge")
+	var reach := float((on["back_layer"] as Dictionary).get("scale_xz", 1.0))
+	assert_true(reach <= 1.0, "the back range stays inside the 2000 m far plane")
+	assert_true(absf(far.global_transform.basis.get_scale().x - reach) < 0.001, "the back range sits at its own radius")
+	var keep_front := -1.0
+	var keep_back := -1.0
+	for raw: Node in front.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		var material := mesh.get_surface_override_material(0) as ShaderMaterial
+		if material == null:
+			continue
+		var keep := float(material.get_shader_parameter("fog_keep"))
+		if far.is_ancestor_of(mesh):
+			keep_back = keep
+		else:
+			keep_front = keep
+	assert_true(keep_back > keep_front and keep_front > 0.0, "the back range takes more of the fog than the front")
+	parent.free()
