@@ -1,0 +1,30 @@
+{
+ "row": "F40#17 High Perches",
+ "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+ "args": [
+  "--seed=2042",
+  "--output={OUT}"
+ ],
+ "godot_args": [
+  "--rendering-method",
+  "forward_plus",
+  "--resolution",
+  "1920x1080",
+  "--fixed-fps",
+  "20"
+ ],
+ "frames": {
+  "F40#17": [
+   "high-perches-crown-rim-out-day",
+   "high-perches-crown-rim-out-night",
+   "high-perches-crown-court-day",
+   "high-perches-crown-court-night"
+  ]
+ },
+ "base": "lane head, no overlay",
+ "arm": "lane head + overlay.json",
+ "presets": [
+  "High"
+ ],
+ "note": "Output must be under res://ralph/reports/VISUAL/phase2/cloudreach/. arrival-landed and departure-lookback vary run to run without the flag (wild creatures wander: two flag-off CPU runs differ by mean 10-22 per pixel), so pair only the crown frames."
+}

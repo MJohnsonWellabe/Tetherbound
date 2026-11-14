@@ -25,6 +25,7 @@ const NIGHT_LIGHT := preload("res://scripts/world/villager_night_light.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const COMBAT_ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
+const APPEARANCE_VARIANTS := preload("res://scripts/characters/appearance_variants.gd")
 const POST_STANCE := preload("res://scripts/characters/post_stance.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const CONFIG_PATH := "res://data/config/village_npcs.json"
@@ -378,7 +379,27 @@ func _start_greeting(spec: Dictionary) -> void:
 		return
 	if bool(panel.call("is_open")):
 		return
-	panel.call("start", conversation_id)
+	panel.call("start", conversation_id, variant_identity(spec))
+
+
+## A villager wearing an ENABLED appearance variant whose record names the plate
+## it replaces (`replaces_portrait`) speaks with the variant's plate on exactly
+## those lines, so the face on the panel is the body in the world. Anything
+## else (no variant, a disabled record, no named plate) changes nothing.
+static func variant_identity(spec: Dictionary) -> Dictionary:
+	var variant_id := str(spec.get("appearance_variant_id", ""))
+	if variant_id.is_empty():
+		return {}
+	var key := str(spec.get("config_key", ""))
+	var look := CHARACTER_MODEL.with_appearance_variant(CHARACTER_MODEL.config_for(key), key, variant_id)
+	if str(look.get("appearance_variant_id", "")) != variant_id:
+		return {}
+	var record: Variant = (APPEARANCE_VARIANTS.load_config().get("variants", {}) as Dictionary).get(variant_id, {})
+	var replaces := str((record as Dictionary).get("replaces_portrait", "")) if record is Dictionary else ""
+	var portrait := str(look.get("portrait", ""))
+	if replaces.is_empty() or portrait.is_empty():
+		return {}
+	return {"portrait": portrait, "portrait_replaces": replaces}
 
 
 ## --- which conversation, given what has already happened ---------------------

@@ -92,6 +92,10 @@ const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("res://scripts/world/cloudreac
 const FLIGHT_AERIE_PRESENTATION := preload("res://scripts/world/cloudreach_flight_aerie_presentation.gd")
 const HIGH_PERCHES_PRESENTATION := preload("res://scripts/world/cloudreach_high_perches_presentation.gd")
 const HIGH_PERCHES_VISUAL_PATH := "res://data/config/cloudreach_high_perches_visual.json"
+## follower_creature.gd KEEP_CLEAR_GROUP / KEEP_CLEAR_RADIUS_META (pinned equal by
+## test_beings_perch_clearance_flag.gd; not preloaded, to keep the world script light).
+const FOLLOWER_KEEP_CLEAR_GROUP := &"follower_keep_clear"
+const FOLLOWER_KEEP_CLEAR_RADIUS_META := &"follower_keep_clear_radius_m"
 const OLD_WIND_OBSERVATORY_PRESENTATION := preload(
 	"res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
 const STORMWARD_OVERLOOK_PRESENTATION := preload("res://scripts/world/cloudreach_stormward_overlook.gd")
@@ -4775,6 +4779,14 @@ func _build_high_perches(root: Node3D) -> void:
 		# Few, uneven facets read as a weathered basalt stack, not a turned flue.
 		(needle.mesh as CylinderMesh).radial_segments = 7 + i % 3
 		needle.rotation.y = angle * 1.7
+		# BEINGS-PERCH-CLEARANCE (F40#17, OFF until judged): the needles stay
+		# visual-only, but the local companion's follow and recall spots keep
+		# its rendered footprint out of them (follower_creature KEEP_CLEAR_GROUP).
+		var clearance_cfg: Variant = perch_cfg.get("companion_needle_clearance", {})
+		if clearance_cfg is Dictionary and bool((clearance_cfg as Dictionary).get("enabled", false)):
+			needle.add_to_group(FOLLOWER_KEEP_CLEAR_GROUP)
+			needle.set_meta(FOLLOWER_KEEP_CLEAR_RADIUS_META,
+				radius * 1.08 + float((clearance_cfg as Dictionary).get("margin_m", 0.3)))
 		_box(root, "PerchCap%d" % i,
 			foot + Vector3.UP * height,
 			Vector3(8.0, 0.8, 4.0), _materials["wood"], false,

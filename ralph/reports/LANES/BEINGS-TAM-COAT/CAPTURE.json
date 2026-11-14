@@ -1,0 +1,5 @@
+{"row":"F38#16","tool":"res://tools/phase2_capture_dialogue.gd","captures":[
+ {"args":["--biome=meadows","--subset=meadows__inventory__trainer__tournament_quarter_mira","--seed=2042","--output={OUT}"],"frame":"meadows__inventory__trainer__tournament_quarter_mira__dialogue"},
+ {"args":["--biome=meadows","--subset=meadows__inventory__trainer__tournament_semi_tam","--seed=2042","--output={OUT}"],"frame":"meadows__inventory__trainer__tournament_semi_tam__dialogue"},
+ {"args":["--biome=meadows","--subset=meadows__inventory__trainer__tournament_final_oskar","--seed=2042","--output={OUT}"],"frame":"meadows__inventory__trainer__tournament_final_oskar__dialogue"}],
+ "output_rule":"--output must be under res://ralph/reports/VISUAL/phase2/meadows/","base":"tb/beings head, no overlay","arm":"tb/beings head + overlay.json","presets":["High","Medium (if High is 7.5 or above)"],"note":"The same three frames as G-rescore-f38-16-c673; only Tam's changes. About 18 minutes per frame on CPU."}
