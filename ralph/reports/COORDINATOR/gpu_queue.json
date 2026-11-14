@@ -5688,6 +5688,17 @@
    "ask": "Base (main with RIMGLOW) vs + ralph/reports/LANES/LAND-CS-RIMSEAT/overlay.json (rim_pickup_seat_1114 seats the tan rim cluster back from the lip; rim_glow scale 0.45 -> 0.3). High-perch tool per CAPTURE.json, High. By eye: the orange lip cluster sits on soil back from the edge with a fainter glow.",
    "added": "14 Nov 01:40",
    "priority": "land-cs boot"
+  },
+  {
+   "id": "beings-perch-clearance",
+   "branch": "tb/beings",
+   "commit": "43eb63612",
+   "rows": [
+    "F40#17 High Perches (6.61)"
+   ],
+   "ask": "Base (main) vs + ralph/reports/LANES/BEINGS-PERCH-CLEARANCE/overlay.json (companion_needle_clearance: the six visual-only needles join the keep-clear group so the Galecrest follow spot avoids them). High-perch tool per CAPTURE.json, High. Pair only crown-rim-out and crown-court (other frames vary with wild creatures). By eye: Galecrest no longer inside the needle, no floating wing in the wall.",
+   "added": "14 Nov 02:05",
+   "priority": "beings (F40#17 defect fix; pairs with RIMSEAT, judge separately)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
