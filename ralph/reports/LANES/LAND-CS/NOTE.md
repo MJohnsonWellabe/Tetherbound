@@ -1,6 +1,7 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
 ## LANDINGS READY (14 Nov 02:30 UTC): TURFGRAIN and WALL-BAND
+- **Combined, as asked: `tb/land-cs-cloudreach-land` 5e926e829** (from main 1405def4d; both flags ON, gate terraces OFF; 58 tests, 0 failed). Land this instead of the two single branches below.
 - **`tb/land-cs-turfgrain-land` 59feea6b**: `turf_detail_1113` ON. G-land-cs-turfgrain-rows: F40#1 +0.20, F40#4 +0.19, F40#7 +0.24, each 3/3, no loss. 53 tests, 0 failed.
 - **`tb/land-cs-wallband-land` 996efab0**: `wall_top_band_1113` ON (BELOW6 arm). G-below6-wall-band-main: F40#1 6.19 -> 6.51 (+0.32, 3/3), no loss. 45 tests, 0 failed. Landed alone: LANE-JUDGE asks to re-judge it with GATE-TERRACE before both land, so `gate_crag_terrace_1113` stays OFF.
 - Both cut from main 1405def4; different keys in cloudreach_visual.json, so either order.
