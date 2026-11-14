@@ -1,0 +1,15 @@
+{
+ "id": "LAND-CS-MASTERFLOOR",
+ "lane": "LANE-LAND-CS",
+ "branch": "tb/land-cs",
+ "preset": "High",
+ "base": {"tree": "tb/land-cs", "overlay": null},
+ "arm": {"tree": "tb/land-cs", "overlay": "ralph/reports/LANES/LAND-CS-MASTERFLOOR/overlay.json"},
+ "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+ "args": ["--seed=2042", "--output={OUT}"],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "frames": {"F40#17": ["cloudreach__flying__high-perches-crown-rim-out-day", "cloudreach__flying__high-perches-crown-rim-out-night"]},
+ "no_loss": "high-perches-crown-court-day; a Master T4 fight frame if one is on the board",
+ "note": "Stack it over RIMGLOW (or capture on main after the RIMGLOW landing) so the base is the shipped rim.",
+ "by_eye": "Upper platform behind the tower: no orange checker; a muted earth patch. Hold if still orange or checkered."
+}

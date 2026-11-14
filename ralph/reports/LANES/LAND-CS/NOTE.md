@@ -1,5 +1,9 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## New arm, held: LAND-CS-MASTERFLOOR (F40#17, 14 Nov 01:10 UTC)
+- The "orange checker disc" on the upper platform is `MasterT4/ArenaFloor` (pixel probe): the worn-ground soil overlay with a 2 m dirt-path tile at #9b805f. The arm gives Master floors a 7 m tile and a muted earth tint (#80776a); other yards unchanged. CPU: the checker is gone. CPU-ready and held.
+- The "griffin clipping the tower" is the player's own Galecrest companion (`AllyCreature`), so it is companion placement for LANE-BEINGS or LANE-THINGS, not this lane.
+
 ## LANDING READY (14 Nov 00:30 UTC): `tb/land-cs-rimglow-land` 1b9bd1ed
 - RIMGLOW SHIPS (LANE-JUDGE G-land-cs-rimglow): F40#17 6.03 -> 6.61 (+0.58, 3/3); court no-loss level (-0.04, noise).
 - Cut from current main; flag ON with `_why_on`; ON pin test; 75 pickup and mushroom tests, 0 failed; READY.md with STATUS: land.
@@ -16,6 +20,7 @@
 - F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.
 - F40#1, F40#7, F40#0, F40#19, F40#21, F40#4 HELD: LAND-CS-TURFGRAIN (fine turf grain), queued for the GPU.
 - F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.
+- F40#17 HELD: LAND-CS-MASTERFLOOR (Master T4 arena floor: 7 m soil tile, muted earth tint), CPU-ready, waiting for a queue slot.
 - F40#17 SHIPPED: LAND-CS-RIMGLOW, 6.03 -> 6.61 (3/3); landing branch tb/land-cs-rimglow-land.
 - F41#22, F41#24 HELD: LAND-CS-SOILOFF (wet-soil discs not built), queued for the GPU.
 - F40#6 PARKED (owner decision): the mount upright over open cloud; no arm from this lane.
