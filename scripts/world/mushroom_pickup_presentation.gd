@@ -22,6 +22,28 @@ static func apply(pickup: Node3D, item_id: String) -> void:
 		dress_mesh(mesh, look)
 
 
+## F40#17 `perch_rim_cluster_1112.rim_glow_1113` (LANE-LAND-CS, OFF until
+## judged). The rim patches are about 0.6x the old cap, but the shared pickup
+## glow keeps its 0.7 m halo, so each patch sits inside a soft ball of light
+## that judges read as "toy-like glow blobs" (G-rescore-1113, 3/3). On: the
+## glow at the three rim placements is scaled by `scale`; it still glows (owner
+## OP-0830-3), only smaller. Every other pickup returns 1.0.
+static func glow_scale(placement_id: String) -> float:
+	if placement_id.is_empty():
+		return 1.0
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(VARIANTS))
+	if not parsed is Dictionary:
+		return 1.0
+	var scoped: Variant = (parsed as Dictionary).get("perch_rim_cluster_1112", {})
+	if not scoped is Dictionary or not bool((scoped as Dictionary).get("enabled", false)) \
+			or not ((scoped as Dictionary).get("only_placements", []) as Array).has(placement_id):
+		return 1.0
+	var glow: Variant = (scoped as Dictionary).get("rim_glow_1113", {})
+	if not glow is Dictionary or not bool((glow as Dictionary).get("enabled", false)):
+		return 1.0
+	return clampf(float((glow as Dictionary).get("scale", 0.5)), 0.2, 1.0)
+
+
 static func dress_mesh(mesh: MeshInstance3D, look: Dictionary) -> void:
 	# Meadows also dresses after cache setup. Both consumers may reach the
 	# same mesh, but its nonuniform Wild scale must be applied only once.
