@@ -5614,7 +5614,8 @@
    ],
    "ask": "Base vs + ralph/reports/LANES/LAND-CS-MASTERFLOOR/overlay.json (Master T4 arena floor: 7 m soil tile and muted earth tint #80776a, replacing the 2 m dirt-path tile that reads as an orange checker disc). High-perch tool frames per its CAPTURE.json, High. By eye: no orange checker on the upper platform. Base must include RIMGLOW once #961 lands (or overlay both).",
    "added": "14 Nov 00:35",
-   "priority": "land-cs boot"
+   "priority": "land-cs boot",
+   "status": "PARKED 14 Nov: level 6.04 -> 6.13 (+0.09, 1/3, 2 ties); platform is background, not the subject; no more rounds on the platform top for F40#17."
   },
   {
    "id": "confirm-perches-seams-fixedseed",
