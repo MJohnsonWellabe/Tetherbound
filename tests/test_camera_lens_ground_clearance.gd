@@ -71,3 +71,20 @@ func test_shipped_config_turns_the_fix_on() -> void:
 	var entry: Dictionary = (parsed as Dictionary).camera.get("lens_ground_clearance", {})
 	assert_eq(entry.get("enabled"), true, "ships ON as a camera bug fix")
 	assert_true(str(entry.get("_why_on", "")).contains("ITEM-VENN-PLANE"), "records its cause")
+
+
+func test_a_lens_the_arm_already_pulled_in_is_tested_where_it_is() -> void:
+	# F39#21 (13 Nov): the fight arm is 19 m and a dune across it pulls the
+	# camera in to 11.5 m, where it rests just above the dune face. The
+	# clearance must test that lens, not the buried point at the full length.
+	_rig.set_lens_ground_probe_for_tests(func(lens: Vector3, clearance: float) -> bool:
+		# Ground rises steeply behind the player; past 11.5 m the point is under it,
+		# where a short downward ray finds nothing.
+		if lens.z > 11.6:
+			return false
+		return lens.y - 0.17 * lens.z < clearance, CFG)
+	_rig.spring_length = 19.0
+	_rig.set("_lens_hit_length_for_tests", 11.5)
+	_rig.call("_keep_lens_off_ground")
+	assert_true(_rig.spring_length < 11.5, "the arm shortened from the real lens, not the buried far end")
+	assert_true(_rig.spring_length >= 2.0, "never below min_arm_m")
