@@ -1,5 +1,5 @@
 {
- "updated": "14 Nov 02:15 UTC",
+ "updated": "14 Nov 03:12 UTC",
  "headline": "13 Nov 23:57: seven PRs landed this evening (#954, #956, #957, #958, #959, #960) and the first close (Staticub roster row). FLOWSTREAKS r2 ships (F13#5 5.70 -> 6.55), landing next. Tried-and-failed tab live.",
  "batches": [
   {
@@ -2139,6 +2139,11 @@
  "score_ledger_pending": [],
  "landed_recent": [
   {
+   "pr": "#964",
+   "what": "F38#30 Warrens hill shell repair (SHELLSHARDS, 5.44 -> 5.98, rest of the Warrens +0.59, F38#24 +0.28), F41#22/#24 Stormwood wet-soil discs not built (SOILOFF, +0.70/+0.94), and the F39#21 lens ground-clearance fix (re-score queued). LANE-LAND-MT, LANE-LAND-CS, LANE-SCENE; full CI green",
+   "when": "14 Nov 03:09"
+  },
+  {
    "pr": "#963",
    "what": "F40#1/#4/#7 Cloudreach turf grain (TURFGRAIN: +0.20, +0.19, +0.24, all 3/3; gate/shrine/overlook matrix no-loss). WALL-BAND withdrawn after the bridge F40#8 loss. LANE-LAND-CS; full CI green",
    "when": "14 Nov 02:13"
@@ -2554,8 +2559,8 @@
    "medium": 7.47
   },
   "F38#30": {
-   "gpu": 6.48,
-   "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905 | G-things-redleaf (13 Nov): main after #930 4.99 (hillside slab PRESENT 3/3, new art) | G-land-mt-brokenhill SHIP 5.06 -> 6.48 (+1.42, 3/3): slab wall to rock outcrops (LANE-JUDGE tb/judge 292317634, 13 Nov) | G-land-mt-shellshards-ss SHIP 5.44 -> 5.98 (+0.54, 3/3) on this panel (on top of BROKENHILL): floating shards and backface slivers gone; warrens other +0.59; F38#24 +0.28 (LANE-JUDGE 4db78c054, 14 Nov)"
+   "gpu": 5.98,
+   "src": "G-floor2-warrens-meadow-match (tb/item-scout-1108 f12fb0d9f): mound shell wears the meadow's grass, 5.23 -> 6.02 (3/3); landed #905 | G-things-redleaf (13 Nov): main after #930 4.99 (hillside slab PRESENT 3/3, new art) | G-land-mt-brokenhill SHIP 5.06 -> 6.48 (+1.42, 3/3): slab wall to rock outcrops (LANE-JUDGE tb/judge 292317634, 13 Nov) | G-land-mt-shellshards-ss SHIP 5.44 -> 5.98 (+0.54, 3/3) on this panel (on top of BROKENHILL): floating shards and backface slivers gone; warrens other +0.59; F38#24 +0.28 (LANE-JUDGE 4db78c054, 14 Nov) | LANDED #964 (main b5cfd21fa, 14 Nov): SHELLSHARDS 5.44 -> 5.98 on that panel"
   },
   "F38#31": {
    "gpu": 7.2,
@@ -2896,8 +2901,8 @@
    "src": "G-floor2-harvest-presence-confirm (tb/item-scout-1108 df24a8ab4): harvest nodes larger with satellite clusters, row 5.81 -> 6.81 (3/3); landed #905; RE-SCORE G-rescore-stale-ext-stormwood 7.17 (LANE-PLACES 444270729, main, GPU High, 12 Nov)"
   },
   "F41#24": {
-   "gpu": 6.46,
-   "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, cleanliness brief, 5 stands; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 7.08; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28 | SOILOFF arm (G-land-cs-soiloff, 14 Nov, not landed yet): forest+giant 5.29 -> 6.23 (+0.94), five stands on that panel 6.00 -> 6.38"
+   "gpu": 6.38,
+   "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, cleanliness brief, 5 stands; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 7.08; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28 | SOILOFF arm (G-land-cs-soiloff, 14 Nov, LANDED #964): forest+giant 5.29 -> 6.23 (+0.94), five stands on that panel 6.00 -> 6.38"
   },
   "F13#5": {
    "gpu": 6.55,
@@ -2916,8 +2921,8 @@
    "src": "GPU High visual baseline, 8 Nov frames (G-baselines-unscored-rows; look only, criterion is C2/C3)"
   },
   "F41#22": {
-   "gpu": 6.46,
-   "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, 5 of 10 matrix stands; baseline 5.90 full row; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 6.96; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28 | SOILOFF arm (G-land-cs-soiloff, 14 Nov, not landed yet): forest+giant 5.33 -> 6.03 (+0.70), five stands on that panel 6.02 -> 6.30"
+   "gpu": 6.3,
+   "src": "GPU High 10 Nov (G-newapproach-stormwood-bark, 5 of 10 matrix stands; baseline 5.90 full row; batch 49 #895) | RE-SCORE G-rescore-f41-22-24 (LANE-PLACES 9360eb28d, main 90ffeb663, five stands x Calm/Break/aftermath, 12 Nov) 6.46 (was 6.96; fit RMSE 0.75, +/-0.75); giant 5.51, forest 6.06, rod_line 6.49, glass 6.98, stormheart 7.28 | SOILOFF arm (G-land-cs-soiloff, 14 Nov, LANDED #964): forest+giant 5.33 -> 6.03 (+0.70), five stands on that panel 6.02 -> 6.30"
   },
   "F38#0": {
    "gpu": 6.6,

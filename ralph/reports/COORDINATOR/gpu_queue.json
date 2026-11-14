@@ -5067,7 +5067,7 @@
    "ask": "Takes THINGS-STORMPOOL r2's slot. Base vs ralph/reports/LANES/LAND-CS-SOILOFF/overlay.json (stormwood_ground_finish forest_layers_1113: wet_soil layer off, the 1,400 near-black glossy discs), High, capture_stormwood_f10_matrix.gd --stands=forest,giant,rod_line,glass,stormheart --phases=calm,break (+aftermath Calm). By-eye: forest_calm/giant_calm black jagged patches gone; forest_break/giant_break no pale slab by the trainer. Else hold.",
    "added": "13 Nov 16:50",
    "note_tree": "tb/land-cs 91ac0d6a1 contains main b8622117c (#954): base frames are main content.",
-   "status": "SHIP 14 Nov (G-land-cs-soiloff): F41#22 5.33 -> 6.03 (+0.70, 3/3), F41#24 5.29 -> 6.23 (+0.94, 3/3); no-loss stands level. Landing in #964 (tb/land-cs-soiloff-land 043e33593)."
+   "status": "LANDED #964 (main b5cfd21fa), 14 Nov. SHIP 14 Nov (G-land-cs-soiloff): F41#22 5.33 -> 6.03 (+0.70, 3/3), F41#24 5.29 -> 6.23 (+0.94, 3/3); no-loss stands level. Landing in #964 (tb/land-cs-soiloff-land 043e33593)."
   },
   {
    "id": "beings-neckdown",
@@ -5642,7 +5642,7 @@
    "ask": "Base vs + ralph/reports/LANES/LAND-MT-SHELLSHARDS/overlay.json (island_strip: drops 276 detached islands off the Meshy mound and fan-fills its open loops, so no sky windows or floating crest shards). Warrens set (route_day, walk_01-03, vista_dusk), High. By eye at walk_02: no sky window or black triangle at the top of frame.",
    "added": "14 Nov 00:50",
    "priority": "Meadows boot",
-   "status": "SHIP judged 14 Nov (+0.54). Crash on the arm run was a divide by zero inside the NVIDIA driver (nvoglv64.dll), the same signature as 10 unrelated runs since 13 Oct (G-land-mt-shellshards-crash). Cleared to land if the retry is clean. Stronghold no-loss on the retry: LEVEL 6.77 = 6.77. Landing in the PR after #963."
+   "status": "LANDED #964 (main b5cfd21fa), 14 Nov. SHIP judged 14 Nov (+0.54). Crash on the arm run was a divide by zero inside the NVIDIA driver (nvoglv64.dll), the same signature as 10 unrelated runs since 13 Oct (G-land-mt-shellshards-crash). Cleared to land if the retry is clean. Stronghold no-loss on the retry: LEVEL 6.77 = 6.77. Landing in the PR after #963."
   },
   {
    "id": "land-mt-plume",
@@ -5679,7 +5679,7 @@
    "ask": "Capture-tooling arm: base vs + ralph/reports/LANES/LAND-CS-ARCHSTAND/overlay.json (capture_stands approach_overrides.candidates_1113: a stand that frames the broken skyroad arch itself). phase2_capture_locations.gd per its CAPTURE.json, High. By eye: the arch is the subject of the frame. Re-baselines F40#3's arch view (stand rule: a stand that cannot show its subject may move).",
    "added": "14 Nov 01:40",
    "priority": "land-cs boot",
-   "status": "JUDGED 14 Nov (G-lcs-archstand): RE-BASELINE, new stand 6.37 vs old 5.74 (+0.63, 3/3). Capture fix; adopt the stand (lands with the next capture-tool landing)."
+   "status": "JUDGED 14 Nov (G-lcs-archstand): RE-BASELINE, new stand 6.37 vs old 5.74 (+0.63, 3/3). Capture fix; adopt the stand (lands with the next capture-tool landing). In PR #965."
   },
   {
    "id": "land-cs-rimseat",
@@ -5691,7 +5691,7 @@
    "ask": "Base (main with RIMGLOW) vs + ralph/reports/LANES/LAND-CS-RIMSEAT/overlay.json (rim_pickup_seat_1114 seats the tan rim cluster back from the lip; rim_glow scale 0.45 -> 0.3). High-perch tool per CAPTURE.json, High. By eye: the orange lip cluster sits on soil back from the edge with a fainter glow.",
    "added": "14 Nov 01:40",
    "priority": "land-cs boot",
-   "status": "SHIP 14 Nov (G-lcs-rimseat): F40#17 6.05 -> 6.68 (+0.63, 3/3); court +0.31; arrival +0.58 creature-staging confound, not counted. LANE-LAND-CS to land with ARCHSTAND."
+   "status": "SHIP 14 Nov (G-lcs-rimseat): F40#17 6.05 -> 6.68 (+0.63, 3/3); court +0.31; arrival +0.58 creature-staging confound, not counted. LANE-LAND-CS to land with ARCHSTAND. In PR #965."
   },
   {
    "id": "beings-perch-clearance",
@@ -5738,6 +5738,17 @@
    "ask": "Base (tb/land-cs head) vs + ralph/reports/LANES/LAND-CS-WALLBAND2/overlay.json (pale band limited to the top 3 m under the rim). phase2_capture_locations.gd cloudreach day approach,close per CAPTURE.json, High. By eye: Three Bells bridge cliff keeps brown rock (hold if pale grey); Realm Gate shows a pale band under the lip. Optional combined overlay with terrace r1 in the folder.",
    "added": "14 Nov 03:10",
    "priority": "land-cs (WALL-BAND r2, judged with the bridge F40#8 as no-loss)"
+  },
+  {
+   "id": "rescore-f39-21-lensground",
+   "branch": "main",
+   "commit": "b5cfd21fa",
+   "rows": [
+    "F39#21 Venn win and aftermath (5.84)"
+   ],
+   "ask": "One-sided re-score on main (lens ground-clearance fix landed in #964). Same Venn win/aftermath capture as G-rescore-1113; pool at least 2 runs and pair by camera per TECHNICAL 8.1. By eye: no flat grey dune plane filling the lower half of the win frame.",
+   "added": "14 Nov 03:12",
+   "priority": "high (regression 7.06 -> 5.84; fix landed)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."

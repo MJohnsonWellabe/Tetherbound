@@ -1,5 +1,5 @@
 {
- "entries": 249,
+ "entries": 256,
  "rows": {
   "F13#5": [
    {
@@ -2021,10 +2021,28 @@
     "rows": [
      "F39#31"
     ],
+    "approach": "land-mt-veilrebuild",
+    "result": "HELD 14 Nov: LAND-MT already has two arms waiting (SEADEPTH r3, PLUME r2); runs when one clears.",
+    "source": "COORDINATOR/gpu_queue.json",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
     "approach": "FLOOR2-DAWNRAIN",
     "result": "Veilfall in rain loses contrast** (right-hand column): the mountain is still readable but flatter. That is the trade VIS-TIDEWAKE's notes warned about; F39#31's rain view is in the capture as a control.",
     "source": "main:ralph/reports/LANES/FLOOR2-DAWNRAIN/ARM.md",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "F39#31"
+    ],
+    "approach": "LAND-MT",
+    "result": "Built and HELD for the next free GPU slot: `LAND-MT-VEILREBUILD` (F39#31, the Veilfall rebuild you asked for).** Overlay only (`falls.rebuild.enabled`); no Meshy, no tiers removed, no camera-facing puffs.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
+    "status": "held"
    },
    {
     "rows": [
@@ -2243,6 +2261,16 @@
      "F40#8"
     ],
     "approach": "LAND-CS",
+    "result": "F40#1, F40#8 HELD: LAND-CS-WALLBAND2 (band limited to the top 3 m under rims), CPU-ready.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
     "result": "F40#1, F40#8 PARKED (as is): BELOW6-WALL-BAND. F40#1 +0.32 (3/3) but F40#8 loses 6.29 -> 5.86 (0/3, cliff face repainted). Withdrawn from PR #963.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "parked"
@@ -2309,7 +2337,7 @@
      "F40#3"
     ],
     "approach": "LAND-CS",
-    "result": "F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.",
+    "result": "F40#3 SHIPPED (re-baseline): LAND-CS-ARCHSTAND, 6.37 vs 5.74 (3/3); landing tb/land-cs-rimarch-land.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    },
@@ -2437,10 +2465,29 @@
     "rows": [
      "F40#8"
     ],
+    "approach": "LAND-CS-WALLBAND2",
+    "result": "F40#8 no-loss, 6.29: round 1 lost there, 6.29 -> 5.86 (0/3, G-lcs-wallband-bridge), so the verdict was amended to DO NOT SHIP and the flag came out of PR #963.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS-WALLBAND2/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#8"
+    ],
     "approach": "LAND-CS",
     "result": "LANE-JUDGE amended G-below6-wall-band-main to **DO NOT SHIP**: the F40#8 no-loss check loses on the Three Bells bridge, 6.29 -> 5.86 (−0.43, 0/3); the band repaints a whole cliff face as grey with faceted brown patches.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#8 HELD: LAND-CS-WALLBAND2 (band limited to the top 3 m under rims), CPU-ready.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
    },
    {
     "rows": [
@@ -2586,7 +2633,7 @@
      "F40#17"
     ],
     "approach": "LAND-CS",
-    "result": "F40#17 HELD: LAND-CS-RIMSEAT (tan rim find 1.2 m back from the lip; overlay glow 0.3), CPU-ready, waiting for a queue slot.",
+    "result": "F40#17 SHIPPED: LAND-CS-RIMSEAT, 6.05 -> 6.68 (3/3); landing tb/land-cs-rimarch-land.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    },
@@ -3215,7 +3262,7 @@
      "F41#24"
     ],
     "approach": "LAND-CS",
-    "result": "F41#22, F41#24 HELD: LAND-CS-SOILOFF (wet-soil discs not built), queued for the GPU.",
+    "result": "F41#22, F41#24 SHIPPED: LAND-CS-SOILOFF (+0.70, +0.94, 3/3); landing tb/land-cs-soiloff-land.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    }
@@ -3247,7 +3294,7 @@
      "F41#24"
     ],
     "approach": "LAND-CS",
-    "result": "F41#22, F41#24 HELD: LAND-CS-SOILOFF (wet-soil discs not built), queued for the GPU.",
+    "result": "F41#22, F41#24 SHIPPED: LAND-CS-SOILOFF (+0.70, +0.94, 3/3); landing tb/land-cs-soiloff-land.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "held"
    }
@@ -3755,6 +3802,15 @@
     "rows": [
      "(no row named)"
     ],
+    "approach": "LAND-MT-VEILREBUILD",
+    "result": "What is new versus the parked approaches.** TIERA (removing cascade tiers) and BASEMIST (camera-facing puffs) are parked. This arm keeps the tiers and draws no puffs.",
+    "source": "land-mt:ralph/reports/LANES/LAND-MT-VEILREBUILD/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
     "approach": "LAND-MT",
     "result": "SHOREZONES: PARKED** after its GPU loss. Round 2 (no normal gate, near fade) should remove the near-sand polygons, but the far-dune turf barely registers and the wet band and wrack line do not read from the stands, so the upside is small. The folder keeps round 2 if you want it run anyway.",
     "source": "land-mt:ralph/reports/LANES/LAND-MT/NOTE.md",
@@ -4055,6 +4111,24 @@
     "approach": "SCENE-CACHE",
     "result": "order 1030, \"A dropped travel pack\": a cold stone fire ring with a cauldron on it, a camp stool and a bucket. An abandoned camp, as the node's own note says (\"a pack left by whoever was here before\").",
     "source": "scene:ralph/reports/LANES/SCENE-CACHE/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "SCENE-FLEECARD",
+    "result": "`combat_hud.gd _apply_flee_card` draws the flee verdict in the same framed family as the catch card. The card is an opaque plate with a soft teal edge (no red). It shows a 44 px headline \"YOU BACKED OFF\" over \"<creature> got clear. Regroup and try again.\", placed in the upper third, clear of the creature, and held 3 s.",
+    "source": "scene:ralph/reports/LANES/SCENE-FLEECARD/ARM.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "SCENE",
+    "result": "Cause, confirmed on the judged GPU frames: the Hollows \"loss\" frame is a flee. The level-42 party never loses inside the capture window (i12 is mid-fight, 5/5 healthy), and the tool ends the fight with `resolve(\"fled\")`. The shipped `loss_card` handles only `lost`, so judges see one small default-size \"You backed off.\" over the spider, with \"Put Sparkit away\" under it.",
+    "source": "scene:ralph/reports/LANES/SCENE/NOTE.md",
     "status": "parked"
    },
    {
