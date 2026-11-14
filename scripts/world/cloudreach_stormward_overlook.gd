@@ -40,7 +40,7 @@ func build(materials: Dictionary) -> void:
 			_v3(spec.position), _v3(spec.size), masonry, "ruined_wing")
 		piece.rotation = Vector3(deg_to_rad(float(spec.get("pitch_deg", 0.0))),
 			deg_to_rad(float(spec.get("yaw_deg", 0.0))), deg_to_rad(float(spec.get("roll_deg", 0.0))))
-	for index in (cfg.get("approach_pavers", []) as Array).size():
+	for index in (cfg.get("approach_pavers", []) as Array).size() if build_pavers(cfg) else 0:
 		var spec := (cfg.approach_pavers as Array)[index] as Dictionary
 		var paver := _box("StormwardPaver%02d" % (index + 1), _v3(spec.position),
 			_v3(spec.size), trim, "approach_paver")
@@ -56,6 +56,17 @@ func build(materials: Dictionary) -> void:
 			(pane_fix.get("pennant", {}) as Dictionary) if fixed else {})
 	_add_beacons(cfg.get("beacons", []) as Array, bronze,
 			(pane_fix.get("ember", {}) as Dictionary) if fixed else {})
+
+
+## F40#15 `paver_strips_1113` (LANE-LAND-CS, OFF until judged). With the
+## ridge join ON the approach ridge is lifted to the ledge crown, which buries
+## the four approach paver slabs: only a sunken strip of each still shows, and
+## judges read it as "dark slab and plank strips on the grass" (GPU
+## G-below6-overlook-solid-c673 walk_02/03, route_day, vista_dusk). On: the
+## pavers are not built. They carry no collision; the trail is separate.
+static func build_pavers(cfg: Dictionary) -> bool:
+	var flag: Variant = cfg.get("paver_strips_1113", {})
+	return not (flag is Dictionary and bool((flag as Dictionary).get("enabled", false)))
 
 
 ## F40#15 `ruin_collision_1113` (flag-off; scope world_geometry: static, the
