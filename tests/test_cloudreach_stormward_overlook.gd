@@ -25,7 +25,8 @@ func test_stormward_threshold_is_open_directional_and_visual_only() -> void:
 			collision_count += 1
 	assert_eq(int(roles.get("survey_pier", 0)), 2)
 	assert_eq(int(roles.get("ruined_wing", 0)), 2)
-	assert_eq(int(roles.get("approach_paver", 0)), 4)
+	# paver_strips_1113 ships ON (G-land-cs-overlook-seams): the buried approach pavers are not built.
+	assert_eq(int(roles.get("approach_paver", 0)), 0)
 	assert_eq(int(roles.get("stormward_needle", 0)), 3)
 	assert_eq(int(roles.get("compass_signal", 0)), 1)
 	assert_eq(int(roles.get("compass_signal_core", 0)), 1)
