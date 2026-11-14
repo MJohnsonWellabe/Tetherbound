@@ -16,6 +16,16 @@ uniform float fog_keep = 0.6;        // share of the environment fog this ridge 
 uniform float base_fog_keep = 0.95;  // at and below base_fade_top_m the ridge melts into the haze
 uniform float base_fade_top_m = 60.0;
 uniform float base_y_world = -40.0;
+// Warm-hour haze (LANE-LAND-MT, OFF at the defaults): at golden hour the
+// environment fog is tan, and a 1.7 km ridge wearing 60% of it reads as a
+// flat tan sheet. warm_haze_mix moves the ridge's own haze toward
+// warm_haze_colour (a cool dusk blue-violet) by how warm the fog is, and
+// warm_keep_scale thins it, so the range stays a cool silhouette with form
+// against the warm sky. Blue day and night fog have no warmth: unchanged.
+uniform vec3 warm_haze_colour = vec3(0.30, 0.33, 0.46);
+uniform float warm_haze_mix = 0.0;
+uniform float warm_keep_scale = 1.0;
+uniform float warm_gain = 3.0;
 varying float v_distance;
 varying float v_height;
 
@@ -30,5 +40,8 @@ void fragment() {
 	ROUGHNESS = 1.0;
 	float env_fog = fog_enabled ? 1.0 - exp(-fog_density * v_distance) : 0.0;
 	float keep = mix(base_fog_keep, fog_keep, smoothstep(0.0, max(base_fade_top_m, 1.0), v_height));
-	FOG = vec4(fog_colour, env_fog * keep);
+	float warmth = clamp((fog_colour.r - fog_colour.b) / max(fog_colour.r, 0.001) * warm_gain, 0.0, 1.0);
+	vec3 haze = mix(fog_colour, warm_haze_colour * dot(fog_colour, vec3(0.3333)) / max(dot(warm_haze_colour, vec3(0.3333)), 0.001),
+		warm_haze_mix * warmth);
+	FOG = vec4(haze, env_fog * keep * mix(1.0, warm_keep_scale, warmth));
 }

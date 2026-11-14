@@ -218,6 +218,10 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - `phase2_capture_tidewake_fights.gd` ("frame_cap" exit 1 is normal)
   - `phase2_capture_cloudreach_live_fight.gd` (about 45 min, often exits 124 after writing frames)
   - `capture_f38_fight.gd` (the GPU G3/G5 set)
+- **Fight captures pool base runs and pair by camera (13 Nov, GPU lane):**
+  - A fight run can start at one of two discrete cameras, chosen per run (Tidewake Venn: 35 m apart at t-000). Capture at least two base runs of the same composition and pool them, and run one throwaway capture of the same fight first as an extra base run to pool. A single base on the other camera made ROSTERNAMES' base read as a camera shift and an F39#7 loss that LANE-JUDGE later withdrew.
+  - Pair base and arm frames by camera position across all runs (`pair_frames.py`). If t-000 differs by more than 1 m between base and arm, re-run the BASE side rather than the arm; an arm retry reproduces the arm's own state.
+  - Fights can also branch into a few fixed paths from the same start (the Meadows Warden fight has two). Pool every run of the same composition before calling a pair unmatched, and disclose any cross-section pairing in the manifest.
 - **Candidate overlays:**
   - Never edit the config a running capture reads.
   - Apply overlays only on a clean tree, and commit new default keys first, because restoring with `git checkout data/config/` wipes uncommitted keys.
