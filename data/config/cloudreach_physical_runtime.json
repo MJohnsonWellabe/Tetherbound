@@ -105,12 +105,17 @@
     "_round1": "qj F40-17-ade4ecff4c0e-11040935: flat (4.57 -> 4.57). Moving the cluster out of frame removed the defect but left the subject unreadable; all three judges asked for it grounded and visible in frame. Stays OFF."
   },
   "rim_pickup_seat_1114": {
-    "_scope": "world_presentation",
-    "_why": "LANE-LAND-CS (14 Nov 2026), F40#17 6.61 (G-land-cs-masterfloor next ask, 3/3: 'the subject decides the row: seat the tan cluster back from the lip on soil, vary cluster size and spacing'; G-land-cs-rimglow judge a: 'the orange cluster still sits at the very lip'). rim_pickup_cluster puts the three finds within 1.5 m of each other about 20 m from the crown centre (900, 2700), the stamina (tan) one at the lip. On (read first by cloudreach_physical_runtime.gd _pickup_override): only the stamina find moves about 1.2 m inward, off the lip; the speed and wild finds keep rim_pickup_cluster's spots so the patch stays in the fixed frame (a wider respacing pushed two finds out of frame on CPU). Same ids, items, counts and claims; only the authored spots change. OFF until judged.",
-    "enabled": false,
-    "pickup_overrides": {
-      "cr_recovery_high_roost_flight_stamina_01": [912.6, 1020.0, 2685.5]
-    }
+      "_scope": "world_presentation",
+      "_why": "LANE-LAND-CS (14 Nov 2026), F40#17 6.61 (G-land-cs-masterfloor next ask, 3/3: 'the subject decides the row: seat the tan cluster back from the lip on soil, vary cluster size and spacing'; G-land-cs-rimglow judge a: 'the orange cluster still sits at the very lip'). rim_pickup_cluster puts the three finds within 1.5 m of each other about 20 m from the crown centre (900, 2700), the stamina (tan) one at the lip. On (read first by cloudreach_physical_runtime.gd _pickup_override): only the stamina find moves about 1.2 m inward, off the lip; the speed and wild finds keep rim_pickup_cluster's spots so the patch stays in the fixed frame (a wider respacing pushed two finds out of frame on CPU). Same ids, items, counts and claims; only the authored spots change. OFF until judged.",
+      "enabled": true,
+      "pickup_overrides": {
+          "cr_recovery_high_roost_flight_stamina_01": [
+              912.6,
+              1020.0,
+              2685.5
+          ]
+      },
+      "_why_on": "ON (GPU High, 14 Nov 2026; ralph/reports/GPU-PASS/1108/G-lcs-rimseat.md on tb/judge d0e475d15): F40#17 6.05 -> 6.68 (+0.63, 3/3); the tan cluster sits on the lawn, floating defect FIXED 3/3. Crown court no-loss +0.31 (3/3). Judged with rim_glow_1113.scale 0.3."
   },
   "rim_pickup_cluster": {
     "_scope": "world_presentation",
