@@ -1,5 +1,11 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## URGENT FOR PR #963 (14 Nov 01:55 UTC): WALL-BAND withdrawn, pushed to the PR branch
+- LANE-JUDGE amended G-below6-wall-band-main to **DO NOT SHIP**: the F40#8 no-loss check loses on the Three Bells bridge, 6.29 -> 5.86 (−0.43, 0/3); the band repaints a whole cliff face as grey with faceted brown patches.
+- I pushed `tb/land-cs-cloudreach-land` 0096977e0: `wall_top_band_1113` OFF with `_why_off`, its test now an OFF pin, READY.md amended. TURFGRAIN unchanged and still ON. 23 tests, 0 failed. **CI on #963 needs to run on this head before merging.**
+- F40#1 HELD: BELOW6-WALL-BAND, F40#1 +0.32 stands; round 2 must limit the band to rim and wall-top geometry (height band or normal mask) and re-judge with the Three Bells bridge frame.
+- F40#8 next ask (not taken yet): mute the gold-cone pointer post behind the trainer.
+
 ## STATE (14 Nov 01:40 UTC)
 - **Landed on main:** overlook join + solid ruin (#954, inherited), RIMGLOW (#961), OVERLOOK-SEAMS (#962). **In CI:** TURFGRAIN + WALL-BAND (PR #963). The single-arm land branches are not needed.
 - `tb/land-cs` dbbfc7842 contains main 94fe423d3. Against main it differs only by flag-off arms (`forest_layers_1113`, `paver`-free now, `rim_pickup_seat_1114`, `master_floor_1114` parked, `candidates_1113` arch stand) and their tests and reports.
@@ -39,7 +45,7 @@
 - F40#1 PARKED: re-cluster the Cloudreach grass tufts by overlay (`ground_cover.cluster_frequency` 0.55, `cluster_threshold` 0.9); no visible change on CPU, not sent.
 - F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.
 - F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.
-- F40#1 SHIPPED: BELOW6-WALL-BAND (+0.32, 3/3); landing tb/land-cs-wallband-land.
+- F40#1, F40#8 PARKED (as is): BELOW6-WALL-BAND. F40#1 +0.32 (3/3) but F40#8 loses 6.29 -> 5.86 (0/3, cliff face repainted). Withdrawn from PR #963.
 - F40#1 HELD: BELOW6-GATE-TERRACE (+0.20, 2/3, curbs read as generated contour lines); re-judge with the wall band on.
 - F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.
 - F40#17 HELD: LAND-CS-RIMSEAT (tan rim find 1.2 m back from the lip; overlay glow 0.3), CPU-ready, waiting for a queue slot.
