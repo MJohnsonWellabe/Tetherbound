@@ -1,6 +1,12 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **On the GPU lane's crash evidence** (tb/gpu-frames-1113 76f13eed9: the fault is inside the NVIDIA OpenGL driver, nvoglv64 32.0.15.6094, an integer divide; the same signature appears on 10 earlier captures, 13 Oct to 9 Nov).
+  - I checked their zero-count guess against this change. The shell's cover tufts and edge flora are individual scene nodes, not MultiMeshes, so island_strip cannot create a zero-instance MultiMesh.
+  - The repaired shell is one surface, validated non-empty with whole, in-range, non-degenerate triangles and finite unit attributes (e9e8d703 pin). There are no zero-length buffers: the vertex, normal, tangent and UV arrays are all sized to the 59,650 + fill vertices.
+  - The only difference reaching the driver is a fresh uncompressed ArrayMesh with no LODs, in place of the imported compressed mesh with LODs and a shadow mesh. That is a standard path, so I don't see a lever in it.
+  - My read: an intermittent driver fault with prior history, which hit the arm side once. It is not tied to stronghold walk_01; the shell is about 400 m away there.
+  - Your call on landing. If you want more evidence, two clean arm-side retries on e9e8d703 are the cheapest.
 - **SHELLSHARDS crash investigation (your 01:27 list): nothing degenerate found. The land branch is now `tb/land-mt-shellshards-land` e9e8d703.**
   - **Validity checks on the real mound** (pin test, now 4 tests, 0 failed), for the source, the strip output and the fill output: every surface non-empty, index count a multiple of 3, all indices in range, zero zero-area triangles, finite positions, normals and UVs, unit normals, and unit tangents with w = ±1. Ten repeat runs are identical; there is no random step.
   - **Results:** all zero on the judged code (ae9acef6) and on the hardened code. A fan never has fewer than 3 points, because loops under 3 are skipped by construction. The mesh has no LOD or shadow-mesh rebuild: a plain ArrayMesh with no LODs.
