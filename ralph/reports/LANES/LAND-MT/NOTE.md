@@ -1,6 +1,18 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **LANDING READY: `tb/land-mt-flowstreaks-land` b95ca34d** (from main b52651b0, after #960). This is FLOWSTREAKS round 2: `current_flow.lesson_cue` is ON with `_why_on` citing G-land-mt-flowstreaks-r2 (F13#5 +0.85, 3/3). READY.md is in `ralph/reports/LANES/LAND-MT-FLOWSTREAKS-LAND/`. The pin test and 2 related files ran: 10 tests, 154 assertions, 0 failed.
+- **Row-tagged status (for TRIED_AND_FAILED):**
+  - F38#24 TWORANGES: PARKED. A stretched copy of the ridge reads as a pale streaky wall; a real second range needs a new far mesh.
+  - F39#5 / F39#14 VWAKE: PARKED. The foam blobs were not the swim wake.
+  - F39#5 / F39#14 SHALLOWFOAM (`foam_depth` 0.2): PARKED. The blobs were unchanged.
+  - F39#19 CRAGBACK: PARKED. It was level on GPU because the engine already flips back-face normals; CRAGCUT shipped instead.
+  - F39#19 DUNETONE: PARKED. Damp tone on the Venn dune is too faint at a believable strength.
+  - F39#31 BASEMIST: PARKED. Camera-facing puffs do not read as base mist at these distances.
+  - F39#31 TIERA: PARKED. It was level.
+  - F39#1 / F39#27 SHOREZONES: PARKED. All rows lost on GPU.
+  - F39#15 SHOALBREAK: PARKED. Contour wander cannot break the round islet halos; it needs a terrain rebake, which is not now.
+  - F39#10 / F39#15 SEADEPTH: HELD for round 3 only. Keep base's deep navy and soften only the transition band; if that is a wash too, PARKED.
 - **Ready, stacks on SHELLSHARDS: `LAND-MT-PLUME` (the "solid smoke pillar").** Flag-off camfx `smoke_plume`, for the Warrens F03 lure post only: wider foot and crown, thinner discs, more top fade and a downwind lean, so the 26 m column reads as a soft plume and still marks the site from the road. Test: 1 test, 0 failed. Gain is modest: please judge SHELLSHARDS+PLUME against SHELLSHARDS in the same Warrens boot (overlay only; 2 arms waiting in total).
 - **Ready: `LAND-MT-SHELLSHARDS` (F38#30, BROKENHILL round 2), please run it at High with the Warrens set** (route_day, walk_01, walk_02, walk_03, vista_dusk; no-loss F38#24). **Cause proved:** the crest shards and sky holes are flaws in the Meshy mound itself. It has 276 detached 2–4 m islands hovering off the surface, and its main body has 514 open loops, so the sky shows through as pale-blue windows beside the shell's dark inside. Five probes ruled out MoundGrowth, the tufts, the edge flora, InteriorRock and the chamber hulls. Flag-off `island_strip` drops the islands and fan-fills the loops when the shell loads (3,590 → 249 open edges, about 0.35 s once). Test: 3 tests, 0 failed. Overlay only. By-eye: walk_02, top of frame, no sky window or black triangle. It is also a geometry correctness fix, so I can cut a land branch straight away if you prefer that over judging.
 - **TWORANGES (F38#24): PARKED on CPU after three looks.** The back layer is the same ridge mesh stretched, so its facets turn into vertical streaks. At height 1.4 and 1.6 it reads as a pale wall crowding the stronghold, not as a far range. A real second range needs a different far mesh, which is outside this round (no Meshy credits). Sheet and ARM.md are in `ralph/reports/LANES/LAND-MT-TWORANGES/`.
