@@ -1,5 +1,64 @@
 # VERDICT-LINES: one line per verdict, for the coordinator
 
+## Handoff (LANE-JUDGE wrap-up, 14 Nov 2026 ~03:10 UTC)
+
+**State**
+- **Head:** `tb/judge` head is pushed with this handoff (the commit after d0e475d15). The branch holds 268 verdict files in this folder.
+- **On main** (`b5cfd21fa`, #964): 220 verdict files. 48 verdicts exist only on `tb/judge` and need the coordinator's landing PR. They are all the 13 Nov lane-judge verdicts from G-below6-*-c673 / G-rescore-*-c673 onward, plus every 14 Nov verdict below.
+- **14 Nov verdicts, all on `tb/judge` only:**
+
+  | Verdict | Result |
+  |---|---|
+  | G-land-mt-grassgroves-r2 | SHIP |
+  | G-rescore-f39-31-post958 | 5.78, new baseline |
+  | G-land-mt-tiera | DO NOT SHIP, PARK |
+  | G-land-mt-seadepth | DO NOT SHIP |
+  | G-land-mt-shorezones | DO NOT SHIP |
+  | G-land-mt-flowstreaks-r2 | SHIP |
+  | G-land-mt-seadepth-r2 | DO NOT SHIP; the panels disagree on F39#10 |
+  | G-land-cs-rimglow | SHIP |
+  | G-land-cs-overlook-seams | SHIP; the Perches confound is confirmed |
+  | G-land-cs-turfgrain-rows | SHIP |
+  | G-below6-wall-band-main | AMENDED to DO NOT SHIP; the F40#8 bridge loses |
+  | G-below6-gate-terrace-main | SHIP, thin |
+  | G-land-cs-masterfloor | level |
+  | G-land-mt-shellshards-ss | SHIP, plus the retry addendum |
+  | G-land-mt-plume | DO NOT SHIP |
+  | G-lcs-wallband-bridge | LOSS |
+  | G-lcs-turf-matrix | no loss |
+  | G-land-cs-soiloff | SHIP |
+  | G-lcs-archstand | RE-BASELINE 6.37 |
+  | G-lcs-rimseat | SHIP |
+
+**Captured-but-unjudged frames on `tb/gpu-frames-1113`:** none. Every section up to b43810834 (G-lcs-rimseat) has a verdict. Still expected, not captured yet:
+- **PANELFILL** (F38#10 close candidate; needs all three panels at High and Medium plus the F38#38 control in one confirming batch).
+- **BEINGS-PERCH-CLEARANCE** (tb/beings 43eb63612, F40#17 griffin clip). Judge it on the four crown frames only, against main with RIMSEAT.
+- **SEADEPTH r3** (keep base's deep navy, soften only the transition).
+- **CLOUDNIGHT r2** (F40#17 night).
+- **WALL-BAND r2** (band masked to rims and wall tops). Re-judge it with F40#1 plus the F40#8 bridge frame.
+- **GATE-TERRACE r2** (combined with WALL-BAND).
+
+**Yardstick and calibration notes**
+- **Per-verdict record:** every verdict has a `yardstick_<tag>/` folder (spec, key, judge_a/b/c, batch, mapped, cal, frames.json).
+- **Fits today:** r 0.86 to 0.95, anchor RMSE 0.43 to 0.71, all confirming. Read r < 0.9 as ±0.3.
+- **Panel strictness:** it varies by up to about 0.6 between batches. A base can read 5.3 on one panel and 5.9 on another, so the paired gain is the measure, and board rows from other panels are not comparable one-to-one. When a close is at stake, add the F38#38 control (8.16/8.30).
+- **Position bias:** in the SEADEPTH batches every water set leaned to side B. When a tone-only change is small, a single panel cannot rank it. Check the judges' reasons name a concrete artefact before counting a win or a loss.
+- **Spawn and run noise:** wild creatures, rain and spawn placement differ run to run (Perches base-vs-base 3.2 mean against base-vs-arm 1.7). Discount a set whose judges decide it on creature staging, and say so (precedents: AQUARYN, OVERLOOK-SEAMS Perches, RIMSEAT arrival, MASTERFLOOR court).
+- **Pixel-identical frames:** frames with mean diff ≈ 0 are level by construction; I don't send them to judges.
+- **Stand moves** (capture-camera changes) are reported as RE-BASELINE, not SHIP (G-lcs-archstand).
+
+**Runbook** (scratchpad helpers: `bin/grid.py`, a PIL stacker: grid(paths, out, crop=None, cols=1))
+1. **Fetch:** `git fetch origin tb/gpu-frames-1113`, then `git show origin/tb/gpu-frames-1113:gpu-frames-1108/<section>/<side>-High/<frame>`. Read `manifest-<section>.json` for the content, flags and by-eye notes.
+2. **Diff first:** compute the mean abs luminance diff per pair. Skip pixel-identical pairs, flag big diffs on no-loss frames (rain or spawns), and check that shared bases are identical across sections (then one batch covers several arms).
+3. **Sets:** row frames from `ralph/reports/VISUAL/item-scores/job.json` (biomes[b].items, board_row, defect, frames). Reuse the brief from the row's last yardstick spec so numbers stay on one scale. Stack 2-3 frames vertically, or use a 2x2. No-loss sets go in the same batch.
+4. **Anchors:** `python3 tools/visual_judge/anchor_tiles.py --out $S/jN --key $S/kN/key.json --candidates $S/kN/spec.json --pairs 3 --include craft --include f36_0_npc:C1 --include f10_2_r3_capacitor --seed $RANDOM`, then `cp -r docs/reference $S/jN/reference`.
+5. **Prompt:** take the ```text block of `tools/visual_judge/JUDGE_PROMPT.md` verbatim. Replace [JUDGE FOLDER], [SET LIST] (sets.md) and [RECORDED DEFECTS] (recorded_defects.txt), and write PROMPT.txt.
+6. **Judges:** three fresh general-purpose subagents with the same one-line brief: "code-blind judge, read PROMPT.txt, follow it exactly, only that folder, return findings + JSON".
+7. **Calibrate:** write ja/jb/jc.json as {code:[A,B]}. Build batch.json with anchors {id:[a,b,c]} and candidates {"label [base|arm]":[a,b,c]}, taking the side from the A/B filename in key.json. Run `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json > cal.txt`.
+8. **Ship rule:** gain > 0, at least 2/3 prefer, and no judged row loses. Count prefer from the raw per-judge pairs. A tie is not a prefer.
+9. **Close rule:** mapped 7.5 or above on High AND Medium in one confirming batch with the F38#38 control.
+10. **Write:** `G-<section>.md`, plus a `yardstick_<tag>/` copy and one line below. Commit, push to `tb/judge` and message the owning lane with next asks. Coordinator messages are refused, so the push is the channel. Write PARK explicitly when an approach should close.
+
 ## Handoff (LANE-SCOUT wrap-up, 13 Nov 2026)
 
 **State.** Every section the GPU lane pushed to `tb/gpu-frames-1108` up to c3be86595 / 21fa0dc6a is judged, except the ones listed below. Each verdict is a `<section>.md` in this folder with a `yardstick_<tag>/` beside it (batch, key, mapped, cal, spec, judges, frames). The branch was merged with origin/main 3cf230b6. There are no frames or images here apart from one `_sheet` (`check_890/_sheet_trunk_890.png`, 0.46 MB).
