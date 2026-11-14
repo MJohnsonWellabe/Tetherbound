@@ -1,5 +1,50 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+# HANDOFF (14 Nov 2026, lane wrapped up on the owner's direction)
+
+## State
+- Branch `tb/land-cs`, merged with main b5cfd21fa (#964). Every unlanded arm is OFF in code; arms live in overlays under `ralph/reports/LANES/LAND-CS-<ARM>/`.
+- **On main from this lane:** overlook ridge join + solid ruin (#954, inherited BELOW6 arms), RIMGLOW (#961, F40#17 6.03 -> 6.61), OVERLOOK-SEAMS (#962, F40#15 5.10 -> 5.41), TURFGRAIN (#963, F40#1 +0.20, F40#4 +0.19, F40#7 +0.24), SOILOFF (#964, F41#22 +0.70, F41#24 +0.94).
+- **In CI, PR #965 (coordinator lands it):** RIMSEAT (F40#17 6.05 -> 6.68, 3/3; also sets `rim_glow_1113.scale` 0.3) and ARCHSTAND (F40#3 re-baseline 6.37 vs 5.74). Branch `tb/land-cs-rimarch-land` 06c384847.
+
+## Open candidates
+| Arm (folder) | Rows | Branch / commit | Status | Exact next step |
+|---|---|---|---|---|
+| LAND-CS-WALLBAND2 | F40#1 (round 1 +0.32), F40#8 no-loss (round 1 lost 0.43) | `tb/land-cs` 7ed2fab0d (code), overlay `LAND-CS-WALLBAND2/overlay.json` | CPU-ready, queued for the GPU. CPU: bridge cliff keeps its rock, Realm Gate rim stays pale. | GPU capture per its CAPTURE.json with the Three Bells bridge close as no-loss; optional `overlay_with_terrace_r1.json` for the combined read. On SHIP, land `wall_top_band_1113` ON with `band_depth_m` 3.0. |
+| BELOW6-GATE-TERRACE round 2 | F40#1 | not built | Round 1 judged +0.20, 2/3 (curbs read as "generated contour lines"). | Build chunky risers with height, drop the loops across the lawn; judge combined with WALLBAND2. |
+| Contact shadows under the rim clusters | F40#17 | not built | Judges' ask after RIMSEAT. | Small ride-along with a bigger F40#17 change. |
+
+Judges' other open asks (not built): F40#3 arch road deck and rubble, beacon dome on a stone drum; TURFGRAIN round 2 (break near-camera tiling with macro variation); WALL-BAND strata and a broken top edge; F40#8 mute the gold-cone pointer post; Cloudreach night grade (CLOUDNIGHT r2, THINGS'); Stormwood canopy gaps, leaf cards, glass ground (LANE-PLACES' rows now).
+
+## What worked
+- **A pixel probe before every arm:** a temporary hook in the capture tool's save step that casts the camera ray through chosen pixels against every visible mesh's triangles and prints the nearest hits. It named the wet-soil discs (SOILOFF), the buried pavers (SEAMS), the Master T4 arena floor, the Galecrest companion "griffin", and the overlook ledge face. Then a switch-off capture to confirm.
+- **Ground probes** (`ground_height_at` on a ring) to find why a stand fails: the arch island is 15 m across (ARCHSTAND), the rim finds sit on the island edge (RIMSEAT).
+- **Sizing an inherited fix to its new context:** the pickup halo was never resized for the smaller rim patches (RIMGLOW); the wall band spans a quarter of a mass's height, which is a strip on a ledge and a whole face on a cliff (WALLBAND2).
+- Landing branches cut from current main in a separate `git worktree` while a capture runs in the main tree.
+
+## What failed (in TRIED_AND_FAILED via the bullets below)
+- F40#15 dark wedge and walk_02 feet strip: four attempts (ridge sink, route exemption, edge lift, ledge drop), all no visible change. The ridge vertices are about 4 m apart; any next try must first print the ledge face heights to prove a change moves it.
+- F40#17 MASTERFLOOR: level (+0.09); judges: the platform is background, not the subject. No more platform rounds.
+- WALL-BAND round 1 as shipped: F40#8 lost 0.43 (whole cliff face repainted); withdrawn from PR #963.
+- F40#1 grass re-clustering by overlay: no visible change. Course rock surface on the owner's granite: not built (the same surface lost 0/3 in `pale_strata`).
+- F40#15 "rampart over the void": no void found under any ruin corner; the left wing floats 0.2 to 0.5 m.
+- My own slip: a `git revert` failed silently and an amend relabelled the adding commit as "Revert"; fixed forward (4d8ac145). Check `grep -c` after any revert.
+
+## Runbook
+- **Setup:** fresh container needs `godot --headless --path . --import` (about 20 min). Shallow clone: merges need `git fetch --deepen=N origin main` first ("unrelated histories" otherwise). Use `XDG_DATA_HOME=<scratch>/xdg`.
+- **One Godot at a time.** Two at once were killed for memory. Long captures go in the background with a long timeout; they die at the tool's background limit, so restore any overlaid config afterwards (`git checkout -- data/config`) and never commit while an overlay is applied (commit by path).
+- **Captures (CPU, `xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility --resolution 1920x1080 --script <tool> -- ...`):**
+  - Stormwood stands: `tools/capture_stormwood_f10_matrix.gd --stands=forest,giant --phases=calm --no-aftermath` (about 10 min).
+  - Cloudreach places: `tools/phase2_capture_locations.gd --biome=cloudreach --seed=2042 --subset=<name> --times=day --views=approach,close` (about 2 min boot, under 1 min a frame); `--spot=id@x,z@heading` for ad-hoc stands; the output folder must be new.
+  - Cloudreach routes: `tools/phase2_capture_routes.gd --biome=cloudreach --seed=2042 --subset=<route> [--frame=<id>]`.
+  - High Perches: `tools/phase2_capture_cloudreach_high_perch.gd --seed=2042 --output=res://ralph/reports/VISUAL/phase2/cloudreach/<new>` (it refuses other outputs); move frames to `.artifacts/` and delete the folder.
+- **Overlays:** a deep-merge script (`{path: patch}`) applied before a capture, then `git checkout -- data/config`. JSON lists cannot be overlaid: add a by-name patch flag (as `forest_layers_1113.layers.<name>`).
+- **Checks:** `godot --headless --path . --script tests/run_tests.gd -- --only=<files>`; route smoke `tests/smoke_cloudreach_waterward_overlook_join.gd` for overlook geometry.
+- **Harness note for TECHNICAL 8.1:** the pixel probe above (save-step hook, ray against mesh triangles, print nearest hits) and the ground ring probe are the two fastest cause-finders; neither is committed as a tool.
+- Coordinator messages from this session were refused (untrusted device); the NOTE was the channel and it worked.
+
+---
+
 ## LANDING READY (14 Nov 03:25 UTC): `tb/land-cs-rimarch-land` 06c384847
 - RIMSEAT SHIPS (G-lcs-rimseat): F40#17 6.05 -> 6.68 (+0.63, 3/3). ARCHSTAND RE-BASELINE adopted (G-lcs-archstand): F40#3 6.37 vs 5.74 (+0.63, 3/3).
 - From main 8abc4ad70: `rim_pickup_seat_1114` ON, `rim_glow_1113.scale` 0.3, `candidates_1113` ON, each with its `_why_on`; two ON pins; 110 tests across 15 files, 0 failed.
