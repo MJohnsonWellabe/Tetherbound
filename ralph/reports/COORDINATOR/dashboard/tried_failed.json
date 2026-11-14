@@ -1,5 +1,5 @@
 {
- "entries": 246,
+ "entries": 249,
  "rows": {
   "F13#5": [
    {
@@ -2199,6 +2199,15 @@
      "F40#1"
     ],
     "approach": "LAND-CS",
+    "result": "F40#1 HELD: BELOW6-WALL-BAND, F40#1 +0.32 stands; round 2 must limit the band to rim and wall-top geometry (height band or normal mask) and re-judge with the Three Bells bridge frame.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "held"
+   },
+   {
+    "rows": [
+     "F40#1"
+    ],
+    "approach": "LAND-CS",
     "result": "F40#1 PARKED: re-cluster the Cloudreach grass tufts by overlay (`ground_cover.cluster_frequency` 0.55, `cluster_threshold` 0.9); no visible change on CPU, not sent.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "parked"
@@ -2230,12 +2239,13 @@
    },
    {
     "rows": [
-     "F40#1"
+     "F40#1",
+     "F40#8"
     ],
     "approach": "LAND-CS",
-    "result": "F40#1 SHIPPED: BELOW6-WALL-BAND (+0.32, 3/3); landing tb/land-cs-wallband-land.",
+    "result": "F40#1, F40#8 PARKED (as is): BELOW6-WALL-BAND. F40#1 +0.32 (3/3) but F40#8 loses 6.29 -> 5.86 (0/3, cliff face repainted). Withdrawn from PR #963.",
     "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
-    "status": "held"
+    "status": "parked"
    },
    {
     "rows": [
@@ -2421,6 +2431,25 @@
     "approach": "below6-wall-band",
     "result": "AMENDED DO NOT SHIP 14 Nov: F40#8 no-loss at the bridge lost 6.29 -> 5.86 (0/3), triplanar camouflage on the bridge cliff. Withdrawn from #963. Waits on limiting the band to rims and wall tops.",
     "source": "COORDINATOR/gpu_queue.json",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
+    "result": "LANE-JUDGE amended G-below6-wall-band-main to **DO NOT SHIP**: the F40#8 no-loss check loses on the Three Bells bridge, 6.29 -> 5.86 (−0.43, 0/3); the band repaints a whole cliff face as grey with faceted brown patches.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "F40#1",
+     "F40#8"
+    ],
+    "approach": "LAND-CS",
+    "result": "F40#1, F40#8 PARKED (as is): BELOW6-WALL-BAND. F40#1 +0.32 (3/3) but F40#8 loses 6.29 -> 5.86 (0/3, cliff face repainted). Withdrawn from PR #963.",
+    "source": "land-cs:ralph/reports/LANES/LAND-CS/NOTE.md",
     "status": "parked"
    }
   ],
@@ -3918,6 +3947,15 @@
     "approach": "BEINGS-OFFICER-FACES",
     "result": "Owner, 13 Nov 2026 (via the coordinator):** Nysa keeps her current face and her gender stays unstated; she is told apart from Varga by hair colour and portrait only. The officer_b body swap built earlier was dropped (record, model copy and plate removed).",
     "source": "beings:ralph/reports/LANES/BEINGS-OFFICER-FACES/ARM.md",
+    "status": "parked"
+   },
+   {
+    "rows": [
+     "(no row named)"
+    ],
+    "approach": "BEINGS-PERCH-CLEARANCE",
+    "result": "With the companion out of `crown-rim-out`, the frame loses its creature. A judge may not miss it, since the defect is gone.",
+    "source": "beings:ralph/reports/LANES/BEINGS-PERCH-CLEARANCE/ARM.md",
     "status": "parked"
    },
    {
