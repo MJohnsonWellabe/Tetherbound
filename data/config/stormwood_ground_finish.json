@@ -249,6 +249,13 @@
   },
   "_why_wet_gloss": "F41#3 candidate (r11 judges: pale lilac pool slabs): the fully wet soil patches mirrored the purple sky at roughness 0.28 / specular 0.38. A duller sheen keeps them dark and wet.",
   "wet_gloss": {"roughness": 0.55, "specular": 0.2},
+  "forest_layers_1113": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "_why_on": "ON (GPU High, 14 Nov 2026; ralph/reports/GPU-PASS/1108/G-land-cs-soiloff.md on tb/judge 810c894f2; confirming batch, r 0.908, RMSE 0.58): forest + giant stands F41#22 5.33 -> 6.03 (+0.70, 3/3) and F41#24 5.29 -> 6.23 (+0.94, 3/3; cleanliness PRESENT -> PARTIAL); the glass, rod_line and stormheart stands level (3 ties). The black glare slabs ('void planes ... a rendering bug') are gone. Five-stand reads on that panel: F41#22 6.02 -> 6.30, F41#24 6.00 -> 6.38.",
+    "_why": "LANE-LAND-CS (13 Nov 2026), F41#22/#24. Cause, confirmed by switching it off at the forest and giant stands: the forest_layers wet_soil tier, 1,400 opaque near-black discs about 2.8 m across with an alpha-scissored ragged rim, overlapping into the black cut-outs, with a wet gloss that mirrors the pale Break sky as the slab. The list cannot be addressed by an overlay, so this flag patches layers by name (stormwood_ground_cover.gd forest_layers()). On with layers.wet_soil.enabled false: the discs are not built. Presentation only; no geometry, collision or route change.",
+    "layers": {"wet_soil": {"enabled": false}}
+  },
   "forest_layers": [
     {
       "name": "wet_soil",
