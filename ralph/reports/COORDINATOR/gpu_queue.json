@@ -5067,7 +5067,7 @@
    "ask": "Takes THINGS-STORMPOOL r2's slot. Base vs ralph/reports/LANES/LAND-CS-SOILOFF/overlay.json (stormwood_ground_finish forest_layers_1113: wet_soil layer off, the 1,400 near-black glossy discs), High, capture_stormwood_f10_matrix.gd --stands=forest,giant,rod_line,glass,stormheart --phases=calm,break (+aftermath Calm). By-eye: forest_calm/giant_calm black jagged patches gone; forest_break/giant_break no pale slab by the trainer. Else hold.",
    "added": "13 Nov 16:50",
    "note_tree": "tb/land-cs 91ac0d6a1 contains main b8622117c (#954): base frames are main content.",
-   "status": "SHIP 14 Nov (G-land-cs-soiloff): F41#22 5.33 -> 6.03 (+0.70, 3/3), F41#24 5.29 -> 6.23 (+0.94, 3/3); no-loss stands level. LANE-LAND-CS to land."
+   "status": "SHIP 14 Nov (G-land-cs-soiloff): F41#22 5.33 -> 6.03 (+0.70, 3/3), F41#24 5.29 -> 6.23 (+0.94, 3/3); no-loss stands level. Landing in #964 (tb/land-cs-soiloff-land 043e33593)."
   },
   {
    "id": "beings-neckdown",
