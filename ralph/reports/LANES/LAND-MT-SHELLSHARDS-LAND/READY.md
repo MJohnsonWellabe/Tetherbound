@@ -20,11 +20,11 @@ Cost: about 0.3 s once at Warrens load on CPU. The shell has no collider, so col
 
 The lane's later flag-off steep-face grass work is **not** in this branch.
 
-**Tests run** (headless; this branch's config and test run on the lane checkout, whose shell code matches plus flag-off extras): 12 tests, 0 failed.
+**Tests run** (headless; the pin was rerun on this branch's own files): 13 tests, 0 failed.
 
 | Test file | Tests | Assertions |
 |---|---|---|
-| `test_hill_shell_island_strip.gd` (pin; SceneTree script) | 3 | 0 failed |
+| `test_hill_shell_island_strip.gd` (pin; SceneTree script) | 4 | 0 failed |
 | `test_warrens_meadow_match.gd` | 3 | 19 |
 | `test_warrens_hill_shell_r2.gd` | 2 | 7 |
 | `test_warrens_hill_foundation.gd` | 3 | 7 |
@@ -36,3 +36,10 @@ The lane's later flag-off steep-face grass work is **not** in this branch.
 - a higher-frequency rock and moss material;
 - one continuous smoke plume (PLUME did not ship);
 - a warren entrance hero piece (new art).
+
+**GPU crash investigation** (GPU lane, island_strip arm run: a native integer divide by zero, 0xC0000094, after 6 of 10 frames; the stacked run finished all 10).
+- **Hardening (dc5ad6b6).** Fill vertices take unit tangents with w = ±1; a plain mean of mirrored seams could give a zero vector with w 0. A surface with nothing kept, or nothing removed, keeps its original indices, so the renderer is never handed an empty surface.
+- **Validity checks added to the pin.** Run on the real mound, for the source, the strip output and the fill output, they check: surfaces non-empty, index counts whole triangles, every index in range, zero zero-area triangles, all positions, normals and UVs finite, unit normals and unit tangents with w = ±1. Ten repeat runs give identical output; the repair has no random step.
+- **Result.** Everything is clean, both on this branch and on the judged pre-hardening code. The repaired mesh is not degenerate.
+- **CPU reproduction.** The same frame sequence (the five Warrens frames, then the five stronghold frames) with island_strip ON and the judged code finished all 10 frames with no crash. This container has no Vulkan, so that ran on the OpenGL fallback, not Forward+.
+- **Not determined.** The cause is still open. The crash came at the stronghold, far from the shell.

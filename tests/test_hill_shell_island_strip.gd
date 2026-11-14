@@ -12,6 +12,7 @@ var tests := 0
 func _initialize() -> void:
 	_test_strip_real_mound()
 	_test_fill_holes()
+	_test_output_valid()
 	_test_config_block()
 	print("test_hill_shell_island_strip: %d tests, %d failed" % [tests, failures])
 	quit(1 if failures > 0 else 0)
@@ -97,6 +98,75 @@ func _test_fill_holes() -> void:
 	for k: int in [Mesh.ARRAY_VERTEX, Mesh.ARRAY_NORMAL, Mesh.ARRAY_TEX_UV]:
 		if a0[k] != null:
 			_check((a1[k] as Variant).size() == (a1[Mesh.ARRAY_VERTEX] as PackedVector3Array).size(), "attribute %d sized to vertices" % k)
+	scene.free()
+
+
+## Every surface the repair hands the renderer: non-empty, whole triangles,
+## indices in range, no zero-area triangles, finite attributes, unit normals
+## and tangents with w = +/-1 (GPU lane: intermittent integer-divide crash).
+func _validate(mesh: Mesh, label: String) -> Dictionary:
+	var report := {"surfaces": mesh.get_surface_count(), "degenerate": 0, "bad_index": 0, "nonfinite": 0, "bad_normal": 0, "bad_tangent": 0}
+	_check(mesh.get_surface_count() > 0, "%s: has surfaces" % label)
+	for s: int in mesh.get_surface_count():
+		var a := mesh.surface_get_arrays(s)
+		var v: PackedVector3Array = a[Mesh.ARRAY_VERTEX]
+		var idx: PackedInt32Array = a[Mesh.ARRAY_INDEX]
+		_check(v.size() >= 3 and idx.size() >= 3, "%s: surface %d non-empty" % [label, s])
+		_check(idx.size() % 3 == 0, "%s: surface %d index count %d is whole triangles" % [label, s, idx.size()])
+		for i: int in idx.size():
+			if idx[i] < 0 or idx[i] >= v.size():
+				report.bad_index += 1
+		for t: int in idx.size() / 3:
+			var p0 := v[idx[t * 3]]
+			var area := (v[idx[t * 3 + 1]] - p0).cross(v[idx[t * 3 + 2]] - p0).length()
+			if area < 1e-12:
+				report.degenerate += 1
+		for p: Vector3 in v:
+			if not p.is_finite():
+				report.nonfinite += 1
+		if a[Mesh.ARRAY_NORMAL] != null:
+			for n: Vector3 in (a[Mesh.ARRAY_NORMAL] as PackedVector3Array):
+				if not n.is_finite():
+					report.nonfinite += 1
+				elif absf(n.length() - 1.0) > 0.02:
+					report.bad_normal += 1
+		if a[Mesh.ARRAY_TEX_UV] != null:
+			for uv: Vector2 in (a[Mesh.ARRAY_TEX_UV] as PackedVector2Array):
+				if not uv.is_finite():
+					report.nonfinite += 1
+		if a[Mesh.ARRAY_TANGENT] != null:
+			var tg: PackedFloat32Array = a[Mesh.ARRAY_TANGENT]
+			_check(tg.size() == v.size() * 4, "%s: tangent array sized to vertices" % label)
+			for i: int in tg.size() / 4:
+				var tv := Vector3(tg[i * 4], tg[i * 4 + 1], tg[i * 4 + 2])
+				if not tv.is_finite() or absf(tv.length() - 1.0) > 0.02 or absf(absf(tg[i * 4 + 3]) - 1.0) > 0.001:
+					report.bad_tangent += 1
+	return report
+
+
+func _test_output_valid() -> void:
+	tests += 1
+	var scene := (load(MOUND) as PackedScene).instantiate()
+	var mesh := (scene.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D).mesh
+	var source := _validate(mesh, "source")
+	print("valid source: %s" % source)
+	var stripped := WARRENS.strip_mesh_islands(mesh, 1000)
+	var rs := _validate(stripped, "strip")
+	print("valid strip: %s" % rs)
+	var filled := WARRENS.fill_mesh_holes(stripped, 80)
+	var rf := _validate(filled, "fill")
+	print("valid fill: %s" % rf)
+	for r: Dictionary in [rs, rf]:
+		_check(int(r.bad_index) == 0, "no out-of-range index")
+		_check(int(r.nonfinite) == 0, "all attributes finite")
+		_check(int(r.degenerate) <= int(source.degenerate), "no new zero-area triangles (%d)" % int(r.degenerate))
+		_check(int(r.bad_normal) <= int(source.bad_normal), "no new bad normals (%d)" % int(r.bad_normal))
+		_check(int(r.bad_tangent) <= int(source.bad_tangent), "no new bad tangents (%d)" % int(r.bad_tangent))
+	# Repeat: the repair is deterministic (no random step), so ten runs must
+	# give identical counts.
+	for run: int in 10:
+		var again := WARRENS.fill_mesh_holes(WARRENS.strip_mesh_islands(mesh, 1000), 80)
+		_check(_tris(again) == _tris(filled), "run %d identical" % run)
 	scene.free()
 
 
