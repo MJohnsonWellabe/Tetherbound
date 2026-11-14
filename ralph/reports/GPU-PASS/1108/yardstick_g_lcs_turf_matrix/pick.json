@@ -1,0 +1,50 @@
+{
+ "gate": {
+  "base": "base-High",
+  "arm": "turfgrain-High",
+  "frames": [
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg",
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.jpg",
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg",
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg"
+  ],
+  "diffs": {
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.jpg": 2.91,
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.jpg": 3.0,
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.jpg": 2.94,
+   "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.jpg": 3.12
+  }
+ },
+ "shrine": {
+  "base": "base-High",
+  "arm": "turfgrain-High",
+  "frames": [
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__night__clear.jpg",
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__clear.jpg",
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__clear.jpg",
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__clear.jpg"
+  ],
+  "diffs": {
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__night__clear.jpg": 5.58,
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__clear.jpg": 2.53,
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__clear.jpg": 2.9,
+   "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__clear.jpg": 4.23
+  }
+ },
+ "overlook": {
+  "base": "base-High",
+  "arm": "turfgrain-High",
+  "frames": [
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.jpg",
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__night__clear.jpg",
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__night__clear.jpg",
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear.jpg"
+  ],
+  "diffs": {
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear.jpg": 4.2,
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__night__clear.jpg": 5.67,
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__night__clear.jpg": 5.49,
+   "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear.jpg": 4.3
+  }
+ }
+}
