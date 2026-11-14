@@ -5678,7 +5678,7 @@
    "ask": "Capture-tooling arm: base vs + ralph/reports/LANES/LAND-CS-ARCHSTAND/overlay.json (capture_stands approach_overrides.candidates_1113: a stand that frames the broken skyroad arch itself). phase2_capture_locations.gd per its CAPTURE.json, High. By eye: the arch is the subject of the frame. Re-baselines F40#3's arch view (stand rule: a stand that cannot show its subject may move).",
    "added": "14 Nov 01:40",
    "priority": "land-cs boot",
-   "status": "RUNNING 14 Nov 20:02 GPU time (continuation runner, tb/land-cs dbbfc7842 import)."
+   "status": "JUDGED 14 Nov (G-lcs-archstand): RE-BASELINE, new stand 6.37 vs old 5.74 (+0.63, 3/3). Capture fix; adopt the stand (lands with the next capture-tool landing)."
   },
   {
    "id": "land-cs-rimseat",

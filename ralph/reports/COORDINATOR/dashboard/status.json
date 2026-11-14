@@ -2781,8 +2781,8 @@
    "src": "GPU High 8-9 Nov (F-cloudreach) | G-rescore-stale-ext-cloudreach (LANE-PLACES, main 90ffeb663, 12 Nov; board gap found 13 Nov tb/places 084cdbcc0): 6.15 -> 6.93"
   },
   "F40#3": {
-   "gpu": 6.33,
-   "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art; G-below6-f40-3-landmarks (LANE-SCOUT cb3ff531d): re-baselined on new stands 6.00 -> 6.33 (2/3), ships; LANDED #919; LANDED #919"
+   "gpu": 6.37,
+   "src": "G-recheck-1111 (LANE-SCOUT, tb/item-scout-1108 a09444393), one-sided on main e1c941cbd: with the #871 closer stands; needs landmark art; G-below6-f40-3-landmarks (LANE-SCOUT cb3ff531d): re-baselined on new stands 6.00 -> 6.33 (2/3), ships; LANDED #919; LANDED #919 | RE-BASELINE G-lcs-archstand (LANE-JUDGE a53b816c4, 14 Nov): new arch stand 6.37 vs old stand 5.74 (+0.63, 3/3); old camera stood between the arch legs. Capture fix, not a game change; new row baseline 6.37"
   },
   "F40#4": {
    "gpu": 6.74,
