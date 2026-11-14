@@ -5541,13 +5541,14 @@
   {
    "id": "scene-tourney",
    "branch": "tb/scene",
-   "commit": "94e97a6c7",
+   "commit": "1d637e656",
    "rows": [
     "F38#16 tournament dialogue (7.31)"
    ],
-   "ask": "Pink-halo part only until LANE-SCENE and LANE-BEINGS reconcile Tam (BEINGS-TAM-COAT is already queued for Tam's colours). See SCENE-TOURNEY/ARM.md.",
+   "ask": "Base vs + ralph/reports/LANES/SCENE-TOURNEY/overlay.json (the pink glowing bush in every tournament conversation frame fades; nothing else). phase2_capture_dialogue.gd tournament subsets per its CAPTURE.json, High; Medium too if F38#16 maps near 7.5. By eye: no pink glowing bush on the left.",
    "added": "13 Nov 23:05",
-   "priority": "hold until split"
+   "priority": "near-bar (F38#16 7.31); tb/scene boot",
+   "status": "READY 14 Nov: split done (berry-glow fade only; Tam outfit OFF and out of every overlay)."
   },
   {
    "id": "rescore-f39-20-main",
