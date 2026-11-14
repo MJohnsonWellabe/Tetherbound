@@ -15,9 +15,9 @@ func _initialize() -> void:
 	_check(not plume.is_empty(), "smoke_plume block present")
 	_check(str(plume.get("scope", "")) == "client_presentation", "scope declared")
 	_check((plume.get("names", []) as Array) == ["WarrensVaultSignalPost"], "names only the Warrens post")
-	var args := PROPS.smoke_column_args(spec)
-	_check(args.size() == 7, "seven configure_smoke args")
 	var on: bool = plume.get("enabled") == true
+	var args := PROPS.smoke_column_args(spec)
+	_check(args.size() == 7 or (on and args.size() == 9), "configure_smoke args")
 	if on:
 		_check(is_equal_approx(float(args[1]), 0.55 * float(plume["alpha_scale"])), "alpha scaled when on")
 		_check(float(args[6]) > 0.0, "drift set when on")

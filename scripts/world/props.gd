@@ -291,6 +291,14 @@ static func smoke_column_args(spec: Dictionary) -> Array:
 			base_size *= float(plume.get("base_size_scale", 1.0))
 		fade = float(plume.get("fade", fade))
 		drift = float(plume.get("drift_per_m", -1.0))
+		var world_dir: Array = plume.get("drift_dir_world", [])
+		if world_dir.size() == 2:
+			# The overlay sits under the prop root, so turn the world heading
+			# into the root's own frame (yaw only; the props stand upright).
+			var local := Vector3(float(world_dir[0]), 0.0, float(world_dir[1])).rotated(Vector3.UP,
+				-deg_to_rad(float(spec.get("yaw_deg", 0.0))))
+			return [top, alpha, top_size, colour, fade, base_size, drift, Vector2(local.x, local.z),
+				float(plume.get("drift_power", 2.0))]
 	return [top, alpha, top_size, colour, fade, base_size, drift]
 
 
