@@ -1,5 +1,10 @@
 # LANE-LAND-CS NOTE (branch `tb/land-cs`; world look in Cloudreach and Stormwood)
 
+## STATE (14 Nov 01:40 UTC)
+- **Landed on main:** overlook join + solid ruin (#954, inherited), RIMGLOW (#961), OVERLOOK-SEAMS (#962). **In CI:** TURFGRAIN + WALL-BAND (PR #963). The single-arm land branches are not needed.
+- `tb/land-cs` dbbfc7842 contains main 94fe423d3. Against main it differs only by flag-off arms (`forest_layers_1113`, `paver`-free now, `rim_pickup_seat_1114`, `master_floor_1114` parked, `candidates_1113` arch stand) and their tests and reports.
+- **Waiting on the GPU:** SOILOFF (F41#22/#24). **Held, CPU-ready:** ARCHSTAND (F40#3), RIMSEAT (F40#17). **Held for a combined re-judge:** GATE-TERRACE round 2 (to build: taller risers, no loops).
+
 ## LANDINGS READY (14 Nov 02:30 UTC): TURFGRAIN and WALL-BAND
 - **Combined, as asked: `tb/land-cs-cloudreach-land` 5e926e829** (from main 1405def4d; both flags ON, gate terraces OFF; 58 tests, 0 failed). Land this instead of the two single branches below.
 - **`tb/land-cs-turfgrain-land` 59feea6b**: `turf_detail_1113` ON. G-land-cs-turfgrain-rows: F40#1 +0.20, F40#4 +0.19, F40#7 +0.24, each 3/3, no loss. 53 tests, 0 failed.
