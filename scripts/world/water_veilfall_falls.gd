@@ -255,7 +255,6 @@ func _build_rebuild_meshes(wet: SurfaceTool, plunges: Array[Dictionary], rebuild
 	for plunge: Dictionary in plunges:
 		var at: Vector3 = plunge.at
 		var radius := float(plunge.radius_m)
-		print("[veilfall] plunge pool at %s radius %.1f m" % [at, radius])
 		for i in segments:
 			var a0 := TAU * float(i) / float(segments)
 			var a1 := TAU * float(i + 1) / float(segments)

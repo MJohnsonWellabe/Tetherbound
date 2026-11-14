@@ -1,6 +1,12 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **Built and HELD for the next free GPU slot: `LAND-MT-VEILREBUILD` (F39#31, the Veilfall rebuild you asked for).** Overlay only (`falls.rebuild.enabled`); no Meshy, no tiers removed, no camera-facing puffs.
+  - **What reached the views:** (1) the fall pattern stretched into long thin vertical streaks (the cells were about 7 x 9 m, the judges' "blocky tiled fall"); (2) three layered strands per fall with their own speeds; (3) a wet, multiply-darkened rock apron 2.3x the fall's width either side.
+  - **Pool and mist shell:** built but OFF. The near stand is about 40 m from the cascade foot, which the live candidate ends 35 m up the gully, so the shell read as a glassy dome and the pool was hidden.
+  - **CPU:** the near view clearly streakier, framed in dark wet stone; the vista changes little.
+  - **Risk:** the apron is near-black at the left edge. Sheet and ARM.md are in the folder.
+  - **If it gains:** extend the cascade to its plunge ring and turn the pool and mist on there.
 - **SHELLSHARDS: cleared to land per your condition. The GPU retry is clean**: same composition, arm side only, 10/10 frames, exit 0, no script errors, no new crash event (tb/gpu-frames-1113 07806bb97, G-land-mt-shellshards-retry). The 19:01 crash matches the known intermittent nvoglv64.dll fault. **Land branch: `tb/land-mt-shellshards-land` e9e8d703**, with the degenerate-geometry checks in its pin test (4 tests, 0 failed) and the crash investigation in READY.md. Ready for the next PR.
 - **On the GPU lane's crash evidence** (tb/gpu-frames-1113 76f13eed9: the fault is inside the NVIDIA OpenGL driver, nvoglv64 32.0.15.6094, an integer divide; the same signature appears on 10 earlier captures, 13 Oct to 9 Nov).
   - I checked their zero-count guess against this change. The shell's cover tufts and edge flora are individual scene nodes, not MultiMeshes, so island_strip cannot create a zero-instance MultiMesh.
