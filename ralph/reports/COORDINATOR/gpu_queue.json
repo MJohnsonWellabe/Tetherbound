@@ -5667,7 +5667,7 @@
    "ask": "Round 3 (final): base vs + ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json (keeps base deep navy and shallow colour, haze off, darker mid band, falloff 10 m: softens only the shelf transition). Re-capture F39#10, F39#15 and the S1/S2 current states, High. If a wash, F39#10 sea tone is PARKED.",
    "added": "14 Nov 01:05",
    "priority": "Tidewake step",
-   "status": "RUNNING 14 Nov 20:53 GPU time (SEADEPTH r2/r3 extras)."
+   "status": "CAPTURED 14 Nov, NOT JUDGED (lanes wrapped): High base/r2/r3 tb/gpu-frames-1113 790e5f876 (48 frames), Medium base/r2 2618730fc. By eye r2 and r3 soften the cyan-to-navy shelf edge, deep water stays navy; r3 slightly darker mid band. Next session: judge from these frames. GPU handoff gpu-frames-1108/HANDOFF-GPU-1113.md (51cabd281)."
   },
   {
    "id": "land-cs-archstand",
@@ -5679,7 +5679,7 @@
    "ask": "Capture-tooling arm: base vs + ralph/reports/LANES/LAND-CS-ARCHSTAND/overlay.json (capture_stands approach_overrides.candidates_1113: a stand that frames the broken skyroad arch itself). phase2_capture_locations.gd per its CAPTURE.json, High. By eye: the arch is the subject of the frame. Re-baselines F40#3's arch view (stand rule: a stand that cannot show its subject may move).",
    "added": "14 Nov 01:40",
    "priority": "land-cs boot",
-   "status": "JUDGED 14 Nov (G-lcs-archstand): RE-BASELINE, new stand 6.37 vs old 5.74 (+0.63, 3/3). Capture fix; adopt the stand (lands with the next capture-tool landing). In PR #965."
+   "status": "LANDED #965 (main c208230f1), 14 Nov. JUDGED 14 Nov (G-lcs-archstand): RE-BASELINE, new stand 6.37 vs old 5.74 (+0.63, 3/3). Capture fix; adopt the stand (lands with the next capture-tool landing). In PR #965."
   },
   {
    "id": "land-cs-rimseat",
@@ -5691,7 +5691,7 @@
    "ask": "Base (main with RIMGLOW) vs + ralph/reports/LANES/LAND-CS-RIMSEAT/overlay.json (rim_pickup_seat_1114 seats the tan rim cluster back from the lip; rim_glow scale 0.45 -> 0.3). High-perch tool per CAPTURE.json, High. By eye: the orange lip cluster sits on soil back from the edge with a fainter glow.",
    "added": "14 Nov 01:40",
    "priority": "land-cs boot",
-   "status": "SHIP 14 Nov (G-lcs-rimseat): F40#17 6.05 -> 6.68 (+0.63, 3/3); court +0.31; arrival +0.58 creature-staging confound, not counted. LANE-LAND-CS to land with ARCHSTAND. In PR #965."
+   "status": "LANDED #965 (main c208230f1), 14 Nov. SHIP 14 Nov (G-lcs-rimseat): F40#17 6.05 -> 6.68 (+0.63, 3/3); court +0.31; arrival +0.58 creature-staging confound, not counted. LANE-LAND-CS to land with ARCHSTAND. In PR #965."
   },
   {
    "id": "beings-perch-clearance",
@@ -5751,5 +5751,7 @@
    "priority": "high (regression 7.06 -> 5.84; fix landed)"
   }
  ],
- "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
+ "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them.",
+ "notes": [],
+ "wrapup_1114": "Lanes wrapped 14 Nov ~03:20 UTC. GPU runner stopped (STOP_ONE before beings-tam-coat); last frames 2618730fc on tb/gpu-frames-1113; handoff 51cabd281 gpu-frames-1108/HANDOFF-GPU-1113.md. Not captured: rescore-f39-21-lensground, scene-fleecard, land-cs-wallband2, beings-perch-clearance, land-mt-veilrebuild (held), and the continuation runner from beings-tam-coat onward. Unpushed local sections on the GPU machine: cragback-f39-2-noloss, meadowground-medium-time. Driver: nvoglv64.dll 0xC0000094 intermittent; one retry clears it."
 }
