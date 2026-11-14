@@ -1,0 +1,43 @@
+[
+ {
+  "label": "SS F38#30",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/F38_30_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/F38_30_ss.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the hillside beside a burrow entrance (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "SS warrens other",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/other_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/other_ss.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: a burrow warren hillside settlement and its route (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ },
+ {
+  "label": "SS F38#24",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/F38_24_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/F38_24_ss.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the distant mountain backdrop (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "PL F38#30",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/F38_30_ss.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/F38_30_pl.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: the hillside beside a burrow entrance (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "PL warrens other",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/other_ss.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k26/other_pl.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: a burrow warren hillside settlement and its route (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ }
+]

@@ -1,0 +1,6 @@
+Qn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Wf: none
+Aw: none
+Ha: none
+Ro: "Craft and leave button hints are faint gray on the dark translucent craft panel"
+Oj: none

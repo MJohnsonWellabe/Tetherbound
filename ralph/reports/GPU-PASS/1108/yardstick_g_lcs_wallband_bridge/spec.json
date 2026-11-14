@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F40#8 bridge",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k28/F40_8_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k28/F40_8_wallband.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: the Three Bells bridge landmark and the cliffs and walls around it (one frame). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer"
+  ]
+ }
+]

@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "section": "G-scene-rosternames @ 8842ebc8c", "arm": "compact_names_1113 (names kept, strip 232 -> 348 px)",
+ "F39#19 High / Medium": ["venn/t-000.00", "venn/tell-start-000.57", "venn/t-003.02"],
+ "F39#7 High / Medium (no-loss)": ["venn/t-023.02", "venn/t-024.02", "venn/t-025.02"],
+ "framing": "GPU lane: the arm's fight camera sits elsewhere, deterministically (High offsets 35/3/9 m; Medium t-000 matched, others 4/16 m); frames kept and disclosed, not excluded, since the shift is caused by the arm",
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg",
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f04_6_r22"}

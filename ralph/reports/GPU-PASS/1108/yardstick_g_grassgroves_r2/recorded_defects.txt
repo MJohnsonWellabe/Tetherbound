@@ -1,0 +1,6 @@
+Xs: none
+Ox: none
+Nm: "The left team roster fades to pale low-contrast text against terrain during active combat"
+Xk: "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions"
+Mm: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vh: none

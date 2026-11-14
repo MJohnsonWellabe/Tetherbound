@@ -1,0 +1,3 @@
+{"branch": "tb/gpu-frames-1113", "section": "G-lcs-wallband-bridge @ 13b890cd3", "content": "tb/land-cs 91ac0d6a1; base no overlay; arm wall_top_band overlay", "preset": "High",
+ "F40#8 bridge": ["broken_causeways three_bells_bridge day close"], "pixel_diff_arm_vs_base": 5.79,
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}

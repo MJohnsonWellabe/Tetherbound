@@ -1,0 +1,47 @@
+[
+ {
+  "label": "TG F40#1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/TG_F40_1_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/TG_F40_1_tg.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: open terrain on the routes to the sky shrine and the realm gate (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+  ]
+ },
+ {
+  "label": "TG F40#7",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/TG_F40_7_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/TG_F40_7_tg.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: grass and stone surface finish at a shrine and a perch court (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites"
+  ]
+ },
+ {
+  "label": "TG F40#4",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/TG_F40_4_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/TG_F40_4_tg.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: exposed landform and cliff edges at a sky shrine (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges"
+  ]
+ },
+ {
+  "label": "WB F40#1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/X_F40_1_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/X_F40_1_wb.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: open terrain on the routes to the sky shrine and the realm gate (2x2). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+  ]
+ },
+ {
+  "label": "TR F40#1",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/X_F40_1_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k24/X_F40_1_tr.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: open terrain on the routes to the sky shrine and the realm gate (2x2). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+  ]
+ }
+]

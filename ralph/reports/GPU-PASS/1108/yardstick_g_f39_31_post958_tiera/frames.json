@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-f39-31-post958-tiera @ f770b16d6 (base = main 13a7ab153 content incl. #958 mist; tiera = + LAND-MT-TIERA overlay from tb/land-mt ed91e8e13), G-rescore-f39-31-clear-day-pre958 @ 81b437258 (pre)", "preset": "High",
+ "frames": ["veilfall-vista (top)", "veilfall-near (bottom)"],
+ "sets": {"F39#31 958": "pre vs post-#958 base", "F39#31 TIERA": "post-#958 base vs tiera"},
+ "pixel_diff_base_vs_tiera": {"vista": 1.11, "near": 1.97},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor; no F38#38 control (no close at stake)"}

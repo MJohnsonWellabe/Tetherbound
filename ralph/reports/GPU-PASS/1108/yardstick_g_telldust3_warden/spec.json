@@ -1,0 +1,29 @@
+[
+ {
+  "label": "F38#28 High",
+  "a": "F38_28_High_base.png",
+  "b": "F38_28_High_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Warden arena boundary (two fight frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+  ]
+ },
+ {
+  "label": "F38#28 Medium",
+  "a": "F38_28_Medium_base.png",
+  "b": "F38_28_Medium_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: Warden arena boundary (two fight frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+  ]
+ },
+ {
+  "label": "F38#38 High-vs-Medium",
+  "a": "ctl_High.png",
+  "b": "ctl_Medium.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Craft and leave button hints are faint gray on the dark translucent craft panel"
+  ]
+ }
+]

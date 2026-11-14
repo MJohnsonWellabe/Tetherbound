@@ -1,0 +1,7 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-mt-duskridge @ 6bd2fef39, G-land-mt-brokenhill @ 09f336509 (one shared base run)", "preset": "High",
+ "DR dusk vistas": ["burrow_warrens vista_dusk", "stronghold_approach vista_dusk"],
+ "DR F38#24 day (no-loss)": ["burrow_warrens walk_02_day", "walk_03_day", "stronghold_approach route_day"],
+ "BH F38#30": ["burrow_warrens walk_02_day", "walk_03_day"],
+ "BH warrens other (no-loss)": ["burrow_warrens route_day", "walk_01_day", "vista_dusk"],
+ "note": "day-frame mean diffs 4.6-14 on both arms include wild-creature spawn differences between runs (GPU lane); judges scored the subject",
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}

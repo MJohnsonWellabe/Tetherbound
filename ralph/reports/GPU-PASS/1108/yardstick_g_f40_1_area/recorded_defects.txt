@@ -1,0 +1,8 @@
+Sj: "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges"
+Ky: none
+Dm: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Yp: none
+Vx: "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+Zt: "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites"
+Ak: "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+Gv: "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"

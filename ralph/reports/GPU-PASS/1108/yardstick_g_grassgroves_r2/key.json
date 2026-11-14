@@ -1,0 +1,35 @@
+{
+ "Xs": {
+  "anchor": false,
+  "label": "Routes noloss",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k17/Routes_noloss_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k17/Routes_noloss_arm.png"
+ },
+ "Ox": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Nm": {
+  "anchor": false,
+  "label": "F39#19 Venn",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k17/F39_19_Venn_arm.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k17/F39_19_Venn_base.png"
+ },
+ "Xk": {
+  "anchor": false,
+  "label": "F39#1",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k17/F39_1_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k17/F39_1_arm.png"
+ },
+ "Mm": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Vh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

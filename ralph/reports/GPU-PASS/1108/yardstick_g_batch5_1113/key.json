@@ -1,0 +1,47 @@
+{
+ "Wp": {
+  "anchor": false,
+  "label": "F39#8 High",
+  "A": "F39_8_High_base.png",
+  "B": "F39_8_High_arm.png"
+ },
+ "Pm": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Hl": {
+  "anchor": false,
+  "label": "F36#92 High",
+  "A": "F36_92_High_arm.png",
+  "B": "F36_92_High_base.png"
+ },
+ "Io": {
+  "anchor": false,
+  "label": "F38#10 High-vs-Medium",
+  "A": "F38_10_High-vs-Medium_High.png",
+  "B": "F38_10_High-vs-Medium_Medium.png"
+ },
+ "Eu": {
+  "anchor": false,
+  "label": "F38#38 High-vs-Medium",
+  "A": "F38_38_High-vs-Medium_Medium.png",
+  "B": "F38_38_High-vs-Medium_High.png"
+ },
+ "Qu": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Hw": {
+  "anchor": false,
+  "label": "F36#50 High",
+  "A": "F36_50_High_main.png",
+  "B": "F36_50_High_main.png"
+ },
+ "Tz": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

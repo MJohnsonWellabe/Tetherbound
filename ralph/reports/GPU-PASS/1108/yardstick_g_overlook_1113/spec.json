@@ -1,0 +1,43 @@
+[
+ {
+  "label": "A join overlook",
+  "a": "A_join_overlook_base.png",
+  "b": "A_join_overlook_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: a summit overlook terrace and its ground (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+  ]
+ },
+ {
+  "label": "A solid F40#15",
+  "a": "A_solid_F40_15_base.png",
+  "b": "A_solid_F40_15_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: a summit overlook terrace walk (two frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+  ]
+ },
+ {
+  "label": "A solid other",
+  "a": "A_solid_other_base.png",
+  "b": "A_solid_other_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: a summit overlook terrace and its ground (three frames, top to bottom). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+  ]
+ },
+ {
+  "label": "A perches shrine",
+  "a": "A_perches_shrine_base.png",
+  "b": "A_perches_shrine_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: a sky shrine in four views and times (2x2). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ },
+ {
+  "label": "A perches perches",
+  "a": "A_perches_perches_base.png",
+  "b": "A_perches_perches_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the cloudreach biome: a high perch court in four views and times (2x2). Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": []
+ }
+]

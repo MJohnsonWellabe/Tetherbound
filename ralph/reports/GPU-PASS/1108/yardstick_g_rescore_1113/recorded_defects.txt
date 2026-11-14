@@ -1,0 +1,16 @@
+Pb: "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"
+Jl: "The large wild creature and the ally crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+Qt: none
+Zz: none
+Rz: "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+Og: "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+Wf: "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several opponent phases"
+Cn: "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+Jh: "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+Kc: "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"; "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
+Cz: "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals"
+Kt: "The left team roster fades to pale low-contrast text against terrain during active combat"
+Hs: "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+Cs: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Iu: "dark olive body with low contrast against the stage"; "faint does not settle onto the ground"
+Lq: "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming"; "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body"

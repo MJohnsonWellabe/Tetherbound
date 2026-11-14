@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "tree": "c673d5285 (files = main 4f9ee3967)", "preset": "High",
+ "A join overlook": {"section": "G-below6-overlook-join-c673 @ e33f0afd1", "frames": ["route_day", "vista_dusk", "walk_01_day"], "not judged": "walk_02_day (mean diff 1.9) and walk_03_day (0.59): unchanged by the arm"},
+ "A perches shrine / perches": {"section": "G-below6-overlook-join-perches-c673 @ c34f3cb1e", "shrine": ["approach day clear", "reverse day clear", "gameplay dawn rain", "detail night rain"], "perches": ["approach day clear", "detail golden rain", "gameplay dawn rain", "reverse golden clear"], "sampling": "8 of 64 pairs, weighted to the largest base-vs-arm diffs; all 64 diffs are 1.4-8.5 mean, from spawns, rain and clock"},
+ "A solid F40#15": {"section": "G-below6-overlook-solid-c673 @ 0c52bcb7b", "frames": ["walk_02_day", "walk_03_day"], "note": "new capture stands by design on the arm side"},
+ "A solid other": {"section": "G-below6-overlook-solid-c673 @ 0c52bcb7b", "frames": ["route_day", "vista_dusk", "walk_01_day"]},
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}

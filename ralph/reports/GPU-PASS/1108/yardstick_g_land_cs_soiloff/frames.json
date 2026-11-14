@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1113", "section": "G-land-cs-soiloff @ f6e148f94", "content": "tb/land-cs 91ac0d6a1; base no overlay, arm LAND-CS-SOILOFF (forest_layers wet_soil disabled)", "preset": "High",
+ "forest+giant (2 rows x calm/break/aftermath_calm)": ["forest", "giant"], "glass+rod_line+stormheart (3 rows)": ["glass", "rod_line", "stormheart"],
+ "pixel_diff_arm_vs_base [calm, break, aftermath]": {"forest": [7.41, 7.24, 8.0], "giant": [6.91, 26.45, 11.8], "glass": [1.58, 7.52, 1.3], "rod_line": [1.7, 7.95, 1.15], "stormheart": [3.56, 5.16, 2.07]},
+ "briefs": "identical to yardstick_g_bk (F41#22 world finish, F41#24 cleanliness)",
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}

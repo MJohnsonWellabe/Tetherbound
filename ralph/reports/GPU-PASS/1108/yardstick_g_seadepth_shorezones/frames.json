@@ -1,0 +1,9 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-mt-seadepth @ f8d8155c5, G-land-mt-seadepth-states @ abc037f16, G-land-mt-shorezones @ e4f261f9f", "content": "tb/land-mt 5ef7e327e; base = no overlay (seadepth and shorezones bases pixel-identical, diff 0.00); arms = cause_tidewake.sea ON / dunes sage-straw zones", "preset": "High",
+ "F39#15": ["drowned_garden route_day", "drowned_garden walk_01", "sluice route_day"],
+ "F39#1": ["brine_steps walk_03", "first_shore horizon_stones route_day"],
+ "F39#10 (SD no-loss)": ["drowned_garden route_day", "first_shore route_day"],
+ "F39#2 (SZ no-loss)": ["drowned_garden route_day", "first_shore route_day"],
+ "F39#17-16 (SD states no-loss)": ["S1_live", "S1_restored", "S2_live (F39-17 folder; F39-16 frames are the same S1/S2 live)"],
+ "pixel_diff_arm_vs_base": {"SD": {"brine_w3": 0.71, "fs_route": 2.47, "dg_route": 3.62, "dg_w1": 2.76, "sluice_route": 3.79, "S1_live": 12.9, "S2_live": 11.51, "S1_restored": 13.81}, "SZ": {"brine_w3": 1.33, "fs_route": 3.9, "dg_route": 6.1, "dg_w1": 1.59, "sluice_route": 7.51}},
+ "not judged": {"F39#27": "character inventory frames not in the section", "F39#30": "no frames in the section"},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor; no F38#38 control (no close at stake)"}

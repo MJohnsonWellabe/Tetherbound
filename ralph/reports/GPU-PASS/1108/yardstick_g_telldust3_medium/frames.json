@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "section": "G-things-telldust3-grunt-medium @ e363003f8", "preset": "Medium", "base": "telldust r1 as on main", "arm": "THINGS-TELLDUST3 (coherent dust phase, low-band values)",
+ "T F38#3 Medium": ["south_bridge_grunt-01", "south_bridge_grunt-02", "south_bridge_grunt-03"],
+ "T F38#11 Medium": ["south_bridge_grunt-t01-stand-mid", "south_bridge_grunt-02", "south_bridge_grunt-03"],
+ "cameras": "matched at 0.00 m (GPU lane); mean pixel diff 1.0-3.4 on judged frames; 99-after (23.5) not judged",
+ "control F38#38": "gpu-frames-1108/F38-38/live/{High,Medium}/meadows__system__crafting.jpg (tb/gpu-frames-1113 contains 21fa0dc6a)",
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f04_6_r22"}

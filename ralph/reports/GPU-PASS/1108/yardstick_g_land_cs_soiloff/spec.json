@@ -1,0 +1,38 @@
+[
+ {
+  "label": "F41#22 forest+giant",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k31/fg_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k31/fg_arm.png",
+  "brief": "Fixed captures from the game of the Stormwood biome frame matrix: two camera stands (one row each), each in storm calm, storm break and the Long Storm aftermath (left to right). Judge whether these views read as the key art's world at a shipping game's finish - storm mood and sky, forest and tree materials, landmarks, light, value range, depth - and anything that reads as a defect, including any surface that reads red, salmon or oxblood.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "F41#24 forest+giant",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k31/fg_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k31/fg_arm.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (two camera stands, each in storm calm, storm break and the Long Storm aftermath). Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, a surface that reads red, salmon or oxblood, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ },
+ {
+  "label": "F41#22 glass+rod_line+stormheart",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k31/grs_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k31/grs_arm.png",
+  "brief": "Fixed captures from the game of the Stormwood biome frame matrix: three camera stands (one row each), each in storm calm, storm break and the Long Storm aftermath (left to right). Judge whether these views read as the key art's world at a shipping game's finish - storm mood and sky, forest and tree materials, landmarks, light, value range, depth - and anything that reads as a defect, including any surface that reads red, salmon or oxblood.",
+  "defects": [
+   "none"
+  ]
+ },
+ {
+  "label": "F41#24 glass+rod_line+stormheart",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k31/grs_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k31/grs_arm.png",
+  "brief": "Fixed captures from the game of the Stormwood biome (three camera stands, each in storm calm, storm break and the Long Storm aftermath). Judge the frames for cleanliness: whether anything reads as a flat magenta ring or slab, a placeholder material, flat untextured geometry, floating or clipping objects, see-through or dithered surfaces, the camera inside geometry, a surface that reads red, salmon or oxblood, or a rendering bug rather than an authored choice.",
+  "defects": [
+   "Flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the frame"
+  ]
+ }
+]

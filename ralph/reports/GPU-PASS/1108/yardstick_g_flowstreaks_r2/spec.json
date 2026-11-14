@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F13#5 High",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k20/F13_5_base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/4f2fc133-57f7-5795-bf9d-9cffd297ce29/scratchpad/k20/F13_5_arm.png",
+  "brief": "Fixed captures from the game of one catalogue subject in the tidewake biome: swimmer-relative current cue: while swimming, the water around the swimmer shows which way the current flows. Judge how this subject looks in the game - whether it reads as the key art's world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+  "defects": [
+   "The current direction does not read: white crescent arcs curve in mixed directions and read as hard decal shapes, with no single flow line"
+  ]
+ }
+]

@@ -1,0 +1,6 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-below6-staticub-fur-world-c673 @ 885f1478c, G-below6-staticub-fur-stage-c673 @ a247e4fc4", "tree": "c673d5285 (main content)", "preset": "High",
+ "Staticub world": ["stormwood__staticub__idle", "moving", "attacking", "hurt", "fainted", "resting (2x3)"],
+ "Staticub shiny (no-loss)": ["stormwood__staticub__shiny_idle"],
+ "Staticub stage": ["staticub-hit-000", "hit-050", "faint-050", "faint-100 (2x2, crop 560,200,1560,840)"],
+ "control": "none in this batch (not a close-out); anchors craft, f36_0_npc:C1, f04_6_r22",
+ "judges": "a, b, c = three fresh general-purpose subagents, standard prompt"}

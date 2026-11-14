@@ -1,0 +1,4 @@
+Qu: none
+Om: none
+Ih: "The current direction does not read: white crescent arcs curve in mixed directions and read as hard decal shapes, with no single flow line"
+Zj: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
