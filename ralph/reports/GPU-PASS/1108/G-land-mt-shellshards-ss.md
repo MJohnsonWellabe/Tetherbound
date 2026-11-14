@@ -11,6 +11,11 @@
 - **Scores:** all mapped. Fit: r 0.943, slope 1.35, anchor RMSE 0.46; the batch is confirming.
 - **Board baseline:** F38#30 is 6.48 on the board, from BROKENHILL's panel; this panel reads base at 5.44. The paired gain is the measure.
 
+## Note (14 Nov): arm run crash
+- **What happened:** the GPU lane reports that the arm run crashed (integer divide by zero) after six frames: the five Warrens views and stronghold route_day. Stronghold walk_01 to walk_03 and vista_dusk have no arm capture.
+- **Effect on this verdict: none.** Every frame judged here was captured on both sides: Warrens walk_02, walk_03, route_day, walk_01 and vista_dusk, and stronghold route_day. F38#24's job frames are exactly Warrens walk_02, walk_03 and stronghold route_day.
+- **The missing stronghold views:** they were not part of any judged set, so nothing needs re-judging. If the queued retry lands, those views can be checked as extra no-loss.
+
 ## What the judges see (3/3)
 - **Base:** "many floating pale-blue and white triangular shards and leaf cards across the hillside", reading as "sky-coloured holes or exposed backfaces", "a strong artefact".
 - **Arm:** "much cleaner, with only a few dark flecks".
