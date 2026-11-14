@@ -31,8 +31,8 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 				tiers.append(leaf)
 		else:
 			tiers.append(source.duplicate(true))
-	for extra: Dictionary in finish.get("forest_layers", []):
-		tiers.append(extra.duplicate(true))
+	for extra: Dictionary in forest_layers(finish):
+		tiers.append(extra)
 	forest_cfg["cover_tiers"] = tiers
 	super._build_cover_tiers(forest_cfg, radius)
 	# Copy uniform values explicitly before swapping, including all inherited
@@ -54,6 +54,30 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		if gloss.has("roughness"): mat.set_shader_parameter("wet_roughness", float(gloss.roughness))
 		if gloss.has("specular"): mat.set_shader_parameter("wet_specular", float(gloss.specular))
 		apply_moss_variation(mat, finish)
+
+
+## `forest_layers` with `forest_layers_1113` applied (LANE-LAND-CS, OFF until
+## judged). The layers are a JSON list, which an overlay cannot address, so
+## the flag carries per-layer patches keyed by layer name: `layers.<name>`
+## merges over that layer, and a layer left with `enabled` false is dropped.
+## OFF (or no patch for a layer) returns the shipped layers unchanged.
+static func forest_layers(finish: Dictionary) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var flag: Variant = finish.get("forest_layers_1113", {})
+	var patches: Dictionary = {}
+	if flag is Dictionary and bool((flag as Dictionary).get("enabled", false)):
+		patches = (flag as Dictionary).get("layers", {})
+	for source: Variant in finish.get("forest_layers", []):
+		if not source is Dictionary:
+			continue
+		var layer: Dictionary = (source as Dictionary).duplicate(true)
+		var patch: Variant = patches.get(str(layer.get("name", "")), {})
+		if patch is Dictionary:
+			layer.merge(patch as Dictionary, true)
+		if not bool(layer.get("enabled", true)):
+			continue
+		out.append(layer)
+	return out
 
 
 ## moss_variation_1101 (cause lane, OFF by default): the cover shader's sw_*
