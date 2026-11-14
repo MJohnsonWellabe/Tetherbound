@@ -5626,7 +5626,8 @@
    ],
    "ask": "Fixed-seed High Perches capture, main with and without paver_strips_1113 (same wild spawn seed both sides), High. Confirms the -0.30 was staging, not the arm. If the arm still loses, tell the coordinator so the flag can be reverted.",
    "added": "14 Nov 00:50",
-   "priority": "cheap confirm"
+   "priority": "cheap confirm",
+   "status": "DONE 14 Nov: no loss. 2+2 pooled runs: base-vs-base 3.20, seams-vs-seams 2.27, best base-vs-seams 1.74; in no frame does seams differ from base by more than base differs from base. G-land-cs-seams-perches-confirm."
   },
   {
    "id": "land-mt-shellshards",
