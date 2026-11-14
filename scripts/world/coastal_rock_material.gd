@@ -62,6 +62,37 @@ uniform float coast_dune_strata_strength = 0.0;
 uniform float coast_dune_scrub_strength = 0.0;
 uniform float coast_dune_scrub_scale = 0.07;
 uniform vec3 coast_dune_scrub_colour : source_color = vec3(0.47, 0.46, 0.33);
+// LANE-LAND-MT shore zones (flag-off; 0 keeps the shipping sand exactly). A
+// false-colour capture showed the wet band is a hairline at the waterline and
+// everything above it is one pale sand, so islands have no shore ecology.
+// wet_wobble_m widens and wanders the damp edge; wrack is a broken dark
+// strand line at the top of the damp sand; zone is sage and straw backdune
+// turf in patches that close up with height on gentle ground.
+uniform float coast_dune_wet_wobble_m = 0.4;
+uniform float coast_dune_wrack_strength = 0.0;
+uniform float coast_dune_wrack_height_m = 1.6;
+uniform float coast_dune_wrack_width_m = 0.35;
+uniform vec3 coast_dune_wrack_colour : source_color = vec3(0.27, 0.25, 0.18);
+uniform float coast_dune_zone_strength = 0.0;
+uniform float coast_dune_zone_start_m = 3.0;
+uniform float coast_dune_zone_full_m = 8.0;
+uniform float coast_dune_zone_scale = 0.035;
+uniform vec3 coast_dune_zone_colour : source_color = vec3(0.40, 0.46, 0.27);
+uniform vec3 coast_dune_zone_straw_colour : source_color = vec3(0.62, 0.58, 0.36);
+// Round 2 (GPU G-land-mt-shorezones: hard triangular olive facets on the near
+// sand). near_fade_m fades turf out toward the camera; slope_free drops the
+// terrain-normal gate, which can step per triangle where normals are faceted;
+// edge widens the patch border. Defaults keep round 1 exactly.
+uniform float coast_dune_zone_near_fade_m = 0.0;
+uniform float coast_dune_zone_slope_free = 0.0;
+uniform float coast_dune_zone_edge = 0.12;
+// LANE-LAND-MT damp hollows (flag-off; 0 keeps the shipping sand exactly).
+// Judges on the Venn fight (G-land-mt-cragback, 3/3): "the dune is one flat
+// pale mid-tone". Low sand gets broad, irregular damp patches in the wet
+// tone, fading out by damp_top_m, so the ground has a light/dark structure.
+uniform float coast_dune_damp_strength = 0.0;
+uniform float coast_dune_damp_scale = 0.03;
+uniform float coast_dune_damp_top_m = 6.0;
 
 float coast_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -215,6 +246,35 @@ const MATERIAL := """
 			scrub = smoothstep(0.26, 0.40, scrub + (grain - 0.5) * 0.12) * level;
 			sand = mix(sand, coast_dune_scrub_colour * mix(0.82, 1.08, grain), scrub * coast_dune_scrub_strength);
 		}
+		if (coast_dune_damp_strength > 0.0) {
+			float damp_n = coast_noise(v_vertex.xz * coast_dune_damp_scale + vec2(2.3, 7.7)) * 0.7
+				+ coast_noise(v_vertex.xz * coast_dune_damp_scale * 2.9 + vec2(9.1, 4.4)) * 0.3;
+			float damp = smoothstep(0.5, 0.68, damp_n + (grain - 0.5) * 0.08)
+				* (1.0 - smoothstep(coast_dune_damp_top_m * 0.55, coast_dune_damp_top_m, v_vertex.y));
+			sand = mix(sand, coast_dune_wet_colour * mix(0.94, 1.06, grain), damp * coast_dune_damp_strength);
+		}
+		if (coast_dune_zone_strength > 0.0) {
+			float zone_n = coast_noise(v_vertex.xz * coast_dune_zone_scale) * 0.5
+				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 3.1 + vec2(3.7, 9.2)) * 0.3
+				+ coast_noise(v_vertex.xz * coast_dune_zone_scale * 11.0 + vec2(8.3, 2.1)) * 0.2;
+			float zone_h = smoothstep(coast_dune_zone_start_m, coast_dune_zone_full_m, v_vertex.y + (zone_n - 0.5) * 4.0);
+			float zone_gentle = mix(smoothstep(0.55, 0.85, abs(dune_normal.y)), 1.0, coast_dune_zone_slope_free);
+			// Noise-led patches that close up with height: turf islands in
+			// sand, never a lawn (a first try blanketed every dune green).
+			float zone_cover = smoothstep(0.5, 0.5 + coast_dune_zone_edge, zone_n * 0.8 + zone_h * 0.2) * smoothstep(0.0, 0.35, zone_h) * zone_gentle;
+			if (coast_dune_zone_near_fade_m > 0.0) {
+				zone_cover *= smoothstep(coast_dune_zone_near_fade_m * 0.5, coast_dune_zone_near_fade_m,
+					length(v_vertex - (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz));
+			}
+			// Metre-scale sand flecks through the turf, so a patch underfoot is
+			// tufted ground and not one flat green sheet.
+			zone_cover *= mix(0.35, 1.0, smoothstep(0.3, 0.62, coast_noise(v_vertex.xz * 0.85 + vec2(4.4))));
+			vec3 turf = mix(coast_dune_zone_straw_colour, coast_dune_zone_colour,
+				coast_noise(v_vertex.xz * coast_dune_zone_scale * 7.3 + vec2(1.9))) * mix(0.8, 1.1, grain);
+			// Keep the sand's own ripple and grain value under the turf.
+			turf *= clamp(dot(sand, vec3(0.3333)) / max(dot(coast_dune_sand_colour, vec3(0.3333)) * 0.79, 0.01), 0.8, 1.2);
+			sand = mix(sand, turf, zone_cover * coast_dune_zone_strength);
+		}
 		// Sand caps the gentle ground; required steep banks expose the
 		// installed mineral material beneath it. This keeps those fixed
 		// landforms from reading as vertical piles of uniformly pale sand.
@@ -229,8 +289,16 @@ const MATERIAL := """
 			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.08));
 		bluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);
 		float dune_weight = outside * (1.0 - bluff);
-		float wet = 1.0 - smoothstep(0.15, coast_dune_wet_height_m, v_vertex.y + (patch - 0.5) * 0.4);
+		float wet_level = v_vertex.y + (patch - 0.5) * coast_dune_wet_wobble_m;
+		float wet = 1.0 - smoothstep(0.15, coast_dune_wet_height_m, wet_level);
 		sand = mix(sand, coast_dune_wet_colour * mix(0.92, 1.02, grain), wet * coast_dune_wet_strength);
+		if (coast_dune_wrack_strength > 0.0) {
+			float wrack_line = smoothstep(coast_dune_wrack_height_m - coast_dune_wrack_width_m, coast_dune_wrack_height_m, wet_level)
+				* (1.0 - smoothstep(coast_dune_wrack_height_m, coast_dune_wrack_height_m + coast_dune_wrack_width_m, wet_level));
+			float wrack_speck = smoothstep(0.42, 0.7, coast_noise(v_vertex.xz * 1.7))
+				* smoothstep(0.3, 0.6, coast_noise(v_vertex.xz * 0.21 + vec2(5.3)));
+			sand = mix(sand, coast_dune_wrack_colour * mix(0.8, 1.15, grain), wrack_line * wrack_speck * coast_dune_wrack_strength);
+		}
 		// At full mineral coverage every installed albedo/normal/roughness
 		// value survives unchanged; do not turn the exposed bank beige again.
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sand, dune_weight);
@@ -314,7 +382,11 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
 		material.call("set_shader_param", "coast_dune_albedo", load("res://assets/environment/terrain/tidewake_dune_sand_v1.png"))
 		for key: String in ["sand_colour", "wet_colour", "wet_height_m", "wet_strength", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "normal_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y",
-				"flank_strength", "flank_scale", "strata_strength", "scrub_strength", "scrub_scale", "scrub_colour"]:
+				"flank_strength", "flank_scale", "strata_strength", "scrub_strength", "scrub_scale", "scrub_colour",
+				"wet_wobble_m", "wrack_strength", "wrack_height_m", "wrack_width_m", "wrack_colour",
+				"zone_strength", "zone_start_m", "zone_full_m", "zone_scale", "zone_colour", "zone_straw_colour",
+				"zone_near_fade_m", "zone_slope_free", "zone_edge",
+				"damp_strength", "damp_scale", "damp_top_m"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))

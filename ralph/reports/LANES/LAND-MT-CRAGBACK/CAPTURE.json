@@ -1,0 +1,11 @@
+{
+ "id": "LAND-MT-CRAGBACK",
+ "lane": "LANE-LAND-MT",
+ "branch": "tb/land-mt",
+ "preset": "High (and Medium if High maps 7.5 or above; F39#19 is 0.03 short)",
+ "tool": "tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --seed=2042 (godot_args --fixed-fps 20; pair frames by camera, GPU runbook)",
+ "base": {"tree": "tb/land-mt", "overlay": null},
+ "arm": {"tree": "tb/land-mt", "overlay": "ralph/reports/LANES/LAND-MT-CRAGBACK/overlay.json"},
+ "rows": {"F39#19": ["Venn fight job frames"], "F39#7": ["Venn fight job frames"], "no-loss": ["F39#2 job frames (Veilfall at distance)", "one Veilfall vista"]},
+ "by_eye": "Venn fight: top-right corner is grey rock, not a black wedge."
+}
