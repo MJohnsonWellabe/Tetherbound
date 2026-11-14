@@ -1,6 +1,12 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **Reply on the SHELLSHARDS GPU crash (0xC0000094, integer divide): hardening pushed. Land branch is now `tb/land-mt-shellshards-land` dc5ad6b6** (tb/land-mt e69fc522).
+  - A GDScript divide by zero raises a SCRIPT ERROR, not a native crash, and the repair code has no unguarded integer division.
+  - Two mesh-side risks are now closed. (1) Fill vertices used plain-averaged tangents, which can give a zero vector with w = 0 where mirrored seams meet; they are now unit length with w = ±1. (2) A surface left empty, or with nothing removed, now keeps its original indices and never reaches the renderer empty.
+  - Pin test: 3 tests, 0 failed.
+  - The crash hit between stronghold route_day and walk_01, far from the shell, and the SHELLSHARDS+PLUME run (same flag) finished all 10 frames, so it may not be this mesh.
+  - If the retry reproduces, please rerun once on dc5ad6b6. If it still crashes, one run with island_strip ON and `fill_max_loop` 0 (strip only) separates the fill from the strip.
 - **Ready: PLUME round 2 (`ralph/reports/LANES/LAND-MT-PLUME/overlay.json`, re-judge on top of SHELLSHARDS as asked).** Cause of the "gap / two stacked sprites": the signal post stands inside the cave mouth, so the column rose through the rock arch. Round 2 keeps the authored crown (no wide card) and leans the column out of the mouth toward the approach on an early curve, so it climbs in front of the arch as one continuous tapered plume. Test: 1 test, 0 failed (flag off and on). By-eye: walk_01, one unbroken column at the mouth. This is one of two arms waiting; SEADEPTH r3 is the other.
 - **LANDING READY: `tb/land-mt-shellshards-land` 8818353e** (from main 94fe423d). This is SHELLSHARDS: `bank.hill_shell.island_strip` ON with `_why_on` citing G-land-mt-shellshards-ss (F38#30 +0.54, 3/3). It carries only the judged strip and fill code, not the later flag-off steep-face work. READY.md is in `ralph/reports/LANES/LAND-MT-SHELLSHARDS-LAND/`. The pin and 4 related Warrens files ran: 12 tests, 0 failed.
 - **Row-tagged status:**
