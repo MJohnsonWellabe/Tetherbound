@@ -71,3 +71,28 @@ func test_shipped_config_turns_the_fix_on() -> void:
 	var entry: Dictionary = (parsed as Dictionary).camera.get("lens_ground_clearance", {})
 	assert_eq(entry.get("enabled"), true, "ships ON as a camera bug fix")
 	assert_true(str(entry.get("_why_on", "")).contains("ITEM-VENN-PLANE"), "records its cause")
+
+
+func test_a_paused_rig_still_lifts_the_lens_on_the_physics_tick() -> void:
+	# F39#21 (13 Nov): sequence_director.gd switches the rig's idle tick off
+	# while a box is up, and the clearance only ran in `_follow` on that tick,
+	# so the Venn win lens stayed 0.36 m above the dune for the whole moment.
+	_slope = true
+	_rig.set_lens_ground_probe_for_tests(_grounded, CFG)
+	_rig.spring_length = 6.0
+	_rig.set_process(false)
+	_rig.call("_physics_process", 1.0 / 60.0)
+	var lens := _rig.position + _rig.global_transform.basis.z * _rig.spring_length
+	assert_true(_rig.spring_length < 6.0, "the paused rig's arm shortened off the dune")
+	assert_true(lens.y - _ground_at(lens) >= 1.0, "the lens clears the ground by min_m")
+
+
+func test_a_running_rig_leaves_the_clearance_to_its_follow() -> void:
+	# While the idle tick runs, `_follow` already applies the clearance; the
+	# physics tick must not add a second pass.
+	_slope = true
+	_rig.set_lens_ground_probe_for_tests(_grounded, CFG)
+	_rig.spring_length = 6.0
+	_rig.set_process(true)
+	_rig.call("_physics_process", 1.0 / 60.0)
+	assert_eq(_rig.spring_length, 6.0)

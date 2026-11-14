@@ -568,6 +568,15 @@ func _physics_process(delta: float) -> void:
 		# ticks under load; catch a teleport on the first physics tick so the
 		# collision Terrain3D centres on this camera arrives with the player.
 		_snap_if_teleported()
+		# F39#21 (13 Nov): `sequence_director.gd` switches the idle tick off
+		# while a box is up (`set_process(not panel)`), and the lens ground
+		# clearance only ran inside `_follow` on that tick. A fight that ended
+		# with the lens on a dune face kept it there for the whole post-fight
+		# moment (Venn win: lens 0.36 m above the sand; the dune filled the
+		# lower frame as a flat grey plane). The physics tick still runs, so
+		# the clearance runs here too whenever the idle tick is off.
+		if not is_processing():
+			_keep_lens_off_ground()
 		return
 	if _target == null or not is_instance_valid(_target):
 		_target = null

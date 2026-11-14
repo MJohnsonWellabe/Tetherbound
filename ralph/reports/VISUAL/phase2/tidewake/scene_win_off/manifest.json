@@ -1,0 +1,42 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"attempt": {
+		"args": [
+			"--trainer=water_trainer_venn",
+			"--seed=2042",
+			"--verified-victory-lifecycle",
+			"--max-frames=400",
+			"--expected-resolution=1280x720",
+			"--source-commit=94e97a6c7af3911980c9f36f3007d1c43fe92a16",
+			"--out=res://ralph/reports/VISUAL/phase2/tidewake/scene_win_off"
+		],
+		"override_pack": "",
+		"override_pack_sha256": "",
+		"seed": 2042,
+		"source_commit": "94e97a6c7af3911980c9f36f3007d1c43fe92a16",
+		"trainer": "water_trainer_venn",
+		"victory_config": {
+			"_comment": "P2-103 production: label persistent quick items and separate the exact victory receipt from team growth. Default on under the owner's Phase 1 instruction. Presentation only; Phase 2 native victory/aftermath comparison at controller 720p and 1080p remains required.",
+			"enabled": true
+		},
+		"victory_config_sha256": "ab0a019b27b4efa5232df9802266f62e82cae400cc9f5a7121ea5c4dabaca409"
+	},
+	"clock_disclosure": "fight_s counts pilot-loop physics ticks and omits save waits; lifecycle elapsed_since_win_ms uses the monotonic production wall clock. Neither is a performance measurement.",
+	"complete": false,
+	"display_server": "X11",
+	"expected_resolution": [
+		1280,
+		720
+	],
+	"failures": [],
+	"frames": [],
+	"missing_phases": [
+		"win",
+		"aftermath",
+		"receipt-expired"
+	],
+	"postwin_inputs": [],
+	"rendering_method": "gl_compatibility",
+	"schema_version": 1,
+	"trainer": "water_trainer_venn"
+}
