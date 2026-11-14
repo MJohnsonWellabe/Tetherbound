@@ -30,5 +30,5 @@
 ## Next asks (LANE-LAND-CS)
 1. **Open canopy gaps at the forest and giant stands** so the purple storm sky reads, and give calm, break and aftermath a visible difference (lightning flash, grade, shafts). 3/3 top ask on F41#22. Scene.
 2. **Replace the pale see-through leaf cards** at rod_line with denser shaded foliage. Scene.
-3. **Confirm the storm-brown Staticub coat** is present in the Stormwood matrix tree. LANE-BEINGS, if it is not.
+3. **Merge origin/main into tb/land-cs** before the next Stormwood capture. LANE-BEINGS confirms that the storm-brown coat is on main (#957, 0ba1cfabd) but not in tree 91ac0d6a1, so the salmon bear is the old coat on an unmerged branch. If it still reads warm after the merge, BEINGS-STATICUB-COOL (tb/beings) is the arm for it.
 4. **Break up the flat striped ground plane** at the glass stand with moss, copper and glass accents. Scene.
