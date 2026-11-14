@@ -1,0 +1,14 @@
+{
+ "id": "LAND-CS-RIMGLOW",
+ "lane": "LANE-LAND-CS",
+ "branch": "tb/land-cs",
+ "preset": "High",
+ "base": {"tree": "tb/land-cs", "overlay": null},
+ "arm": {"tree": "tb/land-cs", "overlay": "ralph/reports/LANES/LAND-CS-RIMGLOW/overlay.json"},
+ "tool": "res://tools/phase2_capture_cloudreach_high_perch.gd",
+ "args": ["--seed=2042", "--output={OUT}"],
+ "godot_args": ["--rendering-method", "forward_plus", "--resolution", "1920x1080", "--fixed-fps", "20"],
+ "frames": {"F40#17": ["cloudreach__flying__high-perches-crown-rim-out-day", "cloudreach__flying__high-perches-crown-rim-out-night"]},
+ "no_loss": "high-perches-crown-court-day",
+ "by_eye": "crown-rim-out day and night: no large soft ball of light round the three mushroom patches. Hold if unchanged."
+}

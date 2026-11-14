@@ -4872,6 +4872,16 @@ func dress_master_site(site: Node3D, definition: Dictionary) -> void:
 	var floor_mesh := site.get_node_or_null(^"ArenaFloor") as MeshInstance3D
 	if floor_mesh != null:
 		floor_mesh.material_override = ENVIRONMENT_MATERIALS.worn_ground(site.global_position, radius)
+		# F40#17 `master_floor_1114` (LANE-LAND-CS, OFF until judged): from the
+		# High Perches rim the master_t4 floor's dirt-path texture, repeating every
+		# 2 m, reads as "a flat orange checker disc ... a placeholder" (G-land-cs-
+		# rimglow 3/3; pixel probe names MasterT4/ArenaFloor). On: a longer soil
+		# tile and a muted earth tint on Master floors only; other yards unchanged.
+		var master_floor: Variant = _visual_config.get("master_floor_1114", {})
+		if master_floor is Dictionary and bool((master_floor as Dictionary).get("enabled", false)):
+			var worn := floor_mesh.material_override as ShaderMaterial
+			worn.set_shader_parameter("soil_scale", float((master_floor as Dictionary).get("soil_scale", 0.14)))
+			worn.set_shader_parameter("soil_tint", Color(str((master_floor as Dictionary).get("soil_tint", "#80776a"))))
 	if str(definition.get("access", "")) != "fly_only":
 		return
 	for child: Node in site.get_children():
@@ -6199,7 +6209,23 @@ func _mesa(
 		var outward := Vector3(top_ring[i].x, 0, top_ring[i].z).normalized()
 		var outward_next := Vector3(top_ring[next].x, 0, top_ring[next].z).normalized()
 		var relief := minf(size.x * 0.055, 15.0)
-		if wall_detail.is_empty():
+		var band_depth := float(top_band_cfg.get("band_depth_m", 0.0)) if top_band_tool != null else 0.0
+		if wall_detail.is_empty() and band_depth > 0.0:
+			# F40#1 / F40#8 round 2 (LANE-LAND-CS): only the top `band_depth_m`
+			# below the rim takes the pale band. The first band spans a quarter
+			# of the mass height (about 19 m on a landmark ledge, far more on a
+			# region cliff), so on the Three Bells bridge it repainted a whole
+			# cliff face (G-lcs-wallband-bridge, F40#8 -0.43, 0/3). The face is
+			# split at that depth; the rest keeps the ordinary cliff material.
+			var fa := clampf(band_depth / maxf(top_ring[i].y - upper_ring[i].y, 0.01), 0.0, 1.0)
+			var fb := clampf(band_depth / maxf(top_ring[next].y - upper_ring[next].y, 0.01), 0.0, 1.0)
+			var mid_a := top_ring[i].lerp(upper_ring[i], fa)
+			var mid_b := top_ring[next].lerp(upper_ring[next], fb)
+			_add_geological_face(top_band_tool, top_ring[i], top_ring[next], mid_a, mid_b,
+				outward, outward_next, 0.0, 4)
+			_add_geological_face(upper_tool, mid_a, mid_b, upper_ring[i], upper_ring[next],
+				outward, outward_next, relief, 16)
+		elif wall_detail.is_empty():
 			_add_geological_face(top_band_tool if top_band_tool != null else upper_tool,
 				top_ring[i], top_ring[next], upper_ring[i], upper_ring[next], outward, outward_next, relief)
 		else:

@@ -7,6 +7,8 @@ uniform vec4 soil_tint : source_color=vec4(0.61,0.50,0.37,1.0);
 uniform vec3 patch_centre=vec3(0.0);
 uniform float radius=16.5;
 uniform vec2 footprint_half=vec2(0.0);
+// master_floor_1114 (LANE-LAND-CS, OFF = 0.48, the shipped tile): soil texture repeats per metre.
+uniform float soil_scale=0.48;
 varying vec3 world_at;
 void vertex(){world_at=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
 void fragment(){
@@ -23,7 +25,7 @@ void fragment(){
 	// Fade soil over the actual crown or paving beneath this overlay. A turf
 	// replacement would paint grass onto cobble and mismatch high battle yards.
 	if(dirt<=0.001){discard;}
-	vec3 soil=texture(soil_tex,world_at.xz*0.48).rgb*soil_tint.rgb;
+	vec3 soil=texture(soil_tex,world_at.xz*soil_scale).rgb*soil_tint.rgb;
 	ALBEDO=soil*mix(vec3(1.0),vec3(0.88,0.82,0.72),cloudreach_ground_1112.x);
 	if (surface_detail_strength > 0.0) {
 		vec3 n = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);

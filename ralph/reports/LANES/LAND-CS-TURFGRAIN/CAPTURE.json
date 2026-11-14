@@ -1,0 +1,28 @@
+{
+ "id": "LAND-CS-TURFGRAIN",
+ "lane": "LANE-LAND-CS",
+ "branch": "tb/land-cs",
+ "preset": "High",
+ "base": {"tree": "tb/land-cs", "overlay": null},
+ "arm": {"tree": "tb/land-cs", "overlay": "ralph/reports/LANES/LAND-CS-TURFGRAIN/overlay.json"},
+ "captures": [
+  {
+   "rows": "F40#1, F40#7, F40#4 (and no-loss F40#3)",
+   "tool": "res://tools/phase2_capture_locations.gd",
+   "args": ["--biome=cloudreach", "--times=day", "--views=approach,close", "--seed=2042", "--output={OUT}"],
+   "frames": [
+    "cloudreach__landmark__realm_gate_crag__day__approach",
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day__approach",
+    "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close"
+   ]
+  },
+  {
+   "rows": "F40#0, F40#19, F40#21",
+   "tool": "res://tools/capture_cloudreach_f40_matrix.gd",
+   "note": "The G-rescore-f40-0-sample pieces (day clear, day rain, night clear, night rain x four views) for realm gate crag, sky shrine and stormward overlook."
+  }
+ ],
+ "by_eye": "Realm Gate and Sky Shrine approach, day: fine grass grain on the lawn up to the camera; trail and stones as on base. Hold if unchanged or if the mid-distance lawn sparkles."
+}

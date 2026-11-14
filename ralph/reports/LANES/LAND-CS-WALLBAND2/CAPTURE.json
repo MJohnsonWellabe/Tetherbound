@@ -1,0 +1,16 @@
+{
+ "id": "LAND-CS-WALLBAND2",
+ "lane": "LANE-LAND-CS",
+ "branch": "tb/land-cs",
+ "preset": "High",
+ "base": {"tree": "tb/land-cs", "overlay": null},
+ "arm": {"tree": "tb/land-cs", "overlay": "ralph/reports/LANES/LAND-CS-WALLBAND2/overlay.json"},
+ "arm_combined_optional": {"tree": "tb/land-cs", "overlay": "ralph/reports/LANES/LAND-CS-WALLBAND2/overlay_with_terrace_r1.json"},
+ "tool": "res://tools/phase2_capture_locations.gd",
+ "args": ["--biome=cloudreach", "--times=day", "--views=approach,close", "--seed=2042", "--output={OUT}"],
+ "frames": {
+  "F40#1": ["cloudreach__landmark__realm_gate_crag__day__approach", "cloudreach__landmark__sky_shrine_heartstone__day__approach", "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close", "cloudreach__landmark__realm_gate_crag__day__close"],
+  "F40#8 no-loss": ["cloudreach__broken_causeways__03__three_bells_bridge__day__close"]
+ },
+ "by_eye": "Bridge close: the cliff right of the bridge keeps its brown rock (hold if pale grey). Realm Gate approach: pale stone band under the lip."
+}
