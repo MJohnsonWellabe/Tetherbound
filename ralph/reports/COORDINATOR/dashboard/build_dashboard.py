@@ -546,10 +546,9 @@ _fp_flight_rows = "".join(
     f'<td>{E(f_["detail"])}</td><td><code>{E(f_["where"])}</code></td></tr>' for f_ in _fp["in_flight"])
 finish_html = (
     '<section class="panel" aria-labelledby="finish-h"><h2 id="finish-h">Finish plan</h2>'
-    f'<p class="note">Every open criterion as of 31 Oct, sorted into the workstream that fixes it, with live progress from this board. Target: everything built and judged by {E(_fp["target"])}; the owner\'s Ally test and play pass follow. The bar stays at a GPU mapped 7.5. '
-    '<a href="https://claude.ai/artifact/XNDPUdtXSbdGtDCk3WumCy">Full plan page</a>.</p>'
+    f'<p class="note">One-week plan (owner, 14 Nov): agents play every chapter on the GPU PC, one ranked list of what looks terrible is fixed by cause, and the owner plays last. Target for {E(_fp["target"])}: nothing terrible in a full play-through, no row below 6.5, a clean end-to-end agent run, verified frame rate and a published build. Rows from 6.5 to 7.5 continue afterwards; the done bar stays at a GPU mapped 7.5.</p>'
     '<div class="kpis">'
-    f'<div class="kpi"><b>{_fp_done} / {len(_fp_all)}</b><span>Plan criteria closed since 31 Oct</span></div>'
+    f'<div class="kpi"><b>{_fp_done} / {len(_fp_all)}</b><span>Plan criteria closed</span></div>'
     f'<div class="kpi"><b>{sum(1 for f_ in _fp["in_flight"] if f_["state"] in ("queued", "built", "running"))}</b><span>Jobs in flight (built, queued or running)</span></div>'
     f'<div class="kpi"><b>{sum(1 for f_ in _fp["in_flight"] if f_["state"] in ("passed", "landed"))}</b><span>Jobs passed or landed</span></div>'
     '</div>'
@@ -557,9 +556,9 @@ finish_html = (
     f'<tbody>{"".join(_fp_phase_rows)}</tbody></table></div>'
     '<h3>In flight now</h3><div class="tbl"><table><thead><tr><th>Job</th><th>State</th><th>Detail</th><th>Where</th></tr></thead>'
     f'<tbody>{_fp_flight_rows}</tbody></table></div>'
-    '<h3>Visual workstreams (193 criteria)</h3><div class="tbl"><table><thead><tr><th>Workstream</th><th class="num">Closed</th><th>Progress</th><th>What fixes it</th><th>Who</th><th>When</th></tr></thead>'
+    f'<h3>Visual workstreams ({sum(len(w_["sels"]) for w_ in _fp_ws)} open rows on 14 Nov)</h3><div class="tbl"><table><thead><tr><th>Workstream</th><th class="num">Closed</th><th>Progress</th><th>What fixes it</th><th>Who</th><th>When</th></tr></thead>'
     f'<tbody>{_fp_ws_rows}</tbody></table></div>'
-    '<h3>Non-visual criteria (14)</h3><div class="tbl"><table><thead><tr><th>Criterion</th><th>Status</th><th>How it closes</th><th>When</th></tr></thead>'
+    '<h3>Non-visual criteria</h3><div class="tbl"><table><thead><tr><th>Criterion</th><th>Status</th><th>How it closes</th><th>When</th></tr></thead>'
     f'<tbody>{_fp_other_rows}</tbody></table></div>'
     '<h3>Needs the owner</h3><ul class="plain">' + "".join(f"<li>{E(a_)}</li>" for a_ in _fp["asks"]) + '</ul></section>')
 
@@ -890,7 +889,7 @@ _v_below7 = sum(1 for r_ in _vrows if r_["bk"] in ("b50", "b00", "b60"))
 _v_gpu = sum(1 for r_ in _vrows if r_["bk"] != "none" and str(r_["src"]).startswith("GPU"))
 _v_fresh = sum(1 for r_ in _vrows if r_.get("fresh"))
 _v_scored = sum(1 for r_ in _vrows if r_["bk"] != "none")
-_stage = ("Tier 1: raise everything below 6 to 6" if _v_below6 else
+_stage = ("This week: nothing below 6.5" if True else
           "Tier 2: raise everything to 7" if _v_below7 else "Tier 3: take everything to 7.5")
 
 
@@ -930,6 +929,14 @@ overview_html = (
     f'<div class="kpi"><span class="kpi-l">Chapter exit cards</span><b>{_cards_met} / {len(_cards)}</b>{bar(round(100 * _cards_met / max(1, len(_cards))))}'
     '<span>integrated end-of-chapter runs passed.</span></div>'
     '</div>'
+    '<section class="panel"><div class="ph"><h2>One-week finish plan</h2><span class="stage">Target ' + E(_fp["target"]) + '</span></div>'
+    '<p>' + E(status.get("headline", "")) + '</p>'
+    '<div class="tbl"><table><thead><tr><th>When</th><th>Work</th><th>State</th></tr></thead><tbody>'
+    + "".join(f'<tr><td>{E(ph_["dates"])}</td><td>{E(ph_["name"])}</td><td>{E("Done" if _fp_today > ph_["end"] else "Now" if ph_["start"] <= _fp_today <= ph_["end"] else "Upcoming")}</td></tr>' for ph_ in _fp["phases"])
+    + '</tbody></table></div>'
+    '<div class="tbl"><table><thead><tr><th>Visual work, by score on 14 Nov</th><th class="num">Closed</th><th>How</th><th>When</th></tr></thead><tbody>'
+    + "".join(f'<tr><td>{E(w_["name"])}</td><td class="num">{_fp_met(w_["sels"])} / {len(w_["sels"])}</td><td>{E(w_["fix"])}</td><td>{E(_fp_phase[w_["phase"]]["dates"])}</td></tr>' for w_ in _fp_ws)
+    + '</tbody></table></div></section>'
     '<section class="panel"><div class="ph"><h2>Visual floor by area</h2><span class="stage">' + E(_stage) + '</span></div>'
     f'<p class="note">Each bar is every visual item in that area, by its latest score (the lower preset where two were judged). '
     f'{_v_gpu} of {_v_scored} scores are GPU ({_v_fresh} re-scored on GPU High on 8–9 Nov); the rest are CPU, which runs about 0.8 lower. '
@@ -1114,7 +1121,7 @@ ul.lanes p{{margin:0}} .ln-head{{display:flex;flex-wrap:wrap;gap:4px 10px;align-
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
-    <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
+    <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt by the coordinator</p>
   </div>
   <nav class="tabs" aria-label="Board views"><label for="tab-ovw">Overview</label><label for="tab-vis">Visual catalogue</label><label for="tab-acc">Acceptance</label><label for="tab-tf">Tried and failed</label></nav>
   <div class="pane pane-ovw">{overview_html}</div>

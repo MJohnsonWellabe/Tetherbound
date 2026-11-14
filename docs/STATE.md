@@ -4,6 +4,8 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Coordinator handoff and plan (8 Nov 2026)
 
+**One-week finish plan (owner, 14 Nov 2026; supersedes "Now" and the lane lines below):** the owner plays last. Agents play every chapter on the GPU PC; one ranked list of what looks terrible is fixed by cause in three lanes; the GPU PC re-plays the game nightly. Target 21 Nov: no row below 6.5, a clean full agent play-through, a clean frame-rate run, a published build; 6.5–7.5 rows continue afterwards (bar and ship rule unchanged). Per-arm GPU queue frozen. Plan: `ralph/reports/COORDINATOR/dashboard/finish_plan.json`.
+
 Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 
 **State:**
@@ -49,7 +51,7 @@ Read first. Replaces the October §0 (Git history); CLAUDE.md overrides.
 - 24 Oct: raise the floor worst-first: below 6 to 6, then all to 7, then 7.5. Unscored areas get a baseline first.
 - 24 Oct, creature touches: current meshes stay; species gain light energy, elemental or war-worn touches. "Just shrink it": Terrapup ships at 3.20 m (the only exception to never-shrink).
 - 17 Oct: F36#1 judges fly-grip only for Fly-capable species, and swim or ride only where used in play. CPU-only evidence never parks a visual item.
-- 2 Nov, F49#0: "Park the opening join, just finish the training loop." The earned line from `relay` is accepted, and no Meadows-opening seam is required.
+- 2 Nov, F49#0: opening join parked; the earned line from `relay` is accepted.
 
 **Active owner rulings (4–5 Oct):**
 - Visual target: High/Medium judged to the full bar; Low/Compatibility checked for breakage until the Ally test passes. UI's second check is 1280×720. F36#0 may refine only the identity of installed NPCs.
