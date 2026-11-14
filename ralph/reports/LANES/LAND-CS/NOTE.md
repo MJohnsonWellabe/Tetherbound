@@ -4,7 +4,7 @@
 - SOILOFF SHIPS (G-land-cs-soiloff): F41#22 5.33 -> 6.03 (+0.70, 3/3), F41#24 5.29 -> 6.23 (+0.94, 3/3); glass, rod_line, stormheart level.
 - Cut from current main 94fe423d3; only `forest_layers_1113` ON with `_why_on`; ON pin; 45 Stormwood ground tests, 0 failed; READY.md. Presentation only (no route smoke needed).
 - TURFGRAIN matrix no-loss: level (G-lcs-turf-matrix), so PR #963 stands.
-- In progress: WALL-BAND round 2 (`band_depth_m` 3.0: pale band only in the top 3 m under the rim), CPU capture of the Realm Gate and Three Bells bridge frames running.
+- **New arm, CPU-ready: LAND-CS-WALLBAND2** (F40#1, F40#8 no-loss). The pale band only in the top 3 m under the rim (`band_depth_m`). CPU: the Three Bells bridge cliff keeps its rock (round 1 turned it pale grey, the judged loss) and the Realm Gate rim stays pale. Optional combined overlay with the round 1 terraces is in the folder.
 
 ## URGENT FOR PR #963 (14 Nov 01:55 UTC): WALL-BAND withdrawn, pushed to the PR branch
 - LANE-JUDGE amended G-below6-wall-band-main to **DO NOT SHIP**: the F40#8 no-loss check loses on the Three Bells bridge, 6.29 -> 5.86 (−0.43, 0/3); the band repaints a whole cliff face as grey with faceted brown patches.
@@ -51,6 +51,7 @@
 - F40#1 PARKED: re-cluster the Cloudreach grass tufts by overlay (`ground_cover.cluster_frequency` 0.55, `cluster_threshold` 0.9); no visible change on CPU, not sent.
 - F40#1, F40#3, F40#4, F40#7, F40#11 PARKED: the F26 course rock surface on the owner's granite (no pale retint); not built, because the same surface lost 0/3 inside `pale_strata` and judges preferred the textured earth.
 - F40#1, F40#4, F40#7 SHIPPED: LAND-CS-TURFGRAIN (+0.20, +0.19, +0.24, 3/3 each); landing tb/land-cs-turfgrain-land. Matrix stands F40#0/#19/#21 not judged yet.
+- F40#1, F40#8 HELD: LAND-CS-WALLBAND2 (band limited to the top 3 m under rims), CPU-ready.
 - F40#1, F40#8 PARKED (as is): BELOW6-WALL-BAND. F40#1 +0.32 (3/3) but F40#8 loses 6.29 -> 5.86 (0/3, cliff face repainted). Withdrawn from PR #963.
 - F40#1 HELD: BELOW6-GATE-TERRACE (+0.20, 2/3, curbs read as generated contour lines); re-judge with the wall band on.
 - F40#3 HELD: LAND-CS-ARCHSTAND (skyroad arch stand from the island's south rim), CPU-ready, waiting for a queue slot.
