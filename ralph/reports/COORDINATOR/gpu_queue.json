@@ -5715,6 +5715,29 @@
    "added": "14 Nov 02:25",
    "priority": "land-mt (F39#31 lowest Tidewake row)",
    "status": "HELD 14 Nov: LAND-MT already has two arms waiting (SEADEPTH r3, PLUME r2); runs when one clears."
+  },
+  {
+   "id": "scene-fleecard",
+   "branch": "tb/scene",
+   "commit": "40ad00e38",
+   "rows": [
+    "F41#16 Hollows fight result (6.37)"
+   ],
+   "ask": "Base (tb/scene head) vs + ralph/reports/LANES/SCENE-FLEECARD/overlay.json (hud.json flee_card_1114: framed teal-edged result card 'YOU BACKED OFF / <creature> got clear', upper third, 3 s; recall line stands down). capture_named_fights_f10_6.gd --ids=hollows_alpha per CAPTURE.json, High first. By eye on 99-after: the large framed card, no small 'You backed off.' over the spider (hold if the small line shows). No-loss: i12 and F41#21 hollows_win 99-after identical.",
+   "added": "14 Nov 03:10",
+   "priority": "scene (first arm ever on F41#16; run ahead of SCENE's older arms)"
+  },
+  {
+   "id": "land-cs-wallband2",
+   "branch": "tb/land-cs",
+   "commit": "98670f209",
+   "rows": [
+    "F40#1 (6.39)",
+    "F40#8 no-loss (6.29)"
+   ],
+   "ask": "Base (tb/land-cs head) vs + ralph/reports/LANES/LAND-CS-WALLBAND2/overlay.json (pale band limited to the top 3 m under the rim). phase2_capture_locations.gd cloudreach day approach,close per CAPTURE.json, High. By eye: Three Bells bridge cliff keeps brown rock (hold if pale grey); Realm Gate shows a pale band under the lip. Optional combined overlay with terrace r1 in the folder.",
+   "added": "14 Nov 03:10",
+   "priority": "land-cs (WALL-BAND r2, judged with the bridge F40#8 as no-loss)"
   }
  ],
  "_note_1109": "Config-only parked arms (tree main) run first as overlays on the main import; the three branch arms each need their own checkout and import, so batch them."
