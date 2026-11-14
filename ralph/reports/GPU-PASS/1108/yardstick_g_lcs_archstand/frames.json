@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1113", "section": "G-lcs-archstand @ c6ef25efe", "content": "tb/land-cs dbbfc7842 (= main 94fe423d3 + flag-off code); arm = capture-stand candidates_1113 ON (capture tooling only)", "preset": "High",
+ "F40#3 (3 frames)": ["windscar_beacon day approach", "landmark broken_skyroad_arch day approach (stand moved)", "old_wind_observatory day approach"],
+ "pixel_diff_arm_vs_base": {"beacon": 5.4, "arch": 40.96, "observatory": 2.9},
+ "not judged": {"broken_causeways__04 broken_skyroad_arch day approach": "arm-only frame (base has no stand there)"},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}
