@@ -36,3 +36,30 @@ Round 1 notes follow.
 - The shoal rings are softer but still concentric. Making them irregular is the next step and is not in this arm.
 - The whole sea gets lighter and less saturated at range. F39#10 (water and island depth, 7.02) and the current-state frames (F39#16, F39#17: the restoration read depends on water colour) are the no-loss checks. The part's own note says an earlier royal-navy palette lost, so the colours stay in the shipping family.
 - Night, dawn and golden were not looked at on CPU.
+
+## Round 3 (`overlay_r3.json`), the judges' last tone round for F39#10
+
+The verdict on r2 said the base has the depth but a hard edge, while the arm has a soft edge but reads lighter cyan. The ask: keep base's deep navy and soften only the transition band.
+
+The lighter read had three sources:
+- the candidate's brighter shallow colour (#74c2b6), carried out by a 16 m falloff;
+- its range haze (#a3c3ce at 0.3), which washes the distance toward cyan;
+- a light mid stop.
+
+Round 3 changes:
+- shallow colour back to base #79b4ac;
+- haze off;
+- a darker mid band (#2a7686) at 3.5 m;
+- falloff 10 m (base 5, r2 16);
+- navy offshore #0f3f5a, full by 14 m;
+- slicks and caps stay off.
+
+**CPU** (`_sheet_r3_cpu.jpg`, left main, right r3; rows: terraces route, walk_01, walk_02, then First Shore route, walk_01, walk_02):
+- The offshore water stays deep navy (slightly deeper).
+- The shelf edge is softer on the terraces route and walk_01.
+- First Shore's chevron bands soften only slightly.
+- The concentric islet halos remain; they need the rebake.
+
+**By-eye line:** terraces route_day. Navy as deep as main, with a wider teal step at the shelf instead of a hard line.
+
+If this panel is a wash too: PARKED for F39#10, as agreed.

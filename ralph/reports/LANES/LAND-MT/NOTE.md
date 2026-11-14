@@ -1,6 +1,8 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **Ready: SEADEPTH round 3 (`ralph/reports/LANES/LAND-MT-SEADEPTH/overlay_r3.json`), the judges' one more tone round for F39#10.** It keeps base's deep navy (and its shallow colour) and softens only the shelf transition: haze off (that, plus the brighter shallow colour, was r2's "lighter cyan"), a darker mid band, falloff 10 m. Re-capture F39#10, F39#15 and the current states. The CPU change is modest (sheet in the folder). If it is a wash, F39#10 sea tone is PARKED. That makes two arms waiting: SHELLSHARDS+PLUME (one boot) and this.
+- **Built, flag-off, not yet looked at:** `meadow_match.steep_fix` for the stretched grass on the Warrens steep flanks (F38#30). The shell shader sampled the broad grass tone top down, so it ran in vertical streaks; the fix makes it triplanar and gives the fine grass anisotropic sampling. I will do a CPU look after SHELLSHARDS is judged, so it can stack on it.
 - **LANDING READY: `tb/land-mt-flowstreaks-land` 548096bc** (pushed 00:40 from b52651b0, now merged up to main 1405def4; diff vs main is the 5 FLOWSTREAKS files only). This is FLOWSTREAKS round 2: `current_flow.lesson_cue` is ON with `_why_on` citing G-land-mt-flowstreaks-r2 (F13#5 +0.85, 3/3). READY.md is in `ralph/reports/LANES/LAND-MT-FLOWSTREAKS-LAND/`. The pin test and 2 related files ran: 10 tests, 154 assertions, 0 failed.
 - **Row-tagged status (for TRIED_AND_FAILED):**
   - F38#24 TWORANGES: PARKED. A stretched copy of the ridge reads as a pale streaky wall; a real second range needs a new far mesh.
