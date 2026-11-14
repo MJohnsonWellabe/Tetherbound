@@ -1,0 +1,5 @@
+{"branch": "tb/gpu-frames-1113", "sections": "G-land-mt-shellshards-ss, G-land-mt-plume", "content": "tb/land-cs 91ac0d6a1 + tb/land-mt 3cbb66b00 Meadows files (manifest); SS = bank.hill_shell.island_strip ON; PLUME judged on top of SS (the plume section's shellshards side is pixel-identical to the SS arm, diff 0.00)", "preset": "High",
+ "SS/PL F38#30": ["burrow_warrens walk_02_day", "walk_03_day"], "SS/PL warrens other": ["route_day", "walk_01_day", "vista_dusk"], "SS F38#24": ["burrow_warrens walk_02_day", "walk_03_day", "stronghold_approach route_day"],
+ "pixel_diff": {"SS vs base, warrens": "7.1-9.4", "SS vs base, stronghold route": 9.96, "PL vs SS, warrens": "4.1-7.0"},
+ "not judged": {"PLUME stronghold no-loss": "only stronghold route_day has an SS-side capture"},
+ "judges": "three fresh general-purpose subagents, standard prompt; anchors craft, f36_0_npc:C1, f10_2_r3_capacitor"}
