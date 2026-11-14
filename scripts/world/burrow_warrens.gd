@@ -3683,6 +3683,8 @@ uniform float detail_uv_per_m = 0.5;
 uniform float detail_mix = 0.0;
 uniform vec4 detail_tint : source_color = vec4(1.0);
 uniform sampler2D meadow_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform sampler2D meadow_tex_aniso : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform bool meadow_steep_fix = false;
 uniform float meadow_mix = 0.0;
 uniform float meadow_uv_per_m = 0.27;
 uniform float meadow_broad_per_m = 0.031;
@@ -3782,6 +3784,17 @@ void fragment() {
 		vec3 fine = texture(meadow_tex, mp.zy).rgb * mw.x + texture(meadow_tex, mp.xz).rgb * mw.y
 			+ texture(meadow_tex, mp.xy).rgb * mw.z;
 		vec3 broad = texture(meadow_tex, world_pos.xz * meadow_broad_per_m).rgb;
+		if (meadow_steep_fix) {
+			// `meadow_match.steep_fix` (F38#30): the broad tone was sampled top
+			// down, so on steep flanks it stretched into vertical streaks, and
+			// the fine grass blurred at grazing angles. Both go triplanar, and
+			// the fine grass samples anisotropically.
+			fine = texture(meadow_tex_aniso, mp.zy).rgb * mw.x + texture(meadow_tex_aniso, mp.xz).rgb * mw.y
+				+ texture(meadow_tex_aniso, mp.xy).rgb * mw.z;
+			vec3 bp = world_pos * meadow_broad_per_m;
+			broad = texture(meadow_tex, bp.zy).rgb * mw.x + texture(meadow_tex, bp.xz).rgb * mw.y
+				+ texture(meadow_tex, bp.xy).rgb * mw.z;
+		}
 		float broad_luma = dot(broad, vec3(0.299, 0.587, 0.114));
 		vec3 grass = fine * meadow_tint.rgb * mix(1.0, broad_luma * 2.2, 0.35);
 		base = mix(base, grass, meadow_mix * smoothstep(meadow_normal_start, meadow_normal_full, world_normal.y));
@@ -3841,6 +3854,9 @@ void fragment() {
 					var facing: Array = meadow.get("normal_up", [0.15, 0.6])
 					material.set_shader_parameter("meadow_normal_start", float(facing[0]))
 					material.set_shader_parameter("meadow_normal_full", float(facing[1]))
+					if bool((meadow.get("steep_fix", {}) as Dictionary).get("enabled", false)):
+						material.set_shader_parameter("meadow_tex_aniso", GRASS_ALBEDO)
+						material.set_shader_parameter("meadow_steep_fix", true)
 				material.set_shader_parameter("clip_min", Vector3(minf(a.x, b.x), minf(a.y, b.y), minf(a.z, b.z)))
 				material.set_shader_parameter("clip_max", Vector3(maxf(a.x, b.x), maxf(a.y, b.y), maxf(a.z, b.z)))
 				var skirt: Dictionary = cfg.get("skirt", {})
