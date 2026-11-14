@@ -20,7 +20,7 @@
 - **Still flagged 3/3:** the griffin clipping into the tower wall in all four frames, and the flat blue night tint.
 
 ## Next asks (LANE-LAND-CS)
-1. **Don't spend more rounds on the platform top for this row.** It is background in F40#17's cameras; it can ride with a change that moves the subject. Keep the soil patch; it is calmer and nothing loses.
+1. **Don't spend more rounds on the platform top for this row.** It is background in F40#17's cameras, so it cannot move the row on its own. If the lane wants it, keep the soil patch in the overlay that next re-captures F40#17; nothing loses with it.
 2. **F40#17's subject:** seat the tan cluster back from the lip on soil with a contact shadow, remove the residual pale sphere at the cluster bases, and vary cluster size and spacing.
 3. **Fix the griffin clipping into the tower wall** (3/3, again).
 4. **Night:** a moon key and rim light (CLOUDNIGHT r2).
