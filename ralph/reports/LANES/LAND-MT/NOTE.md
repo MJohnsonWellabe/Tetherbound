@@ -1,6 +1,7 @@
 # LANE-LAND-MT: Meadows and Tidewake world look
 
 ## TO THE COORDINATOR
+- **Ready: PLUME round 2 (`ralph/reports/LANES/LAND-MT-PLUME/overlay.json`, re-judge on top of SHELLSHARDS as asked).** Cause of the "gap / two stacked sprites": the signal post stands inside the cave mouth, so the column rose through the rock arch. Round 2 keeps the authored crown (no wide card) and leans the column out of the mouth toward the approach on an early curve, so it climbs in front of the arch as one continuous tapered plume. Test: 1 test, 0 failed (flag off and on). By-eye: walk_01, one unbroken column at the mouth. This is one of two arms waiting; SEADEPTH r3 is the other.
 - **LANDING READY: `tb/land-mt-shellshards-land` 8818353e** (from main 94fe423d). This is SHELLSHARDS: `bank.hill_shell.island_strip` ON with `_why_on` citing G-land-mt-shellshards-ss (F38#30 +0.54, 3/3). It carries only the judged strip and fill code, not the later flag-off steep-face work. READY.md is in `ralph/reports/LANES/LAND-MT-SHELLSHARDS-LAND/`. The pin and 4 related Warrens files ran: 12 tests, 0 failed.
 - **Row-tagged status:**
   - F38#30 PLUME: HELD for round 2. The wide crown read as a blurry card over the mouth (Warrens other −0.18). Round 2 is one continuous tapered column (narrow crown, more discs, no gap), drifting away from the entrance.
