@@ -1,4 +1,4 @@
-# SCENE-TOURNEY: tournament conversations without the pink halo, and Tam in her own colours (F38#16 close-out)
+# SCENE-TOURNEY: tournament conversations without the pink halo (F38#16 close-out)
 
 Row: F38#16 tournament dialogue subject, GPU High 7.31 on main (`G-rescore-f38-16-c673.md`; recorded defect FIXED 3/3; 0.19 short). Close-out exception applies.
 
@@ -17,7 +17,11 @@ Berries are food, so the node carries the pickup glow, and its tint comes from t
 
 **The shared body.** `art.json`: Mira is `villager_farmer`, Tam is `villager_smith`. Both use `villager_female_lod0.glb` with the same texture and differ only in hair colour. Tam's portrait (`assets/ui/portraits/tam.png`) shows the same olive hood.
 
-## Arm
+## Split (14 Nov, coordinator)
+
+Tam's outfit colour is removed from this arm's overlay: LANE-BEINGS' BEINGS-TAM-COAT recolours the same coat and is captured first, and two arms on one coat would make both verdicts unreadable. `scene_tam_outfit_1113` stays flag-off in code and is not part of this arm; it comes back only if BEINGS-TAM-COAT loses. **This arm is now the berry-glow fade only.**
+
+## Arm (as first built; item 2 is no longer in the overlay)
 
 Overlay (`overlay.json`) turns on two flag-off changes on `tb/scene`.
 
@@ -30,7 +34,7 @@ Overlay (`overlay.json`) turns on two flag-off changes on `tb/scene`.
 
 ## By-eye line for the GPU lane
 
-`tournament_quarter_mira__dialogue`: no pink halo behind the flowering bush at the left (the bush and its berries are still there). `tournament_semi_tam__dialogue`: Tam's hood and tunic are slate blue, clearly unlike Mira's olive, and the portrait in the box shows the same blue hood. If either is not visible, hold the arm.
+`tournament_quarter_mira__dialogue`: no pink halo behind the flowering bush at the left (the bush and its berries are still there). If the halo is still visible, hold the arm. (Tam is not changed by this arm.)
 
 ## Risks and no-loss frames
 

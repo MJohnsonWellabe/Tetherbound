@@ -8,7 +8,8 @@
    - The new pin test fails on the old code. Camera-rig tests: 217, 0 failed.
    - Why after 10 Nov: the heading the fight ends at decides whether the dune cuts the arm. On CPU (one run each, fights drift) the opposing-trainer stand ON ended facing the dune and OFF along the beach. The clearance was the failing part either way.
    - READY: `ralph/reports/LANES/SCENE-LENSGROUND-LAND/READY.md`. A one-sided F39#21 re-score after it lands gives the number.
-2. Ready and waiting, unchanged: ROSTERNAMES r2, SCENE-CURB, SCENE-PANELFILL, SCENE-TOURNEY, SCENE-CACHE, SCENE-WORKSHOP.
+2. **SCENE-TOURNEY split as asked:** its overlay is now the berry-glow fade only. Tam's outfit flag stays OFF in code and out of every overlay; it returns only if BEINGS-TAM-COAT loses.
+3. Ready and waiting, unchanged: ROSTERNAMES r2, SCENE-CURB, SCENE-PANELFILL, SCENE-TOURNEY, SCENE-CACHE, SCENE-WORKSHOP.
 
 ## Earlier (13 Nov, 23:15 UTC)
 0. **Now working on F39#21 (Venn win camera, 5.84).** Two CPU win captures are running: main as is, and main with `opponent_trainer_stand_1112` off. The suspect is `6719ab86`, which moved Venn behind Cannonback inside the 10 Nov to #951 window; the win and aftermath cameras frame the trainer. A probe logs the lens pose and the ground under and ahead of it. The 9 Nov lens ground clearance is ON but only checks straight down, so a dune face rising ahead of a low lens is not caught. I reply with the cause and a landing branch.
@@ -27,6 +28,15 @@
 4. **F39#20 (6.42):** the recorded defect is FIXED 3/3. The frames still carry the stale "Gather Reef Stone" prompt (fixed by #947) and the dark cliff wedge (LANE-LAND-MT). Needs a re-score, not a build.
 5. **F38#35 (6.33):** the role postures do apply (no mismatch warning on Halda, Lark or Oskar), but at about 40 px tall a 4-38 degree offset cannot read. A 1.8x gain barely registered on CPU, so I reverted it rather than queue a weak arm. The row needs authored role poses (hands on hips, folded arms): animation work, not a scene setting.
 6. Ready and waiting (your queue order): ROSTERNAMES r2, SCENE-CURB, SCENE-PANELFILL, SCENE-TOURNEY, SCENE-CACHE, SCENE-WORKSHOP.
+
+## Tried and failed (for the coordinator's index)
+- F38#28 PARKED: interior stone moss 0.46 to 0.22 (THINGS-HALLMOSS). It only reached the pilasters; the GPU by-eye check held it.
+- F38#28 PARKED: roofed-room wall moss and buttress clip (SCENE-HALLWALLS r1 and r2). r2 judged level, 0/3, all ties; the change is invisible at sheet size.
+- F38#28 PARKED: TELLDUST3 for the Warden fight. Level with cameras matched (High 7.27 = 7.27); it stays shipped for F38#11 and the grunt.
+- F39#19 PARKED: ROSTERNAMES round 1 (names on translucent rows). The re-judge lost 6.78 to 6.38 (0/3); the named roster faded. Round 2 fixes the fade and is queued.
+- F38#35 PARKED: 1.8x gain on the existing role-posture angles. It barely registered on CPU on 40 px villagers; the row needs authored poses.
+- F38#12 PARKED: Kenney log, bedroll and fire pit as cache props (CPU only, never judged). Salmon-pink and off-style; replaced inside SCENE-CACHE.
+- F38#16 HELD: Tam outfit recolour (`scene_tam_outfit_1113`). It overlaps BEINGS-TAM-COAT; held until that verdict.
 
 ## State (13 Nov 2026, lane started)
 - `tb/scene` holds origin/main (after #951) plus this lane's work. Every candidate is flag-off or overlay-only.
