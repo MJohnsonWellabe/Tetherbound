@@ -6209,7 +6209,23 @@ func _mesa(
 		var outward := Vector3(top_ring[i].x, 0, top_ring[i].z).normalized()
 		var outward_next := Vector3(top_ring[next].x, 0, top_ring[next].z).normalized()
 		var relief := minf(size.x * 0.055, 15.0)
-		if wall_detail.is_empty():
+		var band_depth := float(top_band_cfg.get("band_depth_m", 0.0)) if top_band_tool != null else 0.0
+		if wall_detail.is_empty() and band_depth > 0.0:
+			# F40#1 / F40#8 round 2 (LANE-LAND-CS): only the top `band_depth_m`
+			# below the rim takes the pale band. The first band spans a quarter
+			# of the mass height (about 19 m on a landmark ledge, far more on a
+			# region cliff), so on the Three Bells bridge it repainted a whole
+			# cliff face (G-lcs-wallband-bridge, F40#8 -0.43, 0/3). The face is
+			# split at that depth; the rest keeps the ordinary cliff material.
+			var fa := clampf(band_depth / maxf(top_ring[i].y - upper_ring[i].y, 0.01), 0.0, 1.0)
+			var fb := clampf(band_depth / maxf(top_ring[next].y - upper_ring[next].y, 0.01), 0.0, 1.0)
+			var mid_a := top_ring[i].lerp(upper_ring[i], fa)
+			var mid_b := top_ring[next].lerp(upper_ring[next], fb)
+			_add_geological_face(top_band_tool, top_ring[i], top_ring[next], mid_a, mid_b,
+				outward, outward_next, 0.0, 4)
+			_add_geological_face(upper_tool, mid_a, mid_b, upper_ring[i], upper_ring[next],
+				outward, outward_next, relief, 16)
+		elif wall_detail.is_empty():
 			_add_geological_face(top_band_tool if top_band_tool != null else upper_tool,
 				top_ring[i], top_ring[next], upper_ring[i], upper_ring[next], outward, outward_next, relief)
 		else:
